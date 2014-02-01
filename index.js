@@ -9,7 +9,10 @@ module.exports = function(options) {
   options = options || {};
 
   // specify the destination directory, else, the uploads will be moved to the temporary dir of the system
-  var dest = options.dest || os.tmpdir();
+  var dest;
+  // some users may ommit the trailing slash
+  if (options.dest) { dest = options.dest.slice(-1) == '/' ? options.dest : options.dest + '/'; }
+  else { dest = os.tmpdir(); }
 
   // make sure the dest dir exists
   mkdirp(dest, function(err) { if (err) throw err; });

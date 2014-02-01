@@ -32,7 +32,8 @@
     "connect": "*",
     "mocha": "*",
     "should": "*",
-    "supertest": "*"
+    "supertest": "*",
+    "express": "*"
   },
   "author": {
     "name": "Hage Yaapa",
