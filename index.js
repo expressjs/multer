@@ -32,7 +32,7 @@ module.exports = function(options) {
     //if (req.method === 'POST') {
 
       if (options.onParseStart) { options.onParseStart(); }
-      
+
       var busboy = new Busboy({ headers: req.headers });
 
       // handle text field data
@@ -76,13 +76,13 @@ module.exports = function(options) {
 
         fileStream.on('error', function(error) {
           // trigger "file error" event
-          if (options.onError) { options.onError(error); }
+          if (options.onError) { options.onError(error, next); }
           else next(error);
         });
 
         ws.on('error', function(error) {
           // trigger "file error" event
-          if (options.onError) { options.onError(error); }
+          if (options.onError) { options.onError(error, next); }
           else next(error);
         });
 
