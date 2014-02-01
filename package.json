@@ -1,0 +1,44 @@
+{
+  "name": "multer",
+  "version": "0.0.1",
+  "description": "Connect middleware for handling multipart/form-data",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hacksparrow/multer.git",
+    "homepage": "https://github.com/hacksparrow/multer"
+  },
+  "bugs": {
+    "mail": "captain@hacksparrow.com",
+    "url": "https://github.com/hacksparrow/multer/issues"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "keywords": [
+    "form",
+    "post",
+    "multipart",
+    "form-data",
+    "connect",
+    "express",
+    "middleware"
+  ],
+  "dependencies": {
+    "mkdirp": "~0.3.5",
+    "busboy": "0.0.14"
+  },
+  "devDependencies": {
+    "connect": "*",
+    "mocha": "*",
+    "should": "*",
+    "supertest": "*"
+  },
+  "author": {
+    "name": "Hage Yaapa",
+    "email": "captain@hacksparrow.com",
+    "url": "http://www.hacksparrow.com",
+    "twitter": "https://twitter.com/hacksparrow"
+  },
+  "license": "MIT"
+}
