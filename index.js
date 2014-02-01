@@ -77,6 +77,12 @@ module.exports = function(options) {
           else next(error);
         });
 
+        ws.on('error', function(error) {
+          // trigger "file error" event
+          if (options.onError) { options.onError(error); }
+          else next(error);
+        });
+
       });
 
       busboy.on('end', function() {
