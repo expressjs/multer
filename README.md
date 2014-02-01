@@ -1,7 +1,7 @@
 Multer
 ======
 
-Multer is a Connect middleware for handling **multipart/form-data**. It can be used with both Connect and Express, seamlessly. It is based on [busboy](https://github.com/mscdex/busboy). 
+Multer is a Connect middleware for handling **multipart/form-data**. It can be used with both Connect and Express, seamlessly. It is written on top of [busboy](https://github.com/mscdex/busboy). 
 
 ## Usage
 
