@@ -16,7 +16,7 @@ Include the Multer middleware in your app:
     app.use(multer({ dest: './uploads/'}));
     ...
 
-**IMPORTANT**: Multer will not process any form which not **multipart/form-data** submitted via the **POST** method.
+**IMPORTANT**: Multer will not process any form which is not **multipart/form-data** submitted via the **POST** method.
 
 ## Multer file object
 
@@ -32,7 +32,7 @@ A multer file object is a JSON object with the following properties.
 
 ## Options
 
-Multer accepts an options object, the most basic of which is the `dest` property, which tells Multer where to upload the files to. In case you omit the options object, the file will be renamed and uploaded to the temporary directory of the system.
+Multer accepts an options object, the most basic of which is the `dest` property, which tells Multer where to upload the files. In case you omit the options object, the file will be renamed and uploaded to the temporary directory of the system.
 
 By the default, Multer will rename the files so as to avoid name conflicts. The renaming function can be customized according to your needs.
 
