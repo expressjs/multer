@@ -46,8 +46,7 @@ module.exports = function(options) {
 
         var file = {
           fieldname: fieldname,
-          stream: fileStream,
-          originalName: filename,
+          originalname: filename,
           name: newFilename,
           encoding: encoding,
           mimetype: mimetype,
