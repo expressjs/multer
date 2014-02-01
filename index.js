@@ -28,8 +28,8 @@ module.exports = function(options) {
     req.body = req.body || {};
     req.files = req.files || {}; 
 
-    //if (req.headers['content-type'] && req.headers['content-type'].indexOf('multipart/form-data') === 0 && req.method === 'POST') {
-    if (req.method === 'POST') {
+    if (req.headers['content-type'] && req.headers['content-type'].indexOf('multipart/form-data') === 0 && req.method === 'POST') {
+    //if (req.method === 'POST') {
       var busboy = new Busboy({ headers: req.headers });
 
       // handle text field data
