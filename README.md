@@ -43,18 +43,18 @@ By the default, Multer will rename the files so as to avoid name conflicts. The 
 
 The following are the options that can be passed to Multer.
 
-1. `dest`
-2. `limits`
-3. `rename(fieldname, filename)`
-4. `onFileUploadStart(file)`
-5. `onFileUploadData(file, data)`
-6. `onFileUploadComplete(file)`
-7. `onParseStart()`
-8. `onParseEnd()`
-9. `onError()`
-10. `onFilesLimit()`
-11. `onFieldsLimit()`
-12. `onPartsLimit()`
+* `dest`
+* `limits`
+* `rename(fieldname, filename)`
+* `onFileUploadStart(file)`
+* `onFileUploadData(file, data)`
+* `onFileUploadComplete(file)`
+* `onParseStart()`
+* `onParseEnd()`
+* `onError()`
+* `onFilesLimit()`
+* `onFieldsLimit()`
+* `onPartsLimit()`
 
 Apart from these, Multer also supports more advanced [busboy options](https://github.com/mscdex/busboy#busboy-methods) like `highWaterMark`, `fileHwm`, and `defCharset`.
 
@@ -81,13 +81,13 @@ Example:
 
 An object specifying the size limits of the following optional properties.
 
-**fieldNameSize** - integer - Max field name size (Default: 100 bytes)
-**fieldSize** - integer - Max field value size (Default: 1MB)
-**fields** - integer - Max number of non-file fields (Default: Infinity)
-**fileSize** - integer - For multipart forms, the max file size (Default: Infinity)
-**files** - integer - For multipart forms, the max number of file fields (Default: Infinity)
-**parts** - integer - For multipart forms, the max number of parts (fields + files) (Default: Infinity)
-**headerPairs** - integer - For multipart forms, the max number of header key=>value pairs to parse Default: 2000 (same as node's http).
+* `fieldNameSize` - integer - Max field name size (Default: 100 bytes)
+* `fieldSize` - integer - Max field value size (Default: 1MB)
+* `fields` - integer - Max number of non-file fields (Default: Infinity)
+* `fileSize` - integer - For multipart forms, the max file size (Default: Infinity)
+* `files` - integer - For multipart forms, the max number of file fields (Default: Infinity)
+* `parts` - integer - For multipart forms, the max number of parts (fields + files) (Default: Infinity)
+* `headerPairs` - integer - For multipart forms, the max number of header key=>value pairs to parse Default: 2000 (same as node's http).
 
 Example:
 
