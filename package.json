@@ -1,6 +1,6 @@
 {
   "name": "multer",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Connect middleware for handling multipart/form-data",
   "main": "index.js",
   "repository": {

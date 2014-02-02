@@ -16,6 +16,11 @@ Include the Multer middleware in your app:
     app.use(multer({ dest: './uploads/'}));
     ...
 
+You can access the fields and files in the `request` object:
+
+    console.log(req.body);
+    console.log(req.files);
+
 **IMPORTANT**: Multer will not process any form which is not **multipart/form-data** submitted via the **POST** method.
 
 ## Multer file object
@@ -39,13 +44,19 @@ By the default, Multer will rename the files so as to avoid name conflicts. The 
 The following are the options that can be passed to Multer.
 
 1. `dest`
-2. `rename(fieldname, filename)`
-3. `onFileUploadStart(file)`
-4. `onFileUploadData(file, data)`
-5. `onFileUploadComplete(file)`
-6. `onParseStart()`
-7. `onParseEnd()`
-8. `onError()`
+2. `limits`
+3. `rename(fieldname, filename)`
+4. `onFileUploadStart(file)`
+5. `onFileUploadData(file, data)`
+6. `onFileUploadComplete(file)`
+7. `onParseStart()`
+8. `onParseEnd()`
+9. `onError()`
+10. `onFilesLimit()`
+11. `onFieldsLimit()`
+12. `onPartsLimit()`
+
+Apart from these, Multer also supports more advanced [busboy options](https://github.com/mscdex/busboy#busboy-methods) like `highWaterMark`, `fileHwm`, and `defCharset`.
 
 In an average web app, only `dest` and `rename` might be required, and configured as shown in the example.
 
@@ -65,6 +76,28 @@ The destination directory for the uploaded files.
 Example:
 
     dest: './uploads/'
+
+###limits
+
+An object specifying the size limits of the following optional properties.
+
+**fieldNameSize** - integer - Max field name size (Default: 100 bytes)
+**fieldSize** - integer - Max field value size (Default: 1MB)
+**fields** - integer - Max number of non-file fields (Default: Infinity)
+**fileSize** - integer - For multipart forms, the max file size (Default: Infinity)
+**files** - integer - For multipart forms, the max number of file fields (Default: Infinity)
+**parts** - integer - For multipart forms, the max number of parts (fields + files) (Default: Infinity)
+**headerPairs** - integer - For multipart forms, the max number of header key=>value pairs to parse Default: 2000 (same as node's http).
+
+Example:
+
+    limits: {
+      fieldNameSize: 100,
+      files: 2,
+      fields: 5
+    }
+
+Specifying the limits can help protect your site against denial of service (DoS) attacks.
 
 ###rename(fieldname, filename)
 
@@ -136,6 +169,36 @@ Example:
       console.log(error);
       next(error);
     }
+
+###onFilesLimit()
+
+Event handler triggered when the number of files exceed the specification in the `limit` object. No more files will be parsed after the limit is reached.
+
+Example:
+
+    onFilesLimit = function() {
+      console.log('Crossed file limit!');
+    };
+
+###onFieldsLimit()
+
+Event handler triggered when the number of fields exceed the specification in the `limit` object. No more fields will be parsed after the limit is reached.
+
+Example:
+
+    onFilesLimit = function() {
+      console.log('Crossed fields limit!');
+    };
+
+###onPartsLimit()
+
+Event handler triggered when the number of parts exceed the specification in the `limit` object. No more files or fields will be parsed after the limit is reached.
+
+Example:
+
+    onFilesLimit = function() {
+      console.log('Crossed parts limit!');
+    };
 
 ## License (MIT)
 

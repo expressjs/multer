@@ -25,6 +25,7 @@ module.exports = function(options) {
   };
 
   return function(req, res, next) {
+
     req.body = req.body || {};
     req.files = req.files || {}; 
 
@@ -33,7 +34,10 @@ module.exports = function(options) {
 
       if (options.onParseStart) { options.onParseStart(); }
 
-      var busboy = new Busboy({ headers: req.headers });
+      // add the request headers to the options
+      options.headers = req.headers;
+      
+      var busboy = new Busboy(options);
 
       // handle text field data
       busboy.on('field', function(fieldname, val, valTruncated, keyTruncated) {
@@ -86,6 +90,18 @@ module.exports = function(options) {
           else next(error);
         });
 
+      });
+
+      busboy.on('partsLimit', function() {
+        if (options.onPartsLimit) { options.onPartsLimit(); }
+      });
+
+      busboy.on('filesLimit', function() {
+        if (options.onFilesLimit) { options.onFilesLimit(); }
+      });
+
+      busboy.on('fieldsLimit', function() {
+        if (options.onFieldsLimit) { options.onFieldsLimit(); }
       });
 
       busboy.on('end', function() {
