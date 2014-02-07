@@ -78,7 +78,7 @@ module.exports = function(options) {
         // trigger "file upload start" event
         if (options.onFileUploadStart) { options.onFileUploadStart(file); }
 
-        var ws = fs.createWriteStream(path);
+        var ws = fs.createWriteStream(newFilePath);
         fileStream.pipe(ws);
 
         fileStream.on('data', function(data) {
