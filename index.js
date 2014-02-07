@@ -1,5 +1,6 @@
 var os = require('os');
 var fs = require('fs');
+var path = require('path');
 var crypto = require('crypto');
 var Busboy = require('busboy');
 var mkdirp = require('mkdirp');
@@ -11,8 +12,11 @@ module.exports = function(options) {
   // specify the destination directory, else, the uploads will be moved to the temporary dir of the system
   var dest;
   // some users may ommit the trailing slash
-  if (options.dest) { dest = options.dest.slice(-1) == '/' ? options.dest : options.dest + '/'; }
-  else { dest = os.tmpdir(); }
+  if (options.dest) {
+    dest = options.dest;
+  } else {
+    dest = os.tmpdir();
+  }
 
   // make sure the dest dir exists
   mkdirp(dest, function(err) { if (err) throw err; });
@@ -59,7 +63,7 @@ module.exports = function(options) {
         }
         var ext = '.' + filename.split('.').slice(-1)[0];
         var newFilename = rename(fieldname, filename.replace(ext, '')) + ext;
-        var path = dest + newFilename;
+        var newFilePath = path.join(dest, newFilename);
 
         var file = {
           fieldname: fieldname,
@@ -67,7 +71,7 @@ module.exports = function(options) {
           name: newFilename,
           encoding: encoding,
           mimetype: mimetype,
-          path: path,
+          path: newFilePath,
           extension: ext.replace('.', '')
         };
 
