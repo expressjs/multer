@@ -46,7 +46,9 @@ module.exports = function(options) {
 
       // handle files
       busboy.on('file', function(fieldname, fileStream, filename, encoding, mimetype) {
-
+        if (!filename) {
+          filename = "";
+        }
         var ext = '.' + filename.split('.').slice(-1)[0];
         var newFilename = rename(fieldname, filename.replace(ext, '')) + ext;
         var path = dest + newFilename;
