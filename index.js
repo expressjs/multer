@@ -11,7 +11,7 @@ module.exports = function(options) {
 
   // specify the destination directory, else, the uploads will be moved to the temporary dir of the system
   var dest;
-  // some users may ommit the trailing slash
+
   if (options.dest) {
     dest = options.dest;
   } else {
@@ -58,12 +58,20 @@ module.exports = function(options) {
 
       // handle files
       busboy.on('file', function(fieldname, fileStream, filename, encoding, mimetype) {
-        if (!filename) {
-          filename = "";
+
+        var ext, newFilename, newFilePath;
+
+        if (filename) {
+          ext = '.' + filename.split('.').slice(-1)[0];
+          newFilename = rename(fieldname, filename.replace(ext, '')) + ext;
+          newFilePath = path.join(dest, newFilename);
         }
-        var ext = '.' + filename.split('.').slice(-1)[0];
-        var newFilename = rename(fieldname, filename.replace(ext, '')) + ext;
-        var newFilePath = path.join(dest, newFilename);
+        else {
+          filename = null;
+          ext = null;
+          newFilename = null;
+          newFilePath = '/dev/null'; // do something for Windows!
+        }
 
         var file = {
           fieldname: fieldname,
@@ -72,7 +80,7 @@ module.exports = function(options) {
           encoding: encoding,
           mimetype: mimetype,
           path: newFilePath,
-          extension: ext.replace('.', '')
+          extension: (ext === null) ? null : ext.replace('.', '')
         };
 
         // trigger "file upload start" event
