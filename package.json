@@ -5,12 +5,12 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/hacksparrow/multer.git",
-    "homepage": "https://github.com/hacksparrow/multer"
+    "url": "https://github.com/expressjs/multer.git",
+    "homepage": "https://github.com/expressjs/multer"
   },
   "bugs": {
     "mail": "captain@hacksparrow.com",
-    "url": "https://github.com/hacksparrow/multer/issues"
+    "url": "https://github.com/expressjs/multer/issues"
   },
   "scripts": {
     "test": "make test"
