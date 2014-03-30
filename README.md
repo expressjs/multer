@@ -126,7 +126,7 @@ Event handler triggered when a chunk of buffer is received. A buffer object alon
 Example:
 
     onFileUploadData: function(file, data) {
-      console.log(data.lenth + ' of ' + file.fieldname + ' arrived');
+      console.log(data.length + ' of ' + file.fieldname + ' arrived');
     }
 
 ###onFileUploadComplete(file)
