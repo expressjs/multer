@@ -95,7 +95,14 @@ module.exports = function(options) {
         });
 
         fileStream.on('end', function() {
-          req.files[fieldname] = file;
+          if (req.files[fieldname]) {
+            if (!Array.isArray(req.files[fieldname])) {
+              req.files[fieldname] = [ req.files[fieldname] ];
+            }
+            req.files[fieldname].push(file);
+          } else {
+            req.files[fieldname] = file;
+          }
           // trigger "file end" event
           if (options.onFileUploadComplete) { options.onFileUploadComplete(file); }
         });
