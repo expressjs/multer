@@ -21,7 +21,7 @@ You can access the fields and files in the `request` object:
     console.log(req.body);
     console.log(req.files);
 
-**IMPORTANT**: Multer will not process any form which is not **multipart/form-data** submitted via the **POST** method.
+**IMPORTANT**: Multer will not process any form which is not **multipart/form-data** submitted via the **POST** or **PUT** methods.
 
 ## Multer file object
 
