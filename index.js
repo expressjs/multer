@@ -80,7 +80,8 @@ module.exports = function(options) {
           encoding: encoding,
           mimetype: mimetype,
           path: newFilePath,
-          extension: (ext === null) ? null : ext.replace('.', '')
+          extension: (ext === null) ? null : ext.replace('.', ''),
+          size: 0
         };
 
         // trigger "file upload start" event
@@ -90,6 +91,7 @@ module.exports = function(options) {
         fileStream.pipe(ws);
 
         fileStream.on('data', function(data) {
+          if (data) { file.size += data.length; }
           // trigger "file data" event
           if (options.onFileUploadData) { options.onFileUploadData(file, data); }
         });
