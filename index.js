@@ -46,7 +46,7 @@ module.exports = function(options) {
       // handle text field data
       busboy.on('field', function(fieldname, val, valTruncated, keyTruncated) {
         if (req.body.hasOwnProperty(fieldname)) {
-          if (Array.isArray(req.body)) {
+          if (Array.isArray(req.body[fieldname])) {
             req.body[fieldname].push(val);
           } else {
             req.body[fieldname] = [req.body[fieldname], val];
