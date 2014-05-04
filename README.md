@@ -35,6 +35,7 @@ A multer file object is a JSON object with the following properties.
 6. `path` - Location of the uploaded file
 7. `extension` - Extension of the file
 8. `size` - Size of the file in bytes
+9. `truncated` - If the file was truncated due to size limitation
 
 ## Options
 
