@@ -83,7 +83,8 @@ module.exports = function(options) {
           mimetype: mimetype,
           path: newFilePath,
           extension: (ext === null) ? null : ext.replace('.', ''),
-          size: 0
+          size: 0,
+          truncated: null
         };
 
         // trigger "file upload start" event
@@ -99,6 +100,7 @@ module.exports = function(options) {
         });
 
         fileStream.on('end', function() {
+          file.truncated = fileStream.truncated;
           req.files[fieldname] = file;
           // trigger "file end" event
           if (options.onFileUploadComplete) { options.onFileUploadComplete(file); }
