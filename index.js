@@ -20,7 +20,7 @@ module.exports = function(options) {
 
   // make sure the dest dir exists
   mkdirp(dest, function(err) { if (err) throw err; });
-  
+
   // renaming function for the uploaded file - need not worry about the extension
   // ! if you want to keep the original filename, write a renamer function which does that
   var rename = options.rename || function(fieldname, filename) {
@@ -31,10 +31,10 @@ module.exports = function(options) {
   return function(req, res, next) {
 
     req.body = req.body || {};
-    req.files = req.files || {}; 
+    req.files = req.files || {};
 
-    if (req.headers['content-type'] && 
-        req.headers['content-type'].indexOf('multipart/form-data') === 0 && 
+    if (req.headers['content-type'] &&
+        req.headers['content-type'].indexOf('multipart/form-data') === 0 &&
         (req.method === 'POST' || req.method === 'PUT')
     ) {
 
@@ -42,7 +42,7 @@ module.exports = function(options) {
 
       // add the request headers to the options
       options.headers = req.headers;
-      
+
       var busboy = new Busboy(options);
 
       // handle text field data
