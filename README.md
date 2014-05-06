@@ -1,27 +1,33 @@
-Multer
-======
+# Multer [![Build Status](https://travis-ci.org/expressjs/multer.svg?branch=master)](https://travis-ci.org/expressjs/multer) [![NPM version](https://badge.fury.io/js/multer.svg)](https://badge.fury.io/js/multer)
 
-Multer is a Connect / Express middleware for handling **multipart/form-data**. It is written on top of [busboy](https://github.com/mscdex/busboy) for maximum efficiency. 
+Multer is a node.js middleware for handling `multipart/form-data`.
 
-## Usage
+It is written on top of [busboy](https://github.com/mscdex/busboy) for maximum efficiency.
 
-Install the Multer package from npm:
+## API
 
-    $ npm install multer
+#### Installation
 
-Include the Multer middleware in your app:
+`$ npm install multer`
 
-    ...
-    var multer = require('multer');
-    app.use(multer({ dest: './uploads/'}));
-    ...
+#### Usage
+
+```js
+var express = require('express')
+var multer  = require('multer')
+
+var app = express()
+app.use(multer({ dest: './uploads/'}))
+```
 
 You can access the fields and files in the `request` object:
 
-    console.log(req.body);
-    console.log(req.files);
+```js
+console.log(req.body)
+console.log(req.files)
+```
 
-**IMPORTANT**: Multer will not process any form which is not **multipart/form-data** submitted via the **POST** or **PUT** methods.
+**IMPORTANT**: Multer will not process any form which is not `multipart/form-data` submitted via the `POST` or `PUT` methods.
 
 ## Multer file object
 
@@ -62,24 +68,24 @@ Apart from these, Multer also supports more advanced [busboy options](https://gi
 
 In an average web app, only `dest` and `rename` might be required, and configured as shown in the example.
 
-    app.use(multer({
-      dest: './uploads/',
-      rename: function(fieldname, filename) {
-        return filename.replace(/\W+/g, '-').toLowerCase() + Date.now();
-      }
-    }));
+```js
+app.use(multer({
+  dest: './uploads/',
+  rename: function (fieldname, filename) {
+    return filename.replace(/\W+/g, '-').toLowerCase() + Date.now()
+  }
+}))
+```
 
 The details of the properties of the options object is explained in the following sections.
 
-###dest
+### dest
 
 The destination directory for the uploaded files.
 
-Example:
+`dest: './uploads/'`
 
-    dest: './uploads/'
-
-###limits
+### limits
 
 An object specifying the size limits of the following optional properties.
 
@@ -91,116 +97,116 @@ An object specifying the size limits of the following optional properties.
 * `parts` - integer - For multipart forms, the max number of parts (fields + files) (Default: Infinity)
 * `headerPairs` - integer - For multipart forms, the max number of header key=>value pairs to parse Default: 2000 (same as node's http).
 
-Example:
-
-    limits: {
-      fieldNameSize: 100,
-      files: 2,
-      fields: 5
-    }
+```js
+limits: {
+  fieldNameSize: 100,
+  files: 2,
+  fields: 5
+}
+```
 
 Specifying the limits can help protect your site against denial of service (DoS) attacks.
 
-###rename(fieldname, filename)
+### rename(fieldname, filename)
 
 Function to rename the uploaded files. Whatever the function returns will become the new name of the uploaded file (extension is not included). The `fieldname` and `filename` of the file will be available in this function, use them if you need to.
 
-Example:
+```js
+rename: function (fieldname, filename) {
+  return fieldname + filename + Date.now()
+}
+```
 
-    rename: function(fieldname, filename) {
-      return fieldname + filename + Date.now();
-    }
-
-###onFileUploadStart(file)
+### onFileUploadStart(file)
 
 Event handler triggered when a file starts to be uploaded. A file object with the following properties are available to this function: `fieldname`, `originalname`, `name`, `encoding`, `mimetype`, `path`, `extension`.
 
-Example:
+```js
+onFileUploadStart: function (file) {
+  console.log(file.fieldname + ' is starting ...')
+}
+```
 
-    onFileUploadStart: function(file) {
-      console.log(file.fieldname + ' is starting ...');
-    }
-
-###onFileUploadData(file, data)
+### onFileUploadData(file, data)
 
 Event handler triggered when a chunk of buffer is received. A buffer object along with a file object is available to the function.
 
-Example:
+```js
+onFileUploadData: function (file, data) {
+  console.log(data.length + ' of ' + file.fieldname + ' arrived')
+}
+```
 
-    onFileUploadData: function(file, data) {
-      console.log(data.length + ' of ' + file.fieldname + ' arrived');
-    }
-
-###onFileUploadComplete(file)
+### onFileUploadComplete(file)
 
 Event handler trigger when a file is completely uploaded. A file object is available to the function.
 
-Example:
+```js
+onFileUploadComplete: function (file) {
+  console.log(file.fieldname + ' uploaded to  ' + file.path)
+}
+```
 
-    onFileUploadComplete: function(file) {
-      console.log(file.fieldname + ' uploaded to  ' + file.path);
-    }
-
-###onParseStart()
+### onParseStart()
 
 Event handler triggered when the form parsing starts.
 
-Example:
+```js
+onParseStart: function () {
+  console.log('Form parsing started at: ', new Date())
+}
+```
 
-    onParseStart: function() {
-      console.log('Form parsing started at: ', new Date());
-    }
-
-###onParseEnd()
+### onParseEnd()
 
 Event handler triggered when the form parsing completes.
 
-Example:
+```js
+onParseStart: function () {
+  console.log('Form parsing completed at: ', new Date())
+}
+```
 
-    onParseStart: function() {
-      console.log('Form parsing completed at: ', new Date());
-    }
-
-###onError()
+### onError()
 
 Event handler for any errors encountering while processing the form. The `error` object and the `next` object is available to the function. If you are handling errors yourself, make sure to terminate the request or call the `next()` function, else the request will be left hanging.
 
-Example:
+```js
+onError: function (error, next) {
+  console.log(error)
+  next(error)
+}
+```
 
-    onError: function(error, next) {
-      console.log(error);
-      next(error);
-    }
-
-###onFilesLimit()
+### onFilesLimit()
 
 Event handler triggered when the number of files exceed the specification in the `limit` object. No more files will be parsed after the limit is reached.
 
-Example:
+```js
+onFilesLimit: function () {
+  console.log('Crossed file limit!')
+}
+```
 
-    onFilesLimit = function() {
-      console.log('Crossed file limit!');
-    };
-
-###onFieldsLimit()
+### onFieldsLimit()
 
 Event handler triggered when the number of fields exceed the specification in the `limit` object. No more fields will be parsed after the limit is reached.
 
-Example:
+```js
+onFilesLimit: function () {
+  console.log('Crossed fields limit!')
+}
+```
 
-    onFilesLimit = function() {
-      console.log('Crossed fields limit!');
-    };
-
-###onPartsLimit()
+### onPartsLimit()
 
 Event handler triggered when the number of parts exceed the specification in the `limit` object. No more files or fields will be parsed after the limit is reached.
 
-Example:
-
-    onFilesLimit = function() {
-      console.log('Crossed parts limit!');
-    };
+```js
+onFilesLimit: function () {
+  console.log('Crossed parts limit!')
+}
+```
 
 ## License (MIT)
 
