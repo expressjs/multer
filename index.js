@@ -101,7 +101,8 @@ module.exports = function(options) {
 
         fileStream.on('end', function() {
           file.truncated = fileStream.truncated;
-          req.files[fieldname] = file;
+          if (!req.files[fieldname]) { req.files[fieldname] = []; }
+          req.files[fieldname].push(file);
           // trigger "file end" event
           if (options.onFileUploadComplete) { options.onFileUploadComplete(file); }
         });
@@ -133,6 +134,12 @@ module.exports = function(options) {
       });
 
       busboy.on('end', function() {
+        for (var field in req.files){
+          if (req.files[field].length===1){ 
+            req.files[field] = req.files[field][0];
+          }
+        }
+
         // when done parsing the form, pass the control to the next middleware in stack
         if (options.onParseEnd) { options.onParseEnd(); }
         next();
