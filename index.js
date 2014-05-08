@@ -139,7 +139,6 @@ module.exports = function(options) {
             req.files[field] = req.files[field][0];
           }
         }
-
         // when done parsing the form, pass the control to the next middleware in stack
         if (options.onParseEnd) { options.onParseEnd(); }
         next();
