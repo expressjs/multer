@@ -43,7 +43,19 @@ module.exports = function(options) {
       // add the request headers to the options
       options.headers = req.headers;
 
-      var busboy = new Busboy(options);
+
+        var busboyFinished = false;
+        var fileCounter1 = 0;
+        var fileCounter2 = 0;
+        var goNext = function(){
+            if(busboyFinished && fileCounter1 === fileCounter2){
+                next();
+            }
+        };
+
+
+
+        var busboy = new Busboy(options);
 
       // handle text field data
       busboy.on('field', function(fieldname, val, valTruncated, keyTruncated) {
@@ -103,6 +115,7 @@ module.exports = function(options) {
           file.truncated = fileStream.truncated;
           if (!req.files[fieldname]) { req.files[fieldname] = []; }
           req.files[fieldname].push(file);
+          fileCounter1++;
           // trigger "file end" event
           if (options.onFileUploadComplete) { options.onFileUploadComplete(file); }
         });
@@ -117,6 +130,11 @@ module.exports = function(options) {
           // trigger "file error" event
           if (options.onError) { options.onError(error, next); }
           else next(error);
+        });
+
+        ws.on('finish', function(error){
+          fileCounter2++;
+          goNext();
         });
 
       });
@@ -141,7 +159,8 @@ module.exports = function(options) {
         }
         // when done parsing the form, pass the control to the next middleware in stack
         if (options.onParseEnd) { options.onParseEnd(); }
-        next();
+        busboyFinished = true;
+        goNext();
       });
 
       req.pipe(busboy);
