@@ -67,57 +67,54 @@ module.exports = function(options) {
           ext = '.' + filename.split('.').slice(-1)[0];
           newFilename = rename(fieldname, filename.replace(ext, '')) + ext;
           newFilePath = path.join(dest, newFilename);
+
+          var file = {
+            fieldname: fieldname,
+            originalname: filename,
+            name: newFilename,
+            encoding: encoding,
+            mimetype: mimetype,
+            path: newFilePath,
+            extension: (ext === null) ? null : ext.replace('.', ''),
+            size: 0,
+            truncated: null
+          };
+
+          // trigger "file upload start" event
+          if (options.onFileUploadStart) { options.onFileUploadStart(file); }
+
+          var ws = fs.createWriteStream(newFilePath);
+          fileStream.pipe(ws);
+
+          fileStream.on('data', function(data) {
+            if (data) { file.size += data.length; }
+            // trigger "file data" event
+            if (options.onFileUploadData) { options.onFileUploadData(file, data); }
+          });
+
+          fileStream.on('end', function() {
+            file.truncated = fileStream.truncated;
+            if (!req.files[fieldname]) { req.files[fieldname] = []; }
+            req.files[fieldname].push(file);
+            // trigger "file end" event
+            if (options.onFileUploadComplete) { options.onFileUploadComplete(file); }
+          });
+
+          fileStream.on('error', function(error) {
+            // trigger "file error" event
+            if (options.onError) { options.onError(error, next); }
+            else next(error);
+          });
+
+          ws.on('error', function(error) {
+            // trigger "file error" event
+            if (options.onError) { options.onError(error, next); }
+            else next(error);
+          });
         }
         else {
-          filename = null;
-          ext = null;
-          newFilename = null;
-          newFilePath = '/dev/null'; // do something for Windows!
+          fileStream.resume();
         }
-
-        var file = {
-          fieldname: fieldname,
-          originalname: filename,
-          name: newFilename,
-          encoding: encoding,
-          mimetype: mimetype,
-          path: newFilePath,
-          extension: (ext === null) ? null : ext.replace('.', ''),
-          size: 0,
-          truncated: null
-        };
-
-        // trigger "file upload start" event
-        if (options.onFileUploadStart) { options.onFileUploadStart(file); }
-
-        var ws = fs.createWriteStream(newFilePath);
-        fileStream.pipe(ws);
-
-        fileStream.on('data', function(data) {
-          if (data) { file.size += data.length; }
-          // trigger "file data" event
-          if (options.onFileUploadData) { options.onFileUploadData(file, data); }
-        });
-
-        fileStream.on('end', function() {
-          file.truncated = fileStream.truncated;
-          if (!req.files[fieldname]) { req.files[fieldname] = []; }
-          req.files[fieldname].push(file);
-          // trigger "file end" event
-          if (options.onFileUploadComplete) { options.onFileUploadComplete(file); }
-        });
-
-        fileStream.on('error', function(error) {
-          // trigger "file error" event
-          if (options.onError) { options.onError(error, next); }
-          else next(error);
-        });
-
-        ws.on('error', function(error) {
-          // trigger "file error" event
-          if (options.onError) { options.onError(error, next); }
-          else next(error);
-        });
 
       });
 
