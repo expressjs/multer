@@ -1,6 +1,6 @@
 {
   "name": "multer",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Connect middleware for handling multipart/form-data",
   "main": "index.js",
   "repository": {
@@ -26,7 +26,7 @@
   ],
   "dependencies": {
     "mkdirp": "~0.3.5",
-    "busboy": "0.0.14"
+    "busboy": "^0.2.6"
   },
   "devDependencies": {
     "connect": "*",

@@ -133,9 +133,9 @@ module.exports = function(options) {
         if (options.onFieldsLimit) { options.onFieldsLimit(); }
       });
 
-      busboy.on('end', function() {
+      busboy.on('finish', function() {
         for (var field in req.files){
-          if (req.files[field].length===1){ 
+          if (req.files[field].length === 1){
             req.files[field] = req.files[field][0];
           }
         }
