@@ -47,7 +47,11 @@ module.exports = function(options) {
 
       // handle text field data
       busboy.on('field', function(fieldname, val, valTruncated, keyTruncated) {
-        if (req.body.hasOwnProperty(fieldname)) {
+
+        // don't attach to the body object, if there is no value
+        if (!val) return;
+
+        if (req.body.hasOwnProperty(fieldname) && val) {
           if (Array.isArray(req.body[fieldname])) {
             req.body[fieldname].push(val);
           } else {
@@ -56,6 +60,7 @@ module.exports = function(options) {
         } else {
           req.body[fieldname] = val;
         }
+
       });
 
       // handle files
@@ -63,58 +68,56 @@ module.exports = function(options) {
 
         var ext, newFilename, newFilePath;
 
-        if (filename) {
-          ext = '.' + filename.split('.').slice(-1)[0];
-          newFilename = rename(fieldname, filename.replace(ext, '')) + ext;
-          newFilePath = path.join(dest, newFilename);
+        // don't attach to the files object, if there is file
+        if (!filename) return fileStream.resume();
 
-          var file = {
-            fieldname: fieldname,
-            originalname: filename,
-            name: newFilename,
-            encoding: encoding,
-            mimetype: mimetype,
-            path: newFilePath,
-            extension: (ext === null) ? null : ext.replace('.', ''),
-            size: 0,
-            truncated: null
-          };
+        ext = '.' + filename.split('.').slice(-1)[0];
+        newFilename = rename(fieldname, filename.replace(ext, '')) + ext;
+        newFilePath = path.join(dest, newFilename);
 
-          // trigger "file upload start" event
-          if (options.onFileUploadStart) { options.onFileUploadStart(file); }
+        var file = {
+          fieldname: fieldname,
+          originalname: filename,
+          name: newFilename,
+          encoding: encoding,
+          mimetype: mimetype,
+          path: newFilePath,
+          extension: (ext === null) ? null : ext.replace('.', ''),
+          size: 0,
+          truncated: null
+        };
 
-          var ws = fs.createWriteStream(newFilePath);
-          fileStream.pipe(ws);
+        // trigger "file upload start" event
+        if (options.onFileUploadStart) { options.onFileUploadStart(file); }
 
-          fileStream.on('data', function(data) {
-            if (data) { file.size += data.length; }
-            // trigger "file data" event
-            if (options.onFileUploadData) { options.onFileUploadData(file, data); }
-          });
+        var ws = fs.createWriteStream(newFilePath);
+        fileStream.pipe(ws);
 
-          fileStream.on('end', function() {
-            file.truncated = fileStream.truncated;
-            if (!req.files[fieldname]) { req.files[fieldname] = []; }
-            req.files[fieldname].push(file);
-            // trigger "file end" event
-            if (options.onFileUploadComplete) { options.onFileUploadComplete(file); }
-          });
+        fileStream.on('data', function(data) {
+          if (data) { file.size += data.length; }
+          // trigger "file data" event
+          if (options.onFileUploadData) { options.onFileUploadData(file, data); }
+        });
 
-          fileStream.on('error', function(error) {
-            // trigger "file error" event
-            if (options.onError) { options.onError(error, next); }
-            else next(error);
-          });
+        fileStream.on('end', function() {
+          file.truncated = fileStream.truncated;
+          if (!req.files[fieldname]) { req.files[fieldname] = []; }
+          req.files[fieldname].push(file);
+          // trigger "file end" event
+          if (options.onFileUploadComplete) { options.onFileUploadComplete(file); }
+        });
 
-          ws.on('error', function(error) {
-            // trigger "file error" event
-            if (options.onError) { options.onError(error, next); }
-            else next(error);
-          });
-        }
-        else {
-          fileStream.resume();
-        }
+        fileStream.on('error', function(error) {
+          // trigger "file error" event
+          if (options.onError) { options.onError(error, next); }
+          else next(error);
+        });
+
+        ws.on('error', function(error) {
+          // trigger "file error" event
+          if (options.onError) { options.onError(error, next); }
+          else next(error);
+        });
 
       });
 
@@ -130,9 +133,9 @@ module.exports = function(options) {
         if (options.onFieldsLimit) { options.onFieldsLimit(); }
       });
 
-      busboy.on('end', function() {
+      busboy.on('finish', function() {
         for (var field in req.files){
-          if (req.files[field].length===1){ 
+          if (req.files[field].length === 1) {
             req.files[field] = req.files[field][0];
           }
         }
@@ -145,10 +148,8 @@ module.exports = function(options) {
 
     }
 
-    else {
-      return next();
-    }
+    else { return next(); }
 
-  };
+  }
 
-};
+}
