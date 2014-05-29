@@ -1,45 +1,25 @@
 {
-  "name": "multer",
+  "name": "dlin-multer",
   "version": "0.0.7",
-  "description": "Connect middleware for handling multipart/form-data",
+  "description": "A Fork of https://github.com/expressjs/multer",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/expressjs/multer.git",
-    "homepage": "https://github.com/expressjs/multer"
+    "url": "https://github.com/dlin-me/multer",
+    "homepage": "https://github.com/dlin-me/multer"
   },
   "bugs": {
-    "mail": "captain@hacksparrow.com",
-    "url": "https://github.com/expressjs/multer/issues"
+    "mail": "davidforest@gmail.com",
+    "url": "https://github.com/dlin-me/multer/issues"
   },
-  "scripts": {
-    "test": "make test"
-  },
-  "keywords": [
-    "form",
-    "post",
-    "multipart",
-    "form-data",
-    "connect",
-    "express",
-    "middleware"
-  ],
   "dependencies": {
     "mkdirp": "~0.3.5",
     "busboy": "0.0.14"
   },
-  "devDependencies": {
-    "connect": "*",
-    "mocha": "*",
-    "should": "*",
-    "supertest": "*",
-    "express": "*"
-  },
+
   "author": {
-    "name": "Hage Yaapa",
-    "email": "captain@hacksparrow.com",
-    "url": "http://www.hacksparrow.com",
-    "twitter": "https://twitter.com/hacksparrow"
+    "name": "David Lin",
+    "email": "davidforest@gmail.com"
   },
   "license": "MIT"
 }
