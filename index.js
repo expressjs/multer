@@ -47,7 +47,11 @@ module.exports = function(options) {
 
       // handle text field data
       busboy.on('field', function(fieldname, val, valTruncated, keyTruncated) {
-        if (req.body.hasOwnProperty(fieldname)) {
+
+        // don't attach to the body object, if there is no value
+        if (!val) return;
+
+        if (req.body.hasOwnProperty(fieldname) && val) {
           if (Array.isArray(req.body[fieldname])) {
             req.body[fieldname].push(val);
           } else {
@@ -56,6 +60,7 @@ module.exports = function(options) {
         } else {
           req.body[fieldname] = val;
         }
+
       });
 
       // handle files
@@ -63,17 +68,12 @@ module.exports = function(options) {
 
         var ext, newFilename, newFilePath;
 
-        if (filename) {
-          ext = '.' + filename.split('.').slice(-1)[0];
-          newFilename = rename(fieldname, filename.replace(ext, '')) + ext;
-          newFilePath = path.join(dest, newFilename);
-        }
-        else {
-          filename = null;
-          ext = null;
-          newFilename = null;
-          newFilePath = '/dev/null'; // do something for Windows!
-        }
+        // don't attach to the files object, if there is file
+        if (!filename) return fileStream.resume();
+
+        ext = '.' + filename.split('.').slice(-1)[0];
+        newFilename = rename(fieldname, filename.replace(ext, '')) + ext;
+        newFilePath = path.join(dest, newFilename);
 
         var file = {
           fieldname: fieldname,
@@ -134,8 +134,8 @@ module.exports = function(options) {
       });
 
       busboy.on('finish', function() {
-        for (var field in req.files){
-          if (req.files[field].length === 1){
+        for (var field in req.files) {
+          if (req.files[field].length === 1) {
             req.files[field] = req.files[field][0];
           }
         }
@@ -148,10 +148,8 @@ module.exports = function(options) {
 
     }
 
-    else {
-      return next();
-    }
+    else { return next(); }
 
-  };
+  }
 
-};
+}
