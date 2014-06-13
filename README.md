@@ -193,7 +193,7 @@ onFilesLimit: function () {
 Event handler triggered when the number of fields exceed the specification in the `limit` object. No more fields will be parsed after the limit is reached.
 
 ```js
-onFilesLimit: function () {
+onFieldsLimit: function () {
   console.log('Crossed fields limit!')
 }
 ```
@@ -203,7 +203,7 @@ onFilesLimit: function () {
 Event handler triggered when the number of parts exceed the specification in the `limit` object. No more files or fields will be parsed after the limit is reached.
 
 ```js
-onFilesLimit: function () {
+onPartsLimit: function () {
   console.log('Crossed parts limit!')
 }
 ```
