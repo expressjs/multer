@@ -87,12 +87,12 @@ The destination directory for the uploaded files.
 
 ### limits
 
-An object specifying the size limits of the following optional properties.
+An object specifying the size limits of the following optional properties. This object is passed to busboy directly, and the details of properties can be found on [busboy's page](https://github.com/mscdex/busboy#busboy-methods)
 
 * `fieldNameSize` - integer - Max field name size (Default: 100 bytes)
 * `fieldSize` - integer - Max field value size (Default: 1MB)
 * `fields` - integer - Max number of non-file fields (Default: Infinity)
-* `fileSize` - integer - For multipart forms, the max file size (Default: Infinity)
+* `fileSize` - integer - For multipart forms, the max file size (in bytes) (Default: Infinity)
 * `files` - integer - For multipart forms, the max number of file fields (Default: Infinity)
 * `parts` - integer - For multipart forms, the max number of parts (fields + files) (Default: Infinity)
 * `headerPairs` - integer - For multipart forms, the max number of header key=>value pairs to parse Default: 2000 (same as node's http).
