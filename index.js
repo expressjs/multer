@@ -140,7 +140,7 @@ module.exports = function(options) {
           }
         }
         // when done parsing the form, pass the control to the next middleware in stack
-        if (options.onParseEnd) { options.onParseEnd(); }
+        if (options.onParseEnd) { options.onParseEnd(req); }
         next();
       });
 
