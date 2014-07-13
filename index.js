@@ -31,6 +31,9 @@ module.exports = function(options) {
 
   return function(req, res, next) {
 
+    var readFinished = false;
+    var fileCount = 0;
+
     req.body = req.body || {};
     req.files = req.files || {};
 
@@ -72,6 +75,9 @@ module.exports = function(options) {
         // don't attach to the files object, if there is file
         if (!filename) return fileStream.resume();
 
+        // defines is processing a new file
+        fileCount++;
+
         ext = '.' + filename.split('.').slice(-1)[0];
         newFilename = rename(fieldname, filename.replace(ext, '')) + ext;
         newFilePath = path.join(dest, newFilename);
@@ -100,12 +106,16 @@ module.exports = function(options) {
           if (options.onFileUploadData) { options.onFileUploadData(file, data); }
         });
 
-        fileStream.on('end', function() {
+        ws.on('finish', function() {
           file.truncated = fileStream.truncated;
           if (!req.files[fieldname]) { req.files[fieldname] = []; }
           req.files[fieldname].push(file);
           // trigger "file end" event
           if (options.onFileUploadComplete) { options.onFileUploadComplete(file); }
+          
+          // defines has completed processing one more file
+          fileCount--;
+          onFinish();
         });
 
         fileStream.on('error', function(error) {
@@ -135,6 +145,17 @@ module.exports = function(options) {
       });
 
       busboy.on('finish', function() {
+        readFinished = true;
+        onFinish();
+      });
+
+      /**
+       * Pass the control to the next middleware in stack
+       * only if the read and write stream are finished
+       */
+      var onFinish = function () {
+        if (!readFinished || fileCount > 0) return;
+
         for (var field in req.files) {
           if (req.files[field].length === 1) {
             req.files[field] = req.files[field][0];
@@ -147,7 +168,7 @@ module.exports = function(options) {
         // when done parsing the form, pass the control to the next middleware in stack
         if (options.onParseEnd) { options.onParseEnd(); }
         next();
-      });
+      };
 
       req.pipe(busboy);
 
