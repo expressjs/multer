@@ -27,7 +27,8 @@
   "dependencies": {
     "busboy": "^0.2.6",
     "mkdirp": "~0.3.5",
-    "qs": "^0.6.6"
+    "qs": "^0.6.6",
+    "busboy": "^0.2.7"
   },
   "devDependencies": {
     "connect": "*",
