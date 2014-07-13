@@ -157,13 +157,16 @@ onParseStart: function () {
 }
 ```
 
-### onParseEnd()
+### onParseEnd(req)
 
-Event handler triggered when the form parsing completes.
+Event handler triggered when the form parsing completes. The request is available to the function.
 
 ```js
-onParseStart: function () {
+onParseEnd: function (req) {
   console.log('Form parsing completed at: ', new Date())
+
+  // usage example: custom body parse
+  req.body = require('qs').parse(req.body)
 }
 ```
 
