@@ -194,6 +194,17 @@ onError: function (error, next) {
 }
 ```
 
+### onFileSizeLimit()
+
+Event handler triggered when a file size exceeds the specification in the `limit` object. No more files will be parsed after the limit is reached.
+
+```js
+onFileSizeLimit: function (file) {
+  console.log('Failed: ', file.originalname)
+  fs.unlink('./' + file.path) // delete the partially written file
+}
+```
+
 ### onFilesLimit()
 
 Event handler triggered when the number of files exceed the specification in the `limit` object. No more files will be parsed after the limit is reached.

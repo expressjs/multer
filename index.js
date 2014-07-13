@@ -131,6 +131,10 @@ module.exports = function(options) {
           else next(error);
         });
 
+        fileStream.on('limit', function () {
+          if (options.onFileSizeLimit) { options.onFileSizeLimit(file); }
+        });
+
         ws.on('error', function(error) {
           // trigger "file error" event
           if (options.onError) { options.onError(error, next); }
