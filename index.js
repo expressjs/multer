@@ -95,7 +95,13 @@ module.exports = function(options) {
         };
 
         // trigger "file upload start" event
-        if (options.onFileUploadStart) { options.onFileUploadStart(file); }
+        if (options.onFileUploadStart) {
+          var cancelMaybe = options.onFileUploadStart(file);
+          if (typeof cancelMaybe == "object" && cancelMaybe && cancelMaybe.cancel) {
+            fileStream.resume();
+            return;
+          }
+        }
 
         var ws = fs.createWriteStream(newFilePath);
         fileStream.pipe(ws);
