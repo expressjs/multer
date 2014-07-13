@@ -78,7 +78,9 @@ module.exports = function(options) {
         // defines is processing a new file
         fileCount++;
 
-        ext = '.' + filename.split('.').slice(-1)[0];
+        if (filename.indexOf('.') > 0) { ext = '.' + filename.split('.').slice(-1)[0]; }
+        else { ext = ''; }
+
         newFilename = rename(fieldname, filename.replace(ext, '')) + ext;
         newFilePath = path.join(dest, newFilename);
 
