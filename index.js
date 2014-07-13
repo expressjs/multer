@@ -112,7 +112,7 @@ module.exports = function(options) {
           req.files[fieldname].push(file);
           // trigger "file end" event
           if (options.onFileUploadComplete) { options.onFileUploadComplete(file); }
-          
+
           // defines has completed processing one more file
           fileCount--;
           onFinish();
@@ -166,8 +166,8 @@ module.exports = function(options) {
         req.body = qs.parse(req.body);
 
         // when done parsing the form, pass the control to the next middleware in stack
-        if (options.onParseEnd) { options.onParseEnd(req); }
-        next();
+        if (options.onParseEnd) { options.onParseEnd(req, next); }
+        else { next(); }
       };
 
       req.pipe(busboy);

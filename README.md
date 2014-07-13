@@ -58,7 +58,7 @@ The following are the options that can be passed to Multer.
 * `onFileUploadData(file, data)`
 * `onFileUploadComplete(file)`
 * `onParseStart()`
-* `onParseEnd()`
+* `onParseEnd(req, next)`
 * `onError()`
 * `onFilesLimit()`
 * `onFieldsLimit()`
@@ -157,18 +157,23 @@ onParseStart: function () {
 }
 ```
 
-### onParseEnd(req)
+### onParseEnd(req, next)
 
-Event handler triggered when the form parsing completes. The request is available to the function.
+Event handler triggered when the form parsing completes. The `request` object and the `next` objects are are passed to the function.
 
 ```js
-onParseEnd: function (req) {
-  console.log('Form parsing completed at: ', new Date())
+onParseEnd: function (req, next) {
+  console.log('Form parsing completed at: ', new Date());
 
   // usage example: custom body parse
-  req.body = require('qs').parse(req.body)
+  req.body = require('qs').parse(req.body);
+
+  // call the next middleware
+  next();
 }
 ```
+
+**Note**: If you have created a `onParseEnd` event listener, you must manually call the `next()` function, else the request will be left hanging.
 
 ### onError()
 
