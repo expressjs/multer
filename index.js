@@ -4,6 +4,7 @@ var path = require('path');
 var crypto = require('crypto');
 var Busboy = require('busboy');
 var mkdirp = require('mkdirp');
+var qs = require('qs');
 
 module.exports = function(options) {
 
@@ -139,6 +140,10 @@ module.exports = function(options) {
             req.files[field] = req.files[field][0];
           }
         }
+
+        // Parse the body and create a best structure
+        req.body = qs.parse(req.body);
+
         // when done parsing the form, pass the control to the next middleware in stack
         if (options.onParseEnd) { options.onParseEnd(); }
         next();
