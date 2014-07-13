@@ -127,6 +127,14 @@ onFileUploadStart: function (file) {
 }
 ```
 
+You can even stop a file from being uploaded - just return `false` from the event handler. The file won't be processed or reach the file system.
+
+```js
+onFileUploadStart: function (file) {
+  if (file.originalname == 'virus.exe') return false;
+}
+```
+
 ### onFileUploadData(file, data)
 
 Event handler triggered when a chunk of buffer is received. A buffer object along with a file object is available to the function.

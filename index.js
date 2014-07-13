@@ -72,7 +72,7 @@ module.exports = function(options) {
 
         var ext, newFilename, newFilePath;
 
-        // don't attach to the files object, if there is file
+        // don't attach to the files object, if there is no file
         if (!filename) return fileStream.resume();
 
         // defines is processing a new file
@@ -95,7 +95,14 @@ module.exports = function(options) {
         };
 
         // trigger "file upload start" event
-        if (options.onFileUploadStart) { options.onFileUploadStart(file); }
+        if (options.onFileUploadStart) {
+          var proceed = options.onFileUploadStart(file);
+          // if the onFileUploadStart handler returned null, it means we should proceed further, discard the file!
+          if (proceed == false) {
+            fileCount--;
+            return fileStream.resume();
+          }
+        }
 
         var ws = fs.createWriteStream(newFilePath);
         fileStream.pipe(ws);
