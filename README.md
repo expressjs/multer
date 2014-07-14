@@ -60,6 +60,7 @@ The following are the options that can be passed to Multer.
 * `onParseStart()`
 * `onParseEnd(req, next)`
 * `onError()`
+* `onFileSizeLimit(file)`
 * `onFilesLimit()`
 * `onFieldsLimit()`
 * `onPartsLimit()`
