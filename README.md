@@ -53,6 +53,7 @@ The following are the options that can be passed to Multer.
 
 * `dest`
 * `limits`
+* `includeEmptyFields`
 * `rename(fieldname, filename)`
 * `onFileUploadStart(file)`
 * `onFileUploadData(file, data)`
@@ -64,7 +65,6 @@ The following are the options that can be passed to Multer.
 * `onFilesLimit()`
 * `onFieldsLimit()`
 * `onPartsLimit()`
-* `includeEmptyFields`
 
 Apart from these, Multer also supports more advanced [busboy options](https://github.com/mscdex/busboy#busboy-methods) like `highWaterMark`, `fileHwm`, and `defCharset`.
 
@@ -108,6 +108,14 @@ limits: {
 ```
 
 Specifying the limits can help protect your site against denial of service (DoS) attacks.
+
+### includeEmptyFields
+
+A Boolean value to specify whether empty submitted values should be processed and applied to `req.body`; defaults to `false`;
+
+```js
+includeEmptyFields: true
+```
 
 ### rename(fieldname, filename)
 
@@ -235,16 +243,6 @@ Event handler triggered when the number of parts exceed the specification in the
 onPartsLimit: function () {
   console.log('Crossed parts limit!')
 }
-```
-
-### includeEmptyFields
-
-A Boolean value to specify whether empty submitted values should be processed and applied to req.body.
-
-Defaults to false;
-
-```js
-includeEmptyFields: true
 ```
 
 ## License (MIT)
