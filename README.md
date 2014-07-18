@@ -239,7 +239,7 @@ onPartsLimit: function () {
 
 ### includeEmptyFields
 
-A Boolean value to specify whether empty submitted values should be applied to req.body.
+A Boolean value to specify whether empty submitted values should be processed and applied to req.body.
 
 Defaults to false;
 
