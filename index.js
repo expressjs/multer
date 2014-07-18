@@ -9,6 +9,7 @@ var qs = require('qs');
 module.exports = function(options) {
 
   options = options || {};
+  options.includeEmptyFields = options.includeEmptyFields || false;
 
   // specify the destination directory, else, the uploads will be moved to the temporary dir of the system
   var dest;
@@ -52,8 +53,9 @@ module.exports = function(options) {
       // handle text field data
       busboy.on('field', function(fieldname, val, valTruncated, keyTruncated) {
 
-        // don't attach to the body object, if there is no value
-        if (!val) return;
+        // if includeEmptyFields is false and there is no value then don't
+        // attach the fields to req.body
+        if (!options.includeEmptyFields && !val) return;
 
         if (req.body.hasOwnProperty(fieldname) && val) {
           if (Array.isArray(req.body[fieldname])) {
