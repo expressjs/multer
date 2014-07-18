@@ -25,17 +25,16 @@
     "middleware"
   ],
   "dependencies": {
-    "busboy": "^0.2.6",
+    "busboy": "^0.2.7",
     "mkdirp": "~0.3.5",
-    "qs": "^0.6.6",
-    "busboy": "^0.2.7"
+    "qs": "^0.6.6"
   },
   "devDependencies": {
-    "connect": "*",
+    "chai": "^1.9.1",
+    "co": "^3.0.6",
+    "express": "*",
     "mocha": "*",
-    "should": "*",
-    "supertest": "*",
-    "express": "*"
+    "supertest": "^0.13.0"
   },
   "author": {
     "name": "Hage Yaapa",
