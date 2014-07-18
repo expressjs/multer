@@ -6,13 +6,16 @@ var multer = require('../');
 
 var app = express();
 app.use(multer());
-app.post('/', function (req, res) {
+app.post('/', handler);
+app.put('/', handler);
+
+ function handler(req, res) {
     var form = {
         body: req.body,
         files: req.files
     }
     res.send(form);
-});
+}
 
 var app2 = express();
 app2.use(multer({includeEmptyFields: true}));
@@ -30,6 +33,35 @@ describe('Basic Functionality', function () {
 
         request(app)
             .post('/')
+            .type('form')
+            .attach('small0', __dirname + '/files/small0.dat')
+            .field('name', 'Multer')
+            .expect(200)
+            .end(function (err, res) {
+                var form = res.body;
+                expect(err).to.be.null;
+                expect(form.body).to.be.an('object');
+                expect(form.body).to.have.property('name');
+                expect(form.body.name).to.equal('Multer');
+                expect(form.files).to.be.an('object');
+                expect(form.files).to.have.property('small0');
+                expect(form.files.small0).to.have.property('fieldname');
+                expect(form.files.small0.fieldname).to.equal('small0');
+                expect(form.files.small0).to.have.property('originalname');
+                expect(form.files.small0.originalname).to.equal('small0.dat');
+                expect(form.files.small0).to.have.property('size');
+                expect(form.files.small0.size).to.equal(1778);
+                expect(form.files.small0).to.have.property('truncated');
+                expect(form.files.small0.truncated).to.equal(false);
+                done();
+            })
+
+    })
+
+    it('should process multipart/form-data PUT request', function (done) {
+
+        request(app)
+            .put('/')
             .type('form')
             .attach('small0', __dirname + '/files/small0.dat')
             .field('name', 'Multer')
