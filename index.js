@@ -92,6 +92,7 @@ module.exports = function(options) {
           name: newFilename,
           encoding: encoding,
           mimetype: mimetype,
+          'content-length': req.headers['content-length'],
           path: newFilePath,
           extension: (ext === null) ? null : ext.replace('.', ''),
           size: 0,
