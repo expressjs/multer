@@ -9,7 +9,7 @@ app.use(multer());
 app.post('/', handler);
 app.put('/', handler);
 
- function handler(req, res) {
+function handler(req, res) {
     var form = {
         body: req.body,
         files: req.files
@@ -27,7 +27,7 @@ app2.post('/', function (req, res) {
     res.send(form);
 });
 
-describe('Basic Functionality', function () {
+describe('Form', function () {
 
     it('should process multipart/form-data POST request', function (done) {
 
@@ -90,15 +90,12 @@ describe('Basic Functionality', function () {
     it('should not process non-multipart POST request', function (done) {
         request(app)
             .post('/')
-            .attach('small0', __dirname + '/files/small0.dat')
-            .field('name', 'Multer')
+            .send({name: 'Multer'})
             .expect(200)
             .end(function (err, res) {
                 var form = res.body;
                 expect(err).to.be.null;
-                expect(form.body).to.be.an('object');
                 expect(Object.keys(form.body).length).to.equal(0);
-                expect(form.files).to.be.an('object');
                 expect(Object.keys(form.files).length).to.equal(0);
                 done();
             })
