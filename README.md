@@ -117,27 +117,29 @@ A Boolean value to specify whether empty submitted values should be processed an
 includeEmptyFields: true
 ```
 
-### rename(fieldname, filename)
+### rename(fieldname, filename, req)
 
-Function to rename the uploaded files. Whatever the function returns will become the new name of the uploaded file (extension is not included). The `fieldname` and `filename` of the file will be available in this function, use them if you need to.
+Function to rename the uploaded files. Whatever the function returns will become the new name of the uploaded file (extension is not included). The `fieldname`, `filename` and '' of the file will be available in this function, use them if you need to. Also, the request (req) object is passed to assist with the naming function as required.
 
 ```js
-rename: function (fieldname, filename) {
+rename: function (fieldname, filename, req) {
   return fieldname + filename + Date.now()
 }
 ```
 
-### onFileUploadStart(file)
+### onFileUploadStart(file, req)
 
 Event handler triggered when a file starts to be uploaded. A file object with the following properties are available to this function: `fieldname`, `originalname`, `name`, `encoding`, `mimetype`, `path`, `extension`.
 
 ```js
-onFileUploadStart: function (file) {
+onFileUploadStart: function (file, req) {
   console.log(file.fieldname + ' is starting ...')
 }
 ```
 
 You can even stop a file from being uploaded - just return `false` from the event handler. The file won't be processed or reach the file system.
+
+The request (req) object is passed to function to assist with function. A potential use case might be to check other request.body fields to ensure requirements of the form are met before uploading file.
 
 ```js
 onFileUploadStart: function (file) {
@@ -155,9 +157,11 @@ onFileUploadData: function (file, data) {
 }
 ```
 
-### onFileUploadComplete(file)
+### onFileUploadComplete(file, req)
 
 Event handler trigger when a file is completely uploaded. A file object is available to the function.
+
+The request (req) object is passed so that the file can be processed according to the fields in the form.
 
 ```js
 onFileUploadComplete: function (file) {

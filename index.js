@@ -23,12 +23,7 @@ module.exports = function(options) {
   // make sure the dest dir exists
   mkdirp(dest, function(err) { if (err) throw err; });
 
-  // renaming function for the uploaded file - need not worry about the extension
-  // ! if you want to keep the original filename, write a renamer function which does that
-  var rename = options.rename || function(fieldname, filename) {
-    var random_string = fieldname + filename + Date.now() + Math.random();
-    return crypto.createHash('md5').update(random_string).digest('hex');
-  };
+  
 
   return function(req, res, next) {
 
@@ -37,6 +32,13 @@ module.exports = function(options) {
 
     req.body = req.body || {};
     req.files = req.files || {};
+
+    // renaming function for the uploaded file - need not worry about the extension
+    // ! if you want to keep the original filename, write a renamer function which does that
+    var rename = options.rename || function(fieldname, filename, req) {
+      var random_string = fieldname + filename + Date.now() + Math.random();
+      return crypto.createHash('md5').update(random_string).digest('hex');
+    };
 
     if (req.headers['content-type'] &&
         req.headers['content-type'].indexOf('multipart/form-data') === 0 &&
@@ -83,7 +85,7 @@ module.exports = function(options) {
         if (filename.indexOf('.') > 0) { ext = '.' + filename.split('.').slice(-1)[0]; }
         else { ext = ''; }
 
-        newFilename = rename(fieldname, filename.replace(ext, '')) + ext;
+        newFilename = rename(fieldname, filename.replace(ext, ''), req) + ext;
         newFilePath = path.join(dest, newFilename);
 
         var file = {
@@ -100,7 +102,7 @@ module.exports = function(options) {
 
         // trigger "file upload start" event
         if (options.onFileUploadStart) {
-          var proceed = options.onFileUploadStart(file);
+          var proceed = options.onFileUploadStart(file, req);
           // if the onFileUploadStart handler returned null, it means we should proceed further, discard the file!
           if (proceed == false) {
             fileCount--;
@@ -122,7 +124,7 @@ module.exports = function(options) {
           if (!req.files[fieldname]) { req.files[fieldname] = []; }
           req.files[fieldname].push(file);
           // trigger "file end" event
-          if (options.onFileUploadComplete) { options.onFileUploadComplete(file); }
+          if (options.onFileUploadComplete) { options.onFileUploadComplete(file, req); }
 
           // defines has completed processing one more file
           fileCount--;
