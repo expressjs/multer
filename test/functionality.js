@@ -1,6 +1,6 @@
 var fs = require('fs');
 var rimraf = require('rimraf');
-var expect = require('chai').expect
+var expect = require('chai').expect;
 var request = require('supertest');
 var express = require('express');
 var multer = require('../');
