@@ -53,6 +53,7 @@ describe('Form', function () {
                 expect(form.files.small0.size).to.equal(1778);
                 expect(form.files.small0).to.have.property('truncated');
                 expect(form.files.small0.truncated).to.equal(false);
+                expect(form.files.small0.buffer).to.be.null;
                 done();
             })
 
@@ -82,6 +83,7 @@ describe('Form', function () {
                 expect(form.files.small0.size).to.equal(1778);
                 expect(form.files.small0).to.have.property('truncated');
                 expect(form.files.small0.truncated).to.equal(false);
+                expect(form.files.small0.buffer).to.be.null;
                 done();
             })
 
@@ -207,6 +209,7 @@ describe('Files', function () {
                 expect(form.files.empty.size).to.equal(0);
                 expect(form.files.empty).to.have.property('truncated');
                 expect(form.files.empty.truncated).to.equal(false);
+                expect(form.files.empty.buffer).to.be.null;
 
                 expect(form.files).to.have.property('tiny0');
                 expect(form.files.tiny0).to.have.property('fieldname');
@@ -217,6 +220,7 @@ describe('Files', function () {
                 expect(form.files.tiny0.size).to.equal(122);
                 expect(form.files.tiny0).to.have.property('truncated');
                 expect(form.files.tiny0.truncated).to.equal(false);
+                expect(form.files.tiny0.buffer).to.be.null;
 
                 expect(form.files).to.have.property('tiny1');
                 expect(form.files.tiny1).to.have.property('fieldname');
@@ -227,6 +231,7 @@ describe('Files', function () {
                 expect(form.files.tiny1.size).to.equal(7);
                 expect(form.files.tiny1).to.have.property('truncated');
                 expect(form.files.tiny1.truncated).to.equal(false);
+                expect(form.files.tiny1.buffer).to.be.null;
 
                 expect(form.files).to.have.property('small0');
                 expect(form.files.small0).to.have.property('fieldname');
@@ -237,6 +242,7 @@ describe('Files', function () {
                 expect(form.files.small0.size).to.equal(1778);
                 expect(form.files.small0).to.have.property('truncated');
                 expect(form.files.small0.truncated).to.equal(false);
+                expect(form.files.small0.buffer).to.be.null;
 
                 expect(form.files).to.have.property('small1');
                 expect(form.files.small1).to.have.property('fieldname');
@@ -247,6 +253,7 @@ describe('Files', function () {
                 expect(form.files.small1.size).to.equal(315);
                 expect(form.files.small1).to.have.property('truncated');
                 expect(form.files.small1.truncated).to.equal(false);
+                expect(form.files.small1.buffer).to.be.null;
 
                 expect(form.files).to.have.property('medium');
                 expect(form.files.medium).to.have.property('fieldname');
@@ -257,6 +264,7 @@ describe('Files', function () {
                 expect(form.files.medium.size).to.equal(13196);
                 expect(form.files.medium).to.have.property('truncated');
                 expect(form.files.medium.truncated).to.equal(false);
+                expect(form.files.medium.buffer).to.be.null;
 
                 expect(form.files).to.have.property('large');
                 expect(form.files.large).to.have.property('fieldname');
@@ -267,6 +275,7 @@ describe('Files', function () {
                 expect(form.files.large.size).to.equal(2413677);
                 expect(form.files.large).to.have.property('truncated');
                 expect(form.files.large.truncated).to.equal(false);
+                expect(form.files.large.buffer).to.be.null;
 
                 done();
             })
