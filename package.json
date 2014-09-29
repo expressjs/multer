@@ -17,9 +17,9 @@
     "middleware"
   ],
   "dependencies": {
-    "busboy": "^0.2.7",
+    "busboy": "~0.2.9",
     "mkdirp": "~0.3.5",
-    "qs": "^1.2.1"
+    "qs": "~1.2.2"
   },
   "devDependencies": {
     "chai": "^1.9.1",
