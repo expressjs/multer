@@ -46,7 +46,7 @@ A multer file object is a JSON object with the following properties.
 
 ## Options
 
-Multer accepts an options object, the most basic of which is the `dest` property, which tells Multer where to upload the files. In case you omit the options object, the file will be renamed and uploaded to the temporary directory of the system. If the `inMemory` option is true, the dest property is ignored, no data is written to disk, and data is kept in a buffer accessible in the file object.
+Multer accepts an options object, the most basic of which is the `dest` property, which tells Multer where to upload the files. In case you omit the options object, the file will be renamed and uploaded to the temporary directory of the system. If the `inMemory` option is true, no data is written to disk but data is kept in a buffer accessible in the file object.
 
 By the default, Multer will rename the files so as to avoid name conflicts. The renaming function can be customized according to your needs.
 
@@ -121,7 +121,7 @@ includeEmptyFields: true
 
 ### inMemory
 
-If this Boolean value is true, the file.buffer property holds the data in-memory that Multer would have written to disk. The dest option is ignored. The file.path property is set to null. Defaults to `false`.
+If this Boolean value is true, the file.buffer property holds the data in-memory that Multer would have written to disk. The dest option is still populated and the path property contains the proposed path to save the file. Defaults to `false`.
 
 ```js
 inMemory: true
