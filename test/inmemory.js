@@ -19,6 +19,7 @@ describe('InMemory', function () {
 
     var app = express();
     app.use(multer({
+        dest: dest,
         inMemory: true,
         rename: function (fieldname, filename) {
             return fieldname + filename;
@@ -60,16 +61,16 @@ describe('InMemory', function () {
 
                 // The path is explicitly set to null b/c inmemory is true
                 // The handler is responsible for writing the inmemory Buffer to file or database
-                expect(form.files.small0.path).to.be.null;
+                expect(form.files.small0.path).to.equal(path.join(dest, form.files.small0.name));
 
                 // Verify that Multer did not automatically write out the file.
-                expect(fs.existsSync(path.join(dest, form.files.small0.originalname))).to.equal(false);
+                expect(fs.existsSync(form.files.small0.path)).to.equal(false);
 
                 // The buffer holds the data, so write it out now.
-                fs.writeFileSync(path.join(dest, form.files.small0.originalname), form.files.small0.buffer);
+                fs.writeFileSync(form.files.small0.path, form.files.small0.buffer);
 
                 // Now the file should exist
-                expect(fs.existsSync(path.join(dest, form.files.small0.originalname))).to.equal(true);
+                expect(fs.existsSync(form.files.small0.path)).to.equal(true);
 
                 done();
             })

@@ -12,21 +12,16 @@ module.exports = function(options) {
   options.includeEmptyFields = options.includeEmptyFields || false;
   options.inMemory = options.inMemory || false;
 
-  // specify the destination directory, else, the uploads will be moved to the temporary dir of the system
+  // if the destination directory does not exist then assign uploads to the operating system's temporary directory
   var dest;
 
-  if (!options.inMemory) {
-    if (options.dest) {
-      dest = options.dest;
-    } else {
-      dest = os.tmpdir();
-    }
+  if (options.dest) {
+    dest = options.dest;
+  } else {
+    dest = os.tmpdir();
   }
 
-  // make sure the dest dir exists
-  if (!options.inMemory) {
-    mkdirp(dest, function(err) { if (err) throw err; });
-  }
+  mkdirp(dest, function(err) { if (err) throw err; });
 
   // renaming function for the uploaded file - need not worry about the extension
   // ! if you want to keep the original filename, write a renamer function which does that
@@ -89,7 +84,7 @@ module.exports = function(options) {
         else { ext = ''; }
 
         newFilename = rename(fieldname, filename.replace(ext, '')) + ext;
-        newFilePath = (options.inMemory ? null : path.join(dest, newFilename));
+        newFilePath = path.join(dest, newFilename);
 
         var file = {
           fieldname: fieldname,
