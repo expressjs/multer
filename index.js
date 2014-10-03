@@ -57,7 +57,7 @@ module.exports = function(options) {
         // attach the fields to req.body
         if (!options.includeEmptyFields && !val) return;
 
-        if (req.body.hasOwnProperty(fieldname) && val) {
+        if (req.body.hasOwnProperty(fieldname)) {
           if (Array.isArray(req.body[fieldname])) {
             req.body[fieldname].push(val);
           } else {
