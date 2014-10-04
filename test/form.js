@@ -1,4 +1,3 @@
-
 var expect = require('chai').expect
 var request = require('supertest');
 var express = require('express');
@@ -36,6 +35,12 @@ describe('Form', function () {
             .type('form')
             .attach('small0', __dirname + '/files/small0.dat')
             .field('name', 'Multer')
+            .field('checkboxfull', 'cb1')
+            .field('checkboxfull', 'cb2')
+            .field('checkboxhalfempty', 'cb1')
+            .field('checkboxhalfempty', '')
+            .field('checkboxempty', '')
+            .field('checkboxempty', '')
             .expect(200)
             .end(function (err, res) {
                 var form = res.body;
@@ -43,6 +48,10 @@ describe('Form', function () {
                 expect(form.body).to.be.an('object');
                 expect(form.body).to.have.property('name');
                 expect(form.body.name).to.equal('Multer');
+                expect(form.body.checkboxfull).to.be.an('array');
+                expect(form.body.checkboxfull).to.deep.equal(['cb1', 'cb2']);
+                expect(form.body.checkboxhalfempty).to.equal('cb1');
+                expect(form.body).to.not.have.property('checkboxempty');
                 expect(form.files).to.be.an('object');
                 expect(form.files).to.have.property('small0');
                 expect(form.files.small0).to.have.property('fieldname');
@@ -164,6 +173,12 @@ describe('Fields', function () {
             .field('name', 'Multer')
             .field('version', '')
             .field('year', '')
+            .field('checkboxfull', 'cb1')
+            .field('checkboxfull', 'cb2')
+            .field('checkboxhalfempty', 'cb1')
+            .field('checkboxhalfempty', '')
+            .field('checkboxempty', '')
+            .field('checkboxempty', '')
             .expect(200)
             .end(function (err, res) {
                 var form = res.body;
@@ -172,6 +187,12 @@ describe('Fields', function () {
                 expect(form.body).to.have.property('name');
                 expect(form.body).to.have.property('version');
                 expect(form.body).to.have.property('year');
+                expect(form.body.checkboxfull).to.be.an('array');
+                expect(form.body.checkboxfull).to.deep.equal(['cb1', 'cb2']);
+                expect(form.body.checkboxhalfempty).to.be.an('array');
+                expect(form.body.checkboxhalfempty).to.deep.equal(['cb1', '']);
+                expect(form.body.checkboxempty).to.be.an('array');
+                expect(form.body.checkboxempty).to.deep.equal(['', '']);
                 done();
             })
     })
