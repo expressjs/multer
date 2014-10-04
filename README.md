@@ -42,10 +42,11 @@ A multer file object is a JSON object with the following properties.
 7. `extension` - Extension of the file
 8. `size` - Size of the file in bytes
 9. `truncated` - If the file was truncated due to size limitation
+10. `buffer` - Raw data (is null unless the inMemory option is true)
 
 ## Options
 
-Multer accepts an options object, the most basic of which is the `dest` property, which tells Multer where to upload the files. In case you omit the options object, the file will be renamed and uploaded to the temporary directory of the system.
+Multer accepts an options object, the most basic of which is the `dest` property, which tells Multer where to upload the files. In case you omit the options object, the file will be renamed and uploaded to the temporary directory of the system. If the `inMemory` option is true, no data is written to disk but data is kept in a buffer accessible in the file object.
 
 By the default, Multer will rename the files so as to avoid name conflicts. The renaming function can be customized according to your needs.
 
@@ -54,6 +55,7 @@ The following are the options that can be passed to Multer.
 * `dest`
 * `limits`
 * `includeEmptyFields`
+* `inMemory`
 * `rename(fieldname, filename)`
 * `onFileUploadStart(file)`
 * `onFileUploadData(file, data)`
@@ -117,7 +119,19 @@ A Boolean value to specify whether empty submitted values should be processed an
 includeEmptyFields: true
 ```
 
+<<<<<<< HEAD
 ### rename(fieldname, filename, req)
+=======
+### inMemory
+
+If this Boolean value is true, the file.buffer property holds the data in-memory that Multer would have written to disk. The dest option is still populated and the path property contains the proposed path to save the file. Defaults to `false`.
+
+```js
+inMemory: true
+```
+
+### rename(fieldname, filename)
+>>>>>>> upstream/master
 
 Function to rename the uploaded files. Whatever the function returns will become the new name of the uploaded file (extension is not included). The `fieldname`, `filename` and '' of the file will be available in this function, use them if you need to. Also, the request (req) object is passed to assist with the naming function as required.
 
@@ -249,22 +263,4 @@ onPartsLimit: function () {
 }
 ```
 
-## License (MIT)
-
-Copyright (c) 2014 Hage Yaapa <[http://www.hacksparrow.com](http://www.hacksparrow.com)>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+## [MIT Licensed](LICENSE)

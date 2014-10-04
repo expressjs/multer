@@ -10,8 +10,9 @@ module.exports = function(options) {
 
   options = options || {};
   options.includeEmptyFields = options.includeEmptyFields || false;
+  options.inMemory = options.inMemory || false;
 
-  // specify the destination directory, else, the uploads will be moved to the temporary dir of the system
+  // if the destination directory does not exist then assign uploads to the operating system's temporary directory
   var dest;
 
   if (options.dest) {
@@ -20,7 +21,6 @@ module.exports = function(options) {
     dest = os.tmpdir();
   }
 
-  // make sure the dest dir exists
   mkdirp(dest, function(err) { if (err) throw err; });
 
   
@@ -59,7 +59,7 @@ module.exports = function(options) {
         // attach the fields to req.body
         if (!options.includeEmptyFields && !val) return;
 
-        if (req.body.hasOwnProperty(fieldname) && val) {
+        if (req.body.hasOwnProperty(fieldname)) {
           if (Array.isArray(req.body[fieldname])) {
             req.body[fieldname].push(val);
           } else {
@@ -97,7 +97,8 @@ module.exports = function(options) {
           path: newFilePath,
           extension: (ext === null) ? null : ext.replace('.', ''),
           size: 0,
-          truncated: null
+          truncated: null,
+          buffer: null
         };
 
         // trigger "file upload start" event
@@ -110,18 +111,25 @@ module.exports = function(options) {
           }
         }
 
-        var ws = fs.createWriteStream(newFilePath);
-        fileStream.pipe(ws);
+        var bufs = [];
+        var ws;
+
+        if (!options.inMemory) {
+          ws = fs.createWriteStream(newFilePath);
+          fileStream.pipe(ws);
+        }
 
         fileStream.on('data', function(data) {
           if (data) { file.size += data.length; }
+          if (options.inMemory) bufs.push(data);
           // trigger "file data" event
           if (options.onFileUploadData) { options.onFileUploadData(file, data); }
         });
 
-        ws.on('finish', function() {
+        function onFileStreamEnd() {
           file.truncated = fileStream.truncated;
           if (!req.files[fieldname]) { req.files[fieldname] = []; }
+          if (options.inMemory) file.buffer = Buffer.concat(bufs);
           req.files[fieldname].push(file);
           // trigger "file end" event
           if (options.onFileUploadComplete) { options.onFileUploadComplete(file, req); }
@@ -129,7 +137,12 @@ module.exports = function(options) {
           // defines has completed processing one more file
           fileCount--;
           onFinish();
-        });
+        }
+
+        if (options.inMemory)
+          fileStream.on('end', onFileStreamEnd);
+        else
+          ws.on('finish', onFileStreamEnd);
 
         fileStream.on('error', function(error) {
           // trigger "file error" event
@@ -141,11 +154,16 @@ module.exports = function(options) {
           if (options.onFileSizeLimit) { options.onFileSizeLimit(file); }
         });
 
-        ws.on('error', function(error) {
+        function onFileStreamError(error) {
           // trigger "file error" event
           if (options.onError) { options.onError(error, next); }
           else next(error);
-        });
+        }
+
+        if (options.inMemory)
+          fileStream.on('error', onFileStreamError );
+        else 
+          ws.on('error', onFileStreamError );
 
       });
 
