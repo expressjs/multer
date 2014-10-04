@@ -56,7 +56,7 @@ The following are the options that can be passed to Multer.
 * `limits`
 * `includeEmptyFields`
 * `inMemory`
-* `rename(fieldname, filename)`
+* `rename(fieldname, filename, reqParams)`
 * `onFileUploadStart(file)`
 * `onFileUploadData(file, data)`
 * `onFileUploadComplete(file)`
@@ -75,8 +75,8 @@ In an average web app, only `dest` and `rename` might be required, and configure
 ```js
 app.use(multer({
   dest: './uploads/',
-  rename: function (fieldname, filename) {
-    return filename.replace(/\W+/g, '-').toLowerCase() + Date.now()
+  rename: function (fieldname, filename, reqParams) {
+    return reqParams.somefield + '-' + filename.replace(/\W+/g, '-').toLowerCase() + Date.now()
   }
 }))
 ```
@@ -119,9 +119,6 @@ A Boolean value to specify whether empty submitted values should be processed an
 includeEmptyFields: true
 ```
 
-<<<<<<< HEAD
-### rename(fieldname, filename, req)
-=======
 ### inMemory
 
 If this Boolean value is true, the file.buffer property holds the data in-memory that Multer would have written to disk. The dest option is still populated and the path property contains the proposed path to save the file. Defaults to `false`.
@@ -130,30 +127,27 @@ If this Boolean value is true, the file.buffer property holds the data in-memory
 inMemory: true
 ```
 
-### rename(fieldname, filename)
->>>>>>> upstream/master
+### rename(fieldname, filename, reqParams)
 
-Function to rename the uploaded files. Whatever the function returns will become the new name of the uploaded file (extension is not included). The `fieldname`, `filename` and '' of the file will be available in this function, use them if you need to. Also, the request (req) object is passed to assist with the naming function as required.
+Function to rename the uploaded files. Whatever the function returns will become the new name of the uploaded file (extension is not included). The `fieldname` and `filename` of the file will be available in this function, use them if you need to. The parameters of the request will also be available to the function.
 
 ```js
-rename: function (fieldname, filename, req) {
-  return fieldname + filename + Date.now()
+rename: function (fieldname, filename) {
+  return reqParams.somefield + '-' +  fieldname + filename + Date.now()
 }
 ```
 
-### onFileUploadStart(file, req)
+### onFileUploadStart(file)
 
 Event handler triggered when a file starts to be uploaded. A file object with the following properties are available to this function: `fieldname`, `originalname`, `name`, `encoding`, `mimetype`, `path`, `extension`.
 
 ```js
-onFileUploadStart: function (file, req) {
+onFileUploadStart: function (file) {
   console.log(file.fieldname + ' is starting ...')
 }
 ```
 
 You can even stop a file from being uploaded - just return `false` from the event handler. The file won't be processed or reach the file system.
-
-The request (req) object is passed to function to assist with function. A potential use case might be to check other request.body fields to ensure requirements of the form are met before uploading file.
 
 ```js
 onFileUploadStart: function (file) {
@@ -171,11 +165,9 @@ onFileUploadData: function (file, data) {
 }
 ```
 
-### onFileUploadComplete(file, req)
+### onFileUploadComplete(file)
 
 Event handler trigger when a file is completely uploaded. A file object is available to the function.
-
-The request (req) object is passed so that the file can be processed according to the fields in the form.
 
 ```js
 onFileUploadComplete: function (file) {
