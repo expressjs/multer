@@ -27,7 +27,7 @@ console.log(req.body)
 console.log(req.files)
 ```
 
-**IMPORTANT**: Multer will not process any form which is not `multipart/form-data` submitted via the `POST` or `PUT` methods.
+**IMPORTANT**: Multer will not process any form which is not `multipart/form-data` submitted via the `POST`, `PUT`, or `PATCH` methods.
 
 ## Multer file object
 
