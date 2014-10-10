@@ -40,7 +40,7 @@ module.exports = function(options) {
 
     if (req.headers['content-type'] &&
         req.headers['content-type'].indexOf('multipart/form-data') === 0 &&
-        (req.method === 'POST' || req.method === 'PUT')
+        (req.method === 'POST' || req.method === 'PUT' || req.method === 'PATCH')
     ) {
 
       if (options.onParseStart) { options.onParseStart(); }
