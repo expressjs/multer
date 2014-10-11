@@ -4,6 +4,7 @@ var path = require('path');
 var crypto = require('crypto');
 var Busboy = require('busboy');
 var mkdirp = require('mkdirp');
+var is = require('type-is');
 var qs = require('qs');
 
 module.exports = function(options) {
@@ -38,11 +39,7 @@ module.exports = function(options) {
     req.body = req.body || {};
     req.files = req.files || {};
 
-    if (req.headers['content-type'] &&
-        req.headers['content-type'].indexOf('multipart/form-data') === 0 &&
-        (req.method === 'POST' || req.method === 'PUT' || req.method === 'PATCH')
-    ) {
-
+    if (is(req, ['multipart'])) {
       if (options.onParseStart) { options.onParseStart(); }
 
       // add the request headers to the options
