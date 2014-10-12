@@ -11,6 +11,10 @@ var dest = './temp';
 
 describe('InMemory', function () {
 
+    // the mocha default 2000 ms fails in Travis builds
+    // related to multer issue #65
+    this.timeout(10000);
+
     // create the temp dir
     before(function (done) { mkdirp(dest, function(err) { done(); }); });
 
