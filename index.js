@@ -83,7 +83,7 @@ module.exports = function(options) {
         if (filename.indexOf('.') > 0) { ext = '.' + filename.split('.').slice(-1)[0]; }
         else { ext = ''; }
 
-        newFilename = rename(fieldname, filename.replace(ext, '')) + ext;
+        newFilename = rename(fieldname, filename.replace(ext, ''), ext) + ext;
         newFilePath = path.join(dest, newFilename);
 
         var file = {
