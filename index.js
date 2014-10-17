@@ -25,7 +25,7 @@ module.exports = function(options) {
 
   // renaming function for the uploaded file - need not worry about the extension
   // ! if you want to keep the original filename, write a renamer function which does that
-  var rename = options.rename || function(fieldname, filename) {
+  var rename = options.rename || function(fieldname, filename, ext) {
     var random_string = fieldname + filename + Date.now() + Math.random();
     return crypto.createHash('md5').update(random_string).digest('hex');
   };
