@@ -7,6 +7,9 @@ var app = express();
 app.use(multer());
 app.post('/', handler);
 app.put('/', handler);
+app.patch('/', handler);
+app.delete('/', handler);
+app.get('/', handler);
 
 function handler(req, res) {
     var form = {
@@ -92,9 +95,115 @@ describe('Form', function () {
 
     })
 
+
+    it('should process multipart/form-data PATCH request', function (done) {
+
+        request(app)
+            .patch('/')
+            .type('form')
+            .attach('small0', __dirname + '/files/small0.dat')
+            .field('name', 'Multer')
+            .expect(200)
+            .end(function (err, res) {
+                var form = res.body;
+                expect(err).to.be.null;
+                expect(form.body).to.be.an('object');
+                expect(form.body).to.have.property('name');
+                expect(form.body.name).to.equal('Multer');
+                expect(form.files).to.be.an('object');
+                expect(form.files).to.have.property('small0');
+                expect(form.files.small0).to.have.property('fieldname');
+                expect(form.files.small0.fieldname).to.equal('small0');
+                expect(form.files.small0).to.have.property('originalname');
+                expect(form.files.small0.originalname).to.equal('small0.dat');
+                expect(form.files.small0).to.have.property('size');
+                expect(form.files.small0.size).to.equal(1778);
+                expect(form.files.small0).to.have.property('truncated');
+                expect(form.files.small0.truncated).to.equal(false);
+                expect(form.files.small0.buffer).to.be.null;
+                done();
+            })
+
+    })
+
+    it('should process multipart/form-data DELETE request', function (done) {
+
+        request(app)
+            .delete('/')
+            .type('form')
+            .attach('small0', __dirname + '/files/small0.dat')
+            .field('name', 'Multer')
+            .expect(200)
+            .end(function (err, res) {
+                var form = res.body;
+                expect(err).to.be.null;
+                expect(form.body).to.be.an('object');
+                expect(form.body).to.have.property('name');
+                expect(form.body.name).to.equal('Multer');
+                expect(form.files).to.be.an('object');
+                expect(form.files).to.have.property('small0');
+                expect(form.files.small0).to.have.property('fieldname');
+                expect(form.files.small0.fieldname).to.equal('small0');
+                expect(form.files.small0).to.have.property('originalname');
+                expect(form.files.small0.originalname).to.equal('small0.dat');
+                expect(form.files.small0).to.have.property('size');
+                expect(form.files.small0.size).to.equal(1778);
+                expect(form.files.small0).to.have.property('truncated');
+                expect(form.files.small0.truncated).to.equal(false);
+                expect(form.files.small0.buffer).to.be.null;
+                done();
+            })
+
+    })
+
+    it('should process multipart/form-data GET request', function (done) {
+
+        request(app)
+            .get('/')
+            .type('form')
+            .attach('small0', __dirname + '/files/small0.dat')
+            .field('name', 'Multer')
+            .expect(200)
+            .end(function (err, res) {
+                var form = res.body;
+                expect(err).to.be.null;
+                expect(form.body).to.be.an('object');
+                expect(form.body).to.have.property('name');
+                expect(form.body.name).to.equal('Multer');
+                expect(form.files).to.be.an('object');
+                expect(form.files).to.have.property('small0');
+                expect(form.files.small0).to.have.property('fieldname');
+                expect(form.files.small0.fieldname).to.equal('small0');
+                expect(form.files.small0).to.have.property('originalname');
+                expect(form.files.small0.originalname).to.equal('small0.dat');
+                expect(form.files.small0).to.have.property('size');
+                expect(form.files.small0.size).to.equal(1778);
+                expect(form.files.small0).to.have.property('truncated');
+                expect(form.files.small0.truncated).to.equal(false);
+                expect(form.files.small0.buffer).to.be.null;
+                done();
+            })
+
+    })
+
     it('should not process non-multipart POST request', function (done) {
         request(app)
             .post('/')
+            .send({name: 'Multer'})
+            .expect(200)
+            .end(function (err, res) {
+                var form = res.body;
+                expect(err).to.be.null;
+                expect(Object.keys(form.body).length).to.equal(0);
+                expect(Object.keys(form.files).length).to.equal(0);
+                done();
+            })
+
+    })
+
+    it('should not process non-multipart GET request', function (done) {
+        request(app)
+            .get('/')
             .send({name: 'Multer'})
             .expect(200)
             .end(function (err, res) {
@@ -166,7 +275,6 @@ describe('Fields', function () {
                 done();
             })
     })
-
 
     it('should process empty fields, if configured', function (done) {
 
