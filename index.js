@@ -115,8 +115,11 @@ module.exports = function(options) {
         }
 
         fileStream.on('data', function(data) {
-          if (data) { file.size += data.length; }
-          if (options.inMemory) bufs.push(data);
+          if (data) { 
+            if (options.inMemory) bufs.push(data);
+            file.size += data.length; 
+          }
+          //if (options.inMemory) bufs.push(data);
           // trigger "file data" event
           if (options.onFileUploadData) { options.onFileUploadData(file, data); }
         });
@@ -124,8 +127,9 @@ module.exports = function(options) {
         function onFileStreamEnd() {
           file.truncated = fileStream.truncated;
           if (!req.files[fieldname]) { req.files[fieldname] = []; }
-          if (options.inMemory) file.buffer = Buffer.concat(bufs);
+          if (options.inMemory) file.buffer = Buffer.concat(bufs, file.size);
           req.files[fieldname].push(file);
+
           // trigger "file end" event
           if (options.onFileUploadComplete) { options.onFileUploadComplete(file); }
 
