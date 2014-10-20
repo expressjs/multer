@@ -9,6 +9,11 @@ var path = require('path');
 
 var dest = './temp';
 
+// node >v10 does not parse JSON buffer too a buffer so we must detect and create a buffer within these mocha tests
+function createBuffer(buff) {
+    return (buff !== undefined && Buffer.isBuffer(buff)) ? buff : new Buffer(buff);
+}
+
 describe('InMemory', function () {
 
     // the mocha default 2000 ms fails in Travis builds
@@ -34,6 +39,7 @@ describe('InMemory', function () {
             body: req.body,
             files: req.files
         }
+
         res.send(form);
     });
 
@@ -61,7 +67,7 @@ describe('InMemory', function () {
                 expect(form.files.small0.size).to.equal(1778);
                 expect(form.files.small0).to.have.property('truncated');
                 expect(form.files.small0.truncated).to.equal(false);
-                expect(form.files.small0.buffer.length).to.equal(form.files.small0.size);
+                expect(createBuffer(form.files.small0.buffer).length).to.equal(form.files.small0.size);
 
                 // The path is explicitly set to null b/c inmemory is true
                 // The handler is responsible for writing the inmemory Buffer to file or database
@@ -115,7 +121,7 @@ describe('InMemory', function () {
                 expect(form.files.empty.size).to.equal(0);
                 expect(form.files.empty).to.have.property('truncated');
                 expect(form.files.empty.truncated).to.equal(false);
-                expect(form.files.empty.buffer.length).to.equal(form.files.empty.size);
+                expect(createBuffer(form.files.empty.buffer).length).to.equal(form.files.empty.size);
                 done();
             })
     })
@@ -149,7 +155,7 @@ describe('InMemory', function () {
                 expect(form.files.empty.size).to.equal(0);
                 expect(form.files.empty).to.have.property('truncated');
                 expect(form.files.empty.truncated).to.equal(false);
-                expect(form.files.empty.buffer.length).to.equal(form.files.empty.size);
+                expect(createBuffer(form.files.empty.buffer).length).to.equal(form.files.empty.size);
 
                 expect(form.files).to.have.property('tiny0');
                 expect(form.files.tiny0).to.have.property('fieldname');
@@ -160,7 +166,7 @@ describe('InMemory', function () {
                 expect(form.files.tiny0.size).to.equal(122);
                 expect(form.files.tiny0).to.have.property('truncated');
                 expect(form.files.tiny0.truncated).to.equal(false);
-                expect(form.files.tiny0.buffer.length).to.equal(form.files.tiny0.size);
+                expect(createBuffer(form.files.tiny0.buffer).length).to.equal(form.files.tiny0.size);
 
                 expect(form.files).to.have.property('tiny1');
                 expect(form.files.tiny1).to.have.property('fieldname');
@@ -171,7 +177,7 @@ describe('InMemory', function () {
                 expect(form.files.tiny1.size).to.equal(7);
                 expect(form.files.tiny1).to.have.property('truncated');
                 expect(form.files.tiny1.truncated).to.equal(false);
-                expect(form.files.tiny1.buffer.length).to.equal(form.files.tiny1.size);
+                expect(createBuffer(form.files.tiny1.buffer).length).to.equal(form.files.tiny1.size);
 
                 expect(form.files).to.have.property('small0');
                 expect(form.files.small0).to.have.property('fieldname');
@@ -182,7 +188,7 @@ describe('InMemory', function () {
                 expect(form.files.small0.size).to.equal(1778);
                 expect(form.files.small0).to.have.property('truncated');
                 expect(form.files.small0.truncated).to.equal(false);
-                expect(form.files.small0.buffer.length).to.equal(form.files.small0.size);
+                expect(createBuffer(form.files.small0.buffer).length).to.equal(form.files.small0.size);
 
                 expect(form.files).to.have.property('small1');
                 expect(form.files.small1).to.have.property('fieldname');
@@ -193,7 +199,7 @@ describe('InMemory', function () {
                 expect(form.files.small1.size).to.equal(315);
                 expect(form.files.small1).to.have.property('truncated');
                 expect(form.files.small1.truncated).to.equal(false);
-                expect(form.files.small1.buffer.length).to.equal(form.files.small1.size);
+                expect(createBuffer(form.files.small1.buffer).length).to.equal(form.files.small1.size);
 
                 expect(form.files).to.have.property('medium');
                 expect(form.files.medium).to.have.property('fieldname');
@@ -204,7 +210,7 @@ describe('InMemory', function () {
                 expect(form.files.medium.size).to.equal(13196);
                 expect(form.files.medium).to.have.property('truncated');
                 expect(form.files.medium.truncated).to.equal(false);
-                expect(form.files.medium.buffer.length).to.equal(form.files.medium.size);
+                expect(createBuffer(form.files.medium.buffer).length).to.equal(form.files.medium.size);
 
                 expect(form.files).to.have.property('large');
                 expect(form.files.large).to.have.property('fieldname');
@@ -215,7 +221,7 @@ describe('InMemory', function () {
                 expect(form.files.large.size).to.equal(2413677);
                 expect(form.files.large).to.have.property('truncated');
                 expect(form.files.large.truncated).to.equal(false);
-                expect(form.files.large.buffer.length).to.equal(form.files.large.size);
+                expect(createBuffer(form.files.large.buffer).length).to.equal(form.files.large.size);
 
                 done();
             })
