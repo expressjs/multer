@@ -119,7 +119,6 @@ module.exports = function(options) {
             if (options.inMemory) bufs.push(data);
             file.size += data.length; 
           }
-          //if (options.inMemory) bufs.push(data);
           // trigger "file data" event
           if (options.onFileUploadData) { options.onFileUploadData(file, data); }
         });
