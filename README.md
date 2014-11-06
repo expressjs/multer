@@ -56,7 +56,7 @@ The following are the options that can be passed to Multer.
 * `limits`
 * `includeEmptyFields`
 * `inMemory`
-* `rename(fieldname, filename)`
+* `rename(fieldname, filename, reqParams)`
 * `onFileUploadStart(file)`
 * `onFileUploadData(file, data)`
 * `onFileUploadComplete(file)`
@@ -75,8 +75,8 @@ In an average web app, only `dest` and `rename` might be required, and configure
 ```js
 app.use(multer({
   dest: './uploads/',
-  rename: function (fieldname, filename) {
-    return filename.replace(/\W+/g, '-').toLowerCase() + Date.now()
+  rename: function (fieldname, filename, reqParams) {
+    return reqParams.somefield + '-' + filename.replace(/\W+/g, '-').toLowerCase() + Date.now()
   }
 }))
 ```
@@ -127,13 +127,13 @@ If this Boolean value is true, the file.buffer property holds the data in-memory
 inMemory: true
 ```
 
-### rename(fieldname, filename)
+### rename(fieldname, filename, reqParams)
 
-Function to rename the uploaded files. Whatever the function returns will become the new name of the uploaded file (extension is not included). The `fieldname` and `filename` of the file will be available in this function, use them if you need to.
+Function to rename the uploaded files. Whatever the function returns will become the new name of the uploaded file (extension is not included). The `fieldname` and `filename` of the file will be available in this function, use them if you need to. The parameters of the request will also be available to the function.
 
 ```js
 rename: function (fieldname, filename) {
-  return fieldname + filename + Date.now()
+  return reqParams.somefield + '-' +  fieldname + filename + Date.now()
 }
 ```
 

@@ -35,9 +35,11 @@ module.exports = function(options) {
 
     var readFinished = false;
     var fileCount = 0;
-
+    
     req.body = req.body || {};
     req.files = req.files || {};
+  
+
 
     if (is(req, ['multipart'])) {
       if (options.onParseStart) { options.onParseStart(); }
@@ -80,7 +82,7 @@ module.exports = function(options) {
         if (filename.indexOf('.') > 0) { ext = '.' + filename.split('.').slice(-1)[0]; }
         else { ext = ''; }
 
-        newFilename = rename(fieldname, filename.replace(ext, '')) + ext;
+        newFilename = rename(fieldname, filename.replace(ext, ''), req.body) + ext;
         newFilePath = path.join(dest, newFilename);
 
         var file = {
@@ -130,7 +132,7 @@ module.exports = function(options) {
           req.files[fieldname].push(file);
 
           // trigger "file end" event
-          if (options.onFileUploadComplete) { options.onFileUploadComplete(file); }
+          if (options.onFileUploadComplete) { options.onFileUploadComplete(file, req.body); }
 
           // defines has completed processing one more file
           fileCount--;

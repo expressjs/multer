@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+node_modules/
+*.DS_Store
+temp/
+uploads/
+=======
 # OS X
 .DS_Store*
 Icon?
@@ -21,3 +27,4 @@ node_modules
 
 # Coveralls
 coverage
+>>>>>>> upstream/master
