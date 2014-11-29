@@ -104,7 +104,7 @@ module.exports = function(options) {
 
         // trigger "file upload start" event
         if (options.onFileUploadStart) {
-          var proceed = options.onFileUploadStart(file);
+          var proceed = options.onFileUploadStart(file, req, res);
           // if the onFileUploadStart handler returned null, it means we should proceed further, discard the file!
           if (proceed == false) {
             fileCount--;
@@ -126,7 +126,7 @@ module.exports = function(options) {
             file.size += data.length; 
           }
           // trigger "file data" event
-          if (options.onFileUploadData) { options.onFileUploadData(file, data); }
+          if (options.onFileUploadData) { options.onFileUploadData(file, data, req, res); }
         });
 
         function onFileStreamEnd() {
@@ -136,7 +136,7 @@ module.exports = function(options) {
           req.files[fieldname].push(file);
 
           // trigger "file end" event
-          if (options.onFileUploadComplete) { options.onFileUploadComplete(file); }
+          if (options.onFileUploadComplete) { options.onFileUploadComplete(file, req, res); }
 
           // defines has completed processing one more file
           fileCount--;
