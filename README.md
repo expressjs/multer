@@ -121,11 +121,13 @@ includeEmptyFields: true
 
 ### inMemory
 
-If this Boolean value is true, the file.buffer property holds the data in-memory that Multer would have written to disk. The dest option is still populated and the path property contains the proposed path to save the file. Defaults to `false`.
+If this Boolean value is `true`, the `file.buffer` property holds the data in-memory that Multer would have written to disk. The dest option is still populated and the path property contains the proposed path to save the file. Defaults to `false`.
 
 ```js
 inMemory: true
 ```
+
+**WARNING**: Uploading very large files, or relatively small files in large numbers very quickly, can cause your application to run out of memory when `inMemory` is set to`tue`.
 
 ### rename(fieldname, filename)
 
