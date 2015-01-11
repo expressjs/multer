@@ -127,7 +127,7 @@ If this Boolean value is `true`, the `file.buffer` property holds the data in-me
 inMemory: true
 ```
 
-**WARNING**: Uploading very large files, or relatively small files in large numbers very quickly, can cause your application to run out of memory when `inMemory` is set to`tue`.
+**WARNING**: Uploading very large files, or relatively small files in large numbers very quickly, can cause your application to run out of memory when `inMemory` is set to `true`.
 
 ### rename(fieldname, filename)
 
