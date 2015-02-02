@@ -12,6 +12,7 @@ module.exports = function(options) {
   options = options || {};
   options.includeEmptyFields = options.includeEmptyFields || false;
   options.inMemory = options.inMemory || false;
+  options.removeExtensionAfterRename = options.removeExtensionAfterRename || false;
 
   // if the destination directory does not exist then assign uploads to the operating system's temporary directory
   var dest;
@@ -80,7 +81,13 @@ module.exports = function(options) {
         if (filename.indexOf('.') > 0) { ext = '.' + filename.split('.').slice(-1)[0]; }
         else { ext = ''; }
 
-        newFilename = rename(fieldname, filename.replace(ext, '')) + ext;
+        if(options.removeExtensionAfterRename) {
+            newFilename = rename(fieldname, filename.replace(ext, ''));
+        }
+        else {
+            newFilename = rename(fieldname, filename.replace(ext, ''))+ext;
+        }
+
         newFilePath = path.join(dest, newFilename);
 
         var file = {
