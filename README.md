@@ -55,7 +55,6 @@ The following are the options that can be passed to Multer.
 * `dest`
 * `limits`
 * `includeEmptyFields`
-* `putSingleFilesInArray`
 * `inMemory`
 * `rename(fieldname, filename, req, res)`
 * `renameDestDir(dest, req, res)`
@@ -123,7 +122,9 @@ includeEmptyFields: true
 
 ### putSingleFilesInArray
 
-By default `putSingleFilesInArray` is false. Activate it by setting the property to true.
+**NOTE** In the next major version, `putSingleFilesInArray` will go away and all `req.files` key-value pairs will point to an array of file objects. Begin migrating your code to use `putSingleFilesInArray: true`. This will become the default in the next version. An explanation follows.
+
+In the current version `putSingleFilesInArray` is false. Activate it by setting the property to true.
 
 ```js
 putSingleFilesInArray: true
