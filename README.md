@@ -167,7 +167,7 @@ rename: function (fieldname, filename) {
 }
 ```
 
-### renameDestDir
+### renameDestDir(dest, req, res)
 
 Function to rename the directory in which to place uploaded files. The `dest` parameter is the default value originally assigned or passed into multer. The `req` and `res` are also passed into the function because they may contain information (eg session data) needed to create the path (eg get userid from the session).
 
@@ -176,6 +176,8 @@ renameDestDir: function(dest, req, res) {
   return dest + '/user1'  
 }
 ```
+
+Note that [req.body Warnings](#req.body-warnings) applies to this function.
 
 ### onFileUploadStart(file)
 
@@ -294,5 +296,9 @@ onPartsLimit: function () {
   console.log('Crossed parts limit!')
 }
 ```
+
+## req.body Warnings
+
+**WARNING**: `req.body` is fully parsed after file uploads have finished. Accessing `req.body` prematurely may cause errors. The `req` and `res` parameters are added to some functions to allow the developer to access properties other than `req.body`, such as session variables or socket.io objects. You have been forwarned! :)
 
 ## [MIT Licensed](LICENSE)
