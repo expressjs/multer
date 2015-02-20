@@ -12,6 +12,7 @@ module.exports = function(options) {
   options = options || {};
   options.includeEmptyFields = options.includeEmptyFields || false;
   options.inMemory = options.inMemory || false;
+  options.putSingleFilesInArray = options.putSingleFilesInArray || false;
 
   // if the destination directory does not exist then assign uploads to the operating system's temporary directory
   var dest;
@@ -189,9 +190,11 @@ module.exports = function(options) {
       var onFinish = function () {
         if (!readFinished || fileCount > 0) return;
 
-        for (var field in req.files) {
-          if (req.files[field].length === 1) {
-            req.files[field] = req.files[field][0];
+        if (!options.putSingleFilesInArray) {
+          for (var field in req.files) {
+            if (req.files[field].length === 1) {
+              req.files[field] = req.files[field][0];
+            }
           }
         }
 

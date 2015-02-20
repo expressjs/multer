@@ -55,5 +55,37 @@ describe('Functionality', function () {
             })
     })
 
+    var app2 = express();
+    app2.use(multer({
+        dest: './temp',
+        putSingleFilesInArray: true,
+        rename: function (fieldname, filename) {
+            return fieldname + filename;
+        }
+    }));
+    app2.post('/', function (req, res) {
+        var form = {
+            body: req.body,
+            files: req.files
+        }
+        res.send(form);
+    });
+
+    it('should ensure all req.files values point to an array', function (done) {
+        request(app2)
+            .post('/')
+            .type('form')
+            .attach('small0', __dirname + '/files/small0.dat')
+            .attach('small0', __dirname + '/files/small1.dat')
+            .expect(200)
+            .end(function (err, res) {
+                var form = res.body;
+                expect(err).to.be.null;
+                expect(form.files.small0.length).to.equal(2);
+                expect(form.files.small0[0].name).to.equal('small0small0.dat');
+                expect(form.files.small0[1].name).to.equal('small0small1.dat');
+              done();
+            })
+    })
 
 })
