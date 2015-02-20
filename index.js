@@ -96,7 +96,7 @@ module.exports = function(options) {
           encoding: encoding,
           mimetype: mimetype,
           path: newFilePath,
-          extension: (ext === null) ? null : ext.replace('.', ''),
+          extension: (ext === '') ? '' : ext.replace('.', ''),
           size: 0,
           truncated: null,
           buffer: null
