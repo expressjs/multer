@@ -57,7 +57,7 @@ The following are the options that can be passed to Multer.
 * `includeEmptyFields`
 * `putSingleFilesInArray`
 * `inMemory`
-* `rename(fieldname, filename)`
+* `rename(fieldname, filename, req, res)`
 * `renameDestDir(dest, req, res)`
 * `onFileUploadStart(file, req, res)`
 * `onFileUploadData(file, data, req, res)`
@@ -157,15 +157,17 @@ inMemory: true
 
 **WARNING**: Uploading very large files, or relatively small files in large numbers very quickly, can cause your application to run out of memory when `inMemory` is set to `true`.
 
-### rename(fieldname, filename)
+### rename(fieldname, filename, req, res)
 
 Function to rename the uploaded files. Whatever the function returns will become the new name of the uploaded file (extension is not included). The `fieldname` and `filename` of the file will be available in this function, use them if you need to.
 
 ```js
-rename: function (fieldname, filename) {
+rename: function (fieldname, filename, req, res) {
   return fieldname + filename + Date.now()
 }
 ```
+
+Note that [req.body Warnings](#reqbody-warnings) applies to this function.
 
 ### renameDestDir(dest, req, res)
 
