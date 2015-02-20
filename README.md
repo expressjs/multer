@@ -58,6 +58,7 @@ The following are the options that can be passed to Multer.
 * `putSingleFilesInArray`
 * `inMemory`
 * `rename(fieldname, filename)`
+* `renameDestDir(dest, req, res)`
 * `onFileUploadStart(file)`
 * `onFileUploadData(file, data)`
 * `onFileUploadComplete(file)`
@@ -163,6 +164,16 @@ Function to rename the uploaded files. Whatever the function returns will become
 ```js
 rename: function (fieldname, filename) {
   return fieldname + filename + Date.now()
+}
+```
+
+### renameDestDir
+
+Function to rename the directory in which to place uploaded files. The `dest` parameter is the default value originally assigned or passed into multer. The `req` and `res` are also passed into the function because they may contain information (eg session data) needed to create the path (eg get userid from the session).
+
+```js
+renameDestDir: function(dest, req, res) {
+  return dest + '/user1'  
 }
 ```
 
