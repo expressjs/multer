@@ -55,6 +55,7 @@ The following are the options that can be passed to Multer.
 * `dest`
 * `limits`
 * `includeEmptyFields`
+* `putSingleFilesInArray`
 * `inMemory`
 * `rename(fieldname, filename)`
 * `onFileUploadStart(file)`
@@ -117,6 +118,32 @@ A Boolean value to specify whether empty submitted values should be processed an
 
 ```js
 includeEmptyFields: true
+```
+
+### putSingleFilesInArray
+
+By default `putSingleFilesInArray` is false. Activate it by setting the property to true.
+
+```js
+putSingleFilesInArray: true
+```
+
+Some applications or libraries, such as Object Modelers, expect `req.files` key-value pairs to always point to arrays. If `putSingleFilesInArray` is true, multer will ensure all values point to an array. 
+
+```js
+// the value points to a single file object
+req.files['file1'] = [fileObject1]
+// the value points to an array of file objects
+req.files['file1'] = [fileObject1, fileObject2]
+```
+
+Contrast this with Multer's default behavior, where `putSingleFilesInArray` is false. If the value for any key in `req.files` is a single file, then the value will equal a single file object. And if the value points to multiple files, then the value will equal an array of file objects.
+
+```js
+// the value points to a single file object
+req.files['file1'] = fileObject1
+// the value points to an array of file objects
+req.files['file1'] = [fileObject1, fileObject2]
 ```
 
 ### inMemory
