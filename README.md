@@ -57,7 +57,7 @@ The following are the options that can be passed to Multer.
 * `includeEmptyFields`
 * `inMemory`
 * `rename(fieldname, filename, req, res)`
-* `renameDestDir(dest, req, res)`
+* `changeDest(dest, req, res)`
 * `onFileUploadStart(file, req, res)`
 * `onFileUploadData(file, data, req, res)`
 * `onFileUploadComplete(file, req, res)`
@@ -170,12 +170,12 @@ rename: function (fieldname, filename, req, res) {
 
 Note that [req.body Warnings](#reqbody-warnings) applies to this function.
 
-### renameDestDir(dest, req, res)
+### changeDest(dest, req, res)
 
 Function to rename the directory in which to place uploaded files. The `dest` parameter is the default value originally assigned or passed into multer. The `req` and `res` parameters are also passed into the function because they may contain information (eg session data) needed to create the path (eg get userid from the session).
 
 ```js
-renameDestDir: function(dest, req, res) {
+changeDest: function(dest, req, res) {
   return dest + '/user1'; 
 }
 ```
@@ -183,7 +183,7 @@ renameDestDir: function(dest, req, res) {
 You might want to check that the subdirectory has been created. Here is a synchronous way to do it. The [mkdirp](https://www.npmjs.com/package/mkdirp) module can be used to automatically create nested child directories.
 
 ```js
-renameDestDir: function(dest, req, res) {
+changeDest: function(dest, req, res) {
   dest += '/user1';
   if (!fs.existsSync(dest)) fs.mkdirSync(dest);
   return dest;  
