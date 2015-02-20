@@ -171,11 +171,21 @@ Note that [req.body Warnings](#reqbody-warnings) applies to this function.
 
 ### renameDestDir(dest, req, res)
 
-Function to rename the directory in which to place uploaded files. The `dest` parameter is the default value originally assigned or passed into multer. The `req` and `res` are also passed into the function because they may contain information (eg session data) needed to create the path (eg get userid from the session).
+Function to rename the directory in which to place uploaded files. The `dest` parameter is the default value originally assigned or passed into multer. The `req` and `res` parameters are also passed into the function because they may contain information (eg session data) needed to create the path (eg get userid from the session).
 
 ```js
 renameDestDir: function(dest, req, res) {
-  return dest + '/user1'  
+  return dest + '/user1'; 
+}
+```
+
+You might want to check that the subdirectory has been created. Here is a synchronous way to do it. The [mkdirp](https://www.npmjs.com/package/mkdirp) module can be used to automatically create nested child directories.
+
+```js
+renameDestDir: function(dest, req, res) {
+  dest += '/user1';
+  if (!fs.existsSync(dest)) fs.mkdirSync(dest);
+  return dest;  
 }
 ```
 
