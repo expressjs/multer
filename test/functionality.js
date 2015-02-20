@@ -75,12 +75,15 @@ describe('Functionality', function () {
         request(app2)
             .post('/')
             .type('form')
+            .attach('tiny0', __dirname + '/files/tiny0.dat')
             .attach('small0', __dirname + '/files/small0.dat')
             .attach('small0', __dirname + '/files/small1.dat')
             .expect(200)
             .end(function (err, res) {
                 var form = res.body;
                 expect(err).to.be.null;
+                expect(form.files.tiny0.length).to.equal(1);
+                expect(form.files.tiny0[0].name).to.equal('tiny0tiny0.dat');
                 expect(form.files.small0.length).to.equal(2);
                 expect(form.files.small0[0].name).to.equal('small0small0.dat');
                 expect(form.files.small0[1].name).to.equal('small0small1.dat');
