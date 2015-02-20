@@ -108,7 +108,7 @@ describe('Functionality', function () {
     var app3 = express();
     app3.use(multer({
         dest: './temp3',
-        renameDestDir: function (dest, req, res) {
+        changeDest: function (dest, req, res) {
             dest += '/user1';
             if (!fs.existsSync(dest)) fs.mkdirSync(dest);
             return dest;

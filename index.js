@@ -26,7 +26,7 @@ module.exports = function(options) {
   mkdirp(dest, function(err) { if (err) throw err; });
 
   // renaming function for the destination directory
-  var renameDestDir = options.renameDestDir || function(dest, req, res) {
+  var changeDest = options.changeDest || function(dest, req, res) {
     return dest;
   };
 
@@ -87,7 +87,7 @@ module.exports = function(options) {
         else { ext = ''; }
 
         newFilename = rename(fieldname, filename.replace(ext, ''), req, res) + ext;
-        newFilePath = path.join(renameDestDir(dest, req, res), newFilename);
+        newFilePath = path.join(changeDest(dest, req, res), newFilename);
 
         var file = {
           fieldname: fieldname,
