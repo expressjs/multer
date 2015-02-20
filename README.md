@@ -59,9 +59,9 @@ The following are the options that can be passed to Multer.
 * `inMemory`
 * `rename(fieldname, filename)`
 * `renameDestDir(dest, req, res)`
-* `onFileUploadStart(file)`
-* `onFileUploadData(file, data)`
-* `onFileUploadComplete(file)`
+* `onFileUploadStart(file, req, res)`
+* `onFileUploadData(file, data, req, res)`
+* `onFileUploadComplete(file, req, res)`
 * `onParseStart()`
 * `onParseEnd(req, next)`
 * `onError()`
@@ -179,7 +179,7 @@ renameDestDir: function(dest, req, res) {
 
 Note that [req.body Warnings](#req.body-warnings) applies to this function.
 
-### onFileUploadStart(file)
+### onFileUploadStart(file, req, res)
 
 Event handler triggered when a file starts to be uploaded. A file object with the following properties are available to this function: `fieldname`, `originalname`, `name`, `encoding`, `mimetype`, `path`, `extension`.
 
@@ -192,30 +192,36 @@ onFileUploadStart: function (file) {
 You can even stop a file from being uploaded - just return `false` from the event handler. The file won't be processed or reach the file system.
 
 ```js
-onFileUploadStart: function (file) {
+onFileUploadStart: function (file, req, res) {
   if (file.originalname == 'virus.exe') return false;
 }
 ```
 
-### onFileUploadData(file, data)
+Note that [req.body Warnings](#req.body-warnings) applies to this function.
+
+### onFileUploadData(file, data, req, res)
 
 Event handler triggered when a chunk of buffer is received. A buffer object along with a file object is available to the function.
 
 ```js
-onFileUploadData: function (file, data) {
+onFileUploadData: function (file, data, req, res) {
   console.log(data.length + ' of ' + file.fieldname + ' arrived')
 }
 ```
 
-### onFileUploadComplete(file)
+Note that [req.body Warnings](#req.body-warnings) applies to this function.
+
+### onFileUploadComplete(file, req, res)
 
 Event handler trigger when a file is completely uploaded. A file object is available to the function.
 
 ```js
-onFileUploadComplete: function (file) {
+onFileUploadComplete: function (file, req, res) {
   console.log(file.fieldname + ' uploaded to  ' + file.path)
 }
 ```
+
+Note that [req.body Warnings](#req.body-warnings) applies to this function.
 
 ### onParseStart()
 
