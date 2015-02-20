@@ -83,8 +83,7 @@ module.exports = function(options) {
         // defines is processing a new file
         fileCount++;
 
-        if (filename.indexOf('.') > 0) { ext = '.' + filename.split('.').slice(-1)[0]; }
-        else { ext = ''; }
+        ext = filename.indexOf('.') > 0 ? '.' + filename.split('.').pop() : '';
 
         newFilename = rename(fieldname, filename.replace(ext, '')) + ext;
         newFilePath = path.join(renameDestDir(dest, req, res), newFilename);
@@ -96,7 +95,7 @@ module.exports = function(options) {
           encoding: encoding,
           mimetype: mimetype,
           path: newFilePath,
-          extension: (ext === null) ? null : ext.replace('.', ''),
+          extension: ext === '' ? null : ext.replace('.', ''),
           size: 0,
           truncated: null,
           buffer: null
