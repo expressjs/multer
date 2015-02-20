@@ -177,14 +177,14 @@ renameDestDir: function(dest, req, res) {
 }
 ```
 
-Note that [req.body Warnings](#req.body-warnings) applies to this function.
+Note that [req.body Warnings](#reqbody-warnings) applies to this function.
 
 ### onFileUploadStart(file, req, res)
 
 Event handler triggered when a file starts to be uploaded. A file object with the following properties are available to this function: `fieldname`, `originalname`, `name`, `encoding`, `mimetype`, `path`, `extension`.
 
 ```js
-onFileUploadStart: function (file) {
+onFileUploadStart: function (file, req, res) {
   console.log(file.fieldname + ' is starting ...')
 }
 ```
@@ -197,7 +197,7 @@ onFileUploadStart: function (file, req, res) {
 }
 ```
 
-Note that [req.body Warnings](#req.body-warnings) applies to this function.
+Note that [req.body Warnings](#reqbody-warnings) applies to this function.
 
 ### onFileUploadData(file, data, req, res)
 
@@ -209,7 +209,7 @@ onFileUploadData: function (file, data, req, res) {
 }
 ```
 
-Note that [req.body Warnings](#req.body-warnings) applies to this function.
+Note that [req.body Warnings](#reqbody-warnings) applies to this function.
 
 ### onFileUploadComplete(file, req, res)
 
@@ -221,7 +221,7 @@ onFileUploadComplete: function (file, req, res) {
 }
 ```
 
-Note that [req.body Warnings](#req.body-warnings) applies to this function.
+Note that [req.body Warnings](#reqbody-warnings) applies to this function.
 
 ### onParseStart()
 
