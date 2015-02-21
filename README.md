@@ -194,7 +194,7 @@ Note that [req.body Warnings](#reqbody-warnings) applies to this function.
 
 ### onFileUploadStart(file, req, res)
 
-Event handler triggered when a file starts to be uploaded. A file object with the following properties are available to this function: `fieldname`, `originalname`, `name`, `encoding`, `mimetype`, `path`, `extension`.
+Event handler triggered when a file starts to be uploaded. A file object, with the following properties, is available to this function: `fieldname`, `originalname`, `name`, `encoding`, `mimetype`, `path`, and `extension`.
 
 ```js
 onFileUploadStart: function (file, req, res) {
