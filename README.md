@@ -184,9 +184,21 @@ You might want to check that the subdirectory has been created. Here is a synchr
 
 ```js
 changeDest: function(dest, req, res) {
-  dest += '/user1';
-  if (!fs.existsSync(dest)) fs.mkdirSync(dest);
-  return dest;  
+  var stat = null;
+
+  try {
+      // using fs.statSync; NOTE that fs.existsSync is now deprecated; fs.accessSync could be used but is only nodejs >= v0.12.0
+      stat = fs.statSync(dest);
+  } catch(err) {
+      // for nested folders, look at npm package "mkdirp"
+      fs.mkdirSync(dest);
+  }
+
+  if (stat && !stat.isDirectory()) {
+      // Woh! This file/link/etc already exists, so isn't a directory. Can't save in it. Handle appropriately.
+      throw new Error('Directory cannot be created because an inode of a different type exists at "' + dest + '"');
+  }
+  return dest;
 }
 ```
 
