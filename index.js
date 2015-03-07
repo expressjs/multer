@@ -15,21 +15,21 @@ module.exports = function (options) {
     options.inMemory = options.inMemory || false;
     options.putSingleFilesInArray = options.putSingleFilesInArray || false;
     options.pkgCloud = options.pkgCloud || false;
-    options.pkgSettings = options.pkgSettings || {};
-    options.pkgSettings.container = options.pkgSettings.container || 'defaultContainer';
-    options.pkgSettings.fileName = options.pkgSettings.fileName || 'defaultFile';
+    options.pkgOptions = options.pkgOptions || {};
+    options.pkgOptions.container = options.pkgOptions.container || 'defaultContainer';
+    options.pkgOptions.remote = options.pkgOptions.remote || 'defaultRemote';
     var client = options.pkgCloudClient || false;
 
     // if the destination directory does not exist then assign uploads to the operating system's temporary directory
     var dest;
 
-    if (options.dest) {
-        dest = options.dest;
-    } else {
-        dest = os.tmpdir();
-    }
-
     if (!options.pkgCloud) {
+        if (options.dest) {
+            dest = options.dest;
+        } else {
+            dest = os.tmpdir();
+        }
+
         mkdirp(dest, function (err) {
             if (err) throw err;
         });
@@ -41,10 +41,10 @@ module.exports = function (options) {
     };
 
     // container or filename change when needed
-    var changeSettings = options.changeSettings || function (settings, filename, req, res) {
-        var random_string = settings.fileName + Date.now() + Math.random();
-        return crypto.createHash('md5').update(random_string).digest('hex');
-        return settings;
+    var changePkgOptions = options.changePkgOptions || function (pkgOptions, filename, req, res) {
+        var random_string = pkgOptions.remote + Date.now() + Math.random();
+        pkgOptions.remote = crypto.createHash('md5').update(random_string).digest('hex');
+        return pkgOptions;
     };
 
     // renaming function for the uploaded file - need not worry about the extension
@@ -94,7 +94,7 @@ module.exports = function (options) {
             // handle files
             busboy.on('file', function (fieldname, fileStream, filename, encoding, mimetype) {
 
-                var ext, newFilename, newFilePath, pkgSettings = {};
+                var ext, newFilename, newFilePath, pkgOptions = {};
 
                 // don't attach to the files object, if there is no file
                 if (!filename) return fileStream.resume();
@@ -108,14 +108,13 @@ module.exports = function (options) {
                     ext = '';
                 }
 
-                var sets = JSON.parse(JSON.stringify(options.pkgSettings));
-                sets.extension = (ext === '') ? '' : ext.replace('.', '');
-                sets.mimetype = mimetype;
+                var ops = JSON.parse(JSON.stringify(options.pkgOptions));
+                ops.extension = (ext === '') ? '' : ext.replace('.', '');
+                ops.mimetype = mimetype;
 
                 if (options.pkgCloud) {
-                    pkgSettings = changeSettings(sets, filename, req, res);
-                    pkgSettings.fileName = pkgSettings.fileName + ext;
-                    newFilename = pkgSettings.fileName;
+                    pkgOptions = changePkgOptions(ops, filename, req, res);
+                    pkgOptions.remote = pkgOptions.remote + ext;
                 } else {
                     newFilename = rename(fieldname, filename.replace(ext, ''), req, res) + ext;
                     newFilePath = path.join(changeDest(dest, req, res), newFilename);
@@ -124,7 +123,8 @@ module.exports = function (options) {
                 var file = {
                     fieldname: fieldname,
                     originalname: filename,
-                    container: pkgSettings.container || null,
+                    container: pkgOptions.container || null,
+                    remote: pkgOptions.remote || null,
                     name: newFilename,
                     encoding: encoding,
                     mimetype: mimetype,
@@ -150,11 +150,8 @@ module.exports = function (options) {
                 var doneCallback = function (ws) {
 
                     if (options.pkgCloud) {
-                        ws = client.upload({
-                            container: pkgSettings.container,
-                            remote: pkgSettings.fileName,
-                            contentType: file.mimetype
-                        });
+                        pkgOptions.contentType = file.mimetype;
+                        ws = client.upload(pkgOptions);
                         fileStream.pipe(ws);
                     }
 
@@ -237,7 +234,7 @@ module.exports = function (options) {
                 } else {
                     if (options.pkgCloud) {
                         client.createContainer({
-                            'name': pkgSettings.container
+                            'name': pkgOptions.container
                         }, function (err, container) {
                             if (err) {
                                 if (options.onError) {
