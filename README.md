@@ -1,3 +1,6 @@
+# Note:
+This is a fork of expressjs/multer to upload files into from pkgcloud/pkgcloud supported Cloud Object Storages.
+
 # Multer [![Build Status](https://travis-ci.org/expressjs/multer.svg?branch=master)](https://travis-ci.org/expressjs/multer) [![NPM version](https://badge.fury.io/js/multer.svg)](https://badge.fury.io/js/multer)
 
 Multer is a node.js middleware for handling `multipart/form-data`.
