@@ -106,7 +106,7 @@ module.exports = function(options) {
         if (options.onFileUploadStart) {
           var proceed = options.onFileUploadStart(file, req, res);
           // if the onFileUploadStart handler returned null, it means we should proceed further, discard the file!
-          if (proceed == false) {
+          if (proceed === false) {
             fileCount--;
             return fileStream.resume();
           }
@@ -121,9 +121,9 @@ module.exports = function(options) {
         }
 
         fileStream.on('data', function(data) {
-          if (data) { 
+          if (data) {
             if (options.inMemory) bufs.push(data);
-            file.size += data.length; 
+            file.size += data.length;
           }
           // trigger "file data" event
           if (options.onFileUploadData) { options.onFileUploadData(file, data, req, res); }
@@ -155,7 +155,7 @@ module.exports = function(options) {
         });
 
         fileStream.on('limit', function () {
-          if (options.onFileSizeLimit) { options.onFileSizeLimit(file); }
+          if (options.onFileSizeLimit) { options.onFileSizeLimit(file, req, res); }
         });
 
         function onFileStreamError(error) {
@@ -166,21 +166,21 @@ module.exports = function(options) {
 
         if (options.inMemory)
           fileStream.on('error', onFileStreamError );
-        else 
+        else
           ws.on('error', onFileStreamError );
 
       });
 
       busboy.on('partsLimit', function() {
-        if (options.onPartsLimit) { options.onPartsLimit(); }
+        if (options.onPartsLimit) { options.onPartsLimit(req,res); }
       });
 
       busboy.on('filesLimit', function() {
-        if (options.onFilesLimit) { options.onFilesLimit(); }
+        if (options.onFilesLimit) { options.onFilesLimit(req,res); }
       });
 
       busboy.on('fieldsLimit', function() {
-        if (options.onFieldsLimit) { options.onFieldsLimit(); }
+        if (options.onFieldsLimit) { options.onFieldsLimit(req,res); }
       });
 
       busboy.on('finish', function() {
@@ -217,6 +217,6 @@ module.exports = function(options) {
 
     else { return next(); }
 
-  }
+  };
 
-}
+};
