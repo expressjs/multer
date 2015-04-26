@@ -71,6 +71,10 @@ The following are the options that can be passed to Multer.
 * `onFilesLimit()`
 * `onFieldsLimit()`
 * `onPartsLimit()`
+* `pkgCloud`
+* `pkgOptions`
+* `changePkgOptions()`
+
 
 Apart from these, Multer also supports more advanced [busboy options](https://github.com/mscdex/busboy#busboy-methods) like `highWaterMark`, `fileHwm`, and `defCharset`.
 
@@ -133,7 +137,7 @@ In the current version `putSingleFilesInArray` is false. Activate it by setting 
 putSingleFilesInArray: true
 ```
 
-Some applications or libraries, such as Object Modelers, expect `req.files` key-value pairs to always point to arrays. If `putSingleFilesInArray` is true, multer will ensure all values point to an array. 
+Some applications or libraries, such as Object Modelers, expect `req.files` key-value pairs to always point to arrays. If `putSingleFilesInArray` is true, multer will ensure all values point to an array.
 
 ```js
 // the value points to a single file object
@@ -179,7 +183,7 @@ Function to rename the directory in which to place uploaded files. The `dest` pa
 
 ```js
 changeDest: function(dest, req, res) {
-  return dest + '/user1'; 
+  return dest + '/user1';
 }
 ```
 
@@ -329,6 +333,57 @@ Event handler triggered when the number of parts exceed the specification in the
 onPartsLimit: function () {
   console.log('Crossed parts limit!')
 }
+```
+
+### pkgCloudClient
+
+This is required when using multer with pkgCloud. A pkgCloud storage client object is expected: (See [pkgcloud - storage](https://github.com/pkgcloud/pkgcloud#storage))
+```js
+var client = pkgcloud.storage.createClient(config);
+```
+```js
+pkgCloudClient: client
+```
+
+### pkgOptions
+
+This is a option object given to pkgcloud for fileuploading. ([pkgcloud - file](https://github.com/pkgcloud/pkgcloud#file))
+
+```js
+pkgOptions: {
+   container: 'a-container',
+   remote: 'remote-file-name.txt'
+}
+```
+
+### changePkgOptions(options, filename, req, res)
+
+Function to change `pkgOptions` for the file upload before uploading. The `req` and `res` parameters are also passed into the function because they may contain information (eg session data) needed to create the path (eg get userid from the session).
+
+```js
+changePkgOptions: function(options, filename, req, res) {
+   options.container = 'otherContainerName';
+   options.remote = 'myFile.txt';
+   return options;
+}
+```
+
+## pkgCloud Usage:
+
+The pkgCloud functionality just pipes the upload stream to a Cloud-Object-Storage supported by [pkgcloud](https://github.com/pkgcloud/pkgcloud).
+
+```js
+var express = require('express')
+var multer = require('multer-pkgcloud'); // Or when merged 'multer'
+var pkgcloud = require('pkgcloud');
+
+var app = express();
+
+var client = pkgcloud.storage.createClient(config);
+
+app.use(multer({
+   pkgCloudClient: client
+}));
 ```
 
 ## req.body Warnings
