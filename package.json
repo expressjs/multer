@@ -1,13 +1,14 @@
 {
-  "name": "multer",
+  "name": "multer-pkgcloud",
   "description": "Middleware for handling `multipart/form-data`.",
   "version": "0.1.8",
   "contributors": [
     "Hage Yaapa <captain@hacksparrow.com> (http://www.hacksparrow.com)",
-    "Jaret Pfluger <https://github.com/jpfluger>"
+    "Jaret Pfluger <https://github.com/jpfluger>",
+    "Dustin Hoffner <https://github.com/dustin-H>"
   ],
   "license": "MIT",
-  "repository": "expressjs/multer",
+  "repository": "dustin-H/multer",
   "keywords": [
     "form",
     "post",
@@ -15,11 +16,13 @@
     "form-data",
     "formdata",
     "express",
-    "middleware"
+    "middleware",
+    "pkgcloud"
   ],
   "dependencies": {
     "busboy": "~0.2.9",
     "mkdirp": "~0.3.5",
+    "pkgcloud": "^1.2.0-alpha.0",
     "qs": "~1.2.2",
     "type-is": "~1.5.2"
   },
