@@ -2,18 +2,10 @@ var is = require('type-is')
 var Busboy = require('busboy')
 var extend = require('xtend')
 
+var makeError = require('./lib/make-error')
 var appendField = require('./lib/append-field')
 var diskStorage = require('./storage/disk')
 var memoryStorage = require('./storage/memory')
-
-var errorMessages = {
-  'LIMIT_FIELD_KEY': 'Field name too long',
-  'LIMIT_FIELD_VALUE': 'Field value too long',
-  'LIMIT_FILE_SIZE': 'File too large',
-  'LIMIT_PARTS_COUNT': 'Too many parts',
-  'LIMIT_FILES_COUNT': 'Too many files',
-  'LIMIT_FIELD_COUNT': 'Too many fields'
-}
 
 function multer (options) {
   options = options || {}
@@ -32,27 +24,27 @@ function multer (options) {
     req.files = Object.create(null)
 
     var busboy = new Busboy(extend(options, { headers: req.headers }))
+    var isDone = false
     var readFinished = false
     var pendingWrites = 0
 
-    function indicateDone () {
-      if (readFinished && pendingWrites === 0) next()
+    function done (err) {
+      if (isDone) return
+      isDone = true
+      req.unpipe(busboy)
+      busboy.removeAllListeners()
+      next(err)
     }
 
-    function makeError (code) {
-      var err = new Error(errorMessages[code])
-      err.code = code
-      return err
+    function indicateDone () {
+      if (readFinished && pendingWrites === 0) done()
     }
 
     function abort (errOrCode) {
-      req.unpipe(busboy)
-      busboy.removeAllListeners()
-
       if (typeof errOrCode === 'string') {
-        next(makeError(errOrCode))
+        done(makeError(errOrCode))
       } else {
-        next(errOrCode)
+        done(errOrCode)
       }
     }
 
