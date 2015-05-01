@@ -1,11 +1,13 @@
-var os = require('os');
-var fs = require('fs');
 var path = require('path');
-var crypto = require('crypto');
 var Busboy = require('busboy');
 var mkdirp = require('mkdirp');
 var is = require('type-is');
 var qs = require('qs');
+
+var extend = require('xtend')
+
+var diskStorage = require('./storage/disk')
+var memoryStorage = require('./storage/memory')
 
 module.exports = function(options) {
 
@@ -14,30 +16,41 @@ module.exports = function(options) {
   options.inMemory = options.inMemory || false;
   options.putSingleFilesInArray = options.putSingleFilesInArray || false;
 
-  // if the destination directory does not exist then assign uploads to the operating system's temporary directory
-  var dest;
-
-  if (options.dest) {
-    dest = options.dest;
-  } else {
-    dest = os.tmpdir();
+  function legacyFilename () {
+    if (!options.rename) return undefined
+    return function (req, file, cb) {
+      var result
+      try { result = options.rename(file.fieldname, file.legacyName, req, file.legacyRes) }
+      catch (err) { return cb(err) }
+      cb(null, result + file.legacyExt)
+    }
   }
 
-  mkdirp(dest, function(err) { if (err) throw err; });
+  function legacyDestination () {
+    if (!options.dest && !options.changeDest) return undefined
+    if (!options.changeDest) return options.dest
+    if (options.dest) mkdirp.sync(options.dest)
+    return function (req, file, cb) {
+      var result
+      try { result = options.changeDest(options.dest, req, file.legacyRes) }
+      catch (err) { return cb(err) }
+      cb(null, result)
+    }
+  }
 
-  // renaming function for the destination directory
-  var changeDest = options.changeDest || function(dest, req, res) {
-    return dest;
-  };
+  var storage;
+  if (options.storage) {
+    storage = options.storage
+  } else if (options.inMemory) {
+    storage = memoryStorage()
+  } else {
+    storage = diskStorage({
+      filename: legacyFilename(),
+      destination: legacyDestination()
+    })
+  }
 
-  // renaming function for the uploaded file - need not worry about the extension
-  // ! if you want to keep the original filename, write a renamer function which does that
-  var rename = options.rename || function(fieldname, filename, req, res) {
-    var random_string = fieldname + filename + Date.now() + Math.random();
-    return crypto.createHash('md5').update(random_string).digest('hex');
-  };
-
-  return function(req, res, next) {
+  return function (req, res, next) {
 
     var readFinished = false;
     var fileCount = 0;
@@ -48,10 +61,7 @@ module.exports = function(options) {
     if (is(req, ['multipart'])) {
       if (options.onParseStart) { options.onParseStart(); }
 
-      // add the request headers to the options
-      options.headers = req.headers;
-
-      var busboy = new Busboy(options);
+      var busboy = new Busboy(extend(options, { headers: req.headers }))
 
       // handle text field data
       busboy.on('field', function(fieldname, val, valTruncated, keyTruncated) {
@@ -75,31 +85,33 @@ module.exports = function(options) {
       // handle files
       busboy.on('file', function(fieldname, fileStream, filename, encoding, mimetype) {
 
-        var ext, newFilename, newFilePath;
-
         // don't attach to the files object, if there is no file
         if (!filename) return fileStream.resume();
 
         // defines is processing a new file
         fileCount++;
 
-        if (filename.indexOf('.') > 0) { ext = '.' + filename.split('.').slice(-1)[0]; }
-        else { ext = ''; }
-
-        newFilename = rename(fieldname, filename.replace(ext, ''), req, res) + ext;
-        newFilePath = path.join(changeDest(dest, req, res), newFilename);
+        var legacyExt = path.extname(filename)
+        var legacyName = path.basename(filename, legacyExt)
 
         var file = {
+          legacyExt: legacyExt,
+          legacyName: legacyName,
+          legacyRes: res,
+
           fieldname: fieldname,
           originalname: filename,
-          name: newFilename,
           encoding: encoding,
           mimetype: mimetype,
-          path: newFilePath,
-          extension: (ext === '') ? '' : ext.replace('.', ''),
-          size: 0,
-          truncated: null,
-          buffer: null
+
+          stream: fileStream
+
+          // name: newFilename,
+          // path: newFilePath,
+          // extension: (ext === '') ? '' : ext.replace('.', ''),
+          // size: 0,
+          // truncated: null,
+          // buffer: null
         };
 
         // trigger "file upload start" event
@@ -112,28 +124,24 @@ module.exports = function(options) {
           }
         }
 
-        var bufs = [];
-        var ws;
-
-        if (!options.inMemory) {
-          ws = fs.createWriteStream(newFilePath);
-          fileStream.pipe(ws);
+        function onError (err) {
+          if (options.onError) return options.onError(err, next)
+          next(err)
         }
 
-        fileStream.on('data', function(data) {
-          if (data) { 
-            if (options.inMemory) bufs.push(data);
-            file.size += data.length; 
-          }
-          // trigger "file data" event
-          if (options.onFileUploadData) { options.onFileUploadData(file, data, req, res); }
-        });
+        fileStream.on('error', onError)
 
-        function onFileStreamEnd() {
+        storage.handleFile(req, file, function (err, info) {
+          if (err) return onError(err)
+
           file.truncated = fileStream.truncated;
           if (!req.files[fieldname]) { req.files[fieldname] = []; }
-          if (options.inMemory) file.buffer = Buffer.concat(bufs, file.size);
-          req.files[fieldname].push(file);
+
+          var legacy = { name: path.basename(info.path), buffer: null }
+          var fileInfo = extend(file, legacy, info)
+          delete fileInfo.legacyRes
+          delete fileInfo.req
+          req.files[fieldname].push(fileInfo);
 
           // trigger "file end" event
           if (options.onFileUploadComplete) { options.onFileUploadComplete(file, req, res); }
@@ -141,47 +149,17 @@ module.exports = function(options) {
           // defines has completed processing one more file
           fileCount--;
           onFinish();
-        }
-
-        if (options.inMemory)
-          fileStream.on('end', onFileStreamEnd);
-        else
-          ws.on('finish', onFileStreamEnd);
-
-        fileStream.on('error', function(error) {
-          // trigger "file error" event
-          if (options.onError) { options.onError(error, next); }
-          else next(error);
-        });
+        })
 
         fileStream.on('limit', function () {
           if (options.onFileSizeLimit) { options.onFileSizeLimit(file); }
         });
 
-        function onFileStreamError(error) {
-          // trigger "file error" event
-          if (options.onError) { options.onError(error, next); }
-          else next(error);
-        }
-
-        if (options.inMemory)
-          fileStream.on('error', onFileStreamError );
-        else 
-          ws.on('error', onFileStreamError );
-
       });
 
-      busboy.on('partsLimit', function() {
-        if (options.onPartsLimit) { options.onPartsLimit(); }
-      });
-
-      busboy.on('filesLimit', function() {
-        if (options.onFilesLimit) { options.onFilesLimit(); }
-      });
-
-      busboy.on('fieldsLimit', function() {
-        if (options.onFieldsLimit) { options.onFieldsLimit(); }
-      });
+      if (options.onPartsLimit) busboy.on('partsLimit', options.onPartsLimit)
+      if (options.onFilesLimit) busboy.on('filesLimit', options.onFilesLimit)
+      if (options.onFieldsLimit) busboy.on('fieldsLimit', options.onFieldsLimit)
 
       busboy.on('finish', function() {
         readFinished = true;

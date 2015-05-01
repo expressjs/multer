@@ -28,11 +28,7 @@ describe('InMemory', function () {
 
     var app = express();
     app.use(multer({
-        dest: dest,
-        inMemory: true,
-        rename: function (fieldname, filename) {
-            return fieldname + filename;
-        }
+        inMemory: true
     }));
     app.post('/', function (req, res) {
         var form = {
@@ -68,19 +64,7 @@ describe('InMemory', function () {
                 expect(form.files.small0).to.have.property('truncated');
                 expect(form.files.small0.truncated).to.equal(false);
                 expect(createBuffer(form.files.small0.buffer).length).to.equal(form.files.small0.size);
-
-                // The path is explicitly set to null b/c inmemory is true
-                // The handler is responsible for writing the inmemory Buffer to file or database
-                expect(form.files.small0.path).to.equal(path.join(dest, form.files.small0.name));
-
-                // Verify that Multer did not automatically write out the file.
-                expect(fs.existsSync(form.files.small0.path)).to.equal(false);
-
-                // The buffer holds the data, so write it out now.
-                fs.writeFileSync(form.files.small0.path, form.files.small0.buffer);
-
-                // Now the file should exist
-                expect(fs.existsSync(form.files.small0.path)).to.equal(true);
+                expect(form.files.small0.path).to.equal.undefined;
 
                 done();
             })
