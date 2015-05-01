@@ -41,6 +41,8 @@ DiskStorage.prototype.handleFile = function handleFile (req, file, cb) {
       outStream.on('error', cb)
       outStream.on('finish', function () {
         cb(null, {
+          destination: destination,
+          filename: filename,
           path: finalPath,
           size: outStream.bytesWritten
         })

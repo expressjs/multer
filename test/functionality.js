@@ -1,31 +1,33 @@
 var fs = require('fs');
+var mkdirp = require('mkdirp')
 var rimraf = require('rimraf');
 var expect = require('chai').expect
 var request = require('supertest');
 var express = require('express');
 var multer = require('../');
 
+function generateFilename (req, file, cb) {
+  cb(null, file.fieldname + file.originalname)
+}
+
+function requestHandler (req, res, next) {
+  res.json({ body: req.body, files: req.files })
+}
+
 describe('Functionality', function () {
 
     // delete the temp dir after the tests are run
-    after(function (done) { rimraf('./temp', done); });
-    after(function (done) { rimraf('./temp2', done); });
-    after(function (done) { rimraf('./temp3', done); });
+    after(function (done) { rimraf('./temp', done) })
+    after(function (done) { rimraf('./temp2', done) })
+    after(function (done) { rimraf('./temp3', done) })
 
     var app = express();
-    app.use(multer({
-        dest: './temp',
-        rename: function (fieldname, filename) {
-            return fieldname + filename;
-        }
-    }));
-    app.post('/', function (req, res) {
-        var form = {
-            body: req.body,
-            files: req.files
-        }
-        res.send(form);
-    });
+    var storage = multer.diskStorage({
+      destination: './temp',
+      filename: generateFilename
+    })
+    app.use(multer({ storage: storage }))
+    app.post('/', requestHandler);
 
 
     it('should upload the file to the `dest` dir', function (done) {
@@ -52,26 +54,18 @@ describe('Functionality', function () {
             .end(function (err, res) {
                 var form = res.body;
                 expect(err).to.be.null;
-                expect(form.files.small0.name).to.equal('small0small0.dat');
+                expect(form.files.small0[0].filename).to.equal('small0small0.dat');
                 done();
             })
     })
 
     var app2 = express();
-    app2.use(multer({
-        dest: './temp2',
-        putSingleFilesInArray: true,
-        rename: function (fieldname, filename) {
-            return fieldname + filename;
-        }
-    }));
-    app2.post('/', function (req, res) {
-        var form = {
-            body: req.body,
-            files: req.files
-        }
-        res.send(form);
-    });
+    var storage = multer.diskStorage({
+      destination: './temp2',
+      filename: generateFilename
+    })
+    app2.use(multer({ storage: storage }))
+    app2.post('/', requestHandler);
 
     it('should ensure all req.files values (single-file per field) point to an array', function (done) {
         request(app2)
@@ -83,7 +77,7 @@ describe('Functionality', function () {
                 var form = res.body;
                 expect(err).to.be.null;
                 expect(form.files.tiny0.length).to.equal(1);
-                expect(form.files.tiny0[0].name).to.equal('tiny0tiny0.dat');
+                expect(form.files.tiny0[0].filename).to.equal('tiny0tiny0.dat');
                 done();
             })
     })
@@ -99,45 +93,25 @@ describe('Functionality', function () {
                 var form = res.body;
                 expect(err).to.be.null;
                 expect(form.files.small0.length).to.equal(2);
-                expect(form.files.small0[0].name).to.equal('small0small0.dat');
-                expect(form.files.small0[1].name).to.equal('small0small1.dat');
+                expect(form.files.small0[0].filename).to.equal('small0small0.dat');
+                expect(form.files.small0[1].filename).to.equal('small0small1.dat');
                 done();
             })
     })
 
     var app3 = express();
-    app3.use(multer({
-        dest: './temp3',
-        changeDest: function (dest, req, res) {
-            dest += '/user1';
+    var storage = multer.diskStorage({
+      destination: function (req, file, cb) {
+        mkdirp('./temp3/user1', function (err) {
+          if (err) return cb(err)
 
-            var stat = null;
-
-            try {
-                stat = fs.statSync(dest);
-            } catch(err) {
-                // for nested folders, look at npm package "mkdirp"
-                fs.mkdirSync(dest);
-            }
-
-            if (stat && !stat.isDirectory()) {
-                // Woh! This file/link/etc already exists, so isn't a directory. Can't save in it. Handle appropriately.
-                throw new Error('Directory cannot be created because an inode of a different type exists at "' + dest + '"');
-            }
-
-            return dest;
-        },
-        rename: function (fieldname, filename) {
-            return fieldname + filename;
-        }
-    }));
-    app3.post('/', function (req, res) {
-        var form = {
-            body: req.body,
-            files: req.files
-        }
-        res.send(form);
-    });
+          cb(null, './temp3/user1')
+        })
+      },
+      filename: generateFilename
+    })
+    app3.use(multer({ storage: storage }));
+    app3.post('/', requestHandler);
 
     it('should rename the `dest` directory to a different directory', function (done) {
         request(app3)
