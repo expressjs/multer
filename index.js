@@ -7,6 +7,10 @@ var appendField = require('./lib/append-field')
 var diskStorage = require('./storage/disk')
 var memoryStorage = require('./storage/memory')
 
+function allowAll (req, file, cb) {
+  cb(null, true)
+}
+
 function multer (options) {
   options = options || {}
 
@@ -16,6 +20,8 @@ function multer (options) {
   } else {
     storage = diskStorage({ destination: options.dest })
   }
+
+  var fileFilter = (options.fileFilter || allowAll)
 
   return function multerMiddleware (req, res, next) {
     if (!is(req, ['multipart'])) return next()
@@ -61,9 +67,6 @@ function multer (options) {
       // don't attach to the files object, if there is no file
       if (!filename) return fileStream.resume()
 
-      // defines is processing a new file
-      pendingWrites++
-
       var file = {
         fieldname: fieldname,
         originalname: filename,
@@ -71,25 +74,34 @@ function multer (options) {
         mimetype: mimetype
       }
 
-      Object.defineProperty(file, 'stream', {
-        configurable: true,
-        enumerable: false,
-        value: fileStream
-      })
-
-      fileStream.on('error', abort)
-      fileStream.on('limit', function () {
-        abort('LIMIT_FILE_SIZE')
-      })
-
-      storage.handleFile(req, file, function (err, info) {
+      fileFilter(req, file, function (err, includeFile) {
         if (err) return abort(err)
+        if (!includeFile) return fileStream.resume()
 
-        if (!req.files[fieldname]) req.files[fieldname] = []
-        req.files[fieldname].push(extend(file, info))
+        // defines is processing a new file
+        pendingWrites++
 
-        pendingWrites--
-        indicateDone()
+        Object.defineProperty(file, 'stream', {
+          configurable: true,
+          enumerable: false,
+          value: fileStream
+        })
+
+        fileStream.on('error', abort)
+        fileStream.on('limit', function () {
+          abort('LIMIT_FILE_SIZE')
+        })
+
+        storage.handleFile(req, file, function (err, info) {
+          if (err) return abort(err)
+
+          if (!req.files[fieldname]) req.files[fieldname] = []
+          req.files[fieldname].push(extend(file, info))
+
+          pendingWrites--
+          indicateDone()
+        })
+
       })
 
     })

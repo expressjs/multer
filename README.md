@@ -64,6 +64,7 @@ The following are the options that can be passed to Multer.
 Key | Description
 --- | ---
 `dest` or `storage` | Where to store the files
+`fileFilter` | Function to control which files are accepted
 `limits` | Limits of the uploaded data
 
 Apart from these, Multer also supports more advanced [busboy options](https://github.com/mscdex/busboy#busboy-methods) like `highWaterMark`, `fileHwm`, and `defCharset`.
@@ -145,6 +146,29 @@ Key | Description | Default
 `headerPairs` | For multipart forms, the max number of header key=>value pairs to parse | 2000
 
 Specifying the limits can help protect your site against denial of service (DoS) attacks.
+
+### `fileFilter`
+
+Set this to a function to control which files should be uploaded and which
+should be skipped. The function should look like this:
+
+```javascript
+function fileFilter (req, file, cb) {
+
+  // The function should call `cb` with a boolean
+  // to indicate if the file should be accepted
+
+  // To reject this file pass `false`, like so:
+  cb(null, false)
+
+  // To accept the file pass `true`, like so:
+  cb(null, true)
+
+  // You can always pass an error if something goes wrong:
+  cb(new Error('I don\'t have a clue!'))
+
+}
+```
 
 ## License
 
