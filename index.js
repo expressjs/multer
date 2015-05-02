@@ -46,9 +46,9 @@ function multer (options) {
       if (readFinished && pendingWrites === 0) done()
     }
 
-    function abort (errOrCode) {
+    function abort (errOrCode, optionalField) {
       if (typeof errOrCode === 'string') {
-        done(makeError(errOrCode))
+        done(makeError(errOrCode, optionalField))
       } else {
         done(errOrCode)
       }
@@ -57,7 +57,12 @@ function multer (options) {
     // handle text field data
     busboy.on('field', function (fieldname, value, fieldnameTruncated, valueTruncated) {
       if (fieldnameTruncated) return abort('LIMIT_FIELD_KEY')
-      if (valueTruncated) return abort('LIMIT_FIELD_VALUE')
+      if (valueTruncated) return abort('LIMIT_FIELD_VALUE', fieldname)
+
+      // Work around bug in Busboy (https://github.com/mscdex/busboy/issues/6)
+      if (options.limits && options.limits.hasOwnProperty('fieldNameSize')) {
+        if (fieldname.length > options.limits.fieldNameSize) return abort('LIMIT_FIELD_KEY')
+      }
 
       appendField(req.body, fieldname, value)
     })
@@ -66,6 +71,11 @@ function multer (options) {
     busboy.on('file', function (fieldname, fileStream, filename, encoding, mimetype) {
       // don't attach to the files object, if there is no file
       if (!filename) return fileStream.resume()
+
+      // Work around bug in Busboy (https://github.com/mscdex/busboy/issues/6)
+      if (options.limits && options.limits.hasOwnProperty('fieldNameSize')) {
+        if (fieldname.length > options.limits.fieldNameSize) return abort('LIMIT_FIELD_KEY')
+      }
 
       var file = {
         fieldname: fieldname,
@@ -89,7 +99,7 @@ function multer (options) {
 
         fileStream.on('error', abort)
         fileStream.on('limit', function () {
-          abort('LIMIT_FILE_SIZE')
+          abort('LIMIT_FILE_SIZE', fieldname)
         })
 
         storage.handleFile(req, file, function (err, info) {
@@ -106,8 +116,8 @@ function multer (options) {
 
     })
 
-    busboy.on('partsLimit', function () { abort('LIMIT_PARTS_COUNT') })
-    busboy.on('filesLimit', function () { abort('LIMIT_FILES_COUNT') })
+    busboy.on('partsLimit', function () { abort('LIMIT_PART_COUNT') })
+    busboy.on('filesLimit', function () { abort('LIMIT_FILE_COUNT') })
     busboy.on('fieldsLimit', function () { abort('LIMIT_FIELD_COUNT') })
     busboy.on('finish', function () {
       readFinished = true
