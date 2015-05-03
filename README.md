@@ -170,6 +170,11 @@ function fileFilter (req, file, cb) {
 }
 ```
 
+## Custom storage engine
+
+See [the documentation here](/StorageEngine.md) if you want to build your own
+storage engine.
+
 ## License
 
 [MIT](LICENSE)
