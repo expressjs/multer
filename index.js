@@ -1,9 +1,9 @@
 var is = require('type-is')
 var Busboy = require('busboy')
 var extend = require('xtend')
+var appendField = require('append-field')
 
 var makeError = require('./lib/make-error')
-var appendField = require('./lib/append-field')
 var diskStorage = require('./storage/disk')
 var memoryStorage = require('./storage/memory')
 

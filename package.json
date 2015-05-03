@@ -18,10 +18,10 @@
     "middleware"
   ],
   "dependencies": {
+    "append-field": "~0.1.0",
     "busboy": "~0.2.9",
     "concat-stream": "^1.4.8",
     "mkdirp": "~0.3.5",
-    "qs": "~1.2.2",
     "type-is": "~1.5.2",
     "xtend": "^4.0.0"
   },
@@ -30,7 +30,8 @@
     "fs-temp": "^0.1.2",
     "mocha": "*",
     "rimraf": "^2.2.8",
-    "standard": "^3.7.2"
+    "standard": "^3.7.2",
+    "testdata-w3c-json-form": "^0.2.0"
   },
   "engines": {
     "node": ">= 0.10.0"

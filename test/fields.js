@@ -6,6 +6,7 @@ var stream = require('stream')
 var util = require('./_util')
 var multer = require('../')
 var FormData = require('form-data')
+var testData = require('testdata-w3c-json-form')
 
 describe('Fields', function () {
   var parser
@@ -95,4 +96,39 @@ describe('Fields', function () {
     })
   })
 
+  testData.forEach(function (test) {
+    it('should handle ' + test.name, function (done) {
+      var form = new FormData()
+
+      test.fields.forEach(function (field) {
+        form.append(field.key, field.value)
+      })
+
+      util.submitForm(parser, form, function (err, req) {
+        assert.ifError(err)
+        assert.deepEqual(req.body, test.expected)
+        done()
+      })
+    })
+  })
+
+  it('should convert arrays into objects', function (done) {
+    var form = new FormData()
+
+    form.append('obj[0]', 'a')
+    form.append('obj[2]', 'c')
+    form.append('obj[x]', 'yz')
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.ifError(err)
+      assert.deepEqual(req.body, {
+        obj: {
+          '0': 'a',
+          '2': 'c',
+          'x': 'yz'
+        }
+      })
+      done()
+    })
+  })
 })
