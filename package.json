@@ -38,7 +38,9 @@
   },
   "files": [
     "LICENSE",
-    "index.js"
+    "index.js",
+    "storage/",
+    "lib/"
   ],
   "scripts": {
     "test": "standard && mocha"
