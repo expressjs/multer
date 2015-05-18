@@ -4,7 +4,8 @@
   "version": "0.1.8",
   "contributors": [
     "Hage Yaapa <captain@hacksparrow.com> (http://www.hacksparrow.com)",
-    "Jaret Pfluger <https://github.com/jpfluger>"
+    "Jaret Pfluger <https://github.com/jpfluger>",
+    "Linus Unnebäck <linus@folkdatorn.se>"
   ],
   "license": "MIT",
   "repository": "expressjs/multer",
