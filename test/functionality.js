@@ -50,8 +50,8 @@ describe('Functionality', function () {
 
       util.submitForm(env.parser, env.form, function (err, req) {
         assert.ifError(err)
-        assert.ok(startsWith(req.files.small0[0].path, env.uploadDir))
-        assert.equal(util.fileSize(req.files.small0[0].path), 1778)
+        assert.ok(startsWith(req.files[0].path, env.uploadDir))
+        assert.equal(util.fileSize(req.files[0].path), 1778)
         done()
       })
     })
@@ -65,7 +65,7 @@ describe('Functionality', function () {
 
       util.submitForm(env.parser, env.form, function (err, req) {
         assert.ifError(err)
-        assert.equal(req.files.small0[0].filename, 'small0small0.dat')
+        assert.equal(req.files[0].filename, 'small0small0.dat')
         done()
       })
     })
@@ -79,8 +79,8 @@ describe('Functionality', function () {
 
       util.submitForm(env.parser, env.form, function (err, req) {
         assert.ifError(err)
-        assert.equal(req.files.tiny0.length, 1)
-        assert.equal(req.files.tiny0[0].filename, 'tiny0tiny0.dat')
+        assert.equal(req.files.length, 1)
+        assert.equal(req.files[0].filename, 'tiny0tiny0.dat')
         done()
       })
     })
@@ -95,9 +95,9 @@ describe('Functionality', function () {
 
       util.submitForm(env.parser, env.form, function (err, req) {
         assert.ifError(err)
-        assert.equal(req.files.themFiles.length, 2)
-        assert.equal(req.files.themFiles[0].filename, 'themFilessmall0.dat')
-        assert.equal(req.files.themFiles[1].filename, 'themFilessmall1.dat')
+        assert.equal(req.files.length, 2)
+        assert.equal(req.files[0].filename, 'themFilessmall0.dat')
+        assert.equal(req.files[1].filename, 'themFilessmall1.dat')
         done()
       })
     })
@@ -124,9 +124,9 @@ describe('Functionality', function () {
 
     util.submitForm(parser, form, function (err, req) {
       assert.ifError(err)
-      assert.equal(req.files.themFiles.length, 2)
-      assert.ok(req.files.themFiles[0].path.indexOf('/testforme-') >= 0)
-      assert.ok(req.files.themFiles[1].path.indexOf('/testforme-') >= 0)
+      assert.equal(req.files.length, 2)
+      assert.ok(req.files[0].path.indexOf('/testforme-') >= 0)
+      assert.ok(req.files[1].path.indexOf('/testforme-') >= 0)
       done()
     })
   })

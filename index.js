@@ -4,6 +4,7 @@ var extend = require('xtend')
 var appendField = require('append-field')
 
 var makeError = require('./lib/make-error')
+var selectField = require('./lib/select-field')
 var diskStorage = require('./storage/disk')
 var memoryStorage = require('./storage/memory')
 
@@ -27,7 +28,7 @@ function multer (options) {
     if (!is(req, ['multipart'])) return next()
 
     req.body = Object.create(null)
-    req.files = Object.create(null)
+    req.files = []
 
     var busboy = new Busboy(extend(options, { headers: req.headers }))
     var isDone = false
@@ -105,8 +106,7 @@ function multer (options) {
         storage.handleFile(req, file, function (err, info) {
           if (err) return abort(err)
 
-          if (!req.files[fieldname]) req.files[fieldname] = []
-          req.files[fieldname].push(extend(file, info))
+          req.files.push(extend(file, info))
 
           pendingWrites--
           indicateDone()
@@ -130,5 +130,7 @@ function multer (options) {
 }
 
 module.exports = multer
+module.exports.one = selectField.one
+module.exports.many = selectField.many
 module.exports.diskStorage = diskStorage
 module.exports.memoryStorage = memoryStorage

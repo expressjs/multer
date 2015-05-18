@@ -32,10 +32,8 @@ console.log(req.files)
 
 ### `req.files`
 
-req.files is a object where the key is the fieldname, and the value is
-information about the file.
-
-Each file has the following properties:
+req.files is an array of objects containing information about the file. Each
+object has the following properties:
 
 Key | Description | Note
 --- | --- | ---
@@ -128,6 +126,16 @@ When using the memory storage, the file info will contain a field called
 **WARNING**: Uploading very large files, or relatively small files in large
 numbers very quickly, can cause your application to run out of memory when the
 memory storage is used.
+
+### `multer.one(req.files, fieldname)`
+
+Returns the first file with the indicated `filedname`, or `null` if no file
+matches.
+
+### `multer.many(req.files, fieldname)`
+
+Returns an array with all of the files with the indicated `fieldname`. Note that
+the array returned might be empty.
 
 ### `limits`
 

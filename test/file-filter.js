@@ -26,12 +26,11 @@ describe('File Filter', function () {
 
     util.submitForm(parser, form, function (err, req) {
       assert.ifError(err)
-      assert.equal(req.files.notme, undefined)
-      assert.equal(req.files.butme.length, 1)
-      assert.equal(req.files.butme[0].fieldname, 'butme')
-      assert.equal(req.files.butme[0].originalname, 'tiny1.dat')
-      assert.equal(req.files.butme[0].size, 7)
-      assert.equal(req.files.butme[0].buffer.length, 7)
+      assert.equal(req.files.length, 1)
+      assert.equal(req.files[0].fieldname, 'butme')
+      assert.equal(req.files[0].originalname, 'tiny1.dat')
+      assert.equal(req.files[0].size, 7)
+      assert.equal(req.files[0].buffer.length, 7)
       done()
     })
   })
