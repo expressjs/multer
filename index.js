@@ -13,9 +13,12 @@ module.exports = function(options) {
   options.includeEmptyFields = options.includeEmptyFields || false;
   options.inMemory = options.inMemory || false;
   options.putSingleFilesInArray = options.putSingleFilesInArray || false;
-
+  options.useValidation = options.useValidation || false;
+  
   // if the destination directory does not exist then assign uploads to the operating system's temporary directory
   var dest;
+  var isBeginning = true;
+
 
   if (options.dest) {
     dest = options.dest;
@@ -101,7 +104,9 @@ module.exports = function(options) {
           truncated: null,
           buffer: null
         };
-
+        
+        isBeginning = true;
+        
         // trigger "file upload start" event
         if (options.onFileUploadStart) {
           var proceed = options.onFileUploadStart(file, req, res);
@@ -122,6 +127,19 @@ module.exports = function(options) {
 
         fileStream.on('data', function(data) {
           if (data) { 
+            
+            if (isBeginning &&  options.useValidation){
+	             str = data.toString('ascii');
+	             var dataBegin=options.validationString;
+               if (!dataBegin.localeCompare(str.substring(0,dataBegin.length))){
+                      // following three lines perform a clean abort
+	                res.send({error: "validation error", path: ""});
+		
+		              res.destroy();
+		              req.destroy();
+               }
+               isBeginning = false;
+            }
             if (options.inMemory) bufs.push(data);
             file.size += data.length; 
           }
