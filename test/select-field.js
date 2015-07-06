@@ -31,29 +31,32 @@ function assertSet (files, setName, fileNames) {
   }
 }
 
-describe('Memory Storage', function () {
+describe('Select Field', function () {
   var parser
 
   before(function () {
-    parser = multer({ storage: multer.memoryStorage() })
+    parser = multer().fields([
+      { name: 'CA$|-|', maxCount: 1 },
+      { name: 'set-1', maxCount: 3 },
+      { name: 'set-2', maxCount: 3 }
+    ])
   })
 
   it('should select the first file with fieldname', function (done) {
     util.submitForm(parser, generateForm(), function (err, req) {
       assert.ifError(err)
-      assert.equal(req.files.length, 7)
 
       var file
 
-      file = multer.one(req.files, 'CA$|-|')
+      file = req.files['CA$|-|'][0]
       assert.equal(file.fieldname, 'CA$|-|')
       assert.equal(file.originalname, 'empty.dat')
 
-      file = multer.one(req.files, 'set-1')
+      file = req.files['set-1'][0]
       assert.equal(file.fieldname, 'set-1')
       assert.equal(file.originalname, 'tiny0.dat')
 
-      file = multer.one(req.files, 'set-2')
+      file = req.files['set-2'][0]
       assert.equal(file.fieldname, 'set-2')
       assert.equal(file.originalname, 'tiny1.dat')
 
@@ -65,18 +68,10 @@ describe('Memory Storage', function () {
   it('should select all files with fieldname', function (done) {
     util.submitForm(parser, generateForm(), function (err, req) {
       assert.ifError(err)
-      assert.equal(req.files.length, 7)
 
-      var files
-
-      files = multer.many(req.files, 'CA$|-|')
-      assertSet(files, 'CA$|-|', [ 'empty.dat' ])
-
-      files = multer.many(req.files, 'set-1')
-      assertSet(files, 'set-1', [ 'tiny0.dat', 'empty.dat', 'tiny1.dat' ])
-
-      files = multer.many(req.files, 'set-2')
-      assertSet(files, 'set-2', [ 'tiny1.dat', 'tiny0.dat', 'empty.dat' ])
+      assertSet(req.files['CA$|-|'], 'CA$|-|', [ 'empty.dat' ])
+      assertSet(req.files['set-1'], 'set-1', [ 'tiny0.dat', 'empty.dat', 'tiny1.dat' ])
+      assertSet(req.files['set-2'], 'set-2', [ 'tiny1.dat', 'tiny0.dat', 'empty.dat' ])
 
       done()
     })

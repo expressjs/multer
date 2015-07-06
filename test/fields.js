@@ -12,7 +12,7 @@ describe('Fields', function () {
   var parser
 
   before(function () {
-    parser = multer({ storage: multer.memoryStorage() })
+    parser = multer().fields([])
   })
 
   it('should process multiple fields', function (done) {

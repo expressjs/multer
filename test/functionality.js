@@ -31,7 +31,7 @@ describe('Functionality', function () {
       })
 
       cb(null, {
-        parser: multer({ storage: storage }),
+        upload: multer({ storage: storage }),
         uploadDir: uploadDir,
         form: new FormData()
       })
@@ -46,12 +46,13 @@ describe('Functionality', function () {
     makeStandardEnv(function (err, env) {
       if (err) return done(err)
 
+      var parser = env.upload.single('small0')
       env.form.append('small0', util.file('small0.dat'))
 
-      util.submitForm(env.parser, env.form, function (err, req) {
+      util.submitForm(parser, env.form, function (err, req) {
         assert.ifError(err)
-        assert.ok(startsWith(req.files[0].path, env.uploadDir))
-        assert.equal(util.fileSize(req.files[0].path), 1778)
+        assert.ok(startsWith(req.file.path, env.uploadDir))
+        assert.equal(util.fileSize(req.file.path), 1778)
         done()
       })
     })
@@ -61,11 +62,12 @@ describe('Functionality', function () {
     makeStandardEnv(function (err, env) {
       if (err) return done(err)
 
+      var parser = env.upload.single('small0')
       env.form.append('small0', util.file('small0.dat'))
 
-      util.submitForm(env.parser, env.form, function (err, req) {
+      util.submitForm(parser, env.form, function (err, req) {
         assert.ifError(err)
-        assert.equal(req.files[0].filename, 'small0small0.dat')
+        assert.equal(req.file.filename, 'small0small0.dat')
         done()
       })
     })
@@ -75,12 +77,12 @@ describe('Functionality', function () {
     makeStandardEnv(function (err, env) {
       if (err) return done(err)
 
+      var parser = env.upload.single('tiny0')
       env.form.append('tiny0', util.file('tiny0.dat'))
 
-      util.submitForm(env.parser, env.form, function (err, req) {
+      util.submitForm(parser, env.form, function (err, req) {
         assert.ifError(err)
-        assert.equal(req.files.length, 1)
-        assert.equal(req.files[0].filename, 'tiny0tiny0.dat')
+        assert.equal(req.file.filename, 'tiny0tiny0.dat')
         done()
       })
     })
@@ -90,10 +92,11 @@ describe('Functionality', function () {
     makeStandardEnv(function (err, env) {
       if (err) return done(err)
 
+      var parser = env.upload.array('themFiles', 2)
       env.form.append('themFiles', util.file('small0.dat'))
       env.form.append('themFiles', util.file('small1.dat'))
 
-      util.submitForm(env.parser, env.form, function (err, req) {
+      util.submitForm(parser, env.form, function (err, req) {
         assert.ifError(err)
         assert.equal(req.files.length, 2)
         assert.equal(req.files[0].filename, 'themFilessmall0.dat')
@@ -116,8 +119,9 @@ describe('Functionality', function () {
       filename: generateFilename
     })
 
-    var parser = multer({ storage: storage })
     var form = new FormData()
+    var upload = multer({ storage: storage })
+    var parser = upload.array('themFiles', 2)
 
     form.append('themFiles', util.file('small0.dat'))
     form.append('themFiles', util.file('small1.dat'))
