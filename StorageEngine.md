@@ -1,6 +1,6 @@
 # Multer Storage Engine
 
-Storage engine are classes that exposes at least one function: `handleFile`.
+Storage engine are classes that exposes at least one function: `_handleFile`.
 Follow the template below to get started with your storage engine.
 
 When asking the user for input (such as where to save this file), always give
@@ -20,7 +20,7 @@ var storage = myCustomStorage({
 ```
 
 Your engine is responsible for storing the file and provide back info on how to
-access the file in the future. This is done by the `handleFile` function.
+access the file in the future. This is done by the `_handleFile` function.
 
 The file data will be given to you as a stream (`file.stream`). You should pipe
 this data somewhere, and when you are done, call `cb` with some info on the
@@ -28,6 +28,11 @@ file.
 
 The info you provide in the callback will be merged in with the other file info,
 and then presented to the user via `req.files`.
+
+Your engine is also responsible for removing files if an error is encountered
+later on. Multer will decide which files to delete and when, you only need to
+provide the `_removeFile` function. It will receive the same arguments as
+`_handleFile`. Call the callback once the file has been removed.
 
 ## Template
 
@@ -42,7 +47,7 @@ function MyCustomStorage (opts) {
   opts.getDestination = (opts.destination || getDestination)
 }
 
-MyCustomStorage.prototype.handleFile = function handleFile (req, file, cb) {
+MyCustomStorage.prototype._handleFile = function _handleFile (req, file, cb) {
   this.getDestination(req, file, function (err, path) {
     if (err) return cb(err)
 
@@ -57,6 +62,10 @@ MyCustomStorage.prototype.handleFile = function handleFile (req, file, cb) {
       })
     })
   })
+}
+
+MyCustomStorage.prototype._removeFile = function _removeFile (req, file, cb) {
+  fs.unlink(file.path, cb)
 }
 
 module.exports = function (opts) {

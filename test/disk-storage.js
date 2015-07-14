@@ -2,6 +2,7 @@
 
 var assert = require('assert')
 
+var fs = require('fs')
 var util = require('./_util')
 var multer = require('../')
 var temp = require('fs-temp')
@@ -11,7 +12,7 @@ var FormData = require('form-data')
 describe('Disk Storage', function () {
   var uploadDir, upload
 
-  before(function (done) {
+  beforeEach(function (done) {
     temp.mkdir(function (err, path) {
       if (err) return done(err)
 
@@ -21,7 +22,7 @@ describe('Disk Storage', function () {
     })
   })
 
-  after(function (done) {
+  afterEach(function (done) {
     rimraf(uploadDir, done)
   })
 
@@ -142,6 +143,26 @@ describe('Disk Storage', function () {
       assert.equal(req.files['large'][0].originalname, 'large.jpg')
       assert.equal(req.files['large'][0].size, 2413677)
       assert.equal(util.fileSize(req.files['large'][0].path), 2413677)
+
+      done()
+    })
+
+  })
+
+  it('should remove uploaded files on error', function (done) {
+    var form = new FormData()
+    var parser = upload.single('tiny0')
+
+    form.append('tiny0', util.file('tiny0.dat'))
+    form.append('small0', util.file('small0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.equal(err.code, 'LIMIT_UNEXPECTED_FILE')
+      assert.equal(err.field, 'small0')
+      assert.deepEqual(err.storageErrors, [])
+
+      var files = fs.readdirSync(uploadDir)
+      assert.deepEqual(files, [])
 
       done()
     })

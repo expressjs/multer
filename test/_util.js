@@ -23,7 +23,7 @@ exports.submitForm = function submitForm (multer, form, cb) {
     }
 
     multer(req, null, function (err) {
-      cb(err, err ? undefined : req)
+      cb(err, req)
     })
   })
 }

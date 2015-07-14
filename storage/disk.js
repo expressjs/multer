@@ -25,7 +25,7 @@ function DiskStorage (opts) {
   }
 }
 
-DiskStorage.prototype.handleFile = function handleFile (req, file, cb) {
+DiskStorage.prototype._handleFile = function _handleFile (req, file, cb) {
   var that = this
 
   that.getDestination(req, file, function (err, destination) {
@@ -49,6 +49,10 @@ DiskStorage.prototype.handleFile = function handleFile (req, file, cb) {
       })
     })
   })
+}
+
+DiskStorage.prototype._removeFile = function _removeFile (req, file, cb) {
+  fs.unlink(file.path, cb)
 }
 
 module.exports = function (opts) {

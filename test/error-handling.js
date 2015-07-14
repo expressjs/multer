@@ -128,4 +128,33 @@ describe('Error Handling', function () {
       done()
     })
   })
+
+  it('should report errors from storage engines', function (done) {
+    var storage = multer.memoryStorage()
+
+    storage._removeFile = function _removeFile (req, file, cb) {
+      var err = new Error('Test error')
+      err.code = 'TEST'
+      cb(err)
+    }
+
+    var form = new FormData()
+    var upload = multer({ storage: storage })
+    var parser = upload.single('tiny0')
+
+    form.append('tiny0', util.file('tiny0.dat'))
+    form.append('small0', util.file('small0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.equal(err.code, 'LIMIT_UNEXPECTED_FILE')
+      assert.equal(err.field, 'small0')
+
+      assert.equal(err.storageErrors.length, 1)
+      assert.equal(err.storageErrors[0].code, 'TEST')
+      assert.equal(err.storageErrors[0].field, 'tiny0')
+      assert.equal(err.storageErrors[0].file, req.file)
+
+      done()
+    })
+  })
 })
