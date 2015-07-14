@@ -14,26 +14,41 @@ npm install --save multer
 ```javascript
 var express = require('express')
 var multer  = require('multer')
+var upload = multer({ dest: 'uploads/' })
 
 var app = express()
-app.use(multer({ dest: 'uploads/' }))
+
+app.post('/profile', upload.single('avatar'), function (req, res, next) {
+  // req.file is the `avatar` file
+})
+
+app.post('/photos/upload', upload.array('photos', 12), function (req, res, next) {
+  // req.files is array of `photos` files
+})
+
+var cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
+app.post('/cool-profile', cpUpload, function (req, res, next) {
+  // req.files is an object (String -> Array) where fieldname is the key, and the value is array of files
+  //
+  // e.g.
+  //  req.files['avatar'][0] -> File
+  //  req.files['gallery'] -> Array
+})
 ```
 
-You can access the fields and files in the `request` object:
+You can access post data fields as `body` on the `request` object:
 
 ```javascript
 console.log(req.body)
-console.log(req.files)
 ```
 
-**IMPORTANT**: Multer will not process any form which is not `multipart/form-data`.
+**IMPORTANT**: Multer will only process forms which is of the type `multipart/form-data`.
 
 ## API
 
-### `req.files`
+### File information
 
-req.files is an array of objects containing information about the file. Each
-object has the following properties:
+Each file contains the following information:
 
 Key | Description | Note
 --- | --- | ---
@@ -65,8 +80,6 @@ Key | Description
 `fileFilter` | Function to control which files are accepted
 `limits` | Limits of the uploaded data
 
-Apart from these, Multer also supports more advanced [busboy options](https://github.com/mscdex/busboy#busboy-methods) like `highWaterMark`, `fileHwm`, and `defCharset`.
-
 In an average web app, only `dest` might be required, and configured as shown in
 the following example.
 
@@ -77,6 +90,34 @@ app.use(multer({ dest: 'uploads/' }))
 If you want more control over your uploads, you'll want to use the `storage`
 option instead of `dest`. Multer ships with to storage engines `DiskStorage`
 and `MemoryStorage`, more engines is available from third parties.
+
+#### `.single(fieldname)`
+
+Accept a single file with the name `fieldname`. The single file will be stored
+at `req.file`.
+
+#### `.array(fieldname[, maxCount])`
+
+Accept an array of files, all with the name `fieldname`. Optionally error out if
+more than `maxCount` files are uploaded. The array of files will be stored at
+`req.files`.
+
+#### `.fields(fields)`
+
+Accept a mix of files, specified by `fields`. An object with arrays of files
+will be stored at `req.files`.
+
+`fields` should be an array of objects with `name` and optionally a `maxCount`,
+example:
+
+```javascript
+[
+  { name: 'avatar', maxCount: 1 },
+  { name: 'gallery', maxCount: 8 }
+]
+```
+
+### `storage`
 
 #### `DiskStorage`
 
@@ -126,16 +167,6 @@ When using the memory storage, the file info will contain a field called
 **WARNING**: Uploading very large files, or relatively small files in large
 numbers very quickly, can cause your application to run out of memory when the
 memory storage is used.
-
-### `multer.one(req.files, fieldname)`
-
-Returns the first file with the indicated `filedname`, or `null` if no file
-matches.
-
-### `multer.many(req.files, fieldname)`
-
-Returns an array with all of the files with the indicated `fieldname`. Note that
-the array returned might be empty.
 
 ### `limits`
 
