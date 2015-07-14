@@ -19,19 +19,19 @@
     "middleware"
   ],
   "dependencies": {
-    "append-field": "~0.1.0",
-    "busboy": "~0.2.9",
-    "concat-stream": "^1.4.8",
-    "mkdirp": "~0.3.5",
-    "type-is": "~1.5.2",
+    "append-field": "^0.1.0",
+    "busboy": "^0.2.9",
+    "concat-stream": "^1.5.0",
+    "mkdirp": "^0.5.1",
+    "type-is": "^1.6.4",
     "xtend": "^4.0.0"
   },
   "devDependencies": {
-    "form-data": "^0.2.0",
+    "form-data": "^1.0.0-rc1",
     "fs-temp": "^0.1.2",
-    "mocha": "*",
-    "rimraf": "^2.2.8",
-    "standard": "^3.7.2",
+    "mocha": "^2.2.5",
+    "rimraf": "^2.4.1",
+    "standard": "^4.5.4",
     "testdata-w3c-json-form": "^0.2.0"
   },
   "engines": {

@@ -21,11 +21,11 @@ function generateForm () {
 }
 
 function assertSet (files, setName, fileNames) {
-  var i, len = fileNames.length
+  var len = fileNames.length
 
   assert.equal(files.length, len)
 
-  for (i = 0; i < len; i++) {
+  for (var i = 0; i < len; i++) {
     assert.equal(files[i].fieldname, setName)
     assert.equal(files[i].originalname, fileNames[i])
   }
