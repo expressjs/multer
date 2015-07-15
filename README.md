@@ -42,7 +42,7 @@ You can access post data fields as `body` on the `request` object:
 console.log(req.body)
 ```
 
-**IMPORTANT**: Multer will only process forms which is of the type `multipart/form-data`.
+**IMPORTANT**: Multer will only process forms which are of the type `multipart/form-data`.
 
 ## API
 
@@ -69,7 +69,7 @@ property, which tells Multer where to upload the files. In case you omit the
 options object, the file will be renamed and uploaded to the temporary directory
 of the system.
 
-By the default, Multer will rename the files so as to avoid name conflicts. The
+By default, Multer will rename the files so as to avoid naming conflicts. The
 renaming function can be customized according to your needs.
 
 The following are the options that can be passed to Multer.
@@ -89,27 +89,27 @@ app.use(multer({ dest: 'uploads/' }))
 ```
 
 If you want more control over your uploads, you'll want to use the `storage`
-option instead of `dest`. Multer ships with to storage engines `DiskStorage`
-and `MemoryStorage`, more engines is available from third parties.
+option instead of `dest`. Multer ships with storage engines `DiskStorage`
+and `MemoryStorage`; More engines are available from third parties.
 
 #### `.single(fieldname)`
 
 Accept a single file with the name `fieldname`. The single file will be stored
-at `req.file`.
+in `req.file`.
 
 #### `.array(fieldname[, maxCount])`
 
 Accept an array of files, all with the name `fieldname`. Optionally error out if
-more than `maxCount` files are uploaded. The array of files will be stored at
+more than `maxCount` files are uploaded. The array of files will be stored in
 `req.files`.
 
 #### `.fields(fields)`
 
 Accept a mix of files, specified by `fields`. An object with arrays of files
-will be stored at `req.files`.
+will be stored in `req.files`.
 
-`fields` should be an array of objects with `name` and optionally a `maxCount`,
-example:
+`fields` should be an array of objects with `name` and optionally a `maxCount`.
+Example:
 
 ```javascript
 [
@@ -138,23 +138,23 @@ app.use(multer({ storage: storage }))
 ```
 
 There are two options available, `destination` and `filename`. They are both
-functions that helps to determine where the file should be stored.
+functions that determine where the file should be stored.
 
 `destination` is used to determine within which folder the uploaded files should
 be stored. This can also be given as a `string` (e.g. `'/tmp/uploads'`).
 
 `filename` is used to determine what the file should be named inside the folder.
 
-Both function gets passed both the request (`req`) and some information about
+Each function gets passed both the request (`req`) and some information about
 the file (`file`) to aid with the decision.
 
 Note that `req.body` might not have been fully populated yet. It depends on the
-order that the client sends the fields and files.
+order that the client transmits fields and files to the server.
 
 #### `MemoryStorage`
 
 The memory storage engine stores the files in memory as `Buffer` objects. It
-dosen't have any options.
+doesn't have any options.
 
 ```javascript
 var storage = multer.memoryStorage()
@@ -162,18 +162,18 @@ var storage = multer.memoryStorage()
 app.use(multer({ storage: storage }))
 ```
 
-When using the memory storage, the file info will contain a field called
+When using memory storage, the file info will contain a field called
 `buffer` that contains the entire file.
 
 **WARNING**: Uploading very large files, or relatively small files in large
-numbers very quickly, can cause your application to run out of memory when the
+numbers very quickly, can cause your application to run out of memory when
 memory storage is used.
 
 ### `limits`
 
-An object specifying the size limits of the following optional properties. This object is passed to busboy directly, and the details of properties can be found on [busboy's page](https://github.com/mscdex/busboy#busboy-methods)
+An object specifying the size limits of the following optional properties. Multer passes this object into busboy directly, and the details of the properties can be found on [busboy's page](https://github.com/mscdex/busboy#busboy-methods).
 
-The following integer values is available:
+The following integer values are available:
 
 Key | Description | Default
 --- | --- | ---
