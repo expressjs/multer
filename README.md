@@ -226,6 +226,8 @@ and the standard error handler will not be called.
 Instead, the error will be set on the request object as `uploadError` and it's
 up to you to deal with all the (possibly partially) uploaded files.
 
+Refer to the examples in [ErrorHandling](/ErrorHandling.md) for help on implementing `manual` error handling.
+
 ## Custom storage engine
 
 See [the documentation here](/StorageEngine.md) if you want to build your own
