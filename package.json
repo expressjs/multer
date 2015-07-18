@@ -4,7 +4,8 @@
   "version": "0.1.8",
   "contributors": [
     "Hage Yaapa <captain@hacksparrow.com> (http://www.hacksparrow.com)",
-    "Jaret Pfluger <https://github.com/jpfluger>"
+    "Jaret Pfluger <https://github.com/jpfluger>",
+    "Linus Unnebäck <linus@folkdatorn.se>"
   ],
   "license": "MIT",
   "repository": "expressjs/multer",
@@ -18,27 +19,31 @@
     "middleware"
   ],
   "dependencies": {
-    "busboy": "~0.2.9",
-    "mkdirp": "~0.3.5",
-    "qs": "~1.2.2",
-    "type-is": "~1.5.2"
+    "append-field": "^0.1.0",
+    "busboy": "^0.2.9",
+    "concat-stream": "^1.5.0",
+    "mkdirp": "^0.5.1",
+    "type-is": "^1.6.4",
+    "xtend": "^4.0.0"
   },
   "devDependencies": {
-    "chai": "^1.9.1",
-    "co": "^3.0.6",
-    "express": "*",
-    "mocha": "*",
-    "rimraf": "^2.2.8",
-    "supertest": "^0.13.0"
+    "form-data": "^1.0.0-rc1",
+    "fs-temp": "^0.1.2",
+    "mocha": "^2.2.5",
+    "rimraf": "^2.4.1",
+    "standard": "^4.5.4",
+    "testdata-w3c-json-form": "^0.2.0"
   },
   "engines": {
     "node": ">= 0.10.0"
   },
   "files": [
     "LICENSE",
-    "index.js"
+    "index.js",
+    "storage/",
+    "lib/"
   ],
   "scripts": {
-    "test": "mocha --reporter spec --bail --check-leaks"
+    "test": "standard && mocha"
   }
 }

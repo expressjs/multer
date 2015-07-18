@@ -1,156 +1,138 @@
-var fs = require('fs');
-var rimraf = require('rimraf');
-var expect = require('chai').expect
-var request = require('supertest');
-var express = require('express');
-var multer = require('../');
+/* eslint-env mocha */
+
+var assert = require('assert')
+
+var util = require('./_util')
+var multer = require('../')
+var temp = require('fs-temp')
+var rimraf = require('rimraf')
+var FormData = require('form-data')
+
+function generateFilename (req, file, cb) {
+  cb(null, file.fieldname + file.originalname)
+}
+
+function startsWith (str, start) {
+  return (str.substring(0, start.length) === start)
+}
 
 describe('Functionality', function () {
+  var cleanup = []
 
-    // delete the temp dir after the tests are run
-    after(function (done) { rimraf('./temp', done); });
-    after(function (done) { rimraf('./temp2', done); });
-    after(function (done) { rimraf('./temp3', done); });
+  function makeStandardEnv (cb) {
+    temp.mkdir(function (err, uploadDir) {
+      if (err) return cb(err)
 
-    var app = express();
-    app.use(multer({
-        dest: './temp',
-        rename: function (fieldname, filename) {
-            return fieldname + filename;
-        }
-    }));
-    app.post('/', function (req, res) {
-        var form = {
-            body: req.body,
-            files: req.files
-        }
-        res.send(form);
-    });
+      cleanup.push(uploadDir)
 
+      var storage = multer.diskStorage({
+        destination: uploadDir,
+        filename: generateFilename
+      })
 
-    it('should upload the file to the `dest` dir', function (done) {
-        request(app)
-            .post('/')
-            .type('form')
-            .attach('small0', __dirname + '/files/small0.dat')
-            .expect(200)
-            .end(function (err, res) {
-                var form = res.body;
-                expect(err).to.be.null;
-                expect(fs.existsSync('./temp/small0small0.dat')).to.equal(true);
-                done();
-            })
+      cb(null, {
+        upload: multer({ storage: storage }),
+        uploadDir: uploadDir,
+        form: new FormData()
+      })
+    })
+  }
+
+  after(function () {
+    while (cleanup.length) rimraf.sync(cleanup.pop())
+  })
+
+  it('should upload the file to the `dest` dir', function (done) {
+    makeStandardEnv(function (err, env) {
+      if (err) return done(err)
+
+      var parser = env.upload.single('small0')
+      env.form.append('small0', util.file('small0.dat'))
+
+      util.submitForm(parser, env.form, function (err, req) {
+        assert.ifError(err)
+        assert.ok(startsWith(req.file.path, env.uploadDir))
+        assert.equal(util.fileSize(req.file.path), 1778)
+        done()
+      })
+    })
+  })
+
+  it('should rename the uploaded file', function (done) {
+    makeStandardEnv(function (err, env) {
+      if (err) return done(err)
+
+      var parser = env.upload.single('small0')
+      env.form.append('small0', util.file('small0.dat'))
+
+      util.submitForm(parser, env.form, function (err, req) {
+        assert.ifError(err)
+        assert.equal(req.file.filename, 'small0small0.dat')
+        done()
+      })
+    })
+  })
+
+  it('should ensure all req.files values (single-file per field) point to an array', function (done) {
+    makeStandardEnv(function (err, env) {
+      if (err) return done(err)
+
+      var parser = env.upload.single('tiny0')
+      env.form.append('tiny0', util.file('tiny0.dat'))
+
+      util.submitForm(parser, env.form, function (err, req) {
+        assert.ifError(err)
+        assert.equal(req.file.filename, 'tiny0tiny0.dat')
+        done()
+      })
+    })
+  })
+
+  it('should ensure all req.files values (multi-files per field) point to an array', function (done) {
+    makeStandardEnv(function (err, env) {
+      if (err) return done(err)
+
+      var parser = env.upload.array('themFiles', 2)
+      env.form.append('themFiles', util.file('small0.dat'))
+      env.form.append('themFiles', util.file('small1.dat'))
+
+      util.submitForm(parser, env.form, function (err, req) {
+        assert.ifError(err)
+        assert.equal(req.files.length, 2)
+        assert.equal(req.files[0].filename, 'themFilessmall0.dat')
+        assert.equal(req.files[1].filename, 'themFilessmall1.dat')
+        done()
+      })
+    })
+  })
+
+  it('should rename the destination directory to a different directory', function (done) {
+    var storage = multer.diskStorage({
+      destination: function (req, file, cb) {
+        temp.template('testforme-%s').mkdir(function (err, uploadDir) {
+          if (err) return cb(err)
+
+          cleanup.push(uploadDir)
+          cb(null, uploadDir)
+        })
+      },
+      filename: generateFilename
     })
 
+    var form = new FormData()
+    var upload = multer({ storage: storage })
+    var parser = upload.array('themFiles', 2)
 
-    it('should rename the uploaded file', function (done) {
-        request(app)
-            .post('/')
-            .type('form')
-            .attach('small0', __dirname + '/files/small0.dat')
-            .expect(200)
-            .end(function (err, res) {
-                var form = res.body;
-                expect(err).to.be.null;
-                expect(form.files.small0.name).to.equal('small0small0.dat');
-                done();
-            })
+    form.append('themFiles', util.file('small0.dat'))
+    form.append('themFiles', util.file('small1.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.ifError(err)
+      assert.equal(req.files.length, 2)
+      assert.ok(req.files[0].path.indexOf('/testforme-') >= 0)
+      assert.ok(req.files[1].path.indexOf('/testforme-') >= 0)
+      done()
     })
-
-    var app2 = express();
-    app2.use(multer({
-        dest: './temp2',
-        putSingleFilesInArray: true,
-        rename: function (fieldname, filename) {
-            return fieldname + filename;
-        }
-    }));
-    app2.post('/', function (req, res) {
-        var form = {
-            body: req.body,
-            files: req.files
-        }
-        res.send(form);
-    });
-
-    it('should ensure all req.files values (single-file per field) point to an array', function (done) {
-        request(app2)
-            .post('/')
-            .type('form')
-            .attach('tiny0', __dirname + '/files/tiny0.dat')
-            .expect(200)
-            .end(function (err, res) {
-                var form = res.body;
-                expect(err).to.be.null;
-                expect(form.files.tiny0.length).to.equal(1);
-                expect(form.files.tiny0[0].name).to.equal('tiny0tiny0.dat');
-                done();
-            })
-    })
-
-    it('should ensure all req.files values (multi-files per field) point to an array', function (done) {
-        request(app2)
-            .post('/')
-            .type('form')
-            .attach('small0', __dirname + '/files/small0.dat')
-            .attach('small0', __dirname + '/files/small1.dat')
-            .expect(200)
-            .end(function (err, res) {
-                var form = res.body;
-                expect(err).to.be.null;
-                expect(form.files.small0.length).to.equal(2);
-                expect(form.files.small0[0].name).to.equal('small0small0.dat');
-                expect(form.files.small0[1].name).to.equal('small0small1.dat');
-                done();
-            })
-    })
-
-    var app3 = express();
-    app3.use(multer({
-        dest: './temp3',
-        changeDest: function (dest, req, res) {
-            dest += '/user1';
-
-            var stat = null;
-
-            try {
-                stat = fs.statSync(dest);
-            } catch(err) {
-                // for nested folders, look at npm package "mkdirp"
-                fs.mkdirSync(dest);
-            }
-
-            if (stat && !stat.isDirectory()) {
-                // Woh! This file/link/etc already exists, so isn't a directory. Can't save in it. Handle appropriately.
-                throw new Error('Directory cannot be created because an inode of a different type exists at "' + dest + '"');
-            }
-
-            return dest;
-        },
-        rename: function (fieldname, filename) {
-            return fieldname + filename;
-        }
-    }));
-    app3.post('/', function (req, res) {
-        var form = {
-            body: req.body,
-            files: req.files
-        }
-        res.send(form);
-    });
-
-    it('should rename the `dest` directory to a different directory', function (done) {
-        request(app3)
-            .post('/')
-            .type('form')
-            .attach('small0', __dirname + '/files/small0.dat')
-            .expect(200)
-            .end(function (err, res) {
-                var form = res.body;
-                expect(err).to.be.null;
-                expect(fs.existsSync('./temp3/user1/small0small0.dat')).to.equal(true);
-                done();
-            })
-    })
+  })
 
 })
