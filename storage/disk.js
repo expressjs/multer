@@ -52,7 +52,13 @@ DiskStorage.prototype._handleFile = function _handleFile (req, file, cb) {
 }
 
 DiskStorage.prototype._removeFile = function _removeFile (req, file, cb) {
-  fs.unlink(file.path, cb)
+  var path = file.path
+
+  delete file.destination
+  delete file.filename
+  delete file.path
+
+  fs.unlink(path, cb)
 }
 
 module.exports = function (opts) {

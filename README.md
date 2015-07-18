@@ -79,7 +79,6 @@ Key | Description
 `dest` or `storage` | Where to store the files
 `fileFilter` | Function to control which files are accepted
 `limits` | Limits of the uploaded data
-`errorHandling` | How to handle errors (`automatic` or `manual`)
 
 In an average web app, only `dest` might be required, and configured as shown in
 the following example.
@@ -210,23 +209,28 @@ function fileFilter (req, file, cb) {
 }
 ```
 
-### `errorHandling`
+## Error handling
 
-There are two ways of dealing with errors in multer.
+When encountering an error, multer will delegate the error to express. You can
+display a nice error page using [the standard express way](http://expressjs.com/guide/error-handling.html).
 
-**`automatic`** This is the default mode. When encountering an error, multer
-will remove files that have already been uploaded, and then delegate the error
-to express. You can display a nice error page using
-[the standard express way](http://expressjs.com/guide/error-handling.html).
+If you want to catch errors specifically from multer, you can call the
+middleware function by yourself.
 
-**`manual`** If you want more control over what happens when an error is
-encountered, then this mode is for you. No files will automatically be removed,
-and the standard error handler will not be called.
+```javascript
+var upload = multer().single('avatar')
 
-Instead, the error will be set on the request object as `uploadError` and it's
-up to you to deal with all the (possibly partially) uploaded files.
+app.post('/profile', function (req, res) {
+  upload(req, res, function (err) {
+    if (err) {
+      // An error occurred when uploading
+      return
+    }
 
-Refer to the examples in [ErrorHandling](/ErrorHandling.md) for help on implementing `manual` error handling.
+    // Everything went fine
+  })
+})
+```
 
 ## Custom storage engine
 

@@ -19,7 +19,6 @@ function Multer (options) {
 
   this.limits = options.limits
   this.fileFilter = options.fileFilter || allowAll
-  this.errorHandling = options.errorHandling || 'automatic'
 }
 
 Multer.prototype._makeMiddleware = function (fields, fileStrategy) {
@@ -47,7 +46,6 @@ Multer.prototype._makeMiddleware = function (fields, fileStrategy) {
     return {
       limits: this.limits,
       storage: this.storage,
-      errorHandling: this.errorHandling,
       fileFilter: wrappedFileFilter,
       fileStrategy: fileStrategy
     }

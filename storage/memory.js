@@ -12,7 +12,8 @@ MemoryStorage.prototype._handleFile = function _handleFile (req, file, cb) {
 }
 
 MemoryStorage.prototype._removeFile = function _removeFile (req, file, cb) {
-  cb(null) // Will be garbage collected automatically
+  delete file.buffer
+  cb(null)
 }
 
 module.exports = function (opts) {
