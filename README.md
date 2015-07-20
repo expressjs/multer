@@ -142,6 +142,10 @@ functions that determine where the file should be stored.
 `destination` is used to determine within which folder the uploaded files should
 be stored. This can also be given as a `string` (e.g. `'/tmp/uploads'`).
 
+**Note:** You are responsible for creating the directory when providing
+`destination` as a function. When passing a string, multer will make sure that
+the directory is created for you.
+
 `filename` is used to determine what the file should be named inside the folder.
 
 Each function gets passed both the request (`req`) and some information about
