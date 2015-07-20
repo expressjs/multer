@@ -3,6 +3,7 @@
 var assert = require('assert')
 
 var fs = require('fs')
+var path = require('path')
 var util = require('./_util')
 var multer = require('../')
 var temp = require('fs-temp')
@@ -169,4 +170,22 @@ describe('Disk Storage', function () {
 
   })
 
+  it('should report error when directory doesn\'t exist', function (done) {
+    var directory = path.join(temp.mkdirSync(), 'ghost')
+    function dest ($0, $1, cb) { cb(null, directory) }
+
+    var storage = multer.diskStorage({ destination: dest })
+    var upload = multer({ storage: storage })
+    var parser = upload.single('tiny0')
+    var form = new FormData()
+
+    form.append('tiny0', util.file('tiny0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.equal(err.code, 'ENOENT')
+      assert.equal(path.dirname(err.path), directory)
+
+      done()
+    })
+  })
 })
