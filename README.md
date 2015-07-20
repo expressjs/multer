@@ -84,7 +84,7 @@ In an average web app, only `dest` might be required, and configured as shown in
 the following example.
 
 ```javascript
-app.use(multer({ dest: 'uploads/' }))
+var upload = multer({ dest: 'uploads/' })
 ```
 
 If you want more control over your uploads, you'll want to use the `storage`
@@ -133,7 +133,7 @@ var storage = multer.diskStorage({
   }
 })
 
-app.use(multer({ storage: storage }))
+var upload = multer({ storage: storage })
 ```
 
 There are two options available, `destination` and `filename`. They are both
@@ -157,8 +157,7 @@ doesn't have any options.
 
 ```javascript
 var storage = multer.memoryStorage()
-
-app.use(multer({ storage: storage }))
+var upload = multer({ storage: storage })
 ```
 
 When using memory storage, the file info will contain a field called
