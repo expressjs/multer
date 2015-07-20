@@ -148,6 +148,9 @@ the directory is created for you.
 
 `filename` is used to determine what the file should be named inside the folder.
 
+**Note:** Multer will not append any file extension for you, your function
+should return a filename complete with an file extension.
+
 Each function gets passed both the request (`req`) and some information about
 the file (`file`) to aid with the decision.
 
