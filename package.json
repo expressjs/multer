@@ -27,6 +27,7 @@
     "xtend": "^4.0.0"
   },
   "devDependencies": {
+    "express": "^4.13.1",
     "form-data": "^1.0.0-rc1",
     "fs-temp": "^0.1.2",
     "mocha": "^2.2.5",
