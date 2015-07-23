@@ -66,8 +66,7 @@ Key | Description | Note
 
 Multer accepts an options object, the most basic of which is the `dest`
 property, which tells Multer where to upload the files. In case you omit the
-options object, the file will be renamed and uploaded to the temporary directory
-of the system.
+options object, the files will be kept in memory and never written to disk.
 
 By default, Multer will rename the files so as to avoid naming conflicts. The
 renaming function can be customized according to your needs.
