@@ -1,15 +1,21 @@
 # Multer [![Build Status](https://travis-ci.org/expressjs/multer.svg?branch=master)](https://travis-ci.org/expressjs/multer) [![NPM version](https://badge.fury.io/js/multer.svg)](https://badge.fury.io/js/multer) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
 
-Multer is a node.js middleware for handling `multipart/form-data`. It is written
+Multer is a node.js middleware for handling `multipart/form-data`, which is primarily used for uploading files. It is written
 on top of [busboy](https://github.com/mscdex/busboy) for maximum efficiency.
+
+**NOTE**: Multer will not process any form which is not multipart (`multipart/form-data`).
 
 ## Installation
 
 ```sh
-npm install --save multer
+$ npm install --save multer
 ```
 
 ## Usage
+
+Multer adds a `body` object and a `file` or `files` object to the `request` object. The `body` object contains the values of the text fields of the form, the `file` or `files` object contains the files uploaded via the form.
+
+Basic usage example:
 
 ```javascript
 var express = require('express')
@@ -20,10 +26,12 @@ var app = express()
 
 app.post('/profile', upload.single('avatar'), function (req, res, next) {
   // req.file is the `avatar` file
+  // req.body will hold the text fields, if there were any
 })
 
 app.post('/photos/upload', upload.array('photos', 12), function (req, res, next) {
   // req.files is array of `photos` files
+  // req.body will contain the text fields, if there were any
 })
 
 var cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
@@ -33,16 +41,23 @@ app.post('/cool-profile', cpUpload, function (req, res, next) {
   // e.g.
   //  req.files['avatar'][0] -> File
   //  req.files['gallery'] -> Array
+  //
+  // req.body will contain the text fields, if there were any
 })
 ```
 
-You can access post data fields as `body` on the `request` object:
+In case you need to handle a text-only multipart form, you can use any of the multer methods (`.single()`, `.array()`, `fields()`). Here is an example using `.array()`:
 
 ```javascript
-console.log(req.body)
-```
+var express = require('express')
+var app = express()
+var multer  = require('multer')
+var upload = multer()
 
-**IMPORTANT**: Multer will only process forms which are of the type `multipart/form-data`.
+app.post('/profile', upload.array(), function (req, res, next) {
+  // req.body contains the text fields
+})
+```
 
 ## API
 
