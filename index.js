@@ -66,6 +66,37 @@ Multer.prototype.fields = function (fields) {
   return this._makeMiddleware(fields, 'OBJECT')
 }
 
+Multer.prototype.matches = function (regex, maxFiles) {
+  function setup () {
+    var filesLeft = Infinity
+    if (typeof maxFiles === 'number') {
+      filesLeft = maxFiles
+    }
+
+    function matchingCountFilter (req, file, cb) {
+      if (filesLeft <= 0) {
+        return cb(makeError('LIMIT_UNEXPECTED_FILE', file.fieldname))
+      }
+
+      if (regex.test(file.fieldname)) {
+        filesLeft -= 1
+        return cb(null, true)
+      } else {
+        return cb(makeError('LIMIT_UNEXPECTED_FILE', file.fieldname))
+      }
+    }
+
+    return {
+      limits: this.limits,
+      storage: this.storage,
+      fileStrategy: 'OBJECT',
+      fileFilter: matchingCountFilter
+    }
+  }
+
+  return makeMiddleware(setup.bind(this))
+}
+
 function multer (options) {
   if (options === undefined) {
     return new Multer({})

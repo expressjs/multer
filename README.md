@@ -131,6 +131,16 @@ Example:
 ]
 ```
 
+#### `.matches(regex[, maxCount])
+
+Accept a mix of files with names matching a regular expression. Optionally error
+out if more than `maxCount` files are uploaded. An object with arrays of files
+will be stored in `req.files`.
+
+For example, you might use `/^pdf_upload_\d+$/` if you have a dynamic form that
+needs to assocate numbered fields with files in a manner not guaranteed by
+browser field/upload ordering.
+
 ### `storage`
 
 #### `DiskStorage`

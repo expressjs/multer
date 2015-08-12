@@ -94,4 +94,47 @@ describe('Expected files', function () {
       done()
     })
   })
+
+  it('should accept files with matching fieldnames', function (done) {
+    var form = new FormData()
+    var parser = upload.matches(/^butme_\d$/, 5)
+
+    form.append('butme_0', util.file('small0.dat'))
+    form.append('butme_1', util.file('small1.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.ifError(err)
+
+      assert.equal(req.files['butme_0'][0].originalname, 'small0.dat')
+      assert.equal(req.files['butme_1'][0].originalname, 'small1.dat')
+      done()
+    })
+  })
+
+  it('should reject files with non-matching fieldnames', function (done) {
+    var form = new FormData()
+    var parser = upload.matches(/^butme_\d$/, 5)
+
+    form.append('notme_0', util.file('small0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.equal(err.code, 'LIMIT_UNEXPECTED_FILE')
+      assert.equal(err.field, 'notme_0')
+      done()
+    })
+  })
+
+  it('should reject too many files with matching fieldnames', function (done) {
+    var form = new FormData()
+    var parser = upload.matches(/^butme_\d$/, 1)
+
+    form.append('butme_0', util.file('small0.dat'))
+    form.append('butme_1', util.file('small1.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.equal(err.code, 'LIMIT_UNEXPECTED_FILE')
+      assert.equal(err.field, 'butme_1')
+      done()
+    })
+  })
 })
