@@ -16,7 +16,7 @@ var port = 34279
 describe('Express Integration', function () {
   var uploadDir
   before(function (done) {
-    temp.mkdir(function(err, dir) {
+    temp.mkdir(function (err, dir) {
       uploadDir = dir
       done(err)
     })
