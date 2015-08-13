@@ -15,21 +15,21 @@ var port = 34279
 
 describe('Express Integration', function () {
   var uploadDir
-  before(function(done) {
+  before(function (done) {
     temp.mkdir(function(err, dir) {
       uploadDir = dir
-      done();
-    });
+      done(err)
+    })
   })
-  after(function() {
-    rimraf.sync(uploadDir)
+  after(function (done) {
+    rimraf(uploadDir, done)
   })
   it('should work with express error handling', function (done) {
     var app = express()
     var limits = { fileSize: 200 }
-    var upload = multer({ 
-      limits: limits, 
-      storage: multer.diskStorage({destination:uploadDir}) 
+    var upload = multer({
+      limits: limits,
+      storage: multer.diskStorage({destination: uploadDir})
     })
     var form = new FormData()
 
