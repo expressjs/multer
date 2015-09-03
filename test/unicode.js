@@ -38,7 +38,7 @@ describe('Unicode', function () {
     var parser = upload.single('small0')
     var fileName = '\ud83d\udca9.dat'
 
-    form.append('small0', util.file('small0.dat'), { fileName: fileName })
+    form.append('small0', util.file('small0.dat'), { filename: fileName })
 
     util.submitForm(parser, form, function (err, req) {
       assert.ifError(err)
