@@ -35,7 +35,8 @@ Multer.prototype._makeMiddleware = function (fields, fileStrategy) {
     })
 
     function wrappedFileFilter (req, file, cb) {
-      if (fields[0].name !== undefined ){
+      // in case user does not know in advance the file types that will be sent over
+      if (fields[0].name !== undefined){
         if ((filesLeft[file.fieldname] || 0) <= 0) {
           return cb(makeError('LIMIT_UNEXPECTED_FILE', file.fieldname))
         }
