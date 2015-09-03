@@ -18,8 +18,8 @@ describe('Unicode', function () {
 
       var storage = multer.diskStorage({
         destination: path,
-        filename: function (req, file, cb) {
-          cb(null, file.originalname)
+        fileName: function (req, file, cb) {
+          cb(null, file.originalName)
         }
       })
 
@@ -36,17 +36,17 @@ describe('Unicode', function () {
   it('should handle unicode filenames', function (done) {
     var form = new FormData()
     var parser = upload.single('small0')
-    var filename = '\ud83d\udca9.dat'
+    var fileName = '\ud83d\udca9.dat'
 
-    form.append('small0', util.file('small0.dat'), { filename: filename })
+    form.append('small0', util.file('small0.dat'), { fileName: fileName })
 
     util.submitForm(parser, form, function (err, req) {
       assert.ifError(err)
 
-      assert.equal(path.basename(req.file.path), filename)
-      assert.equal(req.file.originalname, filename)
+      assert.equal(path.basename(req.file.path), fileName)
+      assert.equal(req.file.originalName, fileName)
 
-      assert.equal(req.file.fieldname, 'small0')
+      assert.equal(req.file.fieldName, 'small0')
       assert.equal(req.file.size, 1778)
       assert.equal(util.fileSize(req.file.path), 1778)
 

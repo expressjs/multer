@@ -26,8 +26,8 @@ describe('Memory Storage', function () {
 
       assert.equal(req.body.name, 'Multer')
 
-      assert.equal(req.file.fieldname, 'small0')
-      assert.equal(req.file.originalname, 'small0.dat')
+      assert.equal(req.file.fieldName, 'small0')
+      assert.equal(req.file.originalName, 'small0.dat')
       assert.equal(req.file.size, 1778)
       assert.equal(req.file.buffer.length, 1778)
 
@@ -62,8 +62,8 @@ describe('Memory Storage', function () {
       assert.deepEqual(req.body.checkboxhalfempty, [ 'cb1', '' ])
       assert.deepEqual(req.body.checkboxempty, [ '', '' ])
 
-      assert.equal(req.file.fieldname, 'empty')
-      assert.equal(req.file.originalname, 'empty.dat')
+      assert.equal(req.file.fieldName, 'empty')
+      assert.equal(req.file.originalName, 'empty.dat')
       assert.equal(req.file.size, 0)
       assert.equal(req.file.buffer.length, 0)
 
@@ -97,38 +97,38 @@ describe('Memory Storage', function () {
 
       assert.deepEqual(req.body, {})
 
-      assert.equal(req.files['empty'][0].fieldname, 'empty')
-      assert.equal(req.files['empty'][0].originalname, 'empty.dat')
+      assert.equal(req.files['empty'][0].fieldName, 'empty')
+      assert.equal(req.files['empty'][0].originalName, 'empty.dat')
       assert.equal(req.files['empty'][0].size, 0)
       assert.equal(req.files['empty'][0].buffer.length, 0)
 
-      assert.equal(req.files['tiny0'][0].fieldname, 'tiny0')
-      assert.equal(req.files['tiny0'][0].originalname, 'tiny0.dat')
+      assert.equal(req.files['tiny0'][0].fieldName, 'tiny0')
+      assert.equal(req.files['tiny0'][0].originalName, 'tiny0.dat')
       assert.equal(req.files['tiny0'][0].size, 122)
       assert.equal(req.files['tiny0'][0].buffer.length, 122)
 
-      assert.equal(req.files['tiny1'][0].fieldname, 'tiny1')
-      assert.equal(req.files['tiny1'][0].originalname, 'tiny1.dat')
+      assert.equal(req.files['tiny1'][0].fieldName, 'tiny1')
+      assert.equal(req.files['tiny1'][0].originalName, 'tiny1.dat')
       assert.equal(req.files['tiny1'][0].size, 7)
       assert.equal(req.files['tiny1'][0].buffer.length, 7)
 
-      assert.equal(req.files['small0'][0].fieldname, 'small0')
-      assert.equal(req.files['small0'][0].originalname, 'small0.dat')
+      assert.equal(req.files['small0'][0].fieldName, 'small0')
+      assert.equal(req.files['small0'][0].originalName, 'small0.dat')
       assert.equal(req.files['small0'][0].size, 1778)
       assert.equal(req.files['small0'][0].buffer.length, 1778)
 
-      assert.equal(req.files['small1'][0].fieldname, 'small1')
-      assert.equal(req.files['small1'][0].originalname, 'small1.dat')
+      assert.equal(req.files['small1'][0].fieldName, 'small1')
+      assert.equal(req.files['small1'][0].originalName, 'small1.dat')
       assert.equal(req.files['small1'][0].size, 315)
       assert.equal(req.files['small1'][0].buffer.length, 315)
 
-      assert.equal(req.files['medium'][0].fieldname, 'medium')
-      assert.equal(req.files['medium'][0].originalname, 'medium.dat')
+      assert.equal(req.files['medium'][0].fieldName, 'medium')
+      assert.equal(req.files['medium'][0].originalName, 'medium.dat')
       assert.equal(req.files['medium'][0].size, 13196)
       assert.equal(req.files['medium'][0].buffer.length, 13196)
 
-      assert.equal(req.files['large'][0].fieldname, 'large')
-      assert.equal(req.files['large'][0].originalname, 'large.jpg')
+      assert.equal(req.files['large'][0].fieldName, 'large')
+      assert.equal(req.files['large'][0].originalName, 'large.jpg')
       assert.equal(req.files['large'][0].size, 2413677)
       assert.equal(req.files['large'][0].buffer.length, 2413677)
 

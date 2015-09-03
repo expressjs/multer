@@ -26,8 +26,8 @@ function assertSet (files, setName, fileNames) {
   assert.equal(files.length, len)
 
   for (var i = 0; i < len; i++) {
-    assert.equal(files[i].fieldname, setName)
-    assert.equal(files[i].originalname, fileNames[i])
+    assert.equal(files[i].fieldName, setName)
+    assert.equal(files[i].originalName, fileNames[i])
   }
 }
 
@@ -49,16 +49,16 @@ describe('Select Field', function () {
       var file
 
       file = req.files['CA$|-|'][0]
-      assert.equal(file.fieldname, 'CA$|-|')
-      assert.equal(file.originalname, 'empty.dat')
+      assert.equal(file.fieldName, 'CA$|-|')
+      assert.equal(file.originalName, 'empty.dat')
 
       file = req.files['set-1'][0]
-      assert.equal(file.fieldname, 'set-1')
-      assert.equal(file.originalname, 'tiny0.dat')
+      assert.equal(file.fieldName, 'set-1')
+      assert.equal(file.originalName, 'tiny0.dat')
 
       file = req.files['set-2'][0]
-      assert.equal(file.fieldname, 'set-2')
-      assert.equal(file.originalname, 'tiny1.dat')
+      assert.equal(file.fieldName, 'set-2')
+      assert.equal(file.originalName, 'tiny1.dat')
 
       done()
     })

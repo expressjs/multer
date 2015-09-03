@@ -35,8 +35,8 @@ describe('Reuse Middleware', function () {
         assert.equal(req.files.length, fileCount)
 
         req.files.forEach(function (file) {
-          assert.equal(file.fieldname, 'them-files')
-          assert.equal(file.originalname, 'small0.dat')
+          assert.equal(file.fieldName, 'them-files')
+          assert.equal(file.originalName, 'small0.dat')
           assert.equal(file.size, 1778)
           assert.equal(file.buffer.length, 1778)
         })

@@ -12,7 +12,7 @@ describe('File Filter', function () {
   before(function () {
     upload = multer({
       fileFilter: function (req, file, cb) {
-        cb(null, file.fieldname !== 'notme')
+        cb(null, file.fieldName !== 'notme')
       }
     })
   })
@@ -30,8 +30,8 @@ describe('File Filter', function () {
     util.submitForm(parser, form, function (err, req) {
       assert.ifError(err)
       assert.equal(req.files['notme'], undefined)
-      assert.equal(req.files['butme'][0].fieldname, 'butme')
-      assert.equal(req.files['butme'][0].originalname, 'tiny1.dat')
+      assert.equal(req.files['butme'][0].fieldName, 'butme')
+      assert.equal(req.files['butme'][0].originalName, 'tiny1.dat')
       assert.equal(req.files['butme'][0].size, 7)
       assert.equal(req.files['butme'][0].buffer.length, 7)
       done()

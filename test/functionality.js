@@ -8,8 +8,8 @@ var temp = require('fs-temp')
 var rimraf = require('rimraf')
 var FormData = require('form-data')
 
-function generateFilename (req, file, cb) {
-  cb(null, file.fieldname + file.originalname)
+function generateFileName (req, file, cb) {
+  cb(null, file.fieldName + file.originalName)
 }
 
 function startsWith (str, start) {
@@ -27,7 +27,7 @@ describe('Functionality', function () {
 
       var storage = multer.diskStorage({
         destination: uploadDir,
-        filename: generateFilename
+        fileName: generateFileName
       })
 
       cb(null, {
@@ -67,7 +67,7 @@ describe('Functionality', function () {
 
       util.submitForm(parser, env.form, function (err, req) {
         assert.ifError(err)
-        assert.equal(req.file.filename, 'small0small0.dat')
+        assert.equal(req.file.fileName, 'small0small0.dat')
         done()
       })
     })
@@ -82,7 +82,7 @@ describe('Functionality', function () {
 
       util.submitForm(parser, env.form, function (err, req) {
         assert.ifError(err)
-        assert.equal(req.file.filename, 'tiny0tiny0.dat')
+        assert.equal(req.file.fileName, 'tiny0tiny0.dat')
         done()
       })
     })
@@ -99,8 +99,8 @@ describe('Functionality', function () {
       util.submitForm(parser, env.form, function (err, req) {
         assert.ifError(err)
         assert.equal(req.files.length, 2)
-        assert.equal(req.files[0].filename, 'themFilessmall0.dat')
-        assert.equal(req.files[1].filename, 'themFilessmall1.dat')
+        assert.equal(req.files[0].fileName, 'themFilessmall0.dat')
+        assert.equal(req.files[1].fileName, 'themFilessmall1.dat')
         done()
       })
     })
@@ -116,7 +116,7 @@ describe('Functionality', function () {
           cb(null, uploadDir)
         })
       },
-      filename: generateFilename
+      fileName: generateFileName
     })
 
     var form = new FormData()
