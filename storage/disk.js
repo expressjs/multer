@@ -4,7 +4,7 @@ var path = require('path')
 var crypto = require('crypto')
 var mkdirp = require('mkdirp')
 
-function getfileName (req, file, cb) {
+function getFileName (req, file, cb) {
   crypto.pseudoRandomBytes(16, function (err, raw) {
     cb(err, err ? undefined : raw.toString('hex'))
   })
@@ -15,7 +15,7 @@ function getDestination (req, file, cb) {
 }
 
 function DiskStorage (opts) {
-  this.getfileName = (opts.fileName || getfileName)
+  this.getFileName = (opts.fileName || getFileName)
 
   if (typeof opts.destination === 'string') {
     mkdirp.sync(opts.destination)
@@ -31,7 +31,7 @@ DiskStorage.prototype._handleFile = function _handleFile (req, file, cb) {
   that.getDestination(req, file, function (err, destination) {
     if (err) return cb(err)
 
-    that.getfileName(req, file, function (err, fileName) {
+    that.getFileName(req, file, function (err, fileName) {
       if (err) return cb(err)
 
       var finalPath = path.join(destination, fileName)
