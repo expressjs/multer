@@ -4,7 +4,7 @@ var path = require('path')
 var crypto = require('crypto')
 var mkdirp = require('mkdirp')
 
-function getFilename (req, file, cb) {
+function getfileName (req, file, cb) {
   crypto.pseudoRandomBytes(16, function (err, raw) {
     cb(err, err ? undefined : raw.toString('hex'))
   })
@@ -15,7 +15,7 @@ function getDestination (req, file, cb) {
 }
 
 function DiskStorage (opts) {
-  this.getFilename = (opts.filename || getFilename)
+  this.getfileName = (opts.fileName || getfileName)
 
   if (typeof opts.destination === 'string') {
     mkdirp.sync(opts.destination)
@@ -31,10 +31,10 @@ DiskStorage.prototype._handleFile = function _handleFile (req, file, cb) {
   that.getDestination(req, file, function (err, destination) {
     if (err) return cb(err)
 
-    that.getFilename(req, file, function (err, filename) {
+    that.getfileName(req, file, function (err, fileName) {
       if (err) return cb(err)
 
-      var finalPath = path.join(destination, filename)
+      var finalPath = path.join(destination, fileName)
       var outStream = fs.createWriteStream(finalPath)
 
       file.stream.pipe(outStream)
@@ -42,7 +42,7 @@ DiskStorage.prototype._handleFile = function _handleFile (req, file, cb) {
       outStream.on('finish', function () {
         cb(null, {
           destination: destination,
-          filename: filename,
+          fileName: fileName,
           path: finalPath,
           size: outStream.bytesWritten
         })
@@ -55,7 +55,7 @@ DiskStorage.prototype._removeFile = function _removeFile (req, file, cb) {
   var path = file.path
 
   delete file.destination
-  delete file.filename
+  delete file.fileName
   delete file.path
 
   fs.unlink(path, cb)
