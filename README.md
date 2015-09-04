@@ -36,7 +36,7 @@ app.post('/photos/upload', upload.array('photos', 12), function (req, res, next)
 
 var cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
 app.post('/cool-profile', cpUpload, function (req, res, next) {
-  // req.files is an object (String -> Array) where fieldname is the key, and the value is array of files
+  // req.files is an object (String -> Array) where fieldName is the key, and the value is array of files
   //
   // e.g.
   //  req.files['avatar'][0] -> File
@@ -67,13 +67,13 @@ Each file contains the following information:
 
 Key | Description | Note
 --- | --- | ---
-`fieldname` | Field name specified in the form |
-`originalname` | Name of the file on the user's computer |
+`fieldName` | Field name specified in the form |
+`originalName` | Name of the file on the user's computer |
 `encoding` | Encoding type of the file |
 `mimetype` | Mime type of the file |
 `size` | Size of the file in bytes |
 `destination` | The folder to which the file has been saved | `DiskStorage`
-`filename` | The name of the file within the `destination` | `DiskStorage`
+`fileName` | The name of the file within the `destination` | `DiskStorage`
 `path` | The full path to the uploaded file | `DiskStorage`
 `buffer` | A `Buffer` of the entire file | `MemoryStorage`
 
@@ -105,14 +105,14 @@ If you want more control over your uploads, you'll want to use the `storage`
 option instead of `dest`. Multer ships with storage engines `DiskStorage`
 and `MemoryStorage`; More engines are available from third parties.
 
-#### `.single(fieldname)`
+#### `.single(fieldName)`
 
-Accept a single file with the name `fieldname`. The single file will be stored
+Accept a single file with the name `fieldName`. The single file will be stored
 in `req.file`.
 
-#### `.array(fieldname[, maxCount])`
+#### `.array(fieldName[, maxCount])`
 
-Accept an array of files, all with the name `fieldname`. Optionally error out if
+Accept an array of files, all with the name `fieldName`. Optionally error out if
 more than `maxCount` files are uploaded. The array of files will be stored in
 `req.files`.
 
@@ -142,15 +142,15 @@ var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, '/tmp/my-uploads')
   },
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now())
+  fileName: function (req, file, cb) {
+    cb(null, file.fieldName + '-' + Date.now())
   }
 })
 
 var upload = multer({ storage: storage })
 ```
 
-There are two options available, `destination` and `filename`. They are both
+There are two options available, `destination` and `fileName`. They are both
 functions that determine where the file should be stored.
 
 `destination` is used to determine within which folder the uploaded files should
@@ -162,12 +162,12 @@ files is used.
 `destination` as a function. When passing a string, multer will make sure that
 the directory is created for you.
 
-`filename` is used to determine what the file should be named inside the folder.
-If no `filename` is given, each file will be given a random name that doesn't
+`fileName` is used to determine what the file should be named inside the folder.
+If no `fileName` is given, each file will be given a random name that doesn't
 include any file extension.
 
 **Note:** Multer will not append any file extension for you, your function
-should return a filename complete with an file extension.
+should return a fileName complete with an file extension.
 
 Each function gets passed both the request (`req`) and some information about
 the file (`file`) to aid with the decision.
