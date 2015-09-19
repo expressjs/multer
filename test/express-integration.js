@@ -8,14 +8,34 @@ var util = require('./_util')
 var express = require('express')
 var FormData = require('form-data')
 var concat = require('concat-stream')
+var onFinished = require('on-finished')
 
 var port = 34279
 
 describe('Express Integration', function () {
+  var app
+
+  before(function (done) {
+    app = express()
+    app.listen(port, done)
+  })
+
+  function submitForm (form, path, cb) {
+    var req = form.submit('http://localhost:' + port + path)
+
+    req.on('error', cb)
+    req.on('response', function (res) {
+      res.on('error', cb)
+      res.pipe(concat({ encoding: 'buffer' }, function (body) {
+        onFinished(req, function () { cb(null, res, body) })
+      }))
+    })
+  }
+
   it('should work with express error handling', function (done) {
-    var app = express()
     var limits = { fileSize: 200 }
     var upload = multer({ limits: limits })
+    var router = new express.Router()
     var form = new FormData()
 
     var routeCalled = 0
@@ -23,45 +43,67 @@ describe('Express Integration', function () {
 
     form.append('avatar', util.file('large.jpg'))
 
-    app.post('/profile', upload.single('avatar'), function (req, res, next) {
+    router.post('/profile', upload.single('avatar'), function (req, res, next) {
       routeCalled++
       res.status(200).end('SUCCESS')
     })
 
-    app.use(function (err, req, res, next) {
+    router.use(function (err, req, res, next) {
       assert.equal(err.code, 'LIMIT_FILE_SIZE')
 
       errorCalled++
       res.status(500).end('ERROR')
     })
 
-    app.listen(port, function () {
-      var res, body
-      var req = form.submit('http://localhost:' + port + '/profile')
-      var pending = 2
+    app.use('/t1', router)
+    submitForm(form, '/t1/profile', function (err, res, body) {
+      assert.ifError(err)
 
-      function validate () {
-        assert.equal(routeCalled, 0)
-        assert.equal(errorCalled, 1)
-        assert.equal(body.toString(), 'ERROR')
-        assert.equal(res.statusCode, 500)
+      assert.equal(routeCalled, 0)
+      assert.equal(errorCalled, 1)
+      assert.equal(body.toString(), 'ERROR')
+      assert.equal(res.statusCode, 500)
 
-        done()
-      }
+      done()
+    })
+  })
 
-      req.on('response', function (_res) {
-        res = _res
+  it('should work when receiving error from fileFilter', function (done) {
+    function fileFilter (req, file, cb) {
+      cb(new Error('TEST'))
+    }
 
-        res.pipe(concat({ encoding: 'buffer' }, function (_body) {
-          body = _body
+    var upload = multer({ fileFilter: fileFilter })
+    var router = new express.Router()
+    var form = new FormData()
 
-          if (--pending === 0) validate()
-        }))
-      })
+    var routeCalled = 0
+    var errorCalled = 0
 
-      req.on('finish', function () {
-        if (--pending === 0) validate()
-      })
+    form.append('avatar', util.file('large.jpg'))
+
+    router.post('/profile', upload.single('avatar'), function (req, res, next) {
+      routeCalled++
+      res.status(200).end('SUCCESS')
+    })
+
+    router.use(function (err, req, res, next) {
+      assert.equal(err.message, 'TEST')
+
+      errorCalled++
+      res.status(500).end('ERROR')
+    })
+
+    app.use('/t2', router)
+    submitForm(form, '/t2/profile', function (err, res, body) {
+      assert.ifError(err)
+
+      assert.equal(routeCalled, 0)
+      assert.equal(errorCalled, 1)
+      assert.equal(body.toString(), 'ERROR')
+      assert.equal(res.statusCode, 500)
+
+      done()
     })
   })
 })

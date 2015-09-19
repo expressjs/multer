@@ -1,6 +1,7 @@
 var fs = require('fs')
 var path = require('path')
 var stream = require('stream')
+var onFinished = require('on-finished')
 
 exports.file = function file (name) {
   return fs.createReadStream(path.join(__dirname, 'files', name))
@@ -16,6 +17,11 @@ exports.submitForm = function submitForm (multer, form, cb) {
 
     var req = new stream.PassThrough()
 
+    req.complete = false
+    form.once('end', function () {
+      req.complete = true
+    })
+
     form.pipe(req)
     req.headers = {
       'content-type': 'multipart/form-data; boundary=' + form.getBoundary(),
@@ -23,7 +29,7 @@ exports.submitForm = function submitForm (multer, form, cb) {
     }
 
     multer(req, null, function (err) {
-      cb(err, req)
+      onFinished(req, function () { cb(err, req) })
     })
   })
 }
