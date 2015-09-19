@@ -35,11 +35,14 @@ Multer.prototype._makeMiddleware = function (fields, fileStrategy) {
     })
 
     function wrappedFileFilter (req, file, cb) {
-      if ((filesLeft[file.fieldname] || 0) <= 0) {
-        return cb(makeError('LIMIT_UNEXPECTED_FILE', file.fieldname))
-      }
+      // in case user does not know in advance the file types that will be sent over
+      if (fields.length !== 0) {
+        if ((filesLeft[file.fieldname] || 0) <= 0) {
+          return cb(makeError('LIMIT_UNEXPECTED_FILE', file.fieldname))
+        }
 
-      filesLeft[file.fieldname] -= 1
+        filesLeft[file.fieldname] -= 1
+      }
       fileFilter(req, file, cb)
     }
 
@@ -64,6 +67,10 @@ Multer.prototype.array = function (name, maxCount) {
 
 Multer.prototype.fields = function (fields) {
   return this._makeMiddleware(fields, 'OBJECT')
+}
+
+Multer.prototype.any = function () {
+  return this._makeMiddleware([], 'OBJECT')
 }
 
 function multer (options) {
