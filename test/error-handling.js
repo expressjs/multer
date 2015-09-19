@@ -177,4 +177,30 @@ describe('Error Handling', function () {
       done()
     })
   })
+
+  it('should report errors from busboy parsing', function (done) {
+    var req = new stream.PassThrough()
+    var storage = multer.memoryStorage()
+    var upload = multer({ storage: storage }).single('tiny0')
+    var boundary = 'AaB03x'
+    var body = [
+      '--' + boundary,
+      'Content-Disposition: form-data; name="tiny0"; filename="test.txt"',
+      'Content-Type: text/plain',
+      '',
+      'test without end boundary'
+    ].join('\r\n')
+
+    req.headers = {
+      'content-type': 'multipart/form-data; boundary=' + boundary,
+      'content-length': body.length
+    }
+
+    req.end(body)
+
+    upload(req, null, function (err) {
+      assert.equal(err.message, 'Unexpected end of multipart data')
+      done()
+    })
+  })
 })
