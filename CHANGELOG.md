@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.0.4 - 2015-09-19
+
+- Bugfix: propagate all errors from busboy
+
 ## 1.0.3 - 2015-08-06
 
 - Bugfix: ensure file order is correct
