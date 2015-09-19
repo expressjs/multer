@@ -4,6 +4,7 @@ var assert = require('assert')
 
 var util = require('./_util')
 var multer = require('../')
+var stream = require('stream')
 var FormData = require('form-data')
 
 function withLimits (limits, fields) {
@@ -154,6 +155,25 @@ describe('Error Handling', function () {
       assert.equal(err.storageErrors[0].field, 'tiny0')
       assert.equal(err.storageErrors[0].file, req.file)
 
+      done()
+    })
+  })
+
+  it('should report errors from busboy constructor', function (done) {
+    var req = new stream.PassThrough()
+    var storage = multer.memoryStorage()
+    var upload = multer({ storage: storage }).single('tiny0')
+    var body = 'test'
+
+    req.headers = {
+      'content-type': 'multipart/form-data',
+      'content-length': body.length
+    }
+
+    req.end(body)
+
+    upload(req, null, function (err) {
+      assert.equal(err.message, 'Multipart: Boundary not found')
       done()
     })
   })
