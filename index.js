@@ -66,6 +66,19 @@ Multer.prototype.fields = function (fields) {
   return this._makeMiddleware(fields, 'OBJECT')
 }
 
+Multer.prototype.any = function () {
+  function setup () {
+    return {
+      limits: this.limits,
+      storage: this.storage,
+      fileFilter: this.fileFilter,
+      fileStrategy: 'ARRAY'
+    }
+  }
+
+  return makeMiddleware(setup.bind(this))
+}
+
 function multer (options) {
   if (options === undefined) {
     return new Multer({})
