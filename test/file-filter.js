@@ -6,19 +6,22 @@ var util = require('./_util')
 var multer = require('../')
 var FormData = require('form-data')
 
+function withFilter (fileFilter) {
+  return multer({ fileFilter: fileFilter })
+}
+
+function skipSpecificFile (req, file, cb) {
+  cb(null, file.fieldname !== 'notme')
+}
+
+function reportFakeError (req, file, cb) {
+  cb(new Error('Fake error'))
+}
+
 describe('File Filter', function () {
-  var upload
-
-  before(function () {
-    upload = multer({
-      fileFilter: function (req, file, cb) {
-        cb(null, file.fieldname !== 'notme')
-      }
-    })
-  })
-
   it('should skip some files', function (done) {
     var form = new FormData()
+    var upload = withFilter(skipSpecificFile)
     var parser = upload.fields([
       { name: 'notme', maxCount: 1 },
       { name: 'butme', maxCount: 1 }
@@ -38,4 +41,16 @@ describe('File Filter', function () {
     })
   })
 
+  it('should report errors from fileFilter', function (done) {
+    var form = new FormData()
+    var upload = withFilter(reportFakeError)
+    var parser = upload.single('test')
+
+    form.append('test', util.file('tiny0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.equal(err.message, 'Fake error')
+      done()
+    })
+  })
 })
