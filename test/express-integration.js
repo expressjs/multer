@@ -8,14 +8,29 @@ var util = require('./_util')
 var express = require('express')
 var FormData = require('form-data')
 var concat = require('concat-stream')
+var temp = require('fs-temp')
+var rimraf = require('rimraf')
 
 var port = 34279
 
 describe('Express Integration', function () {
+  var uploadDir
+  before(function (done) {
+    temp.mkdir(function (err, dir) {
+      uploadDir = dir
+      done(err)
+    })
+  })
+  after(function (done) {
+    rimraf(uploadDir, done)
+  })
   it('should work with express error handling', function (done) {
     var app = express()
     var limits = { fileSize: 200 }
-    var upload = multer({ limits: limits })
+    var upload = multer({
+      limits: limits,
+      storage: multer.diskStorage({destination: uploadDir})
+    })
     var form = new FormData()
 
     var routeCalled = 0
