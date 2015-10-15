@@ -17,6 +17,26 @@ Multer adds a `body` object and a `file` or `files` object to the `request` obje
 
 Basic usage example:
 
+### HTML FORM
+
+Singe file:
+```html
+<form action="YOUR_URL" method="post" enctype="multipart/form-data">
+  <input type="file" name="avatar">
+  <input type="submit">
+</form>
+```
+
+Multiple files:
+```html
+<form action="YOUR_URL" method="post" enctype="multipart/form-data">
+  <input type="file" name="avatar" multiple>
+  <input type="submit">
+</form>
+```
+
+### Server side
+
 ```javascript
 var express = require('express')
 var multer  = require('multer')
@@ -29,7 +49,7 @@ app.post('/profile', upload.single('avatar'), function (req, res, next) {
   // req.body will hold the text fields, if there were any
 })
 
-app.post('/photos/upload', upload.array('photos', 12), function (req, res, next) {
+app.post('/photos/upload', upload.array('avatar', 12), function (req, res, next) {
   // req.files is array of `photos` files
   // req.body will contain the text fields, if there were any
 })
