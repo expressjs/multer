@@ -22,7 +22,7 @@ Basic usage example:
 Singe file:
 ```html
 <form action="YOUR_URL" method="post" enctype="multipart/form-data">
-  <input type="file" name="avatar">
+  <input type="file" name="photo">
   <input type="submit">
 </form>
 ```
@@ -30,7 +30,7 @@ Singe file:
 Multiple files:
 ```html
 <form action="YOUR_URL" method="post" enctype="multipart/form-data">
-  <input type="file" name="avatar" multiple>
+  <input type="file" name="photos" multiple>
   <input type="submit">
 </form>
 ```
@@ -44,12 +44,12 @@ var upload = multer({ dest: 'uploads/' })
 
 var app = express()
 
-app.post('/profile', upload.single('avatar'), function (req, res, next) {
+app.post('/profile', upload.single('photo'), function (req, res, next) {
   // req.file is the `avatar` file
   // req.body will hold the text fields, if there were any
 })
 
-app.post('/photos/upload', upload.array('avatar', 12), function (req, res, next) {
+app.post('/photos/upload', upload.array('photos', 12), function (req, res, next) {
   // req.files is array of `photos` files
   // req.body will contain the text fields, if there were any
 })
