@@ -94,4 +94,22 @@ describe('Expected files', function () {
       done()
     })
   })
+
+  it('should allow any file to come thru', function (done) {
+    var form = new FormData()
+    var parser = upload.any()
+
+    form.append('butme', util.file('small0.dat'))
+    form.append('butme', util.file('small1.dat'))
+    form.append('andme', util.file('empty.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.ifError(err)
+      assert.equal(req.files.length, 3)
+      assert.equal(req.files[0].fieldname, 'butme')
+      assert.equal(req.files[1].fieldname, 'butme')
+      assert.equal(req.files[2].fieldname, 'andme')
+      done()
+    })
+  })
 })
