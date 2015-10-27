@@ -72,8 +72,8 @@ app.post('/photos/upload', upload.array('photos', 12), function (req, res, next)
 HTML
 ```html
 <form action="YOUR_URL" method="post" enctype="multipart/form-data">
-  <input type="avatar" name="photos">
-  <input type="gallery" name="photos" multiple>
+  <input type="file" name="avatar">
+  <input type="file" name="gallery" multiple>
   <input type="submit">
 </form>
 ```
