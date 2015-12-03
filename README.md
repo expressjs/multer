@@ -5,6 +5,11 @@ on top of [busboy](https://github.com/mscdex/busboy) for maximum efficiency.
 
 **NOTE**: Multer will not process any form which is not multipart (`multipart/form-data`).
 
+**WARNING:** Make sure that you always handle the files that a user uploads.
+Never add multer as a global middleware since a malicious user could upload
+files to a route that you didn't anticipate. Only use this function on routes
+where you are handling the uploaded files.
+
 ## Installation
 
 ```sh
@@ -25,7 +30,9 @@ var upload = multer({ dest: 'uploads/' })
 var app = express()
 
 app.post('/profile', upload.single('avatar'), function (req, res, next) {
-  // req.file is the `avatar` file
+  // 'avatar' is the value of the property "name" of the input of type file
+  // Example: <input type="file" name="avatar" />
+  // req.file contains the 'avatar' file
   // req.body will hold the text fields, if there were any
 })
 
@@ -135,11 +142,6 @@ Example:
 
 Accepts all files that comes over the wire. An array of files will be stored in
 `req.files`.
-
-**WARNING:** Make sure that you always handle the files that a user uploads.
-Never add multer as a global middleware since a malicious user could upload
-files to a route that you didn't anticipate. Only use this function on routes
-where you are handling the uploaded files.
 
 ### `storage`
 
