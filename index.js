@@ -3,6 +3,7 @@ var makeMiddleware = require('./lib/make-middleware')
 
 var diskStorage = require('./storage/disk')
 var memoryStorage = require('./storage/memory')
+var encryptStorage = require('./storage/encrypt')
 
 function allowAll (req, file, cb) {
   cb(null, true)
@@ -94,3 +95,4 @@ function multer (options) {
 module.exports = multer
 module.exports.diskStorage = diskStorage
 module.exports.memoryStorage = memoryStorage
+module.exports.encryptStorage = encryptStorage
