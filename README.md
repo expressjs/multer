@@ -209,7 +209,6 @@ random data.
 
 ```javascript
 var storage = multer.encryptStorage({
-  memory_only: true
   destination: function (req, file, cb) {
     cb(null, '/tmp/my-uploads')
   },
@@ -220,11 +219,8 @@ var storage = multer.encryptStorage({
 
 var upload = multer({ storage: storage })
 ```
-It has 3 options available: `destination`, `filename` and `memory_only`. Both
-`destination` and `filename` does the same as they do for `DiskStorage`. The
-`memory_only` option takes a boolean (Defaults to false if omitted) and defines
-wether or not the file should be stored in memory. You might have to experiment
-with this, as the **WARNING** from `MemoryStorage` applies here aswell.
+It has 2 options available: `destination`, `filename`. Both
+`destination` and `filename` does the same as they do for `DiskStorage`.
 
 A hexidecimal representation of the encryption key is added to
 `req.files.encryptionKey`.

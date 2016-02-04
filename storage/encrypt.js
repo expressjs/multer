@@ -25,7 +25,6 @@ function EncryptStorage (opts) {
   } else {
     this.getDestination = (opts.destination || getDestination)
   }
-  this.memory_only = (opts.memory_only || false)
 }
 
 EncryptStorage.prototype._handleFile = function _handleFile (req, file, cb) {
@@ -38,11 +37,13 @@ EncryptStorage.prototype._handleFile = function _handleFile (req, file, cb) {
       if (err) return cb(err)
 
       var finalPath = path.join(destination, filename)
-      var key = crypto.randomBytes(32).toString('hex')
-      var cipher = crypto.createCipher('aes-256-xts', key)
-      if (that.memory_only) {
+      crypto.randomBytes(32, function (err, buf) {
+        if (err) return cb(err)
+        var key = buf.toString('hex')
+        var cipher = crypto.createCipher('aes-256-xts', key)
         var outMemStream = fs.createWriteStream(finalPath)
         file.stream.pipe(cipher).pipe(outMemStream)
+        outMemStream.on('error', cb)
         outMemStream.on('finish', function () {
           cb(null, {
             destination: destination,
@@ -52,28 +53,7 @@ EncryptStorage.prototype._handleFile = function _handleFile (req, file, cb) {
             size: outMemStream.bytesWritten
           })
         })
-      } else {
-        var outStream = fs.createWriteStream(finalPath + '.tmp.original')
-        file.stream.pipe(outStream)
-        outStream.on('error', cb)
-        outStream.on('finish', function () {
-          var input = fs.createReadStream(finalPath + '.tmp.original')
-          var output = fs.createWriteStream(finalPath)
-
-          input.pipe(cipher).pipe(output)
-          output.on('finish', function () {
-            fs.unlink(finalPath + '.tmp.original', function () {
-              cb(null, {
-                destination: destination,
-                filename: filename,
-                path: finalPath,
-                encryptionKey: key,
-                size: outStream.bytesWritten
-              })
-            })
-          })
-        })
-      }
+      })
     })
   })
 }
