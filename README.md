@@ -204,7 +204,7 @@ memory storage is used.
 
 #### `EncryptStorage`
 
-The encryption storage engine encrypts files using AES-256-XTS with 32bytes of
+The encryption storage engine encrypts files using AES-256-GCM with 32bytes of
 random data.
 
 ```javascript
@@ -224,6 +224,8 @@ It has 2 options available: `destination`, `filename`. Both
 
 A hexidecimal representation of the encryption key is added to
 `req.files.encryptionKey`.
+
+A buffer comprising of the authentication tag is added to `req.files.tag`
 
 ### `limits`
 

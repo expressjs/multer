@@ -40,7 +40,7 @@ EncryptStorage.prototype._handleFile = function _handleFile (req, file, cb) {
       crypto.randomBytes(32, function (err, buf) {
         if (err) return cb(err)
         var key = buf.toString('hex')
-        var cipher = crypto.createCipher('aes-256-xts', key)
+        var cipher = crypto.createCipher('aes-256-gcm', key)
         var outMemStream = fs.createWriteStream(finalPath)
         file.stream.pipe(cipher).pipe(outMemStream)
         outMemStream.on('error', cb)
@@ -50,6 +50,7 @@ EncryptStorage.prototype._handleFile = function _handleFile (req, file, cb) {
             filename: filename,
             path: finalPath,
             encryptionKey: key,
+            tag: cipher.getAuthTag(),
             size: outMemStream.bytesWritten
           })
         })
