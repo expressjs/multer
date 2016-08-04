@@ -66,6 +66,10 @@ Multer.prototype.fields = function (fields) {
   return this._makeMiddleware(fields, 'OBJECT')
 }
 
+Multer.prototype.none = function () {
+  return this._makeMiddleware([], 'NONE')
+}
+
 Multer.prototype.any = function () {
   function setup () {
     return {
