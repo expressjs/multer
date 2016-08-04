@@ -1,0 +1,32 @@
+/* eslint-env mocha */
+
+var assert = require('assert')
+
+var util = require('./_util')
+var multer = require('../')
+var FormData = require('form-data')
+
+describe('None', function () {
+  var parser
+
+  before(function () {
+    parser = multer().none()
+  })
+
+  it('should not allow file uploads', function (done) {
+    var form = new FormData()
+
+    form.append('key1', 'val1')
+    form.append('key2', 'val2')
+    form.append('file', util.file('small0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      // "Unexpected field" error is expected
+      assert.ok(err)
+      assert.deepEqual(req.files, {})
+      assert.equal(req.body['key1'], 'val1')
+      assert.equal(req.body['key2'], 'val2')
+      done()
+    })
+  })
+})

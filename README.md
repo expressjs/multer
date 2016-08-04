@@ -131,6 +131,11 @@ Example:
 ]
 ```
 
+#### `.none()`
+
+Accept only text fields. If any file upload is made, error with code
+"LIMIT\_UNEXPECTED\_FILE" will be issued. This is the same as doing `upload.fields([])`.
+
 #### `.any()`
 
 Accepts all files that comes over the wire. An array of files will be stored in
