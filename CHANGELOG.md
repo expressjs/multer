@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.2.0 - 2016-08-04
+
+- Feature: add .none() for accepting only fields
+
 ## 1.1.0 - 2015-10-23
 
 - Feature: accept any file, regardless of fieldname
