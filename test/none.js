@@ -23,7 +23,7 @@ describe('None', function () {
     util.submitForm(parser, form, function (err, req) {
       // "Unexpected field" error is expected
       assert.equal(err.code, 'LIMIT_UNEXPECTED_FILE')
-      assert.deepEqual(req.files, {})
+      assert.equal(req.files, undefined)
       assert.equal(req.body['key1'], 'val1')
       assert.equal(req.body['key2'], 'val2')
       done()
@@ -38,7 +38,7 @@ describe('None', function () {
 
     util.submitForm(parser, form, function (err, req) {
       assert.ifError(err)
-      assert.deepEqual(req.files, {})
+      assert.equal(req.files, undefined)
       assert.equal(req.body['key1'], 'val1')
       assert.equal(req.body['key2'], 'val2')
       done()
