@@ -21,7 +21,7 @@ describe('None', function () {
     form.append('file', util.file('small0.dat'))
 
     util.submitForm(parser, form, function (err, req) {
-      // "Unexpected field" error is expected
+      assert.ok(err)
       assert.equal(err.code, 'LIMIT_UNEXPECTED_FILE')
       assert.equal(req.files, undefined)
       assert.equal(req.body['key1'], 'val1')
