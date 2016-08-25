@@ -35,6 +35,11 @@ Multer.prototype._makeMiddleware = function (fields, fileStrategy) {
     })
 
     function wrappedFileFilter (req, file, cb) {
+      if (fileStrategy === 'ARRAY'){
+        // remove array notation: ex "file[0]" to "file"
+        file.fieldname = file.fieldname.replace(/\[\d\]/gi, '')
+      }
+
       if ((filesLeft[file.fieldname] || 0) <= 0) {
         return cb(makeError('LIMIT_UNEXPECTED_FILE', file.fieldname))
       }
