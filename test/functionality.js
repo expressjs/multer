@@ -134,5 +134,4 @@ describe('Functionality', function () {
       done()
     })
   })
-
 })

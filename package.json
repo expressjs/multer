@@ -34,7 +34,7 @@
     "fs-temp": "^0.1.2",
     "mocha": "^2.2.5",
     "rimraf": "^2.4.1",
-    "standard": "^4.5.4",
+    "standard": "^8.2.0",
     "testdata-w3c-json-form": "^0.2.0"
   },
   "engines": {

@@ -33,7 +33,6 @@ describe('Memory Storage', function () {
 
       done()
     })
-
   })
 
   it('should process empty fields and an empty file', function (done) {
@@ -69,7 +68,6 @@ describe('Memory Storage', function () {
 
       done()
     })
-
   })
 
   it('should process multiple files', function (done) {
@@ -134,7 +132,5 @@ describe('Memory Storage', function () {
 
       done()
     })
-
   })
-
 })

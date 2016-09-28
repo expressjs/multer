@@ -62,7 +62,6 @@ describe('Select Field', function () {
 
       done()
     })
-
   })
 
   it('should select all files with fieldname', function (done) {
@@ -75,7 +74,5 @@ describe('Select Field', function () {
 
       done()
     })
-
   })
-
 })
