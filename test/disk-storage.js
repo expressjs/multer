@@ -46,7 +46,6 @@ describe('Disk Storage', function () {
 
       done()
     })
-
   })
 
   it('should process empty fields and an empty file', function (done) {
@@ -82,7 +81,6 @@ describe('Disk Storage', function () {
 
       done()
     })
-
   })
 
   it('should process multiple files', function (done) {
@@ -147,7 +145,6 @@ describe('Disk Storage', function () {
 
       done()
     })
-
   })
 
   it('should remove uploaded files on error', function (done) {
@@ -167,7 +164,6 @@ describe('Disk Storage', function () {
 
       done()
     })
-
   })
 
   it('should report error when directory doesn\'t exist', function (done) {
