@@ -5,10 +5,12 @@ var assert = require('assert')
 var multer = require('../')
 var util = require('./_util')
 
+var pify = require('pify')
 var express = require('express')
 var FormData = require('form-data')
-var concat = require('concat-stream')
-var onFinished = require('on-finished')
+var getStream = require('get-stream')
+
+var onFinished = pify(require('on-finished'))
 
 var port = 34279
 
@@ -20,19 +22,25 @@ describe('Express Integration', function () {
     app.listen(port, done)
   })
 
-  function submitForm (form, path, cb) {
-    var req = form.submit('http://localhost:' + port + path)
+  function submitForm (form, path) {
+    return new Promise(function (resolve, reject) {
+      var req = form.submit('http://localhost:' + port + path)
 
-    req.on('error', cb)
-    req.on('response', function (res) {
-      res.on('error', cb)
-      res.pipe(concat({ encoding: 'buffer' }, function (body) {
-        onFinished(req, function () { cb(null, res, body) })
-      }))
+      req.on('error', reject)
+      req.on('response', function (res) {
+        res.on('error', reject)
+
+        var body = getStream.buffer(res)
+        var finished = onFinished(req)
+
+        resolve(Promise.all([body, finished]).then(function (result) {
+          return { res: res, body: result[0] }
+        }))
+      })
     })
   }
 
-  it('should work with express error handling', function (done) {
+  it('should work with express error handling', function () {
     var limits = { fileSize: 200 }
     var upload = multer({ limits: limits })
     var router = new express.Router()
@@ -56,24 +64,16 @@ describe('Express Integration', function () {
     })
 
     app.use('/t1', router)
-    submitForm(form, '/t1/profile', function (err, res, body) {
-      assert.ifError(err)
-
+    return submitForm(form, '/t1/profile').then(function (result) {
       assert.equal(routeCalled, 0)
       assert.equal(errorCalled, 1)
-      assert.equal(body.toString(), 'ERROR')
-      assert.equal(res.statusCode, 500)
-
-      done()
+      assert.equal(result.body.toString(), 'ERROR')
+      assert.equal(result.res.statusCode, 500)
     })
   })
 
-  it('should work when receiving error from fileFilter', function (done) {
-    function fileFilter (req, file, cb) {
-      cb(new Error('TEST'))
-    }
-
-    var upload = multer({ fileFilter: fileFilter })
+  it('should work when uploading a file', function () {
+    var upload = multer()
     var router = new express.Router()
     var form = new FormData()
 
@@ -87,23 +87,17 @@ describe('Express Integration', function () {
       res.status(200).end('SUCCESS')
     })
 
-    router.use(function (err, req, res, next) {
-      assert.equal(err.message, 'TEST')
-
+    router.use(function (_, req, res, next) {
       errorCalled++
       res.status(500).end('ERROR')
     })
 
     app.use('/t2', router)
-    submitForm(form, '/t2/profile', function (err, res, body) {
-      assert.ifError(err)
-
-      assert.equal(routeCalled, 0)
-      assert.equal(errorCalled, 1)
-      assert.equal(body.toString(), 'ERROR')
-      assert.equal(res.statusCode, 500)
-
-      done()
+    return submitForm(form, '/t2/profile').then(function (result) {
+      assert.equal(routeCalled, 1)
+      assert.equal(errorCalled, 0)
+      assert.equal(result.body.toString(), 'SUCCESS')
+      assert.equal(result.res.statusCode, 200)
     })
   })
 })

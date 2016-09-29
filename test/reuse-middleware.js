@@ -7,51 +7,45 @@ var multer = require('../')
 var FormData = require('form-data')
 
 describe('Reuse Middleware', function () {
-  var parser
-
-  before(function (done) {
-    parser = multer().array('them-files')
-    done()
-  })
-
-  it('should accept multiple requests', function (done) {
-    var pending = 8
+  it('should accept multiple requests', function () {
+    var parser = multer().array('them-files')
 
     function submitData (fileCount) {
       var form = new FormData()
 
       form.append('name', 'Multer')
-      form.append('files', '' + fileCount)
+      form.append('files', String(fileCount))
 
       for (var i = 0; i < fileCount; i++) {
         form.append('them-files', util.file('small0.dat'))
       }
 
-      util.submitForm(parser, form, function (err, req) {
-        assert.ifError(err)
-
+      return util.submitForm(parser, form).then(function (req) {
         assert.equal(req.body.name, 'Multer')
-        assert.equal(req.body.files, '' + fileCount)
+        assert.equal(req.body.files, String(fileCount))
         assert.equal(req.files.length, fileCount)
 
         req.files.forEach(function (file) {
-          assert.equal(file.fieldname, 'them-files')
-          assert.equal(file.originalname, 'small0.dat')
+          assert.equal(file.fieldName, 'them-files')
+          assert.equal(file.originalName, 'small0.dat')
           assert.equal(file.size, 1778)
-          assert.equal(file.buffer.length, 1778)
         })
 
-        if (--pending === 0) done()
+        return Promise.all(req.files.map(function (file) {
+          return util.assertStreamSize(file.stream, 1778)
+        }))
       })
     }
 
-    submitData(9)
-    submitData(1)
-    submitData(5)
-    submitData(7)
-    submitData(2)
-    submitData(8)
-    submitData(3)
-    submitData(4)
+    return Promise.all([
+      submitData(9),
+      submitData(1),
+      submitData(5),
+      submitData(7),
+      submitData(2),
+      submitData(8),
+      submitData(3),
+      submitData(4)
+    ])
   })
 })

@@ -8,7 +8,7 @@ on top of [busboy](https://github.com/mscdex/busboy) for maximum efficiency.
 ## Installation
 
 ```sh
-$ npm install --save multer
+npm install --save multer
 ```
 
 ## Usage
@@ -18,11 +18,11 @@ Multer adds a `body` object and a `file` or `files` object to the `request` obje
 Basic usage example:
 
 ```javascript
+var multer = require('multer')
 var express = require('express')
-var multer  = require('multer')
-var upload = multer({ dest: 'uploads/' })
 
 var app = express()
+var upload = multer()
 
 app.post('/profile', upload.single('avatar'), function (req, res, next) {
   // req.file is the `avatar` file
@@ -46,15 +46,16 @@ app.post('/cool-profile', cpUpload, function (req, res, next) {
 })
 ```
 
-In case you need to handle a text-only multipart form, you can use any of the multer methods (`.single()`, `.array()`, `fields()`). Here is an example using `.array()`:
+In case you need to handle a text-only multipart form, you can use the `.none()` method, example:
 
 ```javascript
+var multer = require('multer')
 var express = require('express')
+
 var app = express()
-var multer  = require('multer')
 var upload = multer()
 
-app.post('/profile', upload.array(), function (req, res, next) {
+app.post('/profile', upload.none(), function (req, res, next) {
   // req.body contains the text fields
 })
 ```
@@ -65,45 +66,21 @@ app.post('/profile', upload.array(), function (req, res, next) {
 
 Each file contains the following information:
 
-Key | Description | Note
---- | --- | ---
-`fieldname` | Field name specified in the form |
-`originalname` | Name of the file on the user's computer |
-`encoding` | Encoding type of the file |
-`mimetype` | Mime type of the file |
-`size` | Size of the file in bytes |
-`destination` | The folder to which the file has been saved | `DiskStorage`
-`filename` | The name of the file within the `destination` | `DiskStorage`
-`path` | The full path to the uploaded file | `DiskStorage`
-`buffer` | A `Buffer` of the entire file | `MemoryStorage`
+Key | Description
+--- | ---
+`fieldName` | Field name specified in the form
+`originalName` | Name of the file on the user's computer
+`size` | Size of the file in bytes
+`stream` | Stream of file
 
 ### `multer(opts)`
 
-Multer accepts an options object, the most basic of which is the `dest`
-property, which tells Multer where to upload the files. In case you omit the
-options object, the files will be kept in memory and never written to disk.
+Multer accepts an options object, the following are the options that can be
+passed to Multer.
 
-By default, Multer will rename the files so as to avoid naming conflicts. The
-renaming function can be customized according to your needs.
-
-The following are the options that can be passed to Multer.
-
-Key | Description
---- | ---
-`dest` or `storage` | Where to store the files
-`fileFilter` | Function to control which files are accepted
-`limits` | Limits of the uploaded data
-
-In an average web app, only `dest` might be required, and configured as shown in
-the following example.
-
-```javascript
-var upload = multer({ dest: 'uploads/' })
-```
-
-If you want more control over your uploads, you'll want to use the `storage`
-option instead of `dest`. Multer ships with storage engines `DiskStorage`
-and `MemoryStorage`; More engines are available from third parties.
+Key      | Description
+-------- | -----------
+`limits` | Limits of the uploaded data [(full description)](#limits)
 
 #### `.single(fieldname)`
 
@@ -146,67 +123,6 @@ Never add multer as a global middleware since a malicious user could upload
 files to a route that you didn't anticipate. Only use this function on routes
 where you are handling the uploaded files.
 
-### `storage`
-
-#### `DiskStorage`
-
-The disk storage engine gives you full control on storing files to disk.
-
-```javascript
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, '/tmp/my-uploads')
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now())
-  }
-})
-
-var upload = multer({ storage: storage })
-```
-
-There are two options available, `destination` and `filename`. They are both
-functions that determine where the file should be stored.
-
-`destination` is used to determine within which folder the uploaded files should
-be stored. This can also be given as a `string` (e.g. `'/tmp/uploads'`). If no
-`destination` is given, the operating system's default directory for temporary
-files is used.
-
-**Note:** You are responsible for creating the directory when providing
-`destination` as a function. When passing a string, multer will make sure that
-the directory is created for you.
-
-`filename` is used to determine what the file should be named inside the folder.
-If no `filename` is given, each file will be given a random name that doesn't
-include any file extension.
-
-**Note:** Multer will not append any file extension for you, your function
-should return a filename complete with an file extension.
-
-Each function gets passed both the request (`req`) and some information about
-the file (`file`) to aid with the decision.
-
-Note that `req.body` might not have been fully populated yet. It depends on the
-order that the client transmits fields and files to the server.
-
-#### `MemoryStorage`
-
-The memory storage engine stores the files in memory as `Buffer` objects. It
-doesn't have any options.
-
-```javascript
-var storage = multer.memoryStorage()
-var upload = multer({ storage: storage })
-```
-
-When using memory storage, the file info will contain a field called
-`buffer` that contains the entire file.
-
-**WARNING**: Uploading very large files, or relatively small files in large
-numbers very quickly, can cause your application to run out of memory when
-memory storage is used.
-
 ### `limits`
 
 An object specifying the size limits of the following optional properties. Multer passes this object into busboy directly, and the details of the properties can be found on [busboy's page](https://github.com/mscdex/busboy#busboy-methods).
@@ -224,29 +140,6 @@ Key | Description | Default
 `headerPairs` | For multipart forms, the max number of header key=>value pairs to parse | 2000
 
 Specifying the limits can help protect your site against denial of service (DoS) attacks.
-
-### `fileFilter`
-
-Set this to a function to control which files should be uploaded and which
-should be skipped. The function should look like this:
-
-```javascript
-function fileFilter (req, file, cb) {
-
-  // The function should call `cb` with a boolean
-  // to indicate if the file should be accepted
-
-  // To reject this file pass `false`, like so:
-  cb(null, false)
-
-  // To accept the file pass `true`, like so:
-  cb(null, true)
-
-  // You can always pass an error if something goes wrong:
-  cb(new Error('I don\'t have a clue!'))
-
-}
-```
 
 ## Error handling
 
@@ -270,12 +163,3 @@ app.post('/profile', function (req, res) {
   })
 })
 ```
-
-## Custom storage engine
-
-See [the documentation here](/StorageEngine.md) if you want to build your own
-storage engine.
-
-## License
-
-[MIT](LICENSE)

@@ -3,6 +3,7 @@
 var assert = require('assert')
 var stream = require('stream')
 
+var pify = require('pify')
 var util = require('./_util')
 var multer = require('../')
 var FormData = require('form-data')
@@ -12,28 +13,26 @@ describe('Fields', function () {
   var parser
 
   before(function () {
-    parser = multer().fields([])
+    parser = pify(multer().fields([]))
   })
 
-  it('should process multiple fields', function (done) {
+  it('should process multiple fields', function () {
     var form = new FormData()
 
     form.append('name', 'Multer')
     form.append('key', 'value')
     form.append('abc', 'xyz')
 
-    util.submitForm(parser, form, function (err, req) {
-      assert.ifError(err)
+    return util.submitForm(parser, form).then(function (req) {
       assert.deepEqual(req.body, {
         name: 'Multer',
         key: 'value',
         abc: 'xyz'
       })
-      done()
     })
   })
 
-  it('should process empty fields', function (done) {
+  it('should process empty fields', function () {
     var form = new FormData()
 
     form.append('name', 'Multer')
@@ -46,8 +45,7 @@ describe('Fields', function () {
     form.append('checkboxempty', '')
     form.append('checkboxempty', '')
 
-    util.submitForm(parser, form, function (err, req) {
-      assert.ifError(err)
+    return util.submitForm(parser, form).then(function (req) {
       assert.deepEqual(req.body, {
         name: 'Multer',
         key: '',
@@ -56,11 +54,10 @@ describe('Fields', function () {
         checkboxhalfempty: [ 'cb1', '' ],
         checkboxempty: [ '', '' ]
       })
-      done()
     })
   })
 
-  it('should not process non-multipart POST request', function (done) {
+  it('should not process non-multipart POST request', function () {
     var req = new stream.PassThrough()
 
     req.end('name=Multer')
@@ -70,15 +67,13 @@ describe('Fields', function () {
       'content-length': 11
     }
 
-    parser(req, null, function (err) {
-      assert.ifError(err)
+    parser(req, null).then(function () {
       assert.equal(req.hasOwnProperty('body'), false)
       assert.equal(req.hasOwnProperty('files'), false)
-      done()
     })
   })
 
-  it('should not process non-multipart GET request', function (done) {
+  it('should not process non-multipart GET request', function () {
     var req = new stream.PassThrough()
 
     req.end('name=Multer')
@@ -88,39 +83,34 @@ describe('Fields', function () {
       'content-length': 11
     }
 
-    parser(req, null, function (err) {
-      assert.ifError(err)
+    return parser(req, null).then(function () {
       assert.equal(req.hasOwnProperty('body'), false)
       assert.equal(req.hasOwnProperty('files'), false)
-      done()
     })
   })
 
   testData.forEach(function (test) {
-    it('should handle ' + test.name, function (done) {
+    it('should handle ' + test.name, function () {
       var form = new FormData()
 
       test.fields.forEach(function (field) {
         form.append(field.key, field.value)
       })
 
-      util.submitForm(parser, form, function (err, req) {
-        assert.ifError(err)
+      return util.submitForm(parser, form).then(function (req) {
         assert.deepEqual(req.body, test.expected)
-        done()
       })
     })
   })
 
-  it('should convert arrays into objects', function (done) {
+  it('should convert arrays into objects', function () {
     var form = new FormData()
 
     form.append('obj[0]', 'a')
     form.append('obj[2]', 'c')
     form.append('obj[x]', 'yz')
 
-    util.submitForm(parser, form, function (err, req) {
-      assert.ifError(err)
+    return util.submitForm(parser, form).then(function (req) {
       assert.deepEqual(req.body, {
         obj: {
           '0': 'a',
@@ -128,7 +118,6 @@ describe('Fields', function () {
           'x': 'yz'
         }
       })
-      done()
     })
   })
 })

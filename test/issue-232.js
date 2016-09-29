@@ -4,40 +4,24 @@ var assert = require('assert')
 
 var util = require('./_util')
 var multer = require('../')
-var temp = require('fs-temp')
-var rimraf = require('rimraf')
 var FormData = require('form-data')
+var assertRejects = require('assert-rejects')
 
 describe('Issue #232', function () {
-  var uploadDir, upload
-
-  before(function (done) {
-    temp.mkdir(function (err, path) {
-      if (err) return done(err)
-
-      uploadDir = path
-      upload = multer({ dest: path, limits: { fileSize: 100 } })
-      done()
-    })
-  })
-
-  after(function (done) {
-    rimraf(uploadDir, done)
-  })
-
-  it('should report limit errors', function (done) {
+  it('should report limit errors', function () {
     var form = new FormData()
-    var parser = upload.single('file')
+    var parser = multer({ limits: { fileSize: 100 } }).single('file')
 
     form.append('file', util.file('large.jpg'))
 
-    util.submitForm(parser, form, function (err, req) {
-      assert.ok(err, 'an error was given')
+    return assertRejects(
+      util.submitForm(parser, form),
+      function (err) {
+        assert.equal(err.code, 'LIMIT_FILE_SIZE')
+        assert.equal(err.field, 'file')
 
-      assert.equal(err.code, 'LIMIT_FILE_SIZE')
-      assert.equal(err.field, 'file')
-
-      done()
-    })
+        return true
+      }
+    )
   })
 })

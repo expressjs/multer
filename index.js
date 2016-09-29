@@ -1,100 +1,54 @@
-var makeError = require('./lib/make-error')
-var makeMiddleware = require('./lib/make-middleware')
+var createFileFilter = require('./lib/file-filter')
+var createMiddleware = require('./lib/middleware')
 
-var diskStorage = require('./storage/disk')
-var memoryStorage = require('./storage/memory')
-
-function allowAll (req, file, cb) {
-  cb(null, true)
+function _middleware (limits, fields, fileStrategy) {
+  return createMiddleware(function setup () {
+    return {
+      limits: limits,
+      fileFilter: createFileFilter(fields),
+      fileStrategy: fileStrategy
+    }
+  })
 }
 
 function Multer (options) {
-  if (options.storage) {
-    this.storage = options.storage
-  } else if (options.dest) {
-    this.storage = diskStorage({ destination: options.dest })
-  } else {
-    this.storage = memoryStorage()
-  }
-
   this.limits = options.limits
-  this.fileFilter = options.fileFilter || allowAll
-}
-
-Multer.prototype._makeMiddleware = function (fields, fileStrategy) {
-  function setup () {
-    var fileFilter = this.fileFilter
-    var filesLeft = Object.create(null)
-
-    fields.forEach(function (field) {
-      if (typeof field.maxCount === 'number') {
-        filesLeft[field.name] = field.maxCount
-      } else {
-        filesLeft[field.name] = Infinity
-      }
-    })
-
-    function wrappedFileFilter (req, file, cb) {
-      if ((filesLeft[file.fieldname] || 0) <= 0) {
-        return cb(makeError('LIMIT_UNEXPECTED_FILE', file.fieldname))
-      }
-
-      filesLeft[file.fieldname] -= 1
-      fileFilter(req, file, cb)
-    }
-
-    return {
-      limits: this.limits,
-      storage: this.storage,
-      fileFilter: wrappedFileFilter,
-      fileStrategy: fileStrategy
-    }
-  }
-
-  return makeMiddleware(setup.bind(this))
 }
 
 Multer.prototype.single = function (name) {
-  return this._makeMiddleware([{ name: name, maxCount: 1 }], 'VALUE')
+  return _middleware(this.limits, [{ name: name, maxCount: 1 }], 'VALUE')
 }
 
 Multer.prototype.array = function (name, maxCount) {
-  return this._makeMiddleware([{ name: name, maxCount: maxCount }], 'ARRAY')
+  return _middleware(this.limits, [{ name: name, maxCount: maxCount }], 'ARRAY')
 }
 
 Multer.prototype.fields = function (fields) {
-  return this._makeMiddleware(fields, 'OBJECT')
+  return _middleware(this.limits, fields, 'OBJECT')
 }
 
 Multer.prototype.none = function () {
-  return this._makeMiddleware([], 'NONE')
+  return _middleware(this.limits, [], 'NONE')
 }
 
 Multer.prototype.any = function () {
   function setup () {
     return {
       limits: this.limits,
-      storage: this.storage,
-      fileFilter: this.fileFilter,
+      fileFilter: function () {},
       fileStrategy: 'ARRAY'
     }
   }
 
-  return makeMiddleware(setup.bind(this))
+  return createMiddleware(setup.bind(this))
 }
 
 function multer (options) {
-  if (options === undefined) {
-    return new Multer({})
-  }
+  if (options === undefined) options = {}
+  if (options === null) throw new TypeError('Expected object for arugment "options", got null')
+  if (typeof options !== 'object') throw new TypeError('Expected object for arugment "options", got ' + (typeof options))
 
-  if (typeof options === 'object' && options !== null) {
-    return new Multer(options)
-  }
-
-  throw new TypeError('Expected object for argument options')
+  return new Multer(options)
 }
 
 module.exports = multer
-module.exports.diskStorage = diskStorage
-module.exports.memoryStorage = memoryStorage

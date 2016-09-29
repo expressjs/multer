@@ -2,53 +2,36 @@
 
 var assert = require('assert')
 
-var fs = require('fs')
-var path = require('path')
 var util = require('./_util')
 var multer = require('../')
-var temp = require('fs-temp')
-var rimraf = require('rimraf')
 var FormData = require('form-data')
 
 describe('Disk Storage', function () {
-  var uploadDir, upload
+  var upload
 
-  beforeEach(function (done) {
-    temp.mkdir(function (err, path) {
-      if (err) return done(err)
-
-      uploadDir = path
-      upload = multer({ dest: path })
-      done()
-    })
+  before(function () {
+    upload = multer()
   })
 
-  afterEach(function (done) {
-    rimraf(uploadDir, done)
-  })
-
-  it('should process parser/form-data POST request', function (done) {
+  it('should process parser/form-data POST request', function () {
     var form = new FormData()
     var parser = upload.single('small0')
 
     form.append('name', 'Multer')
     form.append('small0', util.file('small0.dat'))
 
-    util.submitForm(parser, form, function (err, req) {
-      assert.ifError(err)
-
+    return util.submitForm(parser, form).then(function (req) {
       assert.equal(req.body.name, 'Multer')
 
-      assert.equal(req.file.fieldname, 'small0')
-      assert.equal(req.file.originalname, 'small0.dat')
+      assert.equal(req.file.fieldName, 'small0')
+      assert.equal(req.file.originalName, 'small0.dat')
       assert.equal(req.file.size, 1778)
-      assert.equal(util.fileSize(req.file.path), 1778)
 
-      done()
+      return util.assertStreamSize(req.file.stream, 1778)
     })
   })
 
-  it('should process empty fields and an empty file', function (done) {
+  it('should process empty fields and an empty file', function () {
     var form = new FormData()
     var parser = upload.single('empty')
 
@@ -63,9 +46,7 @@ describe('Disk Storage', function () {
     form.append('checkboxempty', '')
     form.append('checkboxempty', '')
 
-    util.submitForm(parser, form, function (err, req) {
-      assert.ifError(err)
-
+    return util.submitForm(parser, form).then(function (req) {
       assert.equal(req.body.name, 'Multer')
       assert.equal(req.body.version, '')
       assert.equal(req.body.year, '')
@@ -74,16 +55,15 @@ describe('Disk Storage', function () {
       assert.deepEqual(req.body.checkboxhalfempty, [ 'cb1', '' ])
       assert.deepEqual(req.body.checkboxempty, [ '', '' ])
 
-      assert.equal(req.file.fieldname, 'empty')
-      assert.equal(req.file.originalname, 'empty.dat')
+      assert.equal(req.file.fieldName, 'empty')
+      assert.equal(req.file.originalName, 'empty.dat')
       assert.equal(req.file.size, 0)
-      assert.equal(util.fileSize(req.file.path), 0)
 
-      done()
+      return util.assertStreamSize(req.file.stream, 0)
     })
   })
 
-  it('should process multiple files', function (done) {
+  it('should process multiple files', function () {
     var form = new FormData()
     var parser = upload.fields([
       { name: 'empty', maxCount: 1 },
@@ -103,85 +83,46 @@ describe('Disk Storage', function () {
     form.append('medium', util.file('medium.dat'))
     form.append('large', util.file('large.jpg'))
 
-    util.submitForm(parser, form, function (err, req) {
-      assert.ifError(err)
-
+    return util.submitForm(parser, form).then(function (req) {
       assert.deepEqual(req.body, {})
 
-      assert.equal(req.files['empty'][0].fieldname, 'empty')
-      assert.equal(req.files['empty'][0].originalname, 'empty.dat')
+      assert.equal(req.files['empty'][0].fieldName, 'empty')
+      assert.equal(req.files['empty'][0].originalName, 'empty.dat')
       assert.equal(req.files['empty'][0].size, 0)
-      assert.equal(util.fileSize(req.files['empty'][0].path), 0)
 
-      assert.equal(req.files['tiny0'][0].fieldname, 'tiny0')
-      assert.equal(req.files['tiny0'][0].originalname, 'tiny0.dat')
+      assert.equal(req.files['tiny0'][0].fieldName, 'tiny0')
+      assert.equal(req.files['tiny0'][0].originalName, 'tiny0.dat')
       assert.equal(req.files['tiny0'][0].size, 122)
-      assert.equal(util.fileSize(req.files['tiny0'][0].path), 122)
 
-      assert.equal(req.files['tiny1'][0].fieldname, 'tiny1')
-      assert.equal(req.files['tiny1'][0].originalname, 'tiny1.dat')
+      assert.equal(req.files['tiny1'][0].fieldName, 'tiny1')
+      assert.equal(req.files['tiny1'][0].originalName, 'tiny1.dat')
       assert.equal(req.files['tiny1'][0].size, 7)
-      assert.equal(util.fileSize(req.files['tiny1'][0].path), 7)
 
-      assert.equal(req.files['small0'][0].fieldname, 'small0')
-      assert.equal(req.files['small0'][0].originalname, 'small0.dat')
+      assert.equal(req.files['small0'][0].fieldName, 'small0')
+      assert.equal(req.files['small0'][0].originalName, 'small0.dat')
       assert.equal(req.files['small0'][0].size, 1778)
-      assert.equal(util.fileSize(req.files['small0'][0].path), 1778)
 
-      assert.equal(req.files['small1'][0].fieldname, 'small1')
-      assert.equal(req.files['small1'][0].originalname, 'small1.dat')
+      assert.equal(req.files['small1'][0].fieldName, 'small1')
+      assert.equal(req.files['small1'][0].originalName, 'small1.dat')
       assert.equal(req.files['small1'][0].size, 315)
-      assert.equal(util.fileSize(req.files['small1'][0].path), 315)
 
-      assert.equal(req.files['medium'][0].fieldname, 'medium')
-      assert.equal(req.files['medium'][0].originalname, 'medium.dat')
+      assert.equal(req.files['medium'][0].fieldName, 'medium')
+      assert.equal(req.files['medium'][0].originalName, 'medium.dat')
       assert.equal(req.files['medium'][0].size, 13196)
-      assert.equal(util.fileSize(req.files['medium'][0].path), 13196)
 
-      assert.equal(req.files['large'][0].fieldname, 'large')
-      assert.equal(req.files['large'][0].originalname, 'large.jpg')
+      assert.equal(req.files['large'][0].fieldName, 'large')
+      assert.equal(req.files['large'][0].originalName, 'large.jpg')
       assert.equal(req.files['large'][0].size, 2413677)
-      assert.equal(util.fileSize(req.files['large'][0].path), 2413677)
 
-      done()
-    })
-  })
-
-  it('should remove uploaded files on error', function (done) {
-    var form = new FormData()
-    var parser = upload.single('tiny0')
-
-    form.append('tiny0', util.file('tiny0.dat'))
-    form.append('small0', util.file('small0.dat'))
-
-    util.submitForm(parser, form, function (err, req) {
-      assert.equal(err.code, 'LIMIT_UNEXPECTED_FILE')
-      assert.equal(err.field, 'small0')
-      assert.deepEqual(err.storageErrors, [])
-
-      var files = fs.readdirSync(uploadDir)
-      assert.deepEqual(files, [])
-
-      done()
-    })
-  })
-
-  it('should report error when directory doesn\'t exist', function (done) {
-    var directory = path.join(temp.mkdirSync(), 'ghost')
-    function dest ($0, $1, cb) { cb(null, directory) }
-
-    var storage = multer.diskStorage({ destination: dest })
-    var upload = multer({ storage: storage })
-    var parser = upload.single('tiny0')
-    var form = new FormData()
-
-    form.append('tiny0', util.file('tiny0.dat'))
-
-    util.submitForm(parser, form, function (err, req) {
-      assert.equal(err.code, 'ENOENT')
-      assert.equal(path.dirname(err.path), directory)
-
-      done()
+      return Promise.all([
+        util.assertStreamSize(req.files['empty'][0].stream, 0),
+        util.assertStreamSize(req.files['tiny0'][0].stream, 122),
+        util.assertStreamSize(req.files['tiny1'][0].stream, 7),
+        util.assertStreamSize(req.files['small0'][0].stream, 1778),
+        util.assertStreamSize(req.files['small1'][0].stream, 315),
+        util.assertStreamSize(req.files['medium'][0].stream, 13196),
+        util.assertStreamSize(req.files['large'][0].stream, 2413677)
+      ])
     })
   })
 })
