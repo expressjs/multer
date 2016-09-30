@@ -32,6 +32,7 @@
     "express": "^4.14.0",
     "form-data": "^2.1.0",
     "get-stream": "^2.3.1",
+    "hasha": "^2.2.0",
     "mocha": "^3.1.0",
     "standard": "^8.2.0",
     "testdata-w3c-json-form": "^0.2.0"

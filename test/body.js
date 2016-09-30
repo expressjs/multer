@@ -9,11 +9,11 @@ var multer = require('../')
 var FormData = require('form-data')
 var testData = require('testdata-w3c-json-form')
 
-describe('Fields', function () {
+describe('body', function () {
   var parser
 
   before(function () {
-    parser = pify(multer().fields([]))
+    parser = multer().none()
   })
 
   it('should process multiple fields', function () {
@@ -67,7 +67,7 @@ describe('Fields', function () {
       'content-length': 11
     }
 
-    parser(req, null).then(function () {
+    pify(parser)(req, null).then(function () {
       assert.equal(req.hasOwnProperty('body'), false)
       assert.equal(req.hasOwnProperty('files'), false)
     })
@@ -83,7 +83,7 @@ describe('Fields', function () {
       'content-length': 11
     }
 
-    return parser(req, null).then(function () {
+    return pify(parser)(req, null).then(function () {
       assert.equal(req.hasOwnProperty('body'), false)
       assert.equal(req.hasOwnProperty('files'), false)
     })

@@ -49,7 +49,7 @@ describe('Express Integration', function () {
     var routeCalled = 0
     var errorCalled = 0
 
-    form.append('avatar', util.file('large.jpg'))
+    form.append('avatar', util.file('large'))
 
     router.post('/profile', upload.single('avatar'), function (req, res, next) {
       routeCalled++
@@ -80,7 +80,7 @@ describe('Express Integration', function () {
     var routeCalled = 0
     var errorCalled = 0
 
-    form.append('avatar', util.file('large.jpg'))
+    form.append('avatar', util.file('large'))
 
     router.post('/profile', upload.single('avatar'), function (req, res, next) {
       routeCalled++

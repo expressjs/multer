@@ -22,11 +22,11 @@ describe('Error Handling', function () {
   it('should respect parts limit', function () {
     var form = new FormData()
     var parser = withLimits({ parts: 1 }, [
-      { name: 'small0', maxCount: 1 }
+      { name: 'small', maxCount: 1 }
     ])
 
     form.append('field0', 'BOOM!')
-    form.append('small0', util.file('small0.dat'))
+    form.append('small', util.file('small'))
 
     return assertRejects(
       util.submitForm(parser, form),
@@ -37,18 +37,18 @@ describe('Error Handling', function () {
   it('should respect file size limit', function () {
     var form = new FormData()
     var parser = withLimits({ fileSize: 1500 }, [
-      { name: 'tiny0', maxCount: 1 },
-      { name: 'small0', maxCount: 1 }
+      { name: 'tiny', maxCount: 1 },
+      { name: 'small', maxCount: 1 }
     ])
 
-    form.append('tiny0', util.file('tiny0.dat'))
-    form.append('small0', util.file('small0.dat'))
+    form.append('tiny', util.file('tiny'))
+    form.append('small', util.file('small'))
 
     return assertRejects(
       util.submitForm(parser, form),
       function (err) {
         assert.equal(err.code, 'LIMIT_FILE_SIZE')
-        assert.equal(err.field, 'small0')
+        assert.equal(err.field, 'small')
 
         return true
       }
@@ -58,12 +58,12 @@ describe('Error Handling', function () {
   it('should respect file count limit', function () {
     var form = new FormData()
     var parser = withLimits({ files: 1 }, [
-      { name: 'small0', maxCount: 1 },
-      { name: 'small1', maxCount: 1 }
+      { name: 'small', maxCount: 1 },
+      { name: 'small', maxCount: 1 }
     ])
 
-    form.append('small0', util.file('small0.dat'))
-    form.append('small1', util.file('small1.dat'))
+    form.append('small', util.file('small'))
+    form.append('small', util.file('small'))
 
     return assertRejects(
       util.submitForm(parser, form),
@@ -74,10 +74,10 @@ describe('Error Handling', function () {
   it('should respect file key limit', function () {
     var form = new FormData()
     var parser = withLimits({ fieldNameSize: 4 }, [
-      { name: 'small0', maxCount: 1 }
+      { name: 'small', maxCount: 1 }
     ])
 
-    form.append('small0', util.file('small0.dat'))
+    form.append('small', util.file('small'))
 
     return assertRejects(
       util.submitForm(parser, form),
@@ -135,13 +135,13 @@ describe('Error Handling', function () {
       { name: 'wrongname', maxCount: 1 }
     ])
 
-    form.append('small0', util.file('small0.dat'))
+    form.append('small', util.file('small'))
 
     return assertRejects(
       util.submitForm(parser, form),
       function (err) {
         assert.equal(err.code, 'LIMIT_UNEXPECTED_FILE')
-        assert.equal(err.field, 'small0')
+        assert.equal(err.field, 'small')
 
         return true
       }
@@ -150,7 +150,7 @@ describe('Error Handling', function () {
 
   it('should report errors from busboy constructor', function (done) {
     var req = new stream.PassThrough()
-    var upload = multer().single('tiny0')
+    var upload = multer().single('tiny')
     var body = 'test'
 
     req.headers = {
@@ -168,11 +168,11 @@ describe('Error Handling', function () {
 
   it('should report errors from busboy parsing', function (done) {
     var req = new stream.PassThrough()
-    var upload = multer().single('tiny0')
+    var upload = multer().single('tiny')
     var boundary = 'AaB03x'
     var body = [
       '--' + boundary,
-      'Content-Disposition: form-data; name="tiny0"; filename="test.txt"',
+      'Content-Disposition: form-data; name="tiny"; filename="test.txt"',
       'Content-Type: text/plain',
       '',
       'test without end boundary'
