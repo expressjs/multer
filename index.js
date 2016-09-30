@@ -4,6 +4,7 @@ var createMiddleware = require('./lib/middleware')
 function _middleware (limits, fields, fileStrategy) {
   return createMiddleware(function setup () {
     return {
+      fields: fields,
       limits: limits,
       fileFilter: createFileFilter(fields),
       fileStrategy: fileStrategy
@@ -34,6 +35,7 @@ Multer.prototype.none = function () {
 Multer.prototype.any = function () {
   function setup () {
     return {
+      fields: [],
       limits: this.limits,
       fileFilter: function () {},
       fileStrategy: 'ARRAY'

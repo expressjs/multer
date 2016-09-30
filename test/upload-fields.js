@@ -24,6 +24,8 @@ describe('upload.fields', function () {
     form.append('set-2', util.file('tiny'))
 
     return util.submitForm(parser, form).then(function (req) {
+      assert.equal(req.files['CA$|-|'].length, 0)
+      assert.equal(req.files['set-1'].length, 0)
       assert.equal(req.files['set-2'].length, 1)
 
       return util.assertFile(req.files['set-2'][0], 'set-2', 'tiny')
