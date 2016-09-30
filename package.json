@@ -34,7 +34,7 @@
     "get-stream": "^2.3.1",
     "hasha": "^2.2.0",
     "mocha": "^3.1.0",
-    "standard": "^8.2.0",
+    "standard": "^8.3.0",
     "testdata-w3c-json-form": "^0.2.0"
   },
   "engines": {
