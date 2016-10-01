@@ -60,4 +60,18 @@ describe('Misc', function () {
 
     return Promise.all([9, 1, 5, 7, 2, 8, 3, 4].map(submitData))
   })
+
+  it('should give error on old options', function () {
+    assert.throws(function () {
+      multer({ dest: '/tmp' })
+    })
+
+    assert.throws(function () {
+      multer({ storage: {} })
+    })
+
+    assert.throws(function () {
+      multer({ fileFilter: function () {} })
+    })
+  })
 })
