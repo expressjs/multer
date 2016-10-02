@@ -91,7 +91,7 @@ describe('upload.fields', function () {
     return assertRejects(
       util.submitForm(parser, form),
       function (err) {
-        assert.equal(err.code, 'LIMIT_UNEXPECTED_FILE')
+        assert.equal(err.code, 'LIMIT_FILE_COUNT')
         assert.equal(err.field, 'CA$|-|')
 
         return true

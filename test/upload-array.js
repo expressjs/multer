@@ -53,16 +53,16 @@ describe('upload.array', function () {
     var form = new FormData()
 
     form.append('name', 'Multer')
-    form.append('file', util.file('small'))
-    form.append('file', util.file('small'))
-    form.append('file', util.file('small'))
-    form.append('file', util.file('small'))
+    form.append('files', util.file('small'))
+    form.append('files', util.file('small'))
+    form.append('files', util.file('small'))
+    form.append('files', util.file('small'))
 
     return assertRejects(
       util.submitForm(parser, form),
       function (err) {
-        assert.equal(err.code, 'LIMIT_UNEXPECTED_FILE')
-        assert.equal(err.field, 'file')
+        assert.equal(err.code, 'LIMIT_FILE_COUNT')
+        assert.equal(err.field, 'files')
 
         return true
       }
