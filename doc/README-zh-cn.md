@@ -1,3 +1,6 @@
+此文档于2016年10月3日翻译时multer的版本是1.2.0，它可能不是最新的！甚至可能存在翻译错误！
+你可能需要阅读原版英语[README](../README.md)，此文档仅供参考！
+
 # Multer [![Build Status](https://travis-ci.org/expressjs/multer.svg?branch=master)](https://travis-ci.org/expressjs/multer) [![NPM version](https://badge.fury.io/js/multer.svg)](https://badge.fury.io/js/multer) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
 
 Multer 是一个 node.js 中间件，用于处理 `multipart/form-data` 类型的表单数据, 它主要用于上传文件. 它是写在 [busboy](https://github.com/mscdex/busboy) 之上非常高效。
