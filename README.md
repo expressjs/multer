@@ -5,6 +5,9 @@ on top of [busboy](https://github.com/mscdex/busboy) for maximum efficiency.
 
 **NOTE**: Multer will not process any form which is not multipart (`multipart/form-data`).
 
+## Language
+English [简体中文](./doc/README-zh-cn.md)
+
 ## Installation
 
 ```sh
