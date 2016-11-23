@@ -9,7 +9,7 @@ on top of [busboy](https://github.com/mscdex/busboy) for maximum efficiency.
 
 This README is also available in other languages:
 
-- [简体中文](./doc/README-zh-cn.md) (Chinese)
+- [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (Chinese)
 
 ## Installation
 
@@ -279,8 +279,7 @@ app.post('/profile', function (req, res) {
 
 ## Custom storage engine
 
-See [the documentation here](/StorageEngine.md) if you want to build your own
-storage engine.
+For information on how to build your own storage engine, see [Multer Storage Engine](https://github.com/expressjs/multer/blob/master/StorageEngine.md).
 
 ## License
 
