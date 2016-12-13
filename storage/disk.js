@@ -47,6 +47,9 @@ DiskStorage.prototype._handleFile = function _handleFile (req, file, cb) {
           size: outStream.bytesWritten
         })
       })
+      req.on('close', function() {
+        outStream.end();
+      });
     })
   })
 }
