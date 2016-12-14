@@ -2,6 +2,7 @@
 
 var assert = require('assert')
 
+var os = require('os')
 var util = require('./_util')
 var multer = require('../')
 var stream = require('stream')
@@ -200,6 +201,22 @@ describe('Error Handling', function () {
 
     upload(req, null, function (err) {
       assert.equal(err.message, 'Unexpected end of multipart data')
+      done()
+    })
+  })
+
+  it('should gracefully handle more than one error at a time', function (done) {
+    var form = new FormData()
+    var storage = multer.diskStorage({ destination: os.tmpdir() })
+    var upload = multer({ storage: storage, limits: { fileSize: 1, files: 1 } }).fields([
+      { name: 'small0', maxCount: 1 }
+    ])
+
+    form.append('small0', util.file('small0.dat'))
+    form.append('small0', util.file('small0.dat'))
+
+    util.submitForm(upload, form, function (err, req) {
+      assert.equal(err.code, 'LIMIT_FILE_SIZE')
       done()
     })
   })
