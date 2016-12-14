@@ -166,7 +166,7 @@ describe('Disk Storage', function () {
     })
   })
 
-  it('should report error when directory doesn\'t exist', function (done) {
+  it('should upload file for passed path', function (done) {
     var directory = path.join(temp.mkdirSync(), 'ghost')
     function dest ($0, $1, cb) { cb(null, directory) }
 
@@ -178,9 +178,11 @@ describe('Disk Storage', function () {
     form.append('tiny0', util.file('tiny0.dat'))
 
     util.submitForm(parser, form, function (err, req) {
-      assert.equal(err.code, 'ENOENT')
-      assert.equal(path.dirname(err.path), directory)
-
+      assert.equal(req.file.fieldname, 'tiny0')
+      assert.equal(req.file.originalname, 'tiny0.dat')
+      assert.equal(req.file.size, 122)
+      assert.equal(util.fileSize(req.file.path), 122)
+      
       done()
     })
   })
