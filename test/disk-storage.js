@@ -178,11 +178,12 @@ describe('Disk Storage', function () {
     form.append('tiny0', util.file('tiny0.dat'))
 
     util.submitForm(parser, form, function (err, req) {
+      assert.ifError(err)
       assert.equal(req.file.fieldname, 'tiny0')
       assert.equal(req.file.originalname, 'tiny0.dat')
       assert.equal(req.file.size, 122)
       assert.equal(util.fileSize(req.file.path), 122)
-      
+
       done()
     })
   })
