@@ -18,7 +18,6 @@ function DiskStorage (opts) {
   this.getFilename = (opts.filename || getFilename)
 
   if (typeof opts.destination === 'string') {
-    mkdirp.sync(opts.destination)
     this.getDestination = function ($0, $1, cb) { cb(null, opts.destination) }
   } else {
     this.getDestination = (opts.destination || getDestination)
@@ -34,6 +33,7 @@ DiskStorage.prototype._handleFile = function _handleFile (req, file, cb) {
     that.getFilename(req, file, function (err, filename) {
       if (err) return cb(err)
 
+      mkdirp.sync(destination)
       var finalPath = path.join(destination, filename)
       var outStream = fs.createWriteStream(finalPath)
 
