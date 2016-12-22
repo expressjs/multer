@@ -190,4 +190,19 @@ describe('Error Handling', function () {
       done()
     })
   })
+
+  it('should gracefully handle more than one error at a time', function () {
+    var form = new FormData()
+    var parser = withLimits({ fileSize: 1, files: 1 }, [
+      { name: 'small', maxCount: 1 }
+    ])
+
+    form.append('small', util.file('small'))
+    form.append('small', util.file('small'))
+
+    return assertRejects(
+      util.submitForm(parser, form),
+      hasCode('LIMIT_FILE_SIZE')
+    )
+  })
 })
