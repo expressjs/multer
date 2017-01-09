@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.0.0-alpha.3 - 2016-12-22
+
+- Feature: unlink file as soon as it's opened
+
+## 2.0.0-alpha.2 - 2016-10-02
+
+- Feature: use LIMIT_FILE_COUNT when receiving too many files
+
+## 2.0.0-alpha.1 - 2016-10-01
+
+- Feature: switch to stream based API
+- Feature: throw error when passing old options
+
 ## 1.2.0 - 2016-08-04
 
 - Feature: add .none() for accepting only fields
