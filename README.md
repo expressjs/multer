@@ -70,6 +70,8 @@ Key | Description
 --- | ---
 `fieldName` | Field name specified in the form
 `originalName` | Name of the file on the user's computer
+`encoding` | Encoding type of the file
+`mimetype` | Mime type of the file
 `size` | Size of the file in bytes
 `stream` | Stream of file
 
