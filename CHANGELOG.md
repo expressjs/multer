@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.3.0 - 2017-01-25
+
+- Feature: Expose preservePath option
+
 ## 1.2.1 - 2016-12-14
 
 - Bugfix: Prevent Multiple Errors from Crashing
