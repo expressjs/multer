@@ -72,6 +72,12 @@ Key | Description
 `originalName` | Name of the file on the user's computer
 `size` | Size of the file in bytes
 `stream` | Stream of file
+`detectedMimeType` | The detected mime-type, or null if we failed to detect
+`detectedFileExtension` | The typical file extension for files of the detected type, or empty string if we failed to detect (with leading `.` to match `path.extname`)
+`clientReportedMimeType` | The mime type reported by the client using the `Content-Type` header, or null<sup>1</sup> if the header was absent
+`clientReportedFileExtension` | The extension of the file uploaded (as reported by `path.extname`)
+
+<sup>1</sup> Currently returns `text/plain` if header is absent, this is a bug and it will be fixed in a patch release. Do not rely on this behavior.
 
 ### `multer(opts)`
 

@@ -25,6 +25,7 @@
     "on-finished": "^2.3.0",
     "pify": "^2.3.0",
     "pump": "^1.0.1",
+    "stream-file-type": "^0.1.1",
     "type-is": "^1.6.13"
   },
   "devDependencies": {
@@ -38,7 +39,7 @@
     "testdata-w3c-json-form": "^0.2.0"
   },
   "engines": {
-    "node": ">= 0.12.0"
+    "node": ">= 4.0.0"
   },
   "files": [
     "LICENSE",
