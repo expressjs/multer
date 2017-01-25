@@ -18,6 +18,7 @@ function Multer (options) {
   }
 
   this.limits = options.limits
+  this.preservePath = options.preservePath
   this.fileFilter = options.fileFilter || allowAll
 }
 
@@ -45,6 +46,7 @@ Multer.prototype._makeMiddleware = function (fields, fileStrategy) {
 
     return {
       limits: this.limits,
+      preservePath: this.preservePath,
       storage: this.storage,
       fileFilter: wrappedFileFilter,
       fileStrategy: fileStrategy
@@ -74,6 +76,7 @@ Multer.prototype.any = function () {
   function setup () {
     return {
       limits: this.limits,
+      preservePath: this.preservePath,
       storage: this.storage,
       fileFilter: this.fileFilter,
       fileStrategy: 'ARRAY'
