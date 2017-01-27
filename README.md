@@ -21,8 +21,19 @@ $ npm install --save multer
 
 Multer adds a `body` object and a `file` or `files` object to the `request` object. The `body` object contains the values of the text fields of the form, the `file` or `files` object contains the files uploaded via the form.
 
-Basic usage example:
+## Examples
 
+### Single file
+
+HTML
+```html
+<form action="YOUR_URL" method="post" enctype="multipart/form-data">
+  <input type="file" name="photo">
+  <input type="submit">
+</form>
+```
+
+Server side JavaScript
 ```javascript
 var express = require('express')
 var multer  = require('multer')
@@ -30,16 +41,49 @@ var upload = multer({ dest: 'uploads/' })
 
 var app = express()
 
-app.post('/profile', upload.single('avatar'), function (req, res, next) {
+app.post('/profile', upload.single('photo'), function (req, res, next) {
   // req.file is the `avatar` file
   // req.body will hold the text fields, if there were any
 })
+```
+
+### One input with multiple files:
+
+HTML
+```html
+<form action="YOUR_URL" method="post" enctype="multipart/form-data">
+  <input type="file" name="photos" multiple>
+  <input type="submit">
+</form>
+```
+
+Server side JavaScript
+```javascript
+var express = require('express')
+var multer  = require('multer')
+var upload = multer({ dest: 'uploads/' })
+
+var app = express()
 
 app.post('/photos/upload', upload.array('photos', 12), function (req, res, next) {
   // req.files is array of `photos` files
   // req.body will contain the text fields, if there were any
 })
+```
 
+### Mixed with multiple inputs fields:
+
+HTML
+```html
+<form action="YOUR_URL" method="post" enctype="multipart/form-data">
+  <input type="file" name="avatar">
+  <input type="file" name="gallery" multiple>
+  <input type="submit">
+</form>
+```
+
+Server side JavaScript
+```javascript
 var cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
 app.post('/cool-profile', cpUpload, function (req, res, next) {
   // req.files is an object (String -> Array) where fieldname is the key, and the value is array of files
