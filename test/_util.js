@@ -7,37 +7,72 @@ var stream = require('stream')
 
 var onFinished = pify(require('on-finished'))
 
-var fileHashes = new Map([
-  ['empty', 'd41d8cd98f00b204e9800998ecf8427e'],
-  ['large', 'd5554977e0b856fa5ad94fff283616fb'],
-  ['medium', '239c571181de5fd47d62419e3e6adc60'],
-  ['small', '3817334ffb4cf3fcaa16c4258d888131'],
-  ['tiny', '300198b56f6d5f1603082c190990b5ec']
-])
-
-var fileSizes = new Map([
-  ['empty', 0],
-  ['large', 2413677],
-  ['medium', 13196],
-  ['small', 1778],
-  ['tiny', 122]
+var files = new Map([
+  ['empty', {
+    clientReportedMimeType: 'application/octet-stream',
+    detectedFileExtension: '',
+    detectedMimeType: null,
+    extension: '.dat',
+    hash: 'd41d8cd98f00b204e9800998ecf8427e',
+    size: 0
+  }],
+  ['large', {
+    clientReportedMimeType: 'application/octet-stream',
+    detectedFileExtension: '',
+    detectedMimeType: null,
+    extension: '',
+    hash: 'd5554977e0b856fa5ad94fff283616fb',
+    size: 2413677
+  }],
+  ['medium', {
+    clientReportedMimeType: 'application/octet-stream',
+    detectedFileExtension: '.gif',
+    detectedMimeType: 'image/gif',
+    extension: '.fake',
+    hash: 'a88025890e6a2cd15edb83e0aecdddd1',
+    size: 21057
+  }],
+  ['small', {
+    clientReportedMimeType: 'application/octet-stream',
+    detectedFileExtension: '',
+    detectedMimeType: null,
+    extension: '.dat',
+    hash: '3817334ffb4cf3fcaa16c4258d888131',
+    size: 1778
+  }],
+  ['tiny', {
+    clientReportedMimeType: 'audio/midi',
+    detectedFileExtension: '.mid',
+    detectedMimeType: 'audio/midi',
+    extension: '.mid',
+    hash: 'c187e1be438cb952bb8a0e8142f4a6d1',
+    size: 248
+  }]
 ])
 
 exports.file = function file (name) {
-  return fs.createReadStream(path.join(__dirname, 'files', name + '.dat'))
+  return fs.createReadStream(path.join(__dirname, 'files', name + files.get(name).extension))
 }
 
 exports.assertFile = function (file, fieldName, fileName) {
-  if (!fileHashes.has(fileName) || !fileSizes.has(fileName)) {
+  if (!files.has(fileName)) {
     throw new Error('No file named "' + fileName + '"')
   }
 
+  var expected = files.get(fileName)
+
   assert.equal(file.fieldName, fieldName)
-  assert.equal(file.originalName, fileName + '.dat')
-  assert.equal(file.size, fileSizes.get(fileName))
+  assert.equal(file.originalName, fileName + expected.extension)
+  assert.equal(file.size, expected.size)
+
+  assert.equal(file.clientReportedMimeType, expected.clientReportedMimeType)
+  assert.equal(file.clientReportedFileExtension, expected.extension)
+
+  assert.equal(file.detectedMimeType, expected.detectedMimeType)
+  assert.equal(file.detectedFileExtension, expected.detectedFileExtension)
 
   return hasha.fromStream(file.stream, { algorithm: 'md5' }).then(function (hash) {
-    assert.equal(hash, fileHashes.get(fileName))
+    assert.equal(hash, expected.hash)
   })
 }
 
