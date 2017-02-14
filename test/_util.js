@@ -54,6 +54,10 @@ exports.file = function file (name) {
   return fs.createReadStream(path.join(__dirname, 'files', name + files.get(name).extension))
 }
 
+exports.knownFileLength = function (name) {
+  return files.get(name).size
+}
+
 exports.assertFile = function (file, fieldName, fileName) {
   if (!files.has(fileName)) {
     throw new Error('No file named "' + fileName + '"')

@@ -22,6 +22,25 @@ describe('Misc', function () {
     })
   })
 
+  it('should handle absent filenames', function () {
+    var form = new FormData()
+    var parser = multer().single('file')
+    var stream = util.file('small')
+
+    // Don't let FormData figure out a filename
+    delete stream.fd
+    delete stream.path
+
+    form.append('file', stream, { knownLength: util.knownFileLength('small') })
+
+    return util.submitForm(parser, form).then(function (req) {
+      assert.strictEqual(req.file.originalName, undefined)
+
+      // Ignore content
+      req.file.stream.resume()
+    })
+  })
+
   it('should present files in same order as they came', function () {
     var parser = multer().array('themFiles', 2)
     var form = new FormData()

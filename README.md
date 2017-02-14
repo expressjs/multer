@@ -69,7 +69,7 @@ Each file contains the following information:
 Key | Description
 --- | ---
 `fieldName` | Field name specified in the form
-`originalName` | Name of the file on the user's computer
+`originalName` | Name of the file on the user's computer (`undefined` if no filename was supplied by the client)
 `size` | Size of the file in bytes
 `stream` | Stream of file
 `detectedMimeType` | The detected mime-type, or null if we failed to detect
