@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.0.0-alpha.4 - 2017-02-14
+
+- Feature: add file type detection
+
 ## 2.0.0-alpha.3 - 2016-12-22
 
 - Feature: unlink file as soon as it's opened
