@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.0.0-alpha.6 - 2017-02-18
+
+- Fix: handle client aborting request
+
 ## 2.0.0-alpha.5 - 2017-02-14
 
 - Fix: allow files without filename
