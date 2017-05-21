@@ -24,11 +24,11 @@ Multer adds a `body` object and a `file` or `files` object to the `request` obje
 Basic usage example:
 
 ```javascript
-var express = require('express')
-var multer  = require('multer')
-var upload = multer({ dest: 'uploads/' })
+const express = require('express')
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
 
-var app = express()
+const app = express()
 
 app.post('/profile', upload.single('avatar'), function (req, res, next) {
   // req.file is the `avatar` file
@@ -55,10 +55,10 @@ app.post('/cool-profile', cpUpload, function (req, res, next) {
 In case you need to handle a text-only multipart form, you can use any of the multer methods (`.single()`, `.array()`, `fields()`). Here is an example using `.array()`:
 
 ```javascript
-var express = require('express')
-var app = express()
-var multer  = require('multer')
-var upload = multer()
+const express = require('express')
+const app = express()
+const multer  = require('multer')
+const upload = multer()
 
 app.post('/profile', upload.array(), function (req, res, next) {
   // req.body contains the text fields
@@ -203,8 +203,8 @@ The memory storage engine stores the files in memory as `Buffer` objects. It
 doesn't have any options.
 
 ```javascript
-var storage = multer.memoryStorage()
-var upload = multer({ storage: storage })
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage })
 ```
 
 When using memory storage, the file info will contain a field called
@@ -264,7 +264,7 @@ If you want to catch errors specifically from multer, you can call the
 middleware function by yourself.
 
 ```javascript
-var upload = multer().single('avatar')
+const upload = multer().single('avatar')
 
 app.post('/profile', function (req, res) {
   upload(req, res, function (err) {
