@@ -27,7 +27,7 @@ this data somewhere, and when you are done, call `cb` with some information on t
 file.
 
 The information you provide in the callback will be merged with multer's file object,
-and then presented to the user via `req.files`.
+and then presented to the user via `req.file`.
 
 Your engine is also responsible for removing files if an error is encountered
 later on. Multer will decide which files to delete and when. Your storage class must
