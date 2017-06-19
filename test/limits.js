@@ -7,7 +7,7 @@ var multer = require('../')
 var FormData = require('form-data')
 var assertRejects = require('assert-rejects')
 
-describe('limits', function () {
+describe('Limits', function () {
   it('should report limit errors', function () {
     var form = new FormData()
     var parser = multer({ limits: { fileSize: 100 } }).single('file')

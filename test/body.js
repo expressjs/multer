@@ -9,7 +9,7 @@ var multer = require('../')
 var FormData = require('form-data')
 var testData = require('testdata-w3c-json-form')
 
-describe('body', function () {
+describe('Body', function () {
   var parser
 
   before(function () {

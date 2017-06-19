@@ -82,10 +82,6 @@ describe('Misc', function () {
 
   it('should give error on old options', function () {
     assert.throws(function () {
-      multer({ dest: '/tmp' })
-    })
-
-    assert.throws(function () {
       multer({ storage: {} })
     })
 
