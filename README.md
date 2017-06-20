@@ -70,8 +70,9 @@ Key | Description
 --- | ---
 `fieldName` | Field name specified in the form
 `originalName` | Name of the file on the user's computer (`undefined` if no filename was supplied by the client)
-`size` | Size of the file in bytes
-`stream` | Stream of file
+`size` | Size of the file in bytes <sup>2</sup>
+`stream` | A new readable stream for the stored file <sup>2</sup>
+`path` | The full path where the file is stored <sup>2</sup>
 `detectedMimeType` | The detected mime-type, or null if we failed to detect
 `detectedFileExtension` | The typical file extension for files of the detected type, or empty string if we failed to detect (with leading `.` to match `path.extname`)
 `clientReportedMimeType` | The mime type reported by the client using the `Content-Type` header, or null<sup>1</sup> if the header was absent
@@ -79,13 +80,19 @@ Key | Description
 
 <sup>1</sup> Currently returns `text/plain` if header is absent, this is a bug and it will be fixed in a patch release. Do not rely on this behavior.
 
+<sup>2</sup> Available only when the `handler` option is not used
+
 ### `multer(opts)`
 
-Multer accepts an options object, the following are the options that can be
-passed to Multer.
+The following are the options that can be passed to Multer. All of them are optional.
+The `opts` parameter can also be a string with a path in which case it will  be used
+as the destination to store files.
+
 
 Key      | Description
 -------- | -----------
+`dest` | The destination path to store files. If no destination is provided the os temporary folder is used.
+`handler` | A function that allows you supply your own writable stream for customization of file storage. Using this causes `dest` to be ignored. See [using streams](#using-streams) for more information
 `limits` | Limits of the uploaded data [(full description)](#limits)
 
 #### `.single(fieldname)`
@@ -146,6 +153,59 @@ Key | Description | Default
 `headerPairs` | For multipart forms, the max number of header key=>value pairs to parse | 2000
 
 Specifying the limits can help protect your site against denial of service (DoS) attacks.
+
+### Using streams
+
+Using handlers allows the efficient use of any stream implementation to store files anywhere.
+To achieve this, just pass a function to Multer in the `handler` property that will be invoked with `req` and `file`. You
+will have to return a new stream or an object specifying  how the writable streams will be created. It is also
+possible to return a promise from a handler in case you need some async before creating the stream.
+
+If you provide an object instead of a stream this are the properties you should set. Only the `stream` property is required.
+
+#### stream
+
+A writable stream to pipe for each incoming file. By default core `fs` streams are used.
+
+#### event
+
+The event that finish the writes. Defaults to `'close'`. You can change this to another value
+like `'finish'` or any event that your custom stream implements (Not all
+writable streams emit the 'close' event so make sure to change accordingly).
+
+#### finish
+
+A post-processing function that executes after the event specified in the previous property is triggered.
+This also gives you an opportunity to extend the file object or inspect the consumed stream. If any arguments
+were received from the event they will be available as the parameters of the function. Promises are supported
+here as well to allow additional processing like hashing a file, etc.
+
+A handler could be as simple as
+
+```javascript
+function handler(req, file) {
+  return new writableStream()
+}
+```
+
+or more complex like
+
+```javascript
+function handler(req, file) {
+  return doSomeAsync().then(() => {
+    return {
+      stream: createWriteStream(),
+      event: 'landed',
+      finish: function() {
+        return hashFile().then((hash) => {
+          file.metadata = { hash };
+          file.stream = createReadStream()
+        })
+      }
+    }
+  }
+}
+```
 
 ## Error handling
 

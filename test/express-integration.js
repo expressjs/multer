@@ -24,7 +24,7 @@ describe('Express Integration', function () {
 
   function submitForm (form, path) {
     return new Promise(function (resolve, reject) {
-      var req = form.submit('http://localhost:' + port + path)
+      var req = form.submit('http://127.0.0.1:' + port + path)
 
       req.on('error', reject)
       req.on('response', function (res) {

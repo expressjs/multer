@@ -22,6 +22,7 @@
     "append-field": "^1.0.0",
     "busboy": "^0.2.13",
     "fs-temp": "^1.1.1",
+    "is-stream": "^1.1.0",
     "on-finished": "^2.3.0",
     "pify": "^2.3.0",
     "pump": "^1.0.1",
