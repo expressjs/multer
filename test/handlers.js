@@ -60,8 +60,9 @@ describe('Handlers', function () {
     var form = new FormData()
 
     function handler () {
-      var stream = fs.createWriteStream()
-      return {stream: stream}
+      return {
+        stream: fs.createWriteStream()
+      }
     }
 
     parser = multer({handler: handler}).single('file')
@@ -81,15 +82,39 @@ describe('Handlers', function () {
     })
   })
 
-  it('should accept a handler that has a stream function', function () {
+  it('should accept a handler that returns a promise', function () {
     var form = new FormData()
 
     function handler () {
-      return {
-        stream: function () {
-          return fs.createWriteStream()
-        }
-      }
+      return new Promise(function (resolve) {
+        resolve(fs.createWriteStream())
+      })
+    }
+
+    parser = multer({handler: handler}).single('file')
+
+    form.append('name', 'Multer')
+    form.append('file', util.file('small'))
+
+    return util.submitForm(parser, form).then(function (req) {
+      assert.equal(req.body.name, 'Multer')
+
+      assert.ok(req.file)
+      assert.equal(req.file.fieldName, 'file')
+      assert.equal(req.file.originalName, 'small.dat')
+      assert.equal(req.file.size, null)
+      assert.equal(req.file.stream, null)
+      assert.equal(req.file.path, null)
+    })
+  })
+
+  it('should accept a handler that resolves to an object', function () {
+    var form = new FormData()
+
+    function handler () {
+      return new Promise(function (resolve) {
+        resolve({stream: fs.createWriteStream()})
+      })
     }
 
     parser = multer({handler: handler}).single('file')
@@ -114,9 +139,7 @@ describe('Handlers', function () {
 
     function handler (req, file) {
       return {
-        stream: function () {
-          return fs.createWriteStream()
-        },
+        stream: fs.createWriteStream(),
         finish: function () {
           file.metadata = 'random data'
         }
@@ -143,9 +166,10 @@ describe('Handlers', function () {
 
   it('should accept a handler that changes the stream event', function () {
     var form = new FormData()
-    var stream = new TestWritable()
+    var stream
 
     function handler () {
+      stream = new TestWritable()
       return {
         stream: stream,
         event: 'unicorn'

@@ -157,15 +157,15 @@ Specifying the limits can help protect your site against denial of service (DoS)
 ### Using streams
 
 Using handlers allows the efficient use of any stream implementation to store files anywhere.
-To achieve this, just pass a function to Multer that will be invoked with `req` and `file`. You
-have to return a new stream or an object to specify how the writable streams will be created.
+To achieve this, just pass a function to Multer in the `handler` property that will be invoked with `req` and `file`. You
+will have to return a new stream or an object specifying  how the writable streams will be created. It is also
+possible to return a promise from a handler in case you need some async before creating the stream.
 
-If you return an object instead of a stream this are the properties you should set. Only the `stream` property is required.
+If you provide an object instead of a stream this are the properties you should set. Only the `stream` property is required.
 
 #### stream
 
-A writable stream or a function that returns a new writable stream to pipe for each incoming file. By default
-core `fs` streams are used. You can return a promise that resolves with the stream too.
+A writable stream to pipe for each incoming file. By default core `fs` streams are used.
 
 #### event
 
@@ -176,8 +176,9 @@ writable streams emit the 'close' event so make sure to change accordingly).
 #### finish
 
 A post-processing function that executes after the event specified in the previous property is triggered.
-This also gives you an opportunity to extend the file object. If any arguments were received from the event
-they will be available as the parameters of the function. Promises are supported here as well.
+This also gives you an opportunity to extend the file object or inspect the consumed stream. If any arguments
+were received from the event they will be available as the parameters of the function. Promises are supported
+here as well to allow additional processing like hashing a file, etc.
 
 A handler could be as simple as
 
@@ -191,20 +192,16 @@ or more complex like
 
 ```javascript
 function handler(req, file) {
-  return {
-    stream: function() {
-      // You can use the stream in the property directly.
-      // The function is only required for async code
-      return doSomeAsync().then(() => {
-        return createWriteStream()
-      })
-    },
-    event: 'finish',
-    finish: function() {
-      return hashFile().then(() => {
-        file.info = path;
-        file.stream = createReadStream(name)
-      })
+  return doSomeAsync().then(() => {
+    return {
+      stream: createWriteStream(),
+      event: 'landed',
+      finish: function() {
+        return hashFile().then((hash) => {
+          file.metadata = { hash };
+          file.stream = createReadStream()
+        })
+      }
     }
   }
 }
