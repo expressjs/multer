@@ -186,7 +186,7 @@ describe('Handlers', function () {
       assert.equal(req.body.name, 'Multer')
 
       assert.ok(req.file)
-      assert.equal(stream.eventNames()[1], 'unicorn')
+      assert.equal(stream.listenerCount('unicorn'), 1)
       assert.equal(req.file.fieldName, 'file')
       assert.equal(req.file.originalName, 'small.dat')
     })
@@ -216,7 +216,7 @@ describe('Handlers', function () {
       assert.equal(req.body.name, 'Multer')
 
       assert.ok(req.file)
-      assert.equal(stream.eventNames()[1], 'unicorn')
+      assert.equal(stream.listenerCount('unicorn'), 1)
       assert.equal(req.file.fieldName, 'file')
       assert.equal(req.file.originalName, 'small.dat')
       assert.equal(args.length, 1)
@@ -254,7 +254,7 @@ describe('Handlers', function () {
       assert.ok(req.files)
 
       req.files.forEach(function (file, index) {
-        assert.equal(file.stream.eventNames()[1], events[index])
+        assert.equal(file.stream.listenerCount(events[index]), 1)
         assert.equal(file.fieldName, 'file')
         assert.equal(file.originalName, 'small.dat')
       })
