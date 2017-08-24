@@ -85,32 +85,26 @@ Key | Description | Note
 
 ### `multer(opts)`
 
-Multer accepts an options object, the most basic of which is the `dest`
-property, which tells Multer where to upload the files. In case you omit the
-options object, the files will be kept in memory and never written to disk.
+Multer는 옵션 객체를 허용합니다. 그 중 가장 기본 옵션인 `dest` 요소는 Multer에게 파일을 어디로 업로드 할 지를 알려줍니다. 만일 옵션 객체를 생략했다면, 파일은 디스크가 아니라 메모리에 저장될 것 입니다.
 
-By default, Multer will rename the files so as to avoid naming conflicts. The
-renaming function can be customized according to your needs.
+기본적으로 Multer는 이름이 중복되는 것을 방지하기 위해서 파일의 이름을 재작성 합니다. 필요에 의해서 해당 함수는 커스터마이징 할 수 있습니다.
 
-The following are the options that can be passed to Multer.
+Multer로 전달 가능한 옵션들은 다음과 같습니다.
 
 Key | Description
 --- | ---
-`dest` or `storage` | Where to store the files
-`fileFilter` | Function to control which files are accepted
-`limits` | Limits of the uploaded data
-`preservePath` | Keep the full path of files instead of just the base name
+`dest` or `storage` | 파일이 저장될 위치
+`fileFilter` | 어떤 파일을 허용할지 제어하는 함수
+`limits` | 업로드 된 데이터의 리밋
+`preservePath` | 파일의 base name 대신 보존할 파일의 전체 경로
 
-In an average web app, only `dest` might be required, and configured as shown in
-the following example.
+보통의 웹 앱에서는 `dest` 옵션 정도만 필요할지도 모릅니다. 설정 방법은 아래의 예제에 나와있습니다.
 
 ```javascript
 var upload = multer({ dest: 'uploads/' })
 ```
 
-If you want more control over your uploads, you'll want to use the `storage`
-option instead of `dest`. Multer ships with storage engines `DiskStorage`
-and `MemoryStorage`; More engines are available from third parties.
+만일 업로드를 더 제어하고 싶다면, `dest` 옵션 대신 `storage` 옵션을 사용할 수 있습니다. Multer는 스토리지 엔진인 `DiskStorage` 와 `MemoryStorage` 를 탑재하고 있습니다. More engines are available from third parties.
 
 #### `.single(fieldname)`
 
