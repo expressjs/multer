@@ -2,7 +2,7 @@ Multer 한국어 번역 페이지 입니다.
 
 # Multer [![Build Status](https://travis-ci.org/expressjs/multer.svg?branch=master)](https://travis-ci.org/expressjs/multer) [![NPM version](https://badge.fury.io/js/multer.svg)](https://badge.fury.io/js/multer) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
 
-Multer는 파일 업로드를 위해 사용되는 `multipart/form-data` 를 다루기 위한 node.js 의 미들웨어 입니다. 효율성을 최대화 하기 위해 [busboy](https://github.com/mscdex/busboy) 위에 쓰여졌습니다.
+Multer는 파일 업로드를 위해 사용되는 `multipart/form-data` 를 다루기 위한 node.js 의 미들웨어 입니다. 효율성을 최대화 하기 위해 [busboy](https://github.com/mscdex/busboy) 를 기반으로 하고 있습니다.
 
 **주**: Multer는 multipart (`multipart/form-data`)가 아닌 폼에서는 동작하지 않습니다.
 
@@ -108,19 +108,15 @@ var upload = multer({ dest: 'uploads/' })
 
 #### `.single(fieldname)`
 
-Accept a single file with the name `fieldname`. The single file will be stored
-in `req.file`.
+`fieldname` 인자에 명시된 이름의 단수 파일을 전달 받습니다. 이 파일은 `req.file` 에 저장될 것 입니다.
 
 #### `.array(fieldname[, maxCount])`
 
-Accept an array of files, all with the name `fieldname`. Optionally error out if
-more than `maxCount` files are uploaded. The array of files will be stored in
-`req.files`.
+`fieldname` 인자에 명시된 이름의 파일 전부를 배열 형태로 전달 받습니다. 선택적으로 `maxCount` 에 명시된 값 이상의 파일이 업로드 될 경우 에러를 출력할 수 있습니다. 전달 된 배열 형태의 파일은 `req.files` 에 저장될 것입니다.
 
 #### `.fields(fields)`
 
-Accept a mix of files, specified by `fields`. An object with arrays of files
-will be stored in `req.files`.
+`fields` 인자에 명시된 여러 파일을 전달 받습니다. 파일 객체는 배열 형태로 `req.files` 에 저장될 것입니다.
 
 `fields` should be an array of objects with `name` and optionally a `maxCount`.
 Example:
@@ -134,18 +130,13 @@ Example:
 
 #### `.none()`
 
-Accept only text fields. If any file upload is made, error with code
-"LIMIT\_UNEXPECTED\_FILE" will be issued. This is the same as doing `upload.fields([])`.
+오직 텍스트 필드만 허용합니다. 만일 어떤 파일이라도 업로드 되었을 경우, "LIMIT\_UNEXPECTED\_FILE" 와 같은 에러 코드가 발생할 것입니다. 이는 `upload.fields([])` 와 같은 동작을 합니다.
 
 #### `.any()`
 
-Accepts all files that comes over the wire. An array of files will be stored in
-`req.files`.
+전달된 모든 파일을 허용합니다. 파일 배열은 `req.files` 에 저장될 것입니다.
 
-**WARNING:** Make sure that you always handle the files that a user uploads.
-Never add multer as a global middleware since a malicious user could upload
-files to a route that you didn't anticipate. Only use this function on routes
-where you are handling the uploaded files.
+**주의:** 항상 사용자가 업로드한 파일을 다룬다는 점을 명심하세요. 악의적인 사용자가 당신이 예측하지 못한 곳으로 파일을 업로드 할 수 있기 때문에 절대 multer를 글로벌 미들웨어로 사용하지 마세요.
 
 ### `storage`
 
