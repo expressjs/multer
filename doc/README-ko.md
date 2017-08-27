@@ -136,13 +136,13 @@ Example:
 
 전달된 모든 파일을 허용합니다. 파일 배열은 `req.files` 에 저장될 것입니다.
 
-**주의:** 항상 사용자가 업로드한 파일을 다룬다는 점을 명심하세요. 악의적인 사용자가 당신이 예측하지 못한 곳으로 파일을 업로드 할 수 있기 때문에 절대 multer를 글로벌 미들웨어로 사용하지 마세요.
+**주의:** 항상 사용자가 업로드한 파일을 다룬다는 점을 명심하세요. 악의적인 사용자가 여러분이 예측하지 못한 곳으로 파일을 업로드 할 수 있기 때문에 절대 multer를 글로벌 미들웨어로 사용하지 마세요.
 
 ### `storage`
 
 #### `DiskStorage`
 
-The disk storage engine gives you full control on storing files to disk.
+디스크 스토리지 엔진은 파일을 디스크에 저장하기 위한 모든 제어 기능을 제공합니다.
 
 ```javascript
 var storage = multer.diskStorage({
@@ -157,53 +157,43 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage })
 ```
 
-There are two options available, `destination` and `filename`. They are both
-functions that determine where the file should be stored.
+`destination` 과 `filename` 의 두가지 옵션이 가능합니다. 두 옵션 모두 파일을 어디에 저장할 지를 정하는 함수입니다.
 
-`destination` is used to determine within which folder the uploaded files should
-be stored. This can also be given as a `string` (e.g. `'/tmp/uploads'`). If no
-`destination` is given, the operating system's default directory for temporary
-files is used.
+`destination` 옵션은 어느 폴더안에 업로드 한 파일을 저장할 지를 결정합니다. 이는 `문자열` 형태로 주어질 수 있습니다 (예. `'/tmp/uploads'`). 만일 `destination` 옵션이 주어지지 않으면, 운영체제 시스템에서 임시 파일을 저장하는 기본 디렉토리를 사용합니다.
 
-**Note:** You are responsible for creating the directory when providing
+**주:** You are responsible for creating the directory when providing
 `destination` as a function. When passing a string, multer will make sure that
 the directory is created for you.
 
-`filename` is used to determine what the file should be named inside the folder.
-If no `filename` is given, each file will be given a random name that doesn't
-include any file extension.
+`filename` 은 폴더안에 저장되는 파일 명을 결정하는데 사용됩니다.
+만일 `filename` 이 주어지지 않는다면, 각각의 파일은 파일확장자를 제외한 랜덤한 이름으로 지어질 것입니다.
 
-**Note:** Multer will not append any file extension for you, your function
-should return a filename complete with an file extension.
+**주:** Multer는 어떠한 파일 확장자도 추가하지 않습니다. 사용자 함수는 파일 확장자를 온전히 포함한 파일명을 반환해야 합니다.
 
 Each function gets passed both the request (`req`) and some information about
 the file (`file`) to aid with the decision.
+각각의 함수는 리퀘스트 정보 (`req`) 와 파일 (`file`) 에 대한 정보를 전달합니다.
 
-Note that `req.body` might not have been fully populated yet. It depends on the
-order that the client transmits fields and files to the server.
+`req.body` 는 완전히 채워지지 않았을 수도 있습니다. 이는 클라이언트가 필드와 파일을 서버로 전송하는 순서에 따라 다릅니다.
 
 #### `MemoryStorage`
 
-The memory storage engine stores the files in memory as `Buffer` objects. It
-doesn't have any options.
+메모리 스토리지 엔진은 파일을 메모리에 `Buffer` 객체로 저장합니다. 이에 대해서는 어떤 옵션도 없습니다.
 
 ```javascript
 var storage = multer.memoryStorage()
 var upload = multer({ storage: storage })
 ```
 
-When using memory storage, the file info will contain a field called
-`buffer` that contains the entire file.
+메모리 스토리지 사용시, 파일 정보는 파일 전체를 포함하는 `buffer` 라고 불리는 필드를 포함할 것입니다.
 
-**WARNING**: Uploading very large files, or relatively small files in large
-numbers very quickly, can cause your application to run out of memory when
-memory storage is used.
+**주의**: 메모리 스토리지를 사용시, 매우 큰 사이즈의 파일을 업로드 하거나 많은 양의 비교적 작은 파일들을 매우 빠르게 업로드 하는 경우 응용 프로그램의 메모리 부족이 발생 할 수 있습니다.
 
 ### `limits`
 
 An object specifying the size limits of the following optional properties. Multer passes this object into busboy directly, and the details of the properties can be found on [busboy's page](https://github.com/mscdex/busboy#busboy-methods).
 
-The following integer values are available:
+다음과 같은 정수 값들이 가능합니다:
 
 Key | Description | Default
 --- | --- | ---
@@ -242,11 +232,9 @@ function fileFilter (req, file, cb) {
 
 ## 에러 핸들링
 
-When encountering an error, multer will delegate the error to express. You can
-display a nice error page using [the standard express way](http://expressjs.com/guide/error-handling.html).
+에러가 발생할 때, multer는 에러를 express에 위임할 것입니다. 여러분은 [the standard express way](http://expressjs.com/guide/error-handling.html) 를 이용해서 멋진 오류 페이지를 보여줄 수 있습니다.
 
-If you want to catch errors specifically from multer, you can call the
-middleware function by yourself.
+만일 multer 로부터 특별히 에러를 캐치하고 싶다면, 직접 미들웨어 함수를 호출하세요.
 
 ```javascript
 var upload = multer().single('avatar')
