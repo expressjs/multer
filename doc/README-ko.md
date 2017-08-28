@@ -191,26 +191,25 @@ var upload = multer({ storage: storage })
 
 ### `limits`
 
-An object specifying the size limits of the following optional properties. Multer passes this object into busboy directly, and the details of the properties can be found on [busboy's page](https://github.com/mscdex/busboy#busboy-methods).
+아래의 옵션 속성들의 크기 제한을 지정하는 객체입니다. Multer 는 이 객체를 busboy로 직접 전달합니다. 속성들에 대한 자세한 내용은 [busboy's page](https://github.com/mscdex/busboy#busboy-methods) 에서 확인 하실 수 있습니다.
 
 다음과 같은 정수 값들이 가능합니다:
 
-Key | Description | Default
+속성 | 설명 | 기본값
 --- | --- | ---
-`fieldNameSize` | Max field name size | 100 bytes
-`fieldSize` | Max field value size | 1MB
-`fields` | Max number of non-file fields | Infinity
-`fileSize` | For multipart forms, the max file size (in bytes) | Infinity
-`files` | For multipart forms, the max number of file fields | Infinity
-`parts` | For multipart forms, the max number of parts (fields + files) | Infinity
-`headerPairs` | For multipart forms, the max number of header key=>value pairs to parse | 2000
+`fieldNameSize` | 필드명 사이즈 최대값 | 100 bytes
+`fieldSize` | 필드값 사이즈 최대값 | 1MB
+`fields` | 파일형식이 아닌 필드의 최대 개수 | 무제한
+`fileSize` | multipart 형식 폼에서 최대 파일 사이즈(bytes) | 무제한
+`files` | multipart 형식 폼에서 파일 필드의 최대 개수 | 무제한
+`parts` | For multipart forms, the max number of parts (fields + files) | 무제한
+`headerPairs` | multipart 형식 폼에서 파싱할 헤더의 key=>value 쌍의 최대 개수| 2000
 
-Specifying the limits can help protect your site against denial of service (DoS) attacks.
+사이즈 제한을 지정하면 서비스 거부 (DoS) 공격으로부터 사이트를 보호하는데 도움이 됩니다.
 
 ### `fileFilter`
 
-Set this to a function to control which files should be uploaded and which
-should be skipped. The function should look like this:
+어느 파일을 업로드 할지, 혹은 건너뛸지 제어할 수 있게 함수에 설정합니다. 해당 함수는 아래와 같을 것입니다 :
 
 ```javascript
 function fileFilter (req, file, cb) {
