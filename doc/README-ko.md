@@ -52,7 +52,7 @@ app.post('/cool-profile', cpUpload, function (req, res, next) {
 })
 ```
 
-In case you need to handle a text-only multipart form, you can use any of the multer methods (`.single()`, `.array()`, `fields()`). Here is an example using `.array()`:
+텍스트 전용 multipart 폼을 처리해야 하는 경우, 어떠한 multer 메소드 (`.single()`, `.array()`, `fields()`) 도 사용할 수 있습니다. 아래는 `.array()` 를 사용한 예제 입니다 :
 
 ```javascript
 var express = require('express')
@@ -87,7 +87,7 @@ Key | Description | Note
 
 Multer는 옵션 객체를 허용합니다. 그 중 가장 기본 옵션인 `dest` 요소는 Multer에게 파일을 어디로 업로드 할 지를 알려줍니다. 만일 옵션 객체를 생략했다면, 파일은 디스크가 아니라 메모리에 저장될 것 입니다.
 
-기본적으로 Multer는 이름이 중복되는 것을 방지하기 위해서 파일의 이름을 재작성 합니다. 필요에 의해서 해당 함수는 커스터마이징 할 수 있습니다.
+기본적으로 Multer는 이름이 중복되는 것을 방지하기 위해서 파일의 이름을 재작성 합니다. 필요에 따라 해당 함수는 커스터마이징이 가능합니다.
 
 Multer로 전달 가능한 옵션들은 다음과 같습니다.
 
@@ -95,7 +95,7 @@ Key | Description
 --- | ---
 `dest` or `storage` | 파일이 저장될 위치
 `fileFilter` | 어떤 파일을 허용할지 제어하는 함수
-`limits` | 업로드 된 데이터의 리밋
+`limits` | 업로드 된 데이터의 한도
 `preservePath` | 파일의 base name 대신 보존할 파일의 전체 경로
 
 보통의 웹 앱에서는 `dest` 옵션 정도만 필요할지도 모릅니다. 설정 방법은 아래의 예제에 나와있습니다.
@@ -104,7 +104,7 @@ Key | Description
 var upload = multer({ dest: 'uploads/' })
 ```
 
-만일 업로드를 더 제어하고 싶다면, `dest` 옵션 대신 `storage` 옵션을 사용할 수 있습니다. Multer는 스토리지 엔진인 `DiskStorage` 와 `MemoryStorage` 를 탑재하고 있습니다. More engines are available from third parties.
+만일 업로드를 더 제어하고 싶다면, `dest` 옵션 대신 `storage` 옵션을 사용할 수 있습니다. Multer는 스토리지 엔진인 `DiskStorage` 와 `MemoryStorage` 를 탑재하고 있습니다. 써드파티로부터 더 많은 엔진들을 사용할 수 있습니다.
 
 #### `.single(fieldname)`
 
@@ -118,8 +118,8 @@ var upload = multer({ dest: 'uploads/' })
 
 `fields` 인자에 명시된 여러 파일을 전달 받습니다. 파일 객체는 배열 형태로 `req.files` 에 저장될 것입니다.
 
-`fields` should be an array of objects with `name` and optionally a `maxCount`.
-Example:
+`fields` 는 `name` 과 `maxCount` (선택사항) 을 포함하는 객체의 배열이어야 합니다.
+예제:
 
 ```javascript
 [
@@ -130,7 +130,7 @@ Example:
 
 #### `.none()`
 
-오직 텍스트 필드만 허용합니다. 만일 어떤 파일이라도 업로드 되었을 경우, "LIMIT\_UNEXPECTED\_FILE" 와 같은 에러 코드가 발생할 것입니다. 이는 `upload.fields([])` 와 같은 동작을 합니다.
+오직 텍스트 필드만 허용합니다. 만일 파일이 업로드 되었을 경우, "LIMIT\_UNEXPECTED\_FILE" 와 같은 에러 코드가 발생할 것입니다. 이는 `upload.fields([])` 와 같은 동작을 합니다.
 
 #### `.any()`
 
@@ -161,18 +161,14 @@ var upload = multer({ storage: storage })
 
 `destination` 옵션은 어느 폴더안에 업로드 한 파일을 저장할 지를 결정합니다. 이는 `문자열` 형태로 주어질 수 있습니다 (예. `'/tmp/uploads'`). 만일 `destination` 옵션이 주어지지 않으면, 운영체제 시스템에서 임시 파일을 저장하는 기본 디렉토리를 사용합니다.
 
-**주:** You are responsible for creating the directory when providing
-`destination` as a function. When passing a string, multer will make sure that
-the directory is created for you.
+**주:** `destination` 을 함수로 사용할 경우, 디렉토리를 생성해야 할 책임이 있습니다. 문자열이 전달될 때, multer는 해당 디렉토리가 생성되었는지 확인합니다.
 
 `filename` 은 폴더안에 저장되는 파일 명을 결정하는데 사용됩니다.
-만일 `filename` 이 주어지지 않는다면, 각각의 파일은 파일확장자를 제외한 랜덤한 이름으로 지어질 것입니다.
+만일 `filename` 이 주어지지 않는다면, 각각의 파일은 파일 확장자를 제외한 랜덤한 이름으로 지어질 것입니다.
 
 **주:** Multer는 어떠한 파일 확장자도 추가하지 않습니다. 사용자 함수는 파일 확장자를 온전히 포함한 파일명을 반환해야 합니다.
 
-Each function gets passed both the request (`req`) and some information about
-the file (`file`) to aid with the decision.
-각각의 함수는 리퀘스트 정보 (`req`) 와 파일 (`file`) 에 대한 정보를 전달합니다.
+결정을 돕기 위해 각각의 함수는 요청 정보 (`req`) 와 파일 (`file`) 에 대한 정보를 모두 전달 받습니다.
 
 `req.body` 는 완전히 채워지지 않았을 수도 있습니다. 이는 클라이언트가 필드와 파일을 서버로 전송하는 순서에 따라 다릅니다.
 
@@ -191,7 +187,7 @@ var upload = multer({ storage: storage })
 
 ### `limits`
 
-아래의 옵션 속성들의 크기 제한을 지정하는 객체입니다. Multer 는 이 객체를 busboy로 직접 전달합니다. 속성들에 대한 자세한 내용은 [busboy's page](https://github.com/mscdex/busboy#busboy-methods) 에서 확인 하실 수 있습니다.
+다음의 선택적 속성의 크기 제한을 지정하는 객체입니다. Multer 는 이 객체를 busboy로 직접 전달합니다. 속성들에 대한 자세한 내용은 [busboy's page](https://github.com/mscdex/busboy#busboy-methods) 에서 확인 하실 수 있습니다.
 
 다음과 같은 정수 값들이 가능합니다:
 
