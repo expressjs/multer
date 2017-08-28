@@ -74,7 +74,7 @@ app.post('/profile', upload.array(), function (req, res, next) {
 Key | Description | Note
 --- | --- | ---
 `fieldname` | 폼에 정의된 필드 명 |
-`originalname` | 사용자 컴퓨터 상의 파일 명 |
+`originalname` | 사용자가 업로드한 파일 명 |
 `encoding` | 파일의 엔코딩 타입 |
 `mimetype` | 파일의 Mime 타입 |
 `size` | 파일의 바이트(byte) 사이즈 |
@@ -136,7 +136,7 @@ var upload = multer({ dest: 'uploads/' })
 
 전달된 모든 파일을 허용합니다. 파일 배열은 `req.files` 에 저장될 것입니다.
 
-**주의:** 항상 사용자가 업로드한 파일을 다룬다는 점을 명심하세요. 악의적인 사용자가 여러분이 예측하지 못한 곳으로 파일을 업로드 할 수 있기 때문에 절대 multer를 글로벌 미들웨어로 사용하지 마세요.
+**주의:** 항상 사용자가 업로드한 파일을 다룬다는 점을 명심하세요. 악의적인 사용자가 여러분이 예측하지 못한 곳으로 파일을 업로드 할 수 있으므로 절대 multer를 글로벌 미들웨어로 사용하지 마세요.
 
 ### `storage`
 
@@ -159,7 +159,7 @@ var upload = multer({ storage: storage })
 
 `destination` 과 `filename` 의 두가지 옵션이 가능합니다. 두 옵션 모두 파일을 어디에 저장할 지를 정하는 함수입니다.
 
-`destination` 옵션은 어느 폴더안에 업로드 한 파일을 저장할 지를 결정합니다. 이는 `문자열` 형태로 주어질 수 있습니다 (예. `'/tmp/uploads'`). 만일 `destination` 옵션이 주어지지 않으면, 운영체제 시스템에서 임시 파일을 저장하는 기본 디렉토리를 사용합니다.
+`destination` 옵션은 어느 폴더안에 업로드 한 파일을 저장할 지를 결정합니다. 이는 `string` 형태로 주어질 수 있습니다 (예. `'/tmp/uploads'`). 만일 `destination` 옵션이 주어지지 않으면, 운영체제 시스템에서 임시 파일을 저장하는 기본 디렉토리를 사용합니다.
 
 **주:** `destination` 을 함수로 사용할 경우, 디렉토리를 생성해야 할 책임이 있습니다. 문자열이 전달될 때, multer는 해당 디렉토리가 생성되었는지 확인합니다.
 
