@@ -1,5 +1,3 @@
-Multer 한국어 번역 페이지 입니다.
-
 # Multer [![Build Status](https://travis-ci.org/expressjs/multer.svg?branch=master)](https://travis-ci.org/expressjs/multer) [![NPM version](https://badge.fury.io/js/multer.svg)](https://badge.fury.io/js/multer) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
 
 Multer는 파일 업로드를 위해 사용되는 `multipart/form-data` 를 다루기 위한 node.js 의 미들웨어 입니다. 효율성을 최대화 하기 위해 [busboy](https://github.com/mscdex/busboy) 를 기반으로 하고 있습니다.
@@ -9,6 +7,7 @@ Multer는 파일 업로드를 위해 사용되는 `multipart/form-data` 를 다�
 ## 번역
 
 이 문서는 아래의 언어로도 제공됩니다:
+- [English](../README.md)
 - [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (중국어)
 
 ## 설치
@@ -31,24 +30,25 @@ var upload = multer({ dest: 'uploads/' })
 var app = express()
 
 app.post('/profile', upload.single('avatar'), function (req, res, next) {
-  // req.file is the `avatar` file
-  // req.body will hold the text fields, if there were any
+  // req.file 은 `avatar` 라는 필드의 파일 정보입니다.
+  // 텍스트 필드가 있는 경우, req.body가 이를 포함할 것입니다.
 })
 
 app.post('/photos/upload', upload.array('photos', 12), function (req, res, next) {
-  // req.files is array of `photos` files
-  // req.body will contain the text fields, if there were any
+  // req.files 는 `photos` 라는 파일정보를 배열로 가지고 있습니다.
+  // 텍스트 필드가 있는 경우, req.body가 이를 포함할 것입니다.
 })
 
 var cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
 app.post('/cool-profile', cpUpload, function (req, res, next) {
-  // req.files is an object (String -> Array) where fieldname is the key, and the value is array of files
+  // req.files는 (String -> Array) 형태의 객체 입니다.
+  // 필드명은 객체의 key에, 파일 정보는 배열로 value에 저장됩니다.
   //
   // e.g.
   //  req.files['avatar'][0] -> File
   //  req.files['gallery'] -> Array
   //
-  // req.body will contain the text fields, if there were any
+  // 텍스트 필드가 있는 경우, req.body가 이를 포함할 것입니다.
 })
 ```
 
@@ -61,7 +61,7 @@ var multer  = require('multer')
 var upload = multer()
 
 app.post('/profile', upload.array(), function (req, res, next) {
-  // req.body contains the text fields
+  // req.body는 텍스트 필드를 포함합니다.
 })
 ```
 
@@ -210,16 +210,14 @@ var upload = multer({ storage: storage })
 ```javascript
 function fileFilter (req, file, cb) {
 
-  // The function should call `cb` with a boolean
-  // to indicate if the file should be accepted
-
-  // To reject this file pass `false`, like so:
+  // 이 함수는 boolean 값과 함께 `cb`를 호출함으로써 해당 파일을 업로드 할지 여부를 나타낼 수 있습니다.
+  // 이 파일을 거부하려면 다음과 같이 `false` 를 전달합니다:
   cb(null, false)
 
-  // To accept the file pass `true`, like so:
+  // 이 파일을 허용하려면 다음과 같이 `true` 를 전달합니다:
   cb(null, true)
 
-  // You can always pass an error if something goes wrong:
+  // 무언가 문제가 생겼다면 언제나 에러를 전달할 수 있습니다:
   cb(new Error('I don\'t have a clue!'))
 
 }
@@ -237,11 +235,11 @@ var upload = multer().single('avatar')
 app.post('/profile', function (req, res) {
   upload(req, res, function (err) {
     if (err) {
-      // An error occurred when uploading
+      // 업로드할때 오류가 발생함
       return
     }
 
-    // Everything went fine
+    // 정상적으로 완료됨
   })
 })
 ```
