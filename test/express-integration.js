@@ -16,10 +16,15 @@ var port = 34279
 
 describe('Express Integration', function () {
   var app
+  var server
 
   before(function (done) {
     app = express()
-    app.listen(port, done)
+    server = app.listen(port, done)
+  })
+
+  after(function (done) {
+    server.close(done)
   })
 
   function submitForm (form, path) {
@@ -34,15 +39,15 @@ describe('Express Integration', function () {
         var finished = onFinished(req)
 
         resolve(Promise.all([body, finished]).then(function (result) {
-          return { res: res, body: result[0] }
+          return {res: res, body: result[0]}
         }))
       })
     })
   }
 
   it('should work with express error handling', function () {
-    var limits = { fileSize: 200 }
-    var upload = multer({ limits: limits })
+    var limits = {fileSize: 200}
+    var upload = multer({limits: limits})
     var router = new express.Router()
     var form = new FormData()
 
