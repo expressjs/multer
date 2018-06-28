@@ -19,11 +19,11 @@
     "middleware"
   ],
   "dependencies": {
-    "append-field": "^0.1.0",
+    "append-field": "^1.0.0",
     "busboy": "^0.2.11",
     "concat-stream": "^1.5.2",
     "mkdirp": "^0.5.1",
-    "object-assign": "^3.0.0",
+    "object-assign": "^4.1.1",
     "on-finished": "^2.3.0",
     "type-is": "^1.6.4",
     "xtend": "^4.0.0"
@@ -31,10 +31,10 @@
   "devDependencies": {
     "express": "^4.13.1",
     "form-data": "^1.0.0-rc1",
-    "fs-temp": "^0.1.2",
-    "mocha": "^2.2.5",
+    "fs-temp": "^1.1.2",
+    "mocha": "^3.5.3",
     "rimraf": "^2.4.1",
-    "standard": "^8.2.0",
+    "standard": "^11.0.1",
     "testdata-w3c-json-form": "^0.2.0"
   },
   "engines": {
