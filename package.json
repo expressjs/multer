@@ -31,10 +31,10 @@
   "devDependencies": {
     "express": "^4.13.1",
     "form-data": "^1.0.0-rc1",
-    "fs-temp": "^0.1.2",
-    "mocha": "^2.2.5",
+    "fs-temp": "^1.1.2",
+    "mocha": "^3.5.3",
     "rimraf": "^2.4.1",
-    "standard": "^8.2.0",
+    "standard": "^11.0.1",
     "testdata-w3c-json-form": "^0.2.0"
   },
   "engines": {
