@@ -21,7 +21,7 @@
   "dependencies": {
     "append-field": "^0.1.0",
     "busboy": "^0.2.11",
-    "concat-stream": "^1.5.0",
+    "concat-stream": "^1.5.2",
     "mkdirp": "^0.5.1",
     "object-assign": "^3.0.0",
     "on-finished": "^2.3.0",
