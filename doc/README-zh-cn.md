@@ -1,30 +1,30 @@
-**´ËÎÄµµÓÚ2016Äê10ÔÂ3ÈÕ·­ÒëÊ±multerµÄ°æ±¾ÊÇ1.2.0£¬Ëü¿ÉÄÜ²»ÊÇ×îÐÂµÄ£¡**
-**ÉõÖÁ¿ÉÄÜ´æÔÚ·­Òë´íÎó£¡Äã¿ÉÄÜÐèÒªÔÄ¶ÁÔ­°æÓ¢Óï[README](../README.md)**
-**´ËÎÄµµ½ö¹©²Î¿¼£¡**
+**æ­¤æ–‡æ¡£äºŽ2016å¹´10æœˆ3æ—¥ç¿»è¯‘æ—¶multerçš„ç‰ˆæœ¬æ˜¯1.2.0ï¼Œå®ƒå¯èƒ½ä¸æ˜¯æœ€æ–°çš„ï¼**
+**ç”šè‡³å¯èƒ½å­˜åœ¨ç¿»è¯‘é”™è¯¯ï¼ä½ å¯èƒ½éœ€è¦é˜…è¯»åŽŸç‰ˆè‹±è¯­[README](../README.md)**
+**æ­¤æ–‡æ¡£ä»…ä¾›å‚è€ƒï¼**
 
 # Multer [![Build Status](https://travis-ci.org/expressjs/multer.svg?branch=master)](https://travis-ci.org/expressjs/multer) [![NPM version](https://badge.fury.io/js/multer.svg)](https://badge.fury.io/js/multer) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
 
-Multer ÊÇÒ»¸ö node.js ÖÐ¼ä¼þ£¬ÓÃÓÚ´¦Àí `multipart/form-data` ÀàÐÍµÄ±íµ¥Êý¾Ý£¬ËüÖ÷ÒªÓÃÓÚÉÏ´«ÎÄ¼þ¡£ËüÊÇÐ´ÔÚ [busboy](https://github.com/mscdex/busboy) Ö®ÉÏ·Ç³£¸ßÐ§¡£
+Multer æ˜¯ä¸€ä¸ª node.js ä¸­é—´ä»¶ï¼Œç”¨äºŽå¤„ç† `multipart/form-data` ç±»åž‹çš„è¡¨å•æ•°æ®ï¼Œå®ƒä¸»è¦ç”¨äºŽä¸Šä¼ æ–‡ä»¶ã€‚å®ƒæ˜¯å†™åœ¨ [busboy](https://github.com/mscdex/busboy) ä¹‹ä¸Šéžå¸¸é«˜æ•ˆã€‚
 
-**×¢Òâ**: Multer ²»»á´¦ÀíÈÎºÎ·Ç `multipart/form-data` ÀàÐÍµÄ±íµ¥Êý¾Ý¡£
+**æ³¨æ„**: Multer ä¸ä¼šå¤„ç†ä»»ä½•éž `multipart/form-data` ç±»åž‹çš„è¡¨å•æ•°æ®ã€‚
 
-## ÆäËüÓïÑÔ
+## å…¶å®ƒè¯­è¨€
 
-- [English](../README.md) (Ó¢Óï)
-- [ƒ6„3‚7ô0ƒ2ë5](https://github.com/expressjs/multer/blob/master/doc/README-ko.md) (³¯ÏÊÓï)
+- [English](../README.md) (è‹±è¯­)
+- [í•œêµ­ì–´](https://github.com/expressjs/multer/blob/master/doc/README-ko.md) (æœé²œè¯­)
 
-## °²×°
+## å®‰è£…
 
 ```sh
 $ npm install --save multer
 ```
 
-## Ê¹ÓÃ
+## ä½¿ç”¨
 
-Multer »áÌí¼ÓÒ»¸ö `body` ¶ÔÏó ÒÔ¼° `file` »ò `files` ¶ÔÏó µ½ express µÄ `request` ¶ÔÏóÖÐ¡£
-`body` ¶ÔÏó°üº¬±íµ¥µÄÎÄ±¾ÓòÐÅÏ¢£¬`file` »ò `files` ¶ÔÏó°üº¬¶ÔÏó±íµ¥ÉÏ´«µÄÎÄ¼þÐÅÏ¢¡£
+Multer ä¼šæ·»åŠ ä¸€ä¸ª `body` å¯¹è±¡ ä»¥åŠ `file` æˆ– `files` å¯¹è±¡ åˆ° express çš„ `request` å¯¹è±¡ä¸­ã€‚
+`body` å¯¹è±¡åŒ…å«è¡¨å•çš„æ–‡æœ¬åŸŸä¿¡æ¯ï¼Œ`file` æˆ– `files` å¯¹è±¡åŒ…å«å¯¹è±¡è¡¨å•ä¸Šä¼ çš„æ–‡ä»¶ä¿¡æ¯ã€‚
 
-»ù±¾Ê¹ÓÃ·½·¨:
+åŸºæœ¬ä½¿ç”¨æ–¹æ³•:
 
 ```javascript
 var express = require('express')
@@ -34,28 +34,28 @@ var upload = multer({ dest: 'uploads/' })
 var app = express()
 
 app.post('/profile', upload.single('avatar'), function (req, res, next) {
-  // req.file ÊÇ `avatar` ÎÄ¼þµÄÐÅÏ¢
-  // req.body ½«¾ßÓÐÎÄ±¾ÓòÊý¾Ý£¬Èç¹û´æÔÚµÄ»°
+  // req.file æ˜¯ `avatar` æ–‡ä»¶çš„ä¿¡æ¯
+  // req.body å°†å…·æœ‰æ–‡æœ¬åŸŸæ•°æ®ï¼Œå¦‚æžœå­˜åœ¨çš„è¯
 })
 
 app.post('/photos/upload', upload.array('photos', 12), function (req, res, next) {
-  // req.files ÊÇ `photos` ÎÄ¼þÊý×éµÄÐÅÏ¢
-  // req.body ½«¾ßÓÐÎÄ±¾ÓòÊý¾Ý£¬Èç¹û´æÔÚµÄ»°
+  // req.files æ˜¯ `photos` æ–‡ä»¶æ•°ç»„çš„ä¿¡æ¯
+  // req.body å°†å…·æœ‰æ–‡æœ¬åŸŸæ•°æ®ï¼Œå¦‚æžœå­˜åœ¨çš„è¯
 })
 
 var cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
 app.post('/cool-profile', cpUpload, function (req, res, next) {
-  // req.files ÊÇÒ»¸ö¶ÔÏó (String -> Array) ¼üÊÇÎÄ¼þÃû£¬ÖµÊÇÎÄ¼þÊý×é
+  // req.files æ˜¯ä¸€ä¸ªå¯¹è±¡ (String -> Array) é”®æ˜¯æ–‡ä»¶åï¼Œå€¼æ˜¯æ–‡ä»¶æ•°ç»„
   //
-  // ÀýÈç£º
+  // ä¾‹å¦‚ï¼š
   //  req.files['avatar'][0] -> File
   //  req.files['gallery'] -> Array
   //
-  // req.body ½«¾ßÓÐÎÄ±¾ÓòÊý¾Ý£¬Èç¹û´æÔÚµÄ»°
+  // req.body å°†å…·æœ‰æ–‡æœ¬åŸŸæ•°æ®ï¼Œå¦‚æžœå­˜åœ¨çš„è¯
 })
 ```
 
-Èç¹ûÄãÐèÒª´¦ÀíÒ»¸öÖ»ÓÐÎÄ±¾ÓòµÄ±íµ¥£¬Äã¿ÉÒÔÊ¹ÓÃÈÎºÎÒ»¸ö multer ·½·¨ (`.single()`, `.array()`, `fields()`). ÏÂÃæÊÇÒ»¸öÊ¹ÓÃ `.array()` µÄÀý×Ó:
+å¦‚æžœä½ éœ€è¦å¤„ç†ä¸€ä¸ªåªæœ‰æ–‡æœ¬åŸŸçš„è¡¨å•ï¼Œä½ å¯ä»¥ä½¿ç”¨ä»»ä½•ä¸€ä¸ª multer æ–¹æ³• (`.single()`, `.array()`, `fields()`). ä¸‹é¢æ˜¯ä¸€ä¸ªä½¿ç”¨ `.array()` çš„ä¾‹å­:
 
 ```javascript
 var express = require('express')
@@ -64,65 +64,65 @@ var multer  = require('multer')
 var upload = multer()
 
 app.post('/profile', upload.array(), function (req, res, next) {
-  // req.body °üº¬ÎÄ±¾Óò
+  // req.body åŒ…å«æ–‡æœ¬åŸŸ
 })
 ```
 
 ## API
 
-### ÎÄ¼þÐÅÏ¢
+### æ–‡ä»¶ä¿¡æ¯
 
-Ã¿¸öÎÄ¼þ¾ßÓÐÏÂÃæµÄÐÅÏ¢:
+æ¯ä¸ªæ–‡ä»¶å…·æœ‰ä¸‹é¢çš„ä¿¡æ¯:
 
 Key | Description | Note
 --- | --- | ---
-`fieldname` | Field name ÓÉ±íµ¥Ö¸¶¨ |
-`originalname` | ÓÃ»§¼ÆËã»úÉÏµÄÎÄ¼þµÄÃû³Æ |
-`encoding` | ÎÄ¼þ±àÂë |
-`mimetype` | ÎÄ¼þµÄ MIME ÀàÐÍ |
-`size` | ÎÄ¼þ´óÐ¡£¨×Ö½Úµ¥Î»£© |
-`destination` | ±£´æÂ·¾¶ | `DiskStorage`
-`filename` | ±£´æÔÚ `destination` ÖÐµÄÎÄ¼þÃû | `DiskStorage`
-`path` | ÒÑÉÏ´«ÎÄ¼þµÄÍêÕûÂ·¾¶ | `DiskStorage`
-`buffer` | Ò»¸ö´æ·ÅÁËÕû¸öÎÄ¼þµÄ `Buffer`  | `MemoryStorage`
+`fieldname` | Field name ç”±è¡¨å•æŒ‡å®š |
+`originalname` | ç”¨æˆ·è®¡ç®—æœºä¸Šçš„æ–‡ä»¶çš„åç§° |
+`encoding` | æ–‡ä»¶ç¼–ç  |
+`mimetype` | æ–‡ä»¶çš„ MIME ç±»åž‹ |
+`size` | æ–‡ä»¶å¤§å°ï¼ˆå­—èŠ‚å•ä½ï¼‰ |
+`destination` | ä¿å­˜è·¯å¾„ | `DiskStorage`
+`filename` | ä¿å­˜åœ¨ `destination` ä¸­çš„æ–‡ä»¶å | `DiskStorage`
+`path` | å·²ä¸Šä¼ æ–‡ä»¶çš„å®Œæ•´è·¯å¾„ | `DiskStorage`
+`buffer` | ä¸€ä¸ªå­˜æ”¾äº†æ•´ä¸ªæ–‡ä»¶çš„ `Buffer`  | `MemoryStorage`
 
 ### `multer(opts)`
 
-Multer ½ÓÊÜÒ»¸ö options ¶ÔÏó£¬ÆäÖÐ×î»ù±¾µÄÊÇ `dest` ÊôÐÔ£¬Õâ½«¸æËß Multer ½«ÉÏ´«ÎÄ¼þ±£´æÔÚÄÄ¡£Èç¹ûÄãÊ¡ÂÔ options ¶ÔÏó£¬ÕâÐ©ÎÄ¼þ½«±£´æÔÚÄÚ´æÖÐ£¬ÓÀÔ¶²»»áÐ´Èë´ÅÅÌ¡£
+Multer æŽ¥å—ä¸€ä¸ª options å¯¹è±¡ï¼Œå…¶ä¸­æœ€åŸºæœ¬çš„æ˜¯ `dest` å±žæ€§ï¼Œè¿™å°†å‘Šè¯‰ Multer å°†ä¸Šä¼ æ–‡ä»¶ä¿å­˜åœ¨å“ªã€‚å¦‚æžœä½ çœç•¥ options å¯¹è±¡ï¼Œè¿™äº›æ–‡ä»¶å°†ä¿å­˜åœ¨å†…å­˜ä¸­ï¼Œæ°¸è¿œä¸ä¼šå†™å…¥ç£ç›˜ã€‚
 
-ÎªÁË±ÜÃâÃüÃû³åÍ»£¬Multer »áÐÞ¸ÄÉÏ´«µÄÎÄ¼þÃû¡£Õâ¸öÖØÃüÃû¹¦ÄÜ¿ÉÒÔ¸ù¾ÝÄúµÄÐèÒª¶¨ÖÆ¡£
+ä¸ºäº†é¿å…å‘½åå†²çªï¼ŒMulter ä¼šä¿®æ”¹ä¸Šä¼ çš„æ–‡ä»¶åã€‚è¿™ä¸ªé‡å‘½ååŠŸèƒ½å¯ä»¥æ ¹æ®æ‚¨çš„éœ€è¦å®šåˆ¶ã€‚
 
-ÒÔÏÂÊÇ¿ÉÒÔ´«µÝ¸ø Multer µÄÑ¡Ïî¡£
+ä»¥ä¸‹æ˜¯å¯ä»¥ä¼ é€’ç»™ Multer çš„é€‰é¡¹ã€‚
 
 Key | Description
 --- | ---
-`dest` or `storage` | ÔÚÄÄÀï´æ´¢ÎÄ¼þ
-`fileFilter` | ÎÄ¼þ¹ýÂËÆ÷£¬¿ØÖÆÄÄÐ©ÎÄ¼þ¿ÉÒÔ±»½ÓÊÜ
-`limits` | ÏÞÖÆÉÏ´«µÄÊý¾Ý
-`preservePath` | ±£´æ°üº¬ÎÄ¼þÃûµÄÍêÕûÎÄ¼þÂ·¾¶
+`dest` or `storage` | åœ¨å“ªé‡Œå­˜å‚¨æ–‡ä»¶
+`fileFilter` | æ–‡ä»¶è¿‡æ»¤å™¨ï¼ŒæŽ§åˆ¶å“ªäº›æ–‡ä»¶å¯ä»¥è¢«æŽ¥å—
+`limits` | é™åˆ¶ä¸Šä¼ çš„æ•°æ®
+`preservePath` | ä¿å­˜åŒ…å«æ–‡ä»¶åçš„å®Œæ•´æ–‡ä»¶è·¯å¾„
 
-Í¨³££¬Ö»ÐèÒªÉèÖÃ `dest` ÊôÐÔ
-ÏñÕâÑù£º
+é€šå¸¸ï¼Œåªéœ€è¦è®¾ç½® `dest` å±žæ€§
+åƒè¿™æ ·ï¼š
 
 ```javascript
 var upload = multer({ dest: 'uploads/' })
 ```
 
-Èç¹ûÄãÏëÔÚÉÏ´«Ê±½øÐÐ¸ü¶àµÄ¿ØÖÆ£¬Äã¿ÉÒÔÊ¹ÓÃ `storage` Ñ¡ÏîÌæ´ú `dest`¡£Multer ¾ßÓÐ `DiskStorage` ºÍ `MemoryStorage` Á½¸ö´æ´¢ÒýÇæ£»ÁíÍâ»¹¿ÉÒÔ´ÓµÚÈý·½»ñµÃ¸ü¶à¿ÉÓÃµÄÒýÇæ¡£
+å¦‚æžœä½ æƒ³åœ¨ä¸Šä¼ æ—¶è¿›è¡Œæ›´å¤šçš„æŽ§åˆ¶ï¼Œä½ å¯ä»¥ä½¿ç”¨ `storage` é€‰é¡¹æ›¿ä»£ `dest`ã€‚Multer å…·æœ‰ `DiskStorage` å’Œ `MemoryStorage` ä¸¤ä¸ªå­˜å‚¨å¼•æ“Žï¼›å¦å¤–è¿˜å¯ä»¥ä»Žç¬¬ä¸‰æ–¹èŽ·å¾—æ›´å¤šå¯ç”¨çš„å¼•æ“Žã€‚
 
 #### `.single(fieldname)`
 
-½ÓÊÜÒ»¸öÒÔ `fieldname` ÃüÃûµÄÎÄ¼þ¡£Õâ¸öÎÄ¼þµÄÐÅÏ¢±£´æÔÚ `req.file`¡£
+æŽ¥å—ä¸€ä¸ªä»¥ `fieldname` å‘½åçš„æ–‡ä»¶ã€‚è¿™ä¸ªæ–‡ä»¶çš„ä¿¡æ¯ä¿å­˜åœ¨ `req.file`ã€‚
 
 #### `.array(fieldname[, maxCount])`
 
-½ÓÊÜÒ»¸öÒÔ `fieldname` ÃüÃûµÄÎÄ¼þÊý×é¡£¿ÉÒÔÅäÖÃ `maxCount` À´ÏÞÖÆÉÏ´«µÄ×î´óÊýÁ¿¡£ÕâÐ©ÎÄ¼þµÄÐÅÏ¢±£´æÔÚ `req.files`¡£
+æŽ¥å—ä¸€ä¸ªä»¥ `fieldname` å‘½åçš„æ–‡ä»¶æ•°ç»„ã€‚å¯ä»¥é…ç½® `maxCount` æ¥é™åˆ¶ä¸Šä¼ çš„æœ€å¤§æ•°é‡ã€‚è¿™äº›æ–‡ä»¶çš„ä¿¡æ¯ä¿å­˜åœ¨ `req.files`ã€‚
 
 #### `.fields(fields)`
 
-½ÓÊÜÖ¸¶¨ `fields` µÄ»ìºÏÎÄ¼þ¡£ÕâÐ©ÎÄ¼þµÄÐÅÏ¢±£´æÔÚ `req.files`¡£
+æŽ¥å—æŒ‡å®š `fields` çš„æ··åˆæ–‡ä»¶ã€‚è¿™äº›æ–‡ä»¶çš„ä¿¡æ¯ä¿å­˜åœ¨ `req.files`ã€‚
 
-`fields` Ó¦¸ÃÊÇÒ»¸ö¶ÔÏóÊý×é£¬Ó¦¸Ã¾ßÓÐ `name` ºÍ¿ÉÑ¡µÄ `maxCount` ÊôÐÔ¡£
+`fields` åº”è¯¥æ˜¯ä¸€ä¸ªå¯¹è±¡æ•°ç»„ï¼Œåº”è¯¥å…·æœ‰ `name` å’Œå¯é€‰çš„ `maxCount` å±žæ€§ã€‚
 
 Example:
 
@@ -135,20 +135,20 @@ Example:
 
 #### `.none()`
 
-Ö»½ÓÊÜÎÄ±¾Óò¡£Èç¹ûÈÎºÎÎÄ¼þÉÏ´«µ½Õâ¸öÄ£Ê½£¬½«·¢Éú "LIMIT\_UNEXPECTED\_FILE" ´íÎó¡£ÕâºÍ `upload.fields([])` µÄÐ§¹ûÒ»Ñù¡£
+åªæŽ¥å—æ–‡æœ¬åŸŸã€‚å¦‚æžœä»»ä½•æ–‡ä»¶ä¸Šä¼ åˆ°è¿™ä¸ªæ¨¡å¼ï¼Œå°†å‘ç”Ÿ "LIMIT\_UNEXPECTED\_FILE" é”™è¯¯ã€‚è¿™å’Œ `upload.fields([])` çš„æ•ˆæžœä¸€æ ·ã€‚
 
 #### `.any()`
 
-½ÓÊÜÒ»ÇÐ¡£ÎÄ¼þÊý×é½«±£´æÔÚ `req.files`¡£
+æŽ¥å—ä¸€åˆ‡ã€‚æ–‡ä»¶æ•°ç»„å°†ä¿å­˜åœ¨ `req.files`ã€‚
 
-**¾¯¸æ:** È·±£Äã×ÜÊÇ´¦ÀíÁËÓÃ»§µÄÎÄ¼þÉÏ´«¡£
-ÓÀÔ¶²»Òª½« multer ×÷ÎªÈ«¾ÖÖÐ¼ä¼þÊ¹ÓÃ£¬ÒòÎª¶ñÒâÓÃ»§¿ÉÒÔÉÏ´«ÎÄ¼þµ½Ò»¸öÄãÃ»ÓÐÔ¤ÁÏµ½µÄÂ·ÓÉ£¬Ó¦¸ÃÖ»ÔÚÄãÐèÒª´¦ÀíÉÏ´«ÎÄ¼þµÄÂ·ÓÉÉÏÊ¹ÓÃ¡£
+**è­¦å‘Š:** ç¡®ä¿ä½ æ€»æ˜¯å¤„ç†äº†ç”¨æˆ·çš„æ–‡ä»¶ä¸Šä¼ ã€‚
+æ°¸è¿œä¸è¦å°† multer ä½œä¸ºå…¨å±€ä¸­é—´ä»¶ä½¿ç”¨ï¼Œå› ä¸ºæ¶æ„ç”¨æˆ·å¯ä»¥ä¸Šä¼ æ–‡ä»¶åˆ°ä¸€ä¸ªä½ æ²¡æœ‰é¢„æ–™åˆ°çš„è·¯ç”±ï¼Œåº”è¯¥åªåœ¨ä½ éœ€è¦å¤„ç†ä¸Šä¼ æ–‡ä»¶çš„è·¯ç”±ä¸Šä½¿ç”¨ã€‚
 
 ### `storage`
 
 #### `DiskStorage`
 
-´ÅÅÌ´æ´¢ÒýÇæ¿ÉÒÔÈÃÄã¿ØÖÆÎÄ¼þµÄ´æ´¢¡£
+ç£ç›˜å­˜å‚¨å¼•æ“Žå¯ä»¥è®©ä½ æŽ§åˆ¶æ–‡ä»¶çš„å­˜å‚¨ã€‚
 
 ```javascript
 var storage = multer.diskStorage({
@@ -163,76 +163,76 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage })
 ```
 
-ÓÐÁ½¸öÑ¡Ïî¿ÉÓÃ£¬`destination` ºÍ `filename`¡£ËûÃÇ¶¼ÊÇÓÃÀ´È·¶¨ÎÄ¼þ´æ´¢Î»ÖÃµÄº¯Êý¡£
+æœ‰ä¸¤ä¸ªé€‰é¡¹å¯ç”¨ï¼Œ`destination` å’Œ `filename`ã€‚ä»–ä»¬éƒ½æ˜¯ç”¨æ¥ç¡®å®šæ–‡ä»¶å­˜å‚¨ä½ç½®çš„å‡½æ•°ã€‚
 
-`destination` ÊÇÓÃÀ´È·¶¨ÉÏ´«µÄÎÄ¼þÓ¦¸Ã´æ´¢ÔÚÄÄ¸öÎÄ¼þ¼ÐÖÐ¡£Ò²¿ÉÒÔÌá¹©Ò»¸ö `string` (ÀýÈç `'/tmp/uploads'`)¡£Èç¹ûÃ»ÓÐÉèÖÃ `destination`£¬ÔòÊ¹ÓÃ²Ù×÷Ä¬ÈÏµÄÁÙÊ±ÎÄ¼þ¼Ð
+`destination` æ˜¯ç”¨æ¥ç¡®å®šä¸Šä¼ çš„æ–‡ä»¶åº”è¯¥å­˜å‚¨åœ¨å“ªä¸ªæ–‡ä»¶å¤¹ä¸­ã€‚ä¹Ÿå¯ä»¥æä¾›ä¸€ä¸ª `string` (ä¾‹å¦‚ `'/tmp/uploads'`)ã€‚å¦‚æžœæ²¡æœ‰è®¾ç½® `destination`ï¼Œåˆ™ä½¿ç”¨æ“ä½œé»˜è®¤çš„ä¸´æ—¶æ–‡ä»¶å¤¹
 
-**×¢Òâ:** Èç¹ûÄãÌá¹©µÄ `destination` ÊÇÒ»¸öº¯Êý£¬ÄãÐèÒª¸ºÔð´´½¨ÎÄ¼þ¼Ð¡£µ±Ìá¹©Ò»¸ö×Ö·û´®£¬multer ½«È·±£Õâ¸öÎÄ¼þ¼ÐÊÇÄã´´½¨µÄ¡£
+**æ³¨æ„:** å¦‚æžœä½ æä¾›çš„ `destination` æ˜¯ä¸€ä¸ªå‡½æ•°ï¼Œä½ éœ€è¦è´Ÿè´£åˆ›å»ºæ–‡ä»¶å¤¹ã€‚å½“æä¾›ä¸€ä¸ªå­—ç¬¦ä¸²ï¼Œmulter å°†ç¡®ä¿è¿™ä¸ªæ–‡ä»¶å¤¹æ˜¯ä½ åˆ›å»ºçš„ã€‚
 
-`filename` ÓÃÓÚÈ·¶¨ÎÄ¼þ¼ÐÖÐµÄÎÄ¼þÃûµÄÈ·¶¨¡£ Èç¹ûÃ»ÓÐÉèÖÃ `filename`£¬Ã¿¸öÎÄ¼þ½«ÉèÖÃÎªÒ»¸öËæ»úÎÄ¼þÃû£¬²¢ÇÒÊÇÃ»ÓÐÀ©Õ¹ÃûµÄ 
+`filename` ç”¨äºŽç¡®å®šæ–‡ä»¶å¤¹ä¸­çš„æ–‡ä»¶åçš„ç¡®å®šã€‚ å¦‚æžœæ²¡æœ‰è®¾ç½® `filename`ï¼Œæ¯ä¸ªæ–‡ä»¶å°†è®¾ç½®ä¸ºä¸€ä¸ªéšæœºæ–‡ä»¶åï¼Œå¹¶ä¸”æ˜¯æ²¡æœ‰æ‰©å±•åçš„ 
 
-**×¢Òâ:** Multer ²»»áÎªÄãÌí¼ÓÈÎºÎÀ©Õ¹Ãû£¬ÄãµÄ³ÌÐòÓ¦¸Ã·µ»ØÒ»¸öÍêÕûµÄÎÄ¼þÃû¡£
+**æ³¨æ„:** Multer ä¸ä¼šä¸ºä½ æ·»åŠ ä»»ä½•æ‰©å±•åï¼Œä½ çš„ç¨‹åºåº”è¯¥è¿”å›žä¸€ä¸ªå®Œæ•´çš„æ–‡ä»¶åã€‚
 
-Ã¿¸öº¯Êý¶¼´«µÝÁËÁ½¸öÇëÇó (`req`) ºÍÒ»Ð©¹ØÓÚÕâ¸öÎÄ¼þµÄÐÅÏ¢ (`file`) ÓÐÖúÓÚÄãµÄ¾ö¶¨¡£
+æ¯ä¸ªå‡½æ•°éƒ½ä¼ é€’äº†ä¸¤ä¸ªè¯·æ±‚ (`req`) å’Œä¸€äº›å…³äºŽè¿™ä¸ªæ–‡ä»¶çš„ä¿¡æ¯ (`file`) æœ‰åŠ©äºŽä½ çš„å†³å®šã€‚
 
-×¢Òâ `req.body` ¿ÉÄÜ»¹Ã»ÓÐÍêÈ«Ìî³ä£¬ÕâÈ¡¾öÓÚÏò¿Í»§¶Ë·¢ËÍ×Ö¶ÎºÍÎÄ¼þµ½·þÎñÆ÷µÄË³Ðò¡£
+æ³¨æ„ `req.body` å¯èƒ½è¿˜æ²¡æœ‰å®Œå…¨å¡«å……ï¼Œè¿™å–å†³äºŽå‘å®¢æˆ·ç«¯å‘é€å­—æ®µå’Œæ–‡ä»¶åˆ°æœåŠ¡å™¨çš„é¡ºåºã€‚
 
 #### `MemoryStorage`
 
-ÄÚ´æ´æ´¢ÒýÇæ½«ÎÄ¼þ´æ´¢ÔÚÄÚ´æÖÐµÄ `Buffer` ¶ÔÏó£¬ËüÃ»ÓÐÈÎºÎÑ¡Ïî
+å†…å­˜å­˜å‚¨å¼•æ“Žå°†æ–‡ä»¶å­˜å‚¨åœ¨å†…å­˜ä¸­çš„ `Buffer` å¯¹è±¡ï¼Œå®ƒæ²¡æœ‰ä»»ä½•é€‰é¡¹
 
 ```javascript
 var storage = multer.memoryStorage()
 var upload = multer({ storage: storage })
 ```
 
-µ±Ê¹ÓÃÄÚ´æ´æ´¢ÒýÇæ£¬ÎÄ¼þÐÅÏ¢½«°üº¬Ò»¸ö `buffer` ×Ö¶Î£¬ÀïÃæ°üº¬ÁËÕû¸öÎÄ¼þÊý¾Ý¡£
+å½“ä½¿ç”¨å†…å­˜å­˜å‚¨å¼•æ“Žï¼Œæ–‡ä»¶ä¿¡æ¯å°†åŒ…å«ä¸€ä¸ª `buffer` å­—æ®µï¼Œé‡Œé¢åŒ…å«äº†æ•´ä¸ªæ–‡ä»¶æ•°æ®ã€‚
 
-**¾¯¸æ**: µ±ÄãÊ¹ÓÃÄÚ´æ´æ´¢£¬ÉÏ´«·Ç³£´óµÄÎÄ¼þ£¬»òÕß·Ç³£¶àµÄÐ¡ÎÄ¼þ£¬»áµ¼ÖÂÄãµÄÓ¦ÓÃ³ÌÐòÄÚ´æÒç³ö
+**è­¦å‘Š**: å½“ä½ ä½¿ç”¨å†…å­˜å­˜å‚¨ï¼Œä¸Šä¼ éžå¸¸å¤§çš„æ–‡ä»¶ï¼Œæˆ–è€…éžå¸¸å¤šçš„å°æ–‡ä»¶ï¼Œä¼šå¯¼è‡´ä½ çš„åº”ç”¨ç¨‹åºå†…å­˜æº¢å‡º
 
 ### `limits`
-Ò»¸ö¶ÔÏó£¬Ö¸¶¨Ò»Ð©Êý¾Ý´óÐ¡µÄÏÞÖÆ¡£Multer Í¨¹ýÕâ¸ö¶ÔÏóÊ¹ÓÃ busboy£¬ÏêÏ¸µÄÌØÐÔ¿ÉÒÔÔÚ [busboy's page](https://github.com/mscdex/busboy#busboy-methods) ÕÒµ½¡£
+ä¸€ä¸ªå¯¹è±¡ï¼ŒæŒ‡å®šä¸€äº›æ•°æ®å¤§å°çš„é™åˆ¶ã€‚Multer é€šè¿‡è¿™ä¸ªå¯¹è±¡ä½¿ç”¨ busboyï¼Œè¯¦ç»†çš„ç‰¹æ€§å¯ä»¥åœ¨ [busboy's page](https://github.com/mscdex/busboy#busboy-methods) æ‰¾åˆ°ã€‚
 
-¿ÉÒÔÊ¹ÓÃÏÂÃæÕâÐ©:
+å¯ä»¥ä½¿ç”¨ä¸‹é¢è¿™äº›:
 
 Key | Description | Default
 --- | --- | ---
-`fieldNameSize` | field Ãû×Ö×î´ó³¤¶È | 100 bytes
-`fieldSize` | field ÖµµÄ×î´ó³¤¶È  | 1MB
-`fields` | ·ÇÎÄ¼þ field µÄ×î´óÊýÁ¿ | ÎÞÏÞ
-`fileSize` | ÔÚ multipart ±íµ¥ÖÐ£¬ÎÄ¼þ×î´ó³¤¶È (×Ö½Úµ¥Î») | ÎÞÏÞ
-`files` | ÔÚ multipart ±íµ¥ÖÐ£¬ÎÄ¼þ×î´óÊýÁ¿ | ÎÞÏÞ
-`parts` | ÔÚ multipart ±íµ¥ÖÐ£¬part ´«ÊäµÄ×î´óÊýÁ¿(fields + files) | ÎÞÏÞ
-`headerPairs` | ÔÚ multipart ±íµ¥ÖÐ£¬¼üÖµ¶Ô×î´ó×éÊý | 2000
+`fieldNameSize` | field åå­—æœ€å¤§é•¿åº¦ | 100 bytes
+`fieldSize` | field å€¼çš„æœ€å¤§é•¿åº¦  | 1MB
+`fields` | éžæ–‡ä»¶ field çš„æœ€å¤§æ•°é‡ | æ— é™
+`fileSize` | åœ¨ multipart è¡¨å•ä¸­ï¼Œæ–‡ä»¶æœ€å¤§é•¿åº¦ (å­—èŠ‚å•ä½) | æ— é™
+`files` | åœ¨ multipart è¡¨å•ä¸­ï¼Œæ–‡ä»¶æœ€å¤§æ•°é‡ | æ— é™
+`parts` | åœ¨ multipart è¡¨å•ä¸­ï¼Œpart ä¼ è¾“çš„æœ€å¤§æ•°é‡(fields + files) | æ— é™
+`headerPairs` | åœ¨ multipart è¡¨å•ä¸­ï¼Œé”®å€¼å¯¹æœ€å¤§ç»„æ•° | 2000
 
-ÉèÖÃ limits ¿ÉÒÔ°ïÖú±£»¤ÄãµÄÕ¾µãÃâÊÜ¾Ü¾ø·þÎñ (DoS) ¹¥»÷¡£
+è®¾ç½® limits å¯ä»¥å¸®åŠ©ä¿æŠ¤ä½ çš„ç«™ç‚¹å…å—æ‹’ç»æœåŠ¡ (DoS) æ”»å‡»ã€‚
 
 ### `fileFilter`
-ÉèÖÃÒ»¸öº¯ÊýÀ´¿ØÖÆÊ²Ã´ÎÄ¼þ¿ÉÒÔÉÏ´«ÒÔ¼°Ê²Ã´ÎÄ¼þÓ¦¸ÃÌø¹ý£¬Õâ¸öº¯ÊýÓ¦¸Ã¿´ÆðÀ´ÏñÕâÑù£º
+è®¾ç½®ä¸€ä¸ªå‡½æ•°æ¥æŽ§åˆ¶ä»€ä¹ˆæ–‡ä»¶å¯ä»¥ä¸Šä¼ ä»¥åŠä»€ä¹ˆæ–‡ä»¶åº”è¯¥è·³è¿‡ï¼Œè¿™ä¸ªå‡½æ•°åº”è¯¥çœ‹èµ·æ¥åƒè¿™æ ·ï¼š
 
 ```javascript
 function fileFilter (req, file, cb) {
 
-  // Õâ¸öº¯ÊýÓ¦¸Ãµ÷ÓÃ `cb` ÓÃbooleanÖµÀ´
-  // Ö¸Ê¾ÊÇ·ñÓ¦½ÓÊÜ¸ÃÎÄ¼þ
+  // è¿™ä¸ªå‡½æ•°åº”è¯¥è°ƒç”¨ `cb` ç”¨booleanå€¼æ¥
+  // æŒ‡ç¤ºæ˜¯å¦åº”æŽ¥å—è¯¥æ–‡ä»¶
 
-  // ¾Ü¾øÕâ¸öÎÄ¼þ£¬Ê¹ÓÃ`false`£¬ÏñÕâÑù:
+  // æ‹’ç»è¿™ä¸ªæ–‡ä»¶ï¼Œä½¿ç”¨`false`ï¼Œåƒè¿™æ ·:
   cb(null, false)
 
-  // ½ÓÊÜÕâ¸öÎÄ¼þ£¬Ê¹ÓÃ`true`£¬ÏñÕâÑù:
+  // æŽ¥å—è¿™ä¸ªæ–‡ä»¶ï¼Œä½¿ç”¨`true`ï¼Œåƒè¿™æ ·:
   cb(null, true)
 
-  // Èç¹ûÓÐÎÊÌâ£¬Äã¿ÉÒÔ×ÜÊÇÕâÑù·¢ËÍÒ»¸ö´íÎó:
+  // å¦‚æžœæœ‰é—®é¢˜ï¼Œä½ å¯ä»¥æ€»æ˜¯è¿™æ ·å‘é€ä¸€ä¸ªé”™è¯¯:
   cb(new Error('I don\'t have a clue!'))
 
 }
 ```
 
-## ´íÎó´¦Àí»úÖÆ
+## é”™è¯¯å¤„ç†æœºåˆ¶
 
-µ±Óöµ½Ò»¸ö´íÎó£¬multer ½«»á°Ñ´íÎó·¢ËÍ¸ø express¡£Äã¿ÉÒÔÊ¹ÓÃÒ»¸ö±È½ÏºÃµÄ´íÎóÕ¹Ê¾Ò³ ([express±ê×¼·½Ê½](http://expressjs.com/guide/error-handling.html))¡£
+å½“é‡åˆ°ä¸€ä¸ªé”™è¯¯ï¼Œmulter å°†ä¼šæŠŠé”™è¯¯å‘é€ç»™ expressã€‚ä½ å¯ä»¥ä½¿ç”¨ä¸€ä¸ªæ¯”è¾ƒå¥½çš„é”™è¯¯å±•ç¤ºé¡µ ([expressæ ‡å‡†æ–¹å¼](http://expressjs.com/guide/error-handling.html))ã€‚
 
-Èç¹ûÄãÏë²¶×½ multer ·¢³öµÄ´íÎó£¬Äã¿ÉÒÔ×Ô¼ºµ÷ÓÃÖÐ¼ä¼þ³ÌÐò¡£
+å¦‚æžœä½ æƒ³æ•æ‰ multer å‘å‡ºçš„é”™è¯¯ï¼Œä½ å¯ä»¥è‡ªå·±è°ƒç”¨ä¸­é—´ä»¶ç¨‹åºã€‚
 
 ```javascript
 var upload = multer().single('avatar')
@@ -240,18 +240,18 @@ var upload = multer().single('avatar')
 app.post('/profile', function (req, res) {
   upload(req, res, function (err) {
     if (err) {
-      // ·¢Éú´íÎó
+      // å‘ç”Ÿé”™è¯¯
       return
     }
 
-    // Ò»ÇÐ¶¼ºÃ
+    // ä¸€åˆ‡éƒ½å¥½
   })
 })
 ```
 
-## ¶¨ÖÆ´æ´¢ÒýÇæ
+## å®šåˆ¶å­˜å‚¨å¼•æ“Ž
 
-Èç¹ûÄãÏëÒª¹¹½¨×Ô¼ºµÄ´æ´¢ÒýÇæ£¬Çë¿´ [ÕâÀï](/StorageEngine.md) ¡£
+å¦‚æžœä½ æƒ³è¦æž„å»ºè‡ªå·±çš„å­˜å‚¨å¼•æ“Žï¼Œè¯·çœ‹ [è¿™é‡Œ](/StorageEngine.md) ã€‚
 
 ## License
 
