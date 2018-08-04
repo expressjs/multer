@@ -18,7 +18,7 @@ function DiskStorage (opts) {
   this.getFilename = (opts.filename || getFilename)
 
   if (typeof opts.destination === 'string') {
-    mkdirp.sync(opts.destination)
+    if (fs.existsSync(opts.destination)) mkdirp.sync(opts.destination)
     this.getDestination = function ($0, $1, cb) { cb(null, opts.destination) }
   } else {
     this.getDestination = (opts.destination || getDestination)
