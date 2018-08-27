@@ -53,7 +53,7 @@ app.post('/cool-profile', cpUpload, function (req, res, next) {
 })
 ```
 
-In case you need to handle a text-only multipart form, you can use any of the multer methods (`.single()`, `.array()`, `fields()`). Here is an example using `.array()`:
+In case you need to handle a text-only multipart form, you should use `none()` method:
 
 ```javascript
 var express = require('express')
@@ -61,7 +61,7 @@ var app = express()
 var multer  = require('multer')
 var upload = multer()
 
-app.post('/profile', upload.array(), function (req, res, next) {
+app.post('/profile', upload.none(), function (req, res, next) {
   // req.body contains the text fields
 })
 ```
@@ -142,7 +142,7 @@ Example:
 #### `.none()`
 
 Accept only text fields. If any file upload is made, error with code
-"LIMIT\_UNEXPECTED\_FILE" will be issued. This is the same as doing `upload.fields([])`.
+"LIMIT\_UNEXPECTED\_FILE" will be issued.
 
 #### `.any()`
 
