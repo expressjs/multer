@@ -23,6 +23,13 @@ $ npm install --save multer
 Multer adds a `body` object and a `file` or `files` object to the `request` object. The `body` object contains the values of the text fields of the form, the `file` or `files` object contains the files uploaded via the form.
 
 Basic usage example:
+Don't forget the `enctype="multipart/form-data"` in your form.
+
+```html
+<form class="" action="/cool-profile" method="post" enctype="multipart/form-data">
+	<input type="file" id="image" name="image_upload" />
+</form>
+```
 
 ```javascript
 var express = require('express')
