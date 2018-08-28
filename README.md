@@ -26,8 +26,8 @@ Basic usage example:
 Don't forget the `enctype="multipart/form-data"` in your form.
 
 ```html
-<form class="" action="/cool-profile" method="post" enctype="multipart/form-data">
-	<input type="file" id="image" name="image_upload" />
+<form action="/profile" method="post" enctype="multipart/form-data">
+  <input type="file" name="avatar" />
 </form>
 ```
 
