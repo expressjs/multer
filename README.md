@@ -53,7 +53,7 @@ app.post('/cool-profile', cpUpload, function (req, res, next) {
 })
 ```
 
-In case you need to handle a text-only multipart form, you should use `none()` method:
+In case you need to handle a text-only multipart form, you should use the `.none()` method:
 
 ```javascript
 var express = require('express')
