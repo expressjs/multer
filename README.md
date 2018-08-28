@@ -24,6 +24,14 @@ Multer adds a `body` object and a `file` or `files` object to the `request` obje
 
 Basic usage example:
 
+Don't forget the `enctype="multipart/form-data"` in your form.
+
+```html
+<form action="/profile" method="post" enctype="multipart/form-data">
+  <input type="file" name="avatar" />
+</form>
+```
+
 ```javascript
 var express = require('express')
 var multer  = require('multer')
