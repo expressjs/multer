@@ -31,21 +31,21 @@ DiskStorage.prototype._handleFile = function _handleFile (req, file, cb) {
   that.getDestination(req, file, function (err, destination) {
     if (err) return cb(err)
 
+    file.destination = destination
+
     that.getFilename(req, file, function (err, filename) {
       if (err) return cb(err)
 
-      var finalPath = path.join(destination, filename)
-      var outStream = fs.createWriteStream(finalPath)
+      file.filename = filename
+      file.path = path.join(destination, filename)
+
+      var outStream = fs.createWriteStream(file.path)
 
       file.stream.pipe(outStream)
       outStream.on('error', cb)
       outStream.on('finish', function () {
-        cb(null, {
-          destination: destination,
-          filename: filename,
-          path: finalPath,
-          size: outStream.bytesWritten
-        })
+        file.size = outStream.bytesWritten
+        cb(null)
       })
     })
   })

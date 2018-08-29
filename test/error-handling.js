@@ -7,6 +7,11 @@ var util = require('./_util')
 var multer = require('../')
 var stream = require('stream')
 var FormData = require('form-data')
+var crypto = require('crypto')
+var fs = require('fs')
+var path = require('path')
+var onFinished = require('on-finished')
+var inherits = require('util').inherits
 
 function withLimits (limits, fields) {
   var storage = multer.memoryStorage()
@@ -218,6 +223,73 @@ describe('Error Handling', function () {
     util.submitForm(upload, form, function (err, req) {
       assert.equal(err.code, 'LIMIT_FILE_SIZE')
       done()
+    })
+  })
+
+  it('should handle clients aborting the request and clean up temporary files', function (done) {
+    function AbortDuringPassThrough (maxBytes) {
+      stream.PassThrough.call(this)
+
+      this.bytesPassed = 0
+      this.maxBytes = maxBytes
+    }
+
+    inherits(AbortDuringPassThrough, stream.PassThrough)
+
+    AbortDuringPassThrough.prototype._transform = function (chunk, enc, cb) {
+      if (this.bytesPassed + chunk.length < this.maxBytes) {
+        this.bytesPassed += chunk.length
+        stream.PassThrough.prototype._transform(chunk, enc, cb)
+      } else {
+        var len = this.maxBytes - this.bytesPassed
+        if (len) {
+          this.bytesPassed += len
+          stream.PassThrough.prototype._transform(chunk.slice(0, len), enc, cb)
+
+          this.emit('aborted')
+        } else {
+          cb()
+        }
+      }
+    }
+
+    var destination = os.tmpdir()
+    var filename = crypto.pseudoRandomBytes(16).toString('hex')
+
+    var storage = multer.diskStorage({
+      destination: destination,
+      filename: function (req, file, cb) { cb(null, filename) }
+    })
+    var upload = multer({ storage: storage }).single('file')
+
+    var form = new FormData()
+    form.append('file', util.file('small0.dat'))
+
+    form.getLength(function (err, length) {
+      assert.equal(err, null)
+
+      var req = new AbortDuringPassThrough(1000)
+
+      req.complete = false
+      form.once('end', function () {
+        req.complete = true
+      })
+
+      form.pipe(req)
+      req.headers = {
+        'content-type': 'multipart/form-data; boundary=' + form.getBoundary(),
+        'content-length': length
+      }
+
+      upload(req, null, function (err) {
+        assert.equal(err.code, 'CLIENT_ABORTED')
+
+        onFinished(req, function () {
+          assert.equal(fs.existsSync(path.join(destination, filename)), false,
+                       'temporary file must be cleaned up')
+          done()
+        })
+      })
     })
   })
 })

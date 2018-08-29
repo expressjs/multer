@@ -4,10 +4,9 @@ function MemoryStorage (opts) {}
 
 MemoryStorage.prototype._handleFile = function _handleFile (req, file, cb) {
   file.stream.pipe(concat(function (data) {
-    cb(null, {
-      buffer: data,
-      size: data.length
-    })
+    file.buffer = data
+    file.size = data.length
+    cb(null)
   }))
 }
 
