@@ -223,6 +223,31 @@ When using memory storage, the file info will contain a field called
 numbers very quickly, can cause your application to run out of memory when
 memory storage is used.
 
+#### `EncryptStorage`
+
+The encryption storage engine encrypts files using AES-256-GCM with 32bytes of
+random data.
+
+```javascript
+var storage = multer.encryptStorage({
+  destination: function (req, file, cb) {
+    cb(null, '/tmp/my-uploads')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now())
+  }
+})
+
+var upload = multer({ storage: storage })
+```
+It has 2 options available: `destination`, `filename`. Both
+`destination` and `filename` does the same as they do for `DiskStorage`.
+
+A hexidecimal representation of the encryption key is added to
+`req.files.encryptionKey`.
+
+A buffer comprising of the authentication tag is added to `req.files.tag`
+
 ### `limits`
 
 An object specifying the size limits of the following optional properties. Multer passes this object into busboy directly, and the details of the properties can be found on [busboy's page](https://github.com/mscdex/busboy#busboy-methods).
