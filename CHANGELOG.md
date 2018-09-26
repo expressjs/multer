@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.4.0 - 2018-09-26
+
+- Feature: Make Multer errors inherit from MulterError
+
 ## 1.3.1 - 2018-06-28
 
 - Bugfix: Bump vulnerable dependency
