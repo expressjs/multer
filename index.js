@@ -1,8 +1,8 @@
-var makeError = require('./lib/make-error')
 var makeMiddleware = require('./lib/make-middleware')
 
 var diskStorage = require('./storage/disk')
 var memoryStorage = require('./storage/memory')
+var MulterError = require('./lib/multer-error')
 
 function allowAll (req, file, cb) {
   cb(null, true)
@@ -37,7 +37,7 @@ Multer.prototype._makeMiddleware = function (fields, fileStrategy) {
 
     function wrappedFileFilter (req, file, cb) {
       if ((filesLeft[file.fieldname] || 0) <= 0) {
-        return cb(makeError('LIMIT_UNEXPECTED_FILE', file.fieldname))
+        return cb(new MulterError('LIMIT_UNEXPECTED_FILE', file.fieldname))
       }
 
       filesLeft[file.fieldname] -= 1
@@ -101,3 +101,4 @@ function multer (options) {
 module.exports = multer
 module.exports.diskStorage = diskStorage
 module.exports.memoryStorage = memoryStorage
+module.exports.MulterError = MulterError

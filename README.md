@@ -266,23 +266,25 @@ function fileFilter (req, file, cb) {
 
 ## Error handling
 
-When encountering an error, multer will delegate the error to express. You can
+When encountering an error, Multer will delegate the error to Express. You can
 display a nice error page using [the standard express way](http://expressjs.com/guide/error-handling.html).
 
-If you want to catch errors specifically from multer, you can call the
-middleware function by yourself.
+If you want to catch errors specifically from Multer, you can call the
+middleware function by yourself. Also, if you want to catch only [the Multer errors](https://github.com/expressjs/multer/blob/master/lib/make-error.js#L1-L9), you can use the `MulterError` class that is attached to the `multer` object itself (e.g. `err instanceof multer.MulterError`).
 
 ```javascript
+var multer = require('multer')
 var upload = multer().single('avatar')
 
 app.post('/profile', function (req, res) {
   upload(req, res, function (err) {
-    if (err) {
-      // An error occurred when uploading
-      return
+    if (err instanceof multer.MulterError) {
+      // A Multer error occurred when uploading.
+    } else {
+      // An unknown error occurred when uploading.
     }
 
-    // Everything went fine
+    // Everything went fine.
   })
 })
 ```
