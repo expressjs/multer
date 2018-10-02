@@ -280,7 +280,7 @@ app.post('/profile', function (req, res) {
   upload(req, res, function (err) {
     if (err instanceof multer.MulterError) {
       // A Multer error occurred when uploading.
-    } else {
+    } else if (err) {
       // An unknown error occurred when uploading.
     }
 
