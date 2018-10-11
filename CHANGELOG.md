@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.4.1 - 2018-10-11
+
+- Bugfix: Make sure that req.file.buffer always is a Buffer
+
 ## 1.4.0 - 2018-09-26
 
 - Feature: Make Multer errors inherit from MulterError
