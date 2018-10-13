@@ -11,6 +11,7 @@ This README is also available in other languages:
 
 - [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (Chinese)
 - [한국어](https://github.com/expressjs/multer/blob/master/doc/README-ko.md) (Korean)
+- [Русский язык](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (Russian)
 
 ## Installation
 
@@ -23,6 +24,14 @@ $ npm install --save multer
 Multer adds a `body` object and a `file` or `files` object to the `request` object. The `body` object contains the values of the text fields of the form, the `file` or `files` object contains the files uploaded via the form.
 
 Basic usage example:
+
+Don't forget the `enctype="multipart/form-data"` in your form.
+
+```html
+<form action="/profile" method="post" enctype="multipart/form-data">
+  <input type="file" name="avatar" />
+</form>
+```
 
 ```javascript
 var express = require('express')
@@ -53,7 +62,7 @@ app.post('/cool-profile', cpUpload, function (req, res, next) {
 })
 ```
 
-In case you need to handle a text-only multipart form, you can use any of the multer methods (`.single()`, `.array()`, `fields()`). Here is an example using `.array()`:
+In case you need to handle a text-only multipart form, you should use the `.none()` method:
 
 ```javascript
 var express = require('express')
@@ -61,7 +70,7 @@ var app = express()
 var multer  = require('multer')
 var upload = multer()
 
-app.post('/profile', upload.array(), function (req, res, next) {
+app.post('/profile', upload.none(), function (req, res, next) {
   // req.body contains the text fields
 })
 ```
@@ -142,7 +151,7 @@ Example:
 #### `.none()`
 
 Accept only text fields. If any file upload is made, error with code
-"LIMIT\_UNEXPECTED\_FILE" will be issued. This is the same as doing `upload.fields([])`.
+"LIMIT\_UNEXPECTED\_FILE" will be issued.
 
 #### `.any()`
 
@@ -258,23 +267,25 @@ function fileFilter (req, file, cb) {
 
 ## Error handling
 
-When encountering an error, multer will delegate the error to express. You can
+When encountering an error, Multer will delegate the error to Express. You can
 display a nice error page using [the standard express way](http://expressjs.com/guide/error-handling.html).
 
-If you want to catch errors specifically from multer, you can call the
-middleware function by yourself.
+If you want to catch errors specifically from Multer, you can call the
+middleware function by yourself. Also, if you want to catch only [the Multer errors](https://github.com/expressjs/multer/blob/master/lib/make-error.js#L1-L9), you can use the `MulterError` class that is attached to the `multer` object itself (e.g. `err instanceof multer.MulterError`).
 
 ```javascript
+var multer = require('multer')
 var upload = multer().single('avatar')
 
 app.post('/profile', function (req, res) {
   upload(req, res, function (err) {
-    if (err) {
-      // An error occurred when uploading
-      return
+    if (err instanceof multer.MulterError) {
+      // A Multer error occurred when uploading.
+    } else if (err) {
+      // An unknown error occurred when uploading.
     }
 
-    // Everything went fine
+    // Everything went fine.
   })
 })
 ```

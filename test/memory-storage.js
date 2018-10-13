@@ -65,6 +65,7 @@ describe('Memory Storage', function () {
       assert.equal(req.file.originalname, 'empty.dat')
       assert.equal(req.file.size, 0)
       assert.equal(req.file.buffer.length, 0)
+      assert.equal(Buffer.isBuffer(req.file.buffer), true)
 
       done()
     })

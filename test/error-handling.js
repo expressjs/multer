@@ -14,6 +14,23 @@ function withLimits (limits, fields) {
 }
 
 describe('Error Handling', function () {
+  it('should be an instance of both `Error` and `MulterError` classes in case of the Multer\'s error', function (done) {
+    var form = new FormData()
+    var storage = multer.diskStorage({ destination: os.tmpdir() })
+    var upload = multer({storage: storage}).fields([
+      { name: 'small0', maxCount: 1 }
+    ])
+
+    form.append('small0', util.file('small0.dat'))
+    form.append('small0', util.file('small0.dat'))
+
+    util.submitForm(upload, form, function (err, req) {
+      assert.equal(err instanceof Error, true)
+      assert.equal(err instanceof multer.MulterError, true)
+      done()
+    })
+  })
+
   it('should respect parts limit', function (done) {
     var form = new FormData()
     var parser = withLimits({ parts: 1 }, [
