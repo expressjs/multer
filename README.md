@@ -211,7 +211,7 @@ order that the client transmits fields and files to the server.
 Instead you can assign a function to return different destinations
 ```javascript
 var multer = require('multer'); //  middleware for handling multipart/form-data,
-// Constructor 
+
 module.exports = function (path) {
   var storage = multer.diskStorage({
       // Absolute path
