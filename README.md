@@ -207,7 +207,7 @@ the file (`file`) to aid with the decision.
 Note that `req.body` might not have been fully populated yet. It depends on the
 order that the client transmits fields and files to the server.
 
-**Note:** Multer will allow you to change the destination folder name.
+**Note:** Multer will not allow you to change the destination folder name.
 Instead you can assign a function to return different destinations
 ```javascript
 var multer = require('multer'); //  middleware for handling multipart/form-data,
