@@ -207,6 +207,25 @@ the file (`file`) to aid with the decision.
 Note that `req.body` might not have been fully populated yet. It depends on the
 order that the client transmits fields and files to the server.
 
+**Note:** Multer will allow you to change the destination folder name.
+Instead you can assign a function to return different destinations
+```javascript
+var multer = require('multer'); //  middleware for handling multipart/form-data,
+// Constructor 
+module.exports = function (path) {
+  var storage = multer.diskStorage({
+      // Absolute path
+      destination: function (req, file, callback) {
+          callback(null, './uploads/'+path);
+      },
+      // Match the field name in the request body
+      filename: function (req, file, callback) {
+          callback(null, file.fieldname + '-' + Date.now());
+      }
+  });
+}
+```
+
 #### `MemoryStorage`
 
 The memory storage engine stores the files in memory as `Buffer` objects. It
