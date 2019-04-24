@@ -127,7 +127,7 @@ and `MemoryStorage`; More engines are available from third parties.
 Accept a single file with the name `fieldname`. The single file will be stored
 in `req.file`.
 
-#### `.array(fieldname[, maxCount])`
+#### `.array(fieldname,[maxCount])`
 
 Accept an array of files, all with the name `fieldname`. Optionally error out if
 more than `maxCount` files are uploaded. The array of files will be stored in
