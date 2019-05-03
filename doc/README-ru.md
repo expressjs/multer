@@ -116,7 +116,7 @@ var upload = multer({ dest: 'uploads/' })
 
 #### `.single(fieldname)`
 
-Принимает один файо с именем `fieldname`. Файл будет сохранен в `req.file`.
+Принимает один файл с именем `fieldname`. Файл будет сохранен в `req.file`.
 
 #### `.array(fieldname[, maxCount])`
 
