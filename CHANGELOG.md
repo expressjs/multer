@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.0.0-alpha.7 - 2019-05-03
+
+- Breaking: drop support for Node.js < 6.x
+
 ## 2.0.0-alpha.6 - 2017-02-18
 
 - Fix: handle client aborting request
