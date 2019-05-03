@@ -1,19 +1,19 @@
 /* eslint-env mocha */
 
-var util = require('./_util')
-var multer = require('../')
+const util = require('./_util')
+const multer = require('../')
 
-var assertRejects = require('assert-rejects')
-var FormData = require('form-data')
-var PassThrough = require('stream').PassThrough
-var pify = require('pify')
+const assertRejects = require('assert-rejects')
+const FormData = require('form-data')
+const PassThrough = require('stream').PassThrough
+const pify = require('pify')
 
 function getLength (form) {
   return pify(form.getLength).call(form)
 }
 
 function createAbortStream (maxBytes) {
-  var bytesPassed = 0
+  let bytesPassed = 0
 
   return new PassThrough({
     transform (chunk, _, cb) {

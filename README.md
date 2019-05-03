@@ -18,11 +18,11 @@ Multer adds a `body` object and a `file` or `files` object to the `request` obje
 Basic usage example:
 
 ```javascript
-var multer = require('multer')
-var express = require('express')
+const multer = require('multer')
+const express = require('express')
 
-var app = express()
-var upload = multer()
+const app = express()
+const upload = multer()
 
 app.post('/profile', upload.single('avatar'), function (req, res, next) {
   // req.file is the `avatar` file
@@ -34,7 +34,7 @@ app.post('/photos/upload', upload.array('photos', 12), function (req, res, next)
   // req.body will contain the text fields, if there were any
 })
 
-var cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
+const cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
 app.post('/cool-profile', cpUpload, function (req, res, next) {
   // req.files is an object (String -> Array) where fieldname is the key, and the value is array of files
   //
@@ -49,11 +49,11 @@ app.post('/cool-profile', cpUpload, function (req, res, next) {
 In case you need to handle a text-only multipart form, you can use the `.none()` method, example:
 
 ```javascript
-var multer = require('multer')
-var express = require('express')
+const multer = require('multer')
+const express = require('express')
 
-var app = express()
-var upload = multer()
+const app = express()
+const upload = multer()
 
 app.post('/profile', upload.none(), function (req, res, next) {
   // req.body contains the text fields
@@ -156,7 +156,7 @@ If you want to catch errors specifically from multer, you can call the
 middleware function by yourself.
 
 ```javascript
-var upload = multer().single('avatar')
+const upload = multer().single('avatar')
 
 app.post('/profile', function (req, res) {
   upload(req, res, function (err) {

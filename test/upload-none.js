@@ -1,37 +1,37 @@
 /* eslint-env mocha */
 
-var assert = require('assert')
-var assertRejects = require('assert-rejects')
-var FormData = require('form-data')
+const assert = require('assert')
+const assertRejects = require('assert-rejects')
+const FormData = require('form-data')
 
-var multer = require('../')
-var util = require('./_util')
+const multer = require('../')
+const util = require('./_util')
 
 describe('upload.none', function () {
-  var parser
+  let parser
 
   before(function () {
     parser = multer().none()
   })
 
   it('should handle text fields', function () {
-    var form = new FormData()
-    var parser = multer().none()
+    const form = new FormData()
+    const parser = multer().none()
 
     form.append('foo', 'bar')
     form.append('test', 'yes')
 
     return util.submitForm(parser, form).then(function (req) {
-      assert.equal(req.file, undefined)
-      assert.equal(req.files, undefined)
+      assert.strictEqual(req.file, undefined)
+      assert.strictEqual(req.files, undefined)
 
-      assert.equal(req.body.foo, 'bar')
-      assert.equal(req.body.test, 'yes')
+      assert.strictEqual(req.body.foo, 'bar')
+      assert.strictEqual(req.body.test, 'yes')
     })
   })
 
   it('should reject single file', function () {
-    var form = new FormData()
+    const form = new FormData()
 
     form.append('name', 'Multer')
     form.append('file', util.file('small'))
@@ -39,8 +39,8 @@ describe('upload.none', function () {
     return assertRejects(
       util.submitForm(parser, form),
       function (err) {
-        assert.equal(err.code, 'LIMIT_UNEXPECTED_FILE')
-        assert.equal(err.field, 'file')
+        assert.strictEqual(err.code, 'LIMIT_UNEXPECTED_FILE')
+        assert.strictEqual(err.field, 'file')
 
         return true
       }
@@ -48,7 +48,7 @@ describe('upload.none', function () {
   })
 
   it('should reject multiple files', function () {
-    var form = new FormData()
+    const form = new FormData()
 
     form.append('name', 'Multer')
     form.append('file', util.file('tiny'))
@@ -57,8 +57,8 @@ describe('upload.none', function () {
     return assertRejects(
       util.submitForm(parser, form),
       function (err) {
-        assert.equal(err.code, 'LIMIT_UNEXPECTED_FILE')
-        assert.equal(err.field, 'file')
+        assert.strictEqual(err.code, 'LIMIT_UNEXPECTED_FILE')
+        assert.strictEqual(err.field, 'file')
 
         return true
       }

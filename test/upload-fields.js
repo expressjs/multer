@@ -1,14 +1,14 @@
 /* eslint-env mocha */
 
-var assert = require('assert')
-var assertRejects = require('assert-rejects')
-var FormData = require('form-data')
+const assert = require('assert')
+const assertRejects = require('assert-rejects')
+const FormData = require('form-data')
 
-var multer = require('../')
-var util = require('./_util')
+const multer = require('../')
+const util = require('./_util')
 
 describe('upload.fields', function () {
-  var parser
+  let parser
 
   before(function () {
     parser = multer().fields([
@@ -19,21 +19,21 @@ describe('upload.fields', function () {
   })
 
   it('should accept single file', function () {
-    var form = new FormData()
+    const form = new FormData()
 
     form.append('set-2', util.file('tiny'))
 
     return util.submitForm(parser, form).then(function (req) {
-      assert.equal(req.files['CA$|-|'].length, 0)
-      assert.equal(req.files['set-1'].length, 0)
-      assert.equal(req.files['set-2'].length, 1)
+      assert.strictEqual(req.files['CA$|-|'].length, 0)
+      assert.strictEqual(req.files['set-1'].length, 0)
+      assert.strictEqual(req.files['set-2'].length, 1)
 
       return util.assertFile(req.files['set-2'][0], 'set-2', 'tiny')
     })
   })
 
   it('should accept some files', function () {
-    var form = new FormData()
+    const form = new FormData()
 
     form.append('CA$|-|', util.file('empty'))
     form.append('set-1', util.file('small'))
@@ -41,9 +41,9 @@ describe('upload.fields', function () {
     form.append('set-2', util.file('tiny'))
 
     return util.submitForm(parser, form).then(function (req) {
-      assert.equal(req.files['CA$|-|'].length, 1)
-      assert.equal(req.files['set-1'].length, 2)
-      assert.equal(req.files['set-2'].length, 1)
+      assert.strictEqual(req.files['CA$|-|'].length, 1)
+      assert.strictEqual(req.files['set-1'].length, 2)
+      assert.strictEqual(req.files['set-2'].length, 1)
 
       return util.assertFiles([
         [req.files['CA$|-|'][0], 'CA$|-|', 'empty'],
@@ -55,7 +55,7 @@ describe('upload.fields', function () {
   })
 
   it('should accept all files', function () {
-    var form = new FormData()
+    const form = new FormData()
 
     form.append('CA$|-|', util.file('empty'))
     form.append('set-1', util.file('tiny'))
@@ -66,9 +66,9 @@ describe('upload.fields', function () {
     form.append('set-2', util.file('empty'))
 
     return util.submitForm(parser, form).then(function (req) {
-      assert.equal(req.files['CA$|-|'].length, 1)
-      assert.equal(req.files['set-1'].length, 3)
-      assert.equal(req.files['set-2'].length, 3)
+      assert.strictEqual(req.files['CA$|-|'].length, 1)
+      assert.strictEqual(req.files['set-1'].length, 3)
+      assert.strictEqual(req.files['set-2'].length, 3)
 
       return util.assertFiles([
         [req.files['CA$|-|'][0], 'CA$|-|', 'empty'],
@@ -83,7 +83,7 @@ describe('upload.fields', function () {
   })
 
   it('should reject too many files', function () {
-    var form = new FormData()
+    const form = new FormData()
 
     form.append('CA$|-|', util.file('small'))
     form.append('CA$|-|', util.file('small'))
@@ -91,8 +91,8 @@ describe('upload.fields', function () {
     return assertRejects(
       util.submitForm(parser, form),
       function (err) {
-        assert.equal(err.code, 'LIMIT_FILE_COUNT')
-        assert.equal(err.field, 'CA$|-|')
+        assert.strictEqual(err.code, 'LIMIT_FILE_COUNT')
+        assert.strictEqual(err.field, 'CA$|-|')
 
         return true
       }
@@ -100,7 +100,7 @@ describe('upload.fields', function () {
   })
 
   it('should reject unexpected field', function () {
-    var form = new FormData()
+    const form = new FormData()
 
     form.append('name', 'Multer')
     form.append('unexpected', util.file('small'))
@@ -108,8 +108,8 @@ describe('upload.fields', function () {
     return assertRejects(
       util.submitForm(parser, form),
       function (err) {
-        assert.equal(err.code, 'LIMIT_UNEXPECTED_FILE')
-        assert.equal(err.field, 'unexpected')
+        assert.strictEqual(err.code, 'LIMIT_UNEXPECTED_FILE')
+        assert.strictEqual(err.field, 'unexpected')
 
         return true
       }

@@ -1,32 +1,32 @@
 /* eslint-env mocha */
 
-var assert = require('assert')
-var FormData = require('form-data')
+const assert = require('assert')
+const FormData = require('form-data')
 
-var multer = require('../')
-var util = require('./_util')
+const multer = require('../')
+const util = require('./_util')
 
 describe('upload.any', function () {
-  var parser
+  let parser
 
   before(function () {
     parser = multer().any()
   })
 
   it('should accept single file', function () {
-    var form = new FormData()
+    const form = new FormData()
 
     form.append('test', util.file('tiny'))
 
     return util.submitForm(parser, form).then(function (req) {
-      assert.equal(req.files.length, 1)
+      assert.strictEqual(req.files.length, 1)
 
       return util.assertFile(req.files[0], 'test', 'tiny')
     })
   })
 
   it('should accept some files', function () {
-    var form = new FormData()
+    const form = new FormData()
 
     form.append('foo', util.file('empty'))
     form.append('foo', util.file('small'))
@@ -34,7 +34,7 @@ describe('upload.any', function () {
     form.append('anyname', util.file('tiny'))
 
     return util.submitForm(parser, form).then(function (req) {
-      assert.equal(req.files.length, 4)
+      assert.strictEqual(req.files.length, 4)
 
       return util.assertFiles([
         [req.files[0], 'foo', 'empty'],
@@ -46,7 +46,7 @@ describe('upload.any', function () {
   })
 
   it('should accept any files', function () {
-    var form = new FormData()
+    const form = new FormData()
 
     form.append('set-0', util.file('empty'))
     form.append('set-1', util.file('tiny'))
@@ -57,7 +57,7 @@ describe('upload.any', function () {
     form.append('set-2', util.file('empty'))
 
     return util.submitForm(parser, form).then(function (req) {
-      assert.equal(req.files.length, 7)
+      assert.strictEqual(req.files.length, 7)
 
       return util.assertFiles([
         [req.files[0], 'set-0', 'empty'],

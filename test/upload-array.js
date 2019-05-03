@@ -1,36 +1,36 @@
 /* eslint-env mocha */
 
-var assert = require('assert')
-var assertRejects = require('assert-rejects')
-var FormData = require('form-data')
+const assert = require('assert')
+const assertRejects = require('assert-rejects')
+const FormData = require('form-data')
 
-var multer = require('../')
-var util = require('./_util')
+const multer = require('../')
+const util = require('./_util')
 
 describe('upload.array', function () {
-  var parser
+  let parser
 
   before(function () {
     parser = multer().array('files', 3)
   })
 
   it('should accept single file', function () {
-    var form = new FormData()
+    const form = new FormData()
 
     form.append('name', 'Multer')
     form.append('files', util.file('small'))
 
     return util.submitForm(parser, form).then(function (req) {
-      assert.equal(req.body.name, 'Multer')
+      assert.strictEqual(req.body.name, 'Multer')
 
-      assert.equal(req.files.length, 1)
+      assert.strictEqual(req.files.length, 1)
 
       return util.assertFile(req.files[0], 'files', 'small')
     })
   })
 
   it('should accept array of files', function () {
-    var form = new FormData()
+    const form = new FormData()
 
     form.append('name', 'Multer')
     form.append('files', util.file('empty'))
@@ -38,8 +38,8 @@ describe('upload.array', function () {
     form.append('files', util.file('tiny'))
 
     return util.submitForm(parser, form).then(function (req) {
-      assert.equal(req.body.name, 'Multer')
-      assert.equal(req.files.length, 3)
+      assert.strictEqual(req.body.name, 'Multer')
+      assert.strictEqual(req.files.length, 3)
 
       return util.assertFiles([
         [req.files[0], 'files', 'empty'],
@@ -50,7 +50,7 @@ describe('upload.array', function () {
   })
 
   it('should reject too many files', function () {
-    var form = new FormData()
+    const form = new FormData()
 
     form.append('name', 'Multer')
     form.append('files', util.file('small'))
@@ -61,8 +61,8 @@ describe('upload.array', function () {
     return assertRejects(
       util.submitForm(parser, form),
       function (err) {
-        assert.equal(err.code, 'LIMIT_FILE_COUNT')
-        assert.equal(err.field, 'files')
+        assert.strictEqual(err.code, 'LIMIT_FILE_COUNT')
+        assert.strictEqual(err.field, 'files')
 
         return true
       }
@@ -70,7 +70,7 @@ describe('upload.array', function () {
   })
 
   it('should reject unexpected field', function () {
-    var form = new FormData()
+    const form = new FormData()
 
     form.append('name', 'Multer')
     form.append('unexpected', util.file('small'))
@@ -78,8 +78,8 @@ describe('upload.array', function () {
     return assertRejects(
       util.submitForm(parser, form),
       function (err) {
-        assert.equal(err.code, 'LIMIT_UNEXPECTED_FILE')
-        assert.equal(err.field, 'unexpected')
+        assert.strictEqual(err.code, 'LIMIT_UNEXPECTED_FILE')
+        assert.strictEqual(err.field, 'unexpected')
 
         return true
       }

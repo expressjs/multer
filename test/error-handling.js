@@ -1,12 +1,12 @@
 /* eslint-env mocha */
 
-var assert = require('assert')
+const assert = require('assert')
 
-var util = require('./_util')
-var multer = require('../')
-var stream = require('stream')
-var FormData = require('form-data')
-var assertRejects = require('assert-rejects')
+const util = require('./_util')
+const multer = require('../')
+const stream = require('stream')
+const FormData = require('form-data')
+const assertRejects = require('assert-rejects')
 
 function withLimits (limits, fields) {
   return multer({ limits: limits }).fields(fields)
@@ -20,8 +20,8 @@ function hasCode (code) {
 
 describe('Error Handling', function () {
   it('should respect parts limit', function () {
-    var form = new FormData()
-    var parser = withLimits({ parts: 1 }, [
+    const form = new FormData()
+    const parser = withLimits({ parts: 1 }, [
       { name: 'small', maxCount: 1 }
     ])
 
@@ -35,8 +35,8 @@ describe('Error Handling', function () {
   })
 
   it('should respect file size limit', function () {
-    var form = new FormData()
-    var parser = withLimits({ fileSize: 1500 }, [
+    const form = new FormData()
+    const parser = withLimits({ fileSize: 1500 }, [
       { name: 'tiny', maxCount: 1 },
       { name: 'small', maxCount: 1 }
     ])
@@ -47,8 +47,8 @@ describe('Error Handling', function () {
     return assertRejects(
       util.submitForm(parser, form),
       function (err) {
-        assert.equal(err.code, 'LIMIT_FILE_SIZE')
-        assert.equal(err.field, 'small')
+        assert.strictEqual(err.code, 'LIMIT_FILE_SIZE')
+        assert.strictEqual(err.field, 'small')
 
         return true
       }
@@ -56,8 +56,8 @@ describe('Error Handling', function () {
   })
 
   it('should respect file count limit', function () {
-    var form = new FormData()
-    var parser = withLimits({ files: 1 }, [
+    const form = new FormData()
+    const parser = withLimits({ files: 1 }, [
       { name: 'small', maxCount: 1 },
       { name: 'small', maxCount: 1 }
     ])
@@ -72,8 +72,8 @@ describe('Error Handling', function () {
   })
 
   it('should respect file key limit', function () {
-    var form = new FormData()
-    var parser = withLimits({ fieldNameSize: 4 }, [
+    const form = new FormData()
+    const parser = withLimits({ fieldNameSize: 4 }, [
       { name: 'small', maxCount: 1 }
     ])
 
@@ -86,8 +86,8 @@ describe('Error Handling', function () {
   })
 
   it('should respect field key limit', function () {
-    var form = new FormData()
-    var parser = withLimits({ fieldNameSize: 4 }, [])
+    const form = new FormData()
+    const parser = withLimits({ fieldNameSize: 4 }, [])
 
     form.append('ok', 'SMILE')
     form.append('blowup', 'BOOM!')
@@ -99,8 +99,8 @@ describe('Error Handling', function () {
   })
 
   it('should respect field value limit', function () {
-    var form = new FormData()
-    var parser = withLimits({ fieldSize: 16 }, [])
+    const form = new FormData()
+    const parser = withLimits({ fieldSize: 16 }, [])
 
     form.append('field0', 'This is okay')
     form.append('field1', 'This will make the parser explode')
@@ -108,8 +108,8 @@ describe('Error Handling', function () {
     return assertRejects(
       util.submitForm(parser, form),
       function (err) {
-        assert.equal(err.code, 'LIMIT_FIELD_VALUE')
-        assert.equal(err.field, 'field1')
+        assert.strictEqual(err.code, 'LIMIT_FIELD_VALUE')
+        assert.strictEqual(err.field, 'field1')
 
         return true
       }
@@ -117,8 +117,8 @@ describe('Error Handling', function () {
   })
 
   it('should respect field count limit', function () {
-    var form = new FormData()
-    var parser = withLimits({ fields: 1 }, [])
+    const form = new FormData()
+    const parser = withLimits({ fields: 1 }, [])
 
     form.append('field0', 'BOOM!')
     form.append('field1', 'BOOM!')
@@ -130,8 +130,8 @@ describe('Error Handling', function () {
   })
 
   it('should respect fields given', function () {
-    var form = new FormData()
-    var parser = withLimits(undefined, [
+    const form = new FormData()
+    const parser = withLimits(undefined, [
       { name: 'wrongname', maxCount: 1 }
     ])
 
@@ -140,8 +140,8 @@ describe('Error Handling', function () {
     return assertRejects(
       util.submitForm(parser, form),
       function (err) {
-        assert.equal(err.code, 'LIMIT_UNEXPECTED_FILE')
-        assert.equal(err.field, 'small')
+        assert.strictEqual(err.code, 'LIMIT_UNEXPECTED_FILE')
+        assert.strictEqual(err.field, 'small')
 
         return true
       }
@@ -149,9 +149,9 @@ describe('Error Handling', function () {
   })
 
   it('should report errors from busboy constructor', function (done) {
-    var req = new stream.PassThrough()
-    var upload = multer().single('tiny')
-    var body = 'test'
+    const req = new stream.PassThrough()
+    const upload = multer().single('tiny')
+    const body = 'test'
 
     req.headers = {
       'content-type': 'multipart/form-data',
@@ -161,16 +161,16 @@ describe('Error Handling', function () {
     req.end(body)
 
     upload(req, null, function (err) {
-      assert.equal(err.message, 'Multipart: Boundary not found')
+      assert.strictEqual(err.message, 'Multipart: Boundary not found')
       done()
     })
   })
 
   it('should report errors from busboy parsing', function (done) {
-    var req = new stream.PassThrough()
-    var upload = multer().single('tiny')
-    var boundary = 'AaB03x'
-    var body = [
+    const req = new stream.PassThrough()
+    const upload = multer().single('tiny')
+    const boundary = 'AaB03x'
+    const body = [
       '--' + boundary,
       'Content-Disposition: form-data; name="tiny"; filename="test.txt"',
       'Content-Type: text/plain',
@@ -186,14 +186,14 @@ describe('Error Handling', function () {
     req.end(body)
 
     upload(req, null, function (err) {
-      assert.equal(err.message, 'Unexpected end of multipart data')
+      assert.strictEqual(err.message, 'Unexpected end of multipart data')
       done()
     })
   })
 
   it('should gracefully handle more than one error at a time', function () {
-    var form = new FormData()
-    var parser = withLimits({ fileSize: 1, files: 1 }, [
+    const form = new FormData()
+    const parser = withLimits({ fileSize: 1, files: 1 }, [
       { name: 'small', maxCount: 1 }
     ])
 

@@ -20,26 +20,27 @@
   ],
   "dependencies": {
     "append-field": "^1.0.0",
-    "busboy": "^0.2.13",
+    "busboy": "^0.3.1",
     "fs-temp": "^1.1.1",
     "on-finished": "^2.3.0",
-    "pify": "^2.3.0",
-    "pump": "^1.0.1",
-    "stream-file-type": "^0.1.1",
-    "type-is": "^1.6.13"
+    "pify": "^4.0.1",
+    "pump": "^3.0.0",
+    "stream-file-type": "^0.3.2",
+    "type-is": "^1.6.18"
   },
   "devDependencies": {
-    "assert-rejects": "^0.1.0",
-    "express": "^4.14.0",
+    "assert-rejects": "^1.0.0",
+    "express": "^4.16.4",
     "form-data": "^2.1.0",
-    "get-stream": "^2.3.1",
-    "hasha": "^2.2.0",
-    "mocha": "^3.1.0",
-    "standard": "^8.3.0",
-    "testdata-w3c-json-form": "^0.2.0"
+    "get-stream": "^4.1.0",
+    "hasha": "^4.0.1",
+    "mocha": "^6.1.4",
+    "recursive-nullify": "^1.0.0",
+    "standard": "^12.0.1",
+    "testdata-w3c-json-form": "^1.0.0"
   },
   "engines": {
-    "node": ">= 4.0.0"
+    "node": ">= 6.0.0"
   },
   "files": [
     "LICENSE",

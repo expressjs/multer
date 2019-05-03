@@ -1,5 +1,5 @@
-var createFileFilter = require('./lib/file-filter')
-var createMiddleware = require('./lib/middleware')
+const createFileFilter = require('./lib/file-filter')
+const createMiddleware = require('./lib/middleware')
 
 function _middleware (limits, fields, fileStrategy) {
   return createMiddleware(function setup () {

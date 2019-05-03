@@ -1,34 +1,34 @@
 /* eslint-env mocha */
 
-var assert = require('assert')
-var assertRejects = require('assert-rejects')
-var FormData = require('form-data')
+const assert = require('assert')
+const assertRejects = require('assert-rejects')
+const FormData = require('form-data')
 
-var multer = require('../')
-var util = require('./_util')
+const multer = require('../')
+const util = require('./_util')
 
 describe('upload.single', function () {
-  var parser
+  let parser
 
   before(function () {
     parser = multer().single('file')
   })
 
   it('should accept single file', function () {
-    var form = new FormData()
+    const form = new FormData()
 
     form.append('name', 'Multer')
     form.append('file', util.file('small'))
 
     return util.submitForm(parser, form).then(function (req) {
-      assert.equal(req.body.name, 'Multer')
+      assert.strictEqual(req.body.name, 'Multer')
 
       return util.assertFile(req.file, 'file', 'small')
     })
   })
 
   it('should reject multiple files', function () {
-    var form = new FormData()
+    const form = new FormData()
 
     form.append('name', 'Multer')
     form.append('file', util.file('tiny'))
@@ -37,8 +37,8 @@ describe('upload.single', function () {
     return assertRejects(
       util.submitForm(parser, form),
       function (err) {
-        assert.equal(err.code, 'LIMIT_FILE_COUNT')
-        assert.equal(err.field, 'file')
+        assert.strictEqual(err.code, 'LIMIT_FILE_COUNT')
+        assert.strictEqual(err.field, 'file')
 
         return true
       }
@@ -46,7 +46,7 @@ describe('upload.single', function () {
   })
 
   it('should reject unexpected field', function () {
-    var form = new FormData()
+    const form = new FormData()
 
     form.append('name', 'Multer')
     form.append('unexpected', util.file('tiny'))
@@ -54,8 +54,8 @@ describe('upload.single', function () {
     return assertRejects(
       util.submitForm(parser, form),
       function (err) {
-        assert.equal(err.code, 'LIMIT_UNEXPECTED_FILE')
-        assert.equal(err.field, 'unexpected')
+        assert.strictEqual(err.code, 'LIMIT_UNEXPECTED_FILE')
+        assert.strictEqual(err.field, 'unexpected')
 
         return true
       }

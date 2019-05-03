@@ -1,13 +1,13 @@
-var fs = require('fs')
-var path = require('path')
-var pify = require('pify')
-var hasha = require('hasha')
-var assert = require('assert')
-var stream = require('stream')
+const fs = require('fs')
+const path = require('path')
+const pify = require('pify')
+const hasha = require('hasha')
+const assert = require('assert')
+const stream = require('stream')
 
-var onFinished = pify(require('on-finished'))
+const onFinished = pify(require('on-finished'))
 
-var files = new Map([
+const files = new Map([
   ['empty', {
     clientReportedMimeType: 'application/octet-stream',
     detectedFileExtension: '',
@@ -63,20 +63,20 @@ exports.assertFile = function (file, fieldName, fileName) {
     throw new Error('No file named "' + fileName + '"')
   }
 
-  var expected = files.get(fileName)
+  const expected = files.get(fileName)
 
-  assert.equal(file.fieldName, fieldName)
-  assert.equal(file.originalName, fileName + expected.extension)
-  assert.equal(file.size, expected.size)
+  assert.strictEqual(file.fieldName, fieldName)
+  assert.strictEqual(file.originalName, fileName + expected.extension)
+  assert.strictEqual(file.size, expected.size)
 
-  assert.equal(file.clientReportedMimeType, expected.clientReportedMimeType)
-  assert.equal(file.clientReportedFileExtension, expected.extension)
+  assert.strictEqual(file.clientReportedMimeType, expected.clientReportedMimeType)
+  assert.strictEqual(file.clientReportedFileExtension, expected.extension)
 
-  assert.equal(file.detectedMimeType, expected.detectedMimeType)
-  assert.equal(file.detectedFileExtension, expected.detectedFileExtension)
+  assert.strictEqual(file.detectedMimeType, expected.detectedMimeType)
+  assert.strictEqual(file.detectedFileExtension, expected.detectedFileExtension)
 
   return hasha.fromStream(file.stream, { algorithm: 'md5' }).then(function (hash) {
-    assert.equal(hash, expected.hash)
+    assert.strictEqual(hash, expected.hash)
   })
 }
 
@@ -92,7 +92,7 @@ function getLength (form) {
 
 exports.submitForm = function submitForm (multer, form, cb) {
   return getLength(form).then(function (length) {
-    var req = new stream.PassThrough()
+    const req = new stream.PassThrough()
 
     req.complete = false
     form.once('end', function () {
