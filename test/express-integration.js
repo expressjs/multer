@@ -13,11 +13,15 @@ var onFinished = require('on-finished')
 var port = 34279
 
 describe('Express Integration', function () {
-  var app
+  var app, server
 
   before(function (done) {
     app = express()
-    app.listen(port, done)
+    server = app.listen(port, done)
+  })
+
+  after(function () {
+    server.close()
   })
 
   function submitForm (form, path, cb) {
