@@ -35,7 +35,7 @@
     "mocha": "^3.5.3",
     "rimraf": "^2.4.1",
     "standard": "^11.0.1",
-    "testdata-w3c-json-form": "^0.2.0"
+    "testdata-w3c-json-form": "^1.0.0"
   },
   "engines": {
     "node": ">= 0.10.0"
