@@ -39,7 +39,7 @@ DiskStorage.prototype._handleFile = function _handleFile (req, file, cb) {
 
       file.stream.pipe(outStream)
       outStream.on('error', cb)
-      outStream.on('finish', function () {
+      outStream.on('close', function () {
         cb(null, {
           destination: destination,
           filename: filename,
