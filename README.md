@@ -61,7 +61,7 @@ app.post('/cool-profile', cpUpload, function (req, res, next) {
   // req.body will contain the text fields, if there were any
 })
 
-app.post('/really-cool-profile'', upload.any(), function (req, res, next) {
+app.post('/really-cool-profile', upload.any(), function (req, res, next) {
   // req.files will contain all the files you uploaded
   // req.body will contain the text fields, if there were any
 })
