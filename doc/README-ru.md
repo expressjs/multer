@@ -9,7 +9,8 @@ Multer — это middleware для фреймворка express для обра
 Это README также доступно на других языках:
 
 - [English](https://github.com/expressjs/multer/blob/master/README.md) (Английский)
-- [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (Китайский)
+- [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (Традиционный китайский)
+- [繁體中文](doc/README-zh-tw.md) (중국어 번체)
 - [한국어](https://github.com/expressjs/multer/blob/master/doc/README-ko.md) (Корейский)
 
 ## Установка
