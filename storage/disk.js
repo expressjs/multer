@@ -5,7 +5,7 @@ var crypto = require('crypto')
 var mkdirp = require('mkdirp')
 
 function getFilename (req, file, cb) {
-  crypto.pseudoRandomBytes(16, function (err, raw) {
+  crypto.randomBytes(16, function (err, raw) {
     cb(err, err ? undefined : raw.toString('hex'))
   })
 }
