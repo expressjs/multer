@@ -202,7 +202,7 @@ var upload = multer({ storage: storage })
 Ключ | Описание | Значение по умолчанию
 --- | --- | ---
 `fieldNameSize` | Максимальный размер имени файла | 100 bytes
-`fieldSize` | Максимальный размер значения поля | 1MB
+`fieldSize` | Максимальный размер значения поля в байтах | 1MB
 `fields` | Максимальное количество не-файловых полей | Не ограничено
 `fileSize` | Максимальный размер файла в байтах для multipart-форм | Не ограничен
 `files` | Максимальное количество полей с файлами для multipart-форм | Не ограничено
@@ -237,7 +237,7 @@ function fileFilter (req, file, cb) {
 
 Когда выбрасывается исключение, Multer делегирует его обработку Express. Вы можете выводить страницу ошибки [стандартными для express способами](http://expressjs.com/guide/error-handling.html).
 
-Если вы хотите отлавливать ошибки конкретно от Multer, вам нужно вызывать собственную middleware для их обработки. Еще, если вы хотите отлавливать [исключительно ошибки Multer](https://github.com/expressjs/multer/blob/master/lib/make-error.js#L1-L9), вы можете использовать класс `MulterError`, который привязан к объекту `multer` (например, `err instanceof multer.MulterError`)
+Если вы хотите отлавливать ошибки конкретно от Multer, вам нужно вызывать собственную middleware для их обработки. Еще, если вы хотите отлавливать [исключительно ошибки Multer](https://github.com/expressjs/multer/blob/master/lib/multer-error.js), вы можете использовать класс `MulterError`, который привязан к объекту `multer` (например, `err instanceof multer.MulterError`)
 
 ```javascript
 var multer = require('multer')
