@@ -290,7 +290,7 @@ app.post('/profile', function (req, res) {
   })
 })
 ```
-## Custom request pipe busboy (Example firebase + multer + firebase storage)
+## Custom request pipe busboy (Example firebase + express + multer + firebase storage)
 ```javascript
 const admin = require("firebase-admin");
 const express = require("express");
@@ -304,7 +304,7 @@ app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 const multerMiddleware = multer({
   storage: multer.memoryStorage(),
   // Custom request pipe with busboy
-  executeRequestPipe: (req, busboy) => {
+  executeRequestPipeBusboy: (req, busboy) => {
     return busboy.end(req.rawBody);
   }
 });

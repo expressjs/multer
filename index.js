@@ -20,7 +20,7 @@ function Multer (options) {
   this.limits = options.limits
   this.preservePath = options.preservePath
   this.fileFilter = options.fileFilter || allowAll
-  this.executeRequestPipe = (typeof options.executeRequestPipe === 'function' && options.executeRequestPipeBusboy) || null
+  this.executeRequestPipeBusboy = (typeof options.executeRequestPipeBusboy === 'function' && options.executeRequestPipeBusboy) || null
 }
 
 Multer.prototype._makeMiddleware = function (fields, fileStrategy) {
