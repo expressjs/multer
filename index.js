@@ -53,10 +53,7 @@ Multer.prototype._makeMiddleware = function (fields, fileStrategy) {
       fileStrategy: fileStrategy
     }
   }
-  if (this.executeRequestPipe) {
-    return makeMiddleware(setup.bind(this), this.executeRequestPipeBusboy)
-  }
-  return makeMiddleware(setup.bind(this))
+  return makeMiddleware(setup.bind(this), this.executeRequestPipeBusboy)
 }
 
 Multer.prototype.single = function (name) {
