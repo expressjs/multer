@@ -110,6 +110,7 @@ Key | Description
 `fileFilter` | Function to control which files are accepted
 `limits` | Limits of the uploaded data
 `preservePath` | Keep the full path of files instead of just the base name
+`executeRequestPipeBusboy` | Function to apply request pipe with busboy
 
 In an average web app, only `dest` might be required, and configured as shown in
 the following example.
@@ -288,6 +289,45 @@ app.post('/profile', function (req, res) {
     // Everything went fine.
   })
 })
+```
+## Custom request pipe busboy (firebase + firebase storage)
+```javascript
+var multer = require('multer')
+const multerMiddleware = multer({
+  storage: multer.memoryStorage(),
+  // Custom request pipe with busboy
+  executeRequestPipe: (req, busboy) => {
+    return busboy.end(req.rawBody);
+  }
+});
+
+app.post("/upload", multerMiddleware.single("file"), (req, res) => {
+  if (!req.file) {
+    res.status(400).send("No file uploaded.");
+    return;
+  }
+  // Create a new blob in the bucket and upload the file data.
+  const bucket = firebase.storage().bucket("gs://my-custom-bucket");
+  const blob = bucket.file(req.file.originalname);
+  const blobStream = blob.createWriteStream();
+
+  blobStream.on("error", err => {
+    next(err);
+  });
+
+  blobStream.on("finish", () => {
+    // The public URL can be used to directly access the file via HTTP.
+    const urls = await blob.getSignedUrl({
+      action: 'read',
+      // 1 hr in ms
+      expires: new Date(new Date().getTime() + (60*60*1000)),
+    });
+    res.status(200).send(publicUrl);
+  });
+
+  blobStream.end(req.file.buffer);
+});
+
 ```
 
 ## Custom storage engine
