@@ -290,7 +290,7 @@ app.post('/profile', function (req, res) {
   })
 })
 ```
-## Custom request pipe busboy (firebase + firebase storage)
+## Custom request pipe busboy (Example firebase + multer + firebase storage)
 ```javascript
 const admin = require("firebase-admin");
 const express = require("express");
