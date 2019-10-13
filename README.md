@@ -292,7 +292,15 @@ app.post('/profile', function (req, res) {
 ```
 ## Custom request pipe busboy (firebase + firebase storage)
 ```javascript
-var multer = require('multer')
+const admin = require("firebase-admin");
+const express = require("express");
+const multer = require('multer');
+const bodyParser = require("body-parser");
+const firebase = admin.initializeApp({
+  credential: admin.credential.cert(require("your_service_account.json")),
+});
+const app = express();
+app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 const multerMiddleware = multer({
   storage: multer.memoryStorage(),
   // Custom request pipe with busboy
@@ -327,7 +335,7 @@ app.post("/upload", multerMiddleware.single("file"), (req, res) => {
 
   blobStream.end(req.file.buffer);
 });
-
+exports.api = functions.https.onRequest(app);
 ```
 
 ## Custom storage engine
