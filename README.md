@@ -75,6 +75,27 @@ app.post('/profile', upload.none(), function (req, res, next) {
 })
 ```
 
+Custom `startProcessing` function to handle pre-processed request object, useful when dealing with cloud functions or environments that processes http `request` object before it can hit the express application.
+
+```javascript
+var express = require('express')
+var app = express()
+var multer  = require('multer')
+var upload = multer({
+  startProcessing (req, busboy) {
+    if (req.rawBody) { // indicates the request was pre-processed
+      busboy.end(req.rawBody)
+    } else {
+      req.pipe(busboy)
+    }
+  }
+})
+
+app.post('/profile', upload.none(), function (req, res, next) {
+  // req.body contains the text fields
+})
+```
+
 ## API
 
 ### File information
@@ -110,6 +131,7 @@ Key | Description
 `fileFilter` | Function to control which files are accepted
 `limits` | Limits of the uploaded data
 `preservePath` | Keep the full path of files instead of just the base name
+`startProcessing` | Function that will be invoked to initiate the request processing with busboy
 
 In an average web app, only `dest` might be required, and configured as shown in
 the following example.
