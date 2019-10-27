@@ -4,7 +4,7 @@ Multer is a node.js middleware for handling `multipart/form-data`, which is prim
 on top of [busboy](https://github.com/mscdex/busboy) for maximum efficiency.
 
 **NOTE**: 
-- Multer will not process any form which is not multipart (`multipart/form-data`)
+- Multer will not process any form which is not multipart (`multipart/form-data`).
 - Multer conflicts with [express-fileupload](https://github.com/richardgirges/express-fileupload) and won't work if used both.
 
 ## Translations 
