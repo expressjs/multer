@@ -5,3 +5,7 @@ node_js:
   - '10'
   - '8'
   - '8.3.0'
+os:
+  - linux
+  - osx
+  - windows
