@@ -42,8 +42,8 @@ class Multer {
 }
 
 function multer (options = {}) {
-  if (options === null) throw new TypeError('Expected object for arugment "options", got null')
-  if (typeof options !== 'object') throw new TypeError(`Expected object for arugment "options", got ${typeof options}`)
+  if (options === null) throw new TypeError('Expected object for argument "options", got null')
+  if (typeof options !== 'object') throw new TypeError(`Expected object for argument "options", got ${typeof options}`)
 
   if (options.dest || options.storage || options.fileFilter) {
     throw new Error('The "dest", "storage" and "fileFilter" options where removed in Multer 2.0. Please refer to the latest documentation for new usage.')
