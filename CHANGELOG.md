@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.0.0-beta.1 - 2019-11-23
+
+- Breaking: drop support for Node.js < 8.3.x
+
 ## 2.0.0-alpha.7 - 2019-05-03
 
 - Breaking: drop support for Node.js < 6.x
