@@ -25,22 +25,22 @@
     "on-finished": "^2.3.0",
     "pify": "^4.0.1",
     "pump": "^3.0.0",
-    "stream-file-type": "^0.3.2",
+    "stream-file-type": "^0.4.0",
     "type-is": "^1.6.18"
   },
   "devDependencies": {
     "assert-rejects": "^1.0.0",
     "express": "^4.16.4",
-    "form-data": "^2.1.0",
-    "get-stream": "^4.1.0",
-    "hasha": "^3.0.0",
+    "form-data": "^3.0.0",
+    "get-stream": "^5.1.0",
+    "hasha": "^5.1.0",
     "mocha": "^6.1.4",
     "recursive-nullify": "^1.0.0",
     "standard": "^12.0.1",
     "testdata-w3c-json-form": "^1.0.0"
   },
   "engines": {
-    "node": ">= 6.0.0"
+    "node": ">=8.3"
   },
   "files": [
     "LICENSE",

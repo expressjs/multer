@@ -7,29 +7,27 @@ const FormData = require('form-data')
 const multer = require('../')
 const util = require('./_util')
 
-describe('upload.array', function () {
+describe('upload.array', () => {
   let parser
 
-  before(function () {
+  before(() => {
     parser = multer().array('files', 3)
   })
 
-  it('should accept single file', function () {
+  it('should accept single file', async () => {
     const form = new FormData()
 
     form.append('name', 'Multer')
     form.append('files', util.file('small'))
 
-    return util.submitForm(parser, form).then(function (req) {
-      assert.strictEqual(req.body.name, 'Multer')
+    const req = await util.submitForm(parser, form)
+    assert.strictEqual(req.body.name, 'Multer')
+    assert.strictEqual(req.files.length, 1)
 
-      assert.strictEqual(req.files.length, 1)
-
-      return util.assertFile(req.files[0], 'files', 'small')
-    })
+    await util.assertFile(req.files[0], 'files', 'small')
   })
 
-  it('should accept array of files', function () {
+  it('should accept array of files', async () => {
     const form = new FormData()
 
     form.append('name', 'Multer')
@@ -37,19 +35,18 @@ describe('upload.array', function () {
     form.append('files', util.file('small'))
     form.append('files', util.file('tiny'))
 
-    return util.submitForm(parser, form).then(function (req) {
-      assert.strictEqual(req.body.name, 'Multer')
-      assert.strictEqual(req.files.length, 3)
+    const req = await util.submitForm(parser, form)
+    assert.strictEqual(req.body.name, 'Multer')
+    assert.strictEqual(req.files.length, 3)
 
-      return util.assertFiles([
-        [req.files[0], 'files', 'empty'],
-        [req.files[1], 'files', 'small'],
-        [req.files[2], 'files', 'tiny']
-      ])
-    })
+    await util.assertFiles([
+      [req.files[0], 'files', 'empty'],
+      [req.files[1], 'files', 'small'],
+      [req.files[2], 'files', 'tiny']
+    ])
   })
 
-  it('should reject too many files', function () {
+  it('should reject too many files', async () => {
     const form = new FormData()
 
     form.append('name', 'Multer')
@@ -58,31 +55,21 @@ describe('upload.array', function () {
     form.append('files', util.file('small'))
     form.append('files', util.file('small'))
 
-    return assertRejects(
+    await assertRejects(
       util.submitForm(parser, form),
-      function (err) {
-        assert.strictEqual(err.code, 'LIMIT_FILE_COUNT')
-        assert.strictEqual(err.field, 'files')
-
-        return true
-      }
+      (err) => err.code === 'LIMIT_FILE_COUNT' && err.field === 'files'
     )
   })
 
-  it('should reject unexpected field', function () {
+  it('should reject unexpected field', async () => {
     const form = new FormData()
 
     form.append('name', 'Multer')
     form.append('unexpected', util.file('small'))
 
-    return assertRejects(
+    await assertRejects(
       util.submitForm(parser, form),
-      function (err) {
-        assert.strictEqual(err.code, 'LIMIT_UNEXPECTED_FILE')
-        assert.strictEqual(err.field, 'unexpected')
-
-        return true
-      }
+      (err) => err.code === 'LIMIT_UNEXPECTED_FILE' && err.field === 'unexpected'
     )
   })
 })

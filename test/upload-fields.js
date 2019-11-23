@@ -7,10 +7,10 @@ const FormData = require('form-data')
 const multer = require('../')
 const util = require('./_util')
 
-describe('upload.fields', function () {
+describe('upload.fields', () => {
   let parser
 
-  before(function () {
+  before(() => {
     parser = multer().fields([
       { name: 'CA$|-|', maxCount: 1 },
       { name: 'set-1', maxCount: 3 },
@@ -18,21 +18,20 @@ describe('upload.fields', function () {
     ])
   })
 
-  it('should accept single file', function () {
+  it('should accept single file', async () => {
     const form = new FormData()
 
     form.append('set-2', util.file('tiny'))
 
-    return util.submitForm(parser, form).then(function (req) {
-      assert.strictEqual(req.files['CA$|-|'].length, 0)
-      assert.strictEqual(req.files['set-1'].length, 0)
-      assert.strictEqual(req.files['set-2'].length, 1)
+    const req = await util.submitForm(parser, form)
+    assert.strictEqual(req.files['CA$|-|'].length, 0)
+    assert.strictEqual(req.files['set-1'].length, 0)
+    assert.strictEqual(req.files['set-2'].length, 1)
 
-      return util.assertFile(req.files['set-2'][0], 'set-2', 'tiny')
-    })
+    await util.assertFile(req.files['set-2'][0], 'set-2', 'tiny')
   })
 
-  it('should accept some files', function () {
+  it('should accept some files', async () => {
     const form = new FormData()
 
     form.append('CA$|-|', util.file('empty'))
@@ -40,21 +39,20 @@ describe('upload.fields', function () {
     form.append('set-1', util.file('empty'))
     form.append('set-2', util.file('tiny'))
 
-    return util.submitForm(parser, form).then(function (req) {
-      assert.strictEqual(req.files['CA$|-|'].length, 1)
-      assert.strictEqual(req.files['set-1'].length, 2)
-      assert.strictEqual(req.files['set-2'].length, 1)
+    const req = await util.submitForm(parser, form)
+    assert.strictEqual(req.files['CA$|-|'].length, 1)
+    assert.strictEqual(req.files['set-1'].length, 2)
+    assert.strictEqual(req.files['set-2'].length, 1)
 
-      return util.assertFiles([
-        [req.files['CA$|-|'][0], 'CA$|-|', 'empty'],
-        [req.files['set-1'][0], 'set-1', 'small'],
-        [req.files['set-1'][1], 'set-1', 'empty'],
-        [req.files['set-2'][0], 'set-2', 'tiny']
-      ])
-    })
+    await util.assertFiles([
+      [req.files['CA$|-|'][0], 'CA$|-|', 'empty'],
+      [req.files['set-1'][0], 'set-1', 'small'],
+      [req.files['set-1'][1], 'set-1', 'empty'],
+      [req.files['set-2'][0], 'set-2', 'tiny']
+    ])
   })
 
-  it('should accept all files', function () {
+  it('should accept all files', async () => {
     const form = new FormData()
 
     form.append('CA$|-|', util.file('empty'))
@@ -65,54 +63,43 @@ describe('upload.fields', function () {
     form.append('set-2', util.file('tiny'))
     form.append('set-2', util.file('empty'))
 
-    return util.submitForm(parser, form).then(function (req) {
-      assert.strictEqual(req.files['CA$|-|'].length, 1)
-      assert.strictEqual(req.files['set-1'].length, 3)
-      assert.strictEqual(req.files['set-2'].length, 3)
+    const req = await util.submitForm(parser, form)
+    assert.strictEqual(req.files['CA$|-|'].length, 1)
+    assert.strictEqual(req.files['set-1'].length, 3)
+    assert.strictEqual(req.files['set-2'].length, 3)
 
-      return util.assertFiles([
-        [req.files['CA$|-|'][0], 'CA$|-|', 'empty'],
-        [req.files['set-1'][0], 'set-1', 'tiny'],
-        [req.files['set-1'][1], 'set-1', 'empty'],
-        [req.files['set-1'][2], 'set-1', 'tiny'],
-        [req.files['set-2'][0], 'set-2', 'tiny'],
-        [req.files['set-2'][1], 'set-2', 'tiny'],
-        [req.files['set-2'][2], 'set-2', 'empty']
-      ])
-    })
+    await util.assertFiles([
+      [req.files['CA$|-|'][0], 'CA$|-|', 'empty'],
+      [req.files['set-1'][0], 'set-1', 'tiny'],
+      [req.files['set-1'][1], 'set-1', 'empty'],
+      [req.files['set-1'][2], 'set-1', 'tiny'],
+      [req.files['set-2'][0], 'set-2', 'tiny'],
+      [req.files['set-2'][1], 'set-2', 'tiny'],
+      [req.files['set-2'][2], 'set-2', 'empty']
+    ])
   })
 
-  it('should reject too many files', function () {
+  it('should reject too many files', async () => {
     const form = new FormData()
 
     form.append('CA$|-|', util.file('small'))
     form.append('CA$|-|', util.file('small'))
 
-    return assertRejects(
+    await assertRejects(
       util.submitForm(parser, form),
-      function (err) {
-        assert.strictEqual(err.code, 'LIMIT_FILE_COUNT')
-        assert.strictEqual(err.field, 'CA$|-|')
-
-        return true
-      }
+      (err) => err.code === 'LIMIT_FILE_COUNT' && err.field === 'CA$|-|'
     )
   })
 
-  it('should reject unexpected field', function () {
+  it('should reject unexpected field', async () => {
     const form = new FormData()
 
     form.append('name', 'Multer')
     form.append('unexpected', util.file('small'))
 
-    return assertRejects(
+    await assertRejects(
       util.submitForm(parser, form),
-      function (err) {
-        assert.strictEqual(err.code, 'LIMIT_UNEXPECTED_FILE')
-        assert.strictEqual(err.field, 'unexpected')
-
-        return true
-      }
+      (err) => err.code === 'LIMIT_UNEXPECTED_FILE' && err.field === 'unexpected'
     )
   })
 })

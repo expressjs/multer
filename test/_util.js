@@ -54,13 +54,13 @@ exports.file = function file (name) {
   return fs.createReadStream(path.join(__dirname, 'files', name + files.get(name).extension))
 }
 
-exports.knownFileLength = function (name) {
+exports.knownFileLength = function knownFileLength (name) {
   return files.get(name).size
 }
 
-exports.assertFile = function (file, fieldName, fileName) {
+exports.assertFile = async (file, fieldName, fileName) => {
   if (!files.has(fileName)) {
-    throw new Error('No file named "' + fileName + '"')
+    throw new Error(`No file named "${fileName}"`)
   }
 
   const expected = files.get(fileName)
@@ -75,38 +75,34 @@ exports.assertFile = function (file, fieldName, fileName) {
   assert.strictEqual(file.detectedMimeType, expected.detectedMimeType)
   assert.strictEqual(file.detectedFileExtension, expected.detectedFileExtension)
 
-  return hasha.fromStream(file.stream, { algorithm: 'md5' }).then(function (hash) {
-    assert.strictEqual(hash, expected.hash)
-  })
+  const hash = await hasha.fromStream(file.stream, { algorithm: 'md5' })
+
+  assert.strictEqual(hash, expected.hash)
 }
 
-exports.assertFiles = function (files) {
-  return Promise.all(files.map(function (args) {
-    return exports.assertFile(args[0], args[1], args[2])
-  }))
+exports.assertFiles = (files) => {
+  return Promise.all(files.map((args) => exports.assertFile(args[0], args[1], args[2])))
 }
 
 function getLength (form) {
   return pify(form.getLength).call(form)
 }
 
-exports.submitForm = function submitForm (multer, form, cb) {
-  return getLength(form).then(function (length) {
-    const req = new stream.PassThrough()
+exports.submitForm = async (multer, form) => {
+  const length = await getLength(form)
+  const req = new stream.PassThrough()
 
-    req.complete = false
-    form.once('end', function () {
-      req.complete = true
-    })
+  req.complete = false
+  form.once('end', () => { req.complete = true })
 
-    form.pipe(req)
-    req.headers = {
-      'content-type': 'multipart/form-data; boundary=' + form.getBoundary(),
-      'content-length': length
-    }
+  form.pipe(req)
+  req.headers = {
+    'content-type': `multipart/form-data; boundary=${form.getBoundary()}`,
+    'content-length': length
+  }
 
-    return pify(multer)(req, null)
-      .then(function () { return onFinished(req) })
-      .then(function () { return req })
-  })
+  await pify(multer)(req, null)
+  await onFinished(req)
+
+  return req
 }

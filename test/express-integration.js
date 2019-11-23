@@ -14,37 +14,35 @@ const onFinished = pify(require('on-finished'))
 
 const port = 34279
 
-describe('Express Integration', function () {
+describe('Express Integration', () => {
   let app, server
 
-  before(function (done) {
+  before((done) => {
     app = express()
     server = app.listen(port, done)
   })
 
-  after(function (done) {
+  after((done) => {
     server.close(done)
   })
 
   function submitForm (form, path) {
-    return new Promise(function (resolve, reject) {
-      const req = form.submit('http://localhost:' + port + path)
+    return new Promise((resolve, reject) => {
+      const req = form.submit(`http://localhost:${port}${path}`)
 
       req.on('error', reject)
-      req.on('response', function (res) {
+      req.on('response', (res) => {
         res.on('error', reject)
 
         const body = getStream.buffer(res)
         const finished = onFinished(req)
 
-        resolve(Promise.all([body, finished]).then(function (result) {
-          return { res: res, body: result[0] }
-        }))
+        resolve(Promise.all([body, finished]).then(([body]) => ({ res, body })))
       })
     })
   }
 
-  it('should work with express error handling', function () {
+  it('should work with express error handling', async () => {
     const limits = { fileSize: 200 }
     const upload = multer({ limits: limits })
     const router = new express.Router()
@@ -55,12 +53,12 @@ describe('Express Integration', function () {
 
     form.append('avatar', util.file('large'))
 
-    router.post('/profile', upload.single('avatar'), function (req, res, next) {
+    router.post('/profile', upload.single('avatar'), (req, res, next) => {
       routeCalled++
       res.status(200).end('SUCCESS')
     })
 
-    router.use(function (err, req, res, next) {
+    router.use((err, req, res, next) => {
       assert.strictEqual(err.code, 'LIMIT_FILE_SIZE')
 
       errorCalled++
@@ -68,15 +66,16 @@ describe('Express Integration', function () {
     })
 
     app.use('/t1', router)
-    return submitForm(form, '/t1/profile').then(function (result) {
-      assert.strictEqual(routeCalled, 0)
-      assert.strictEqual(errorCalled, 1)
-      assert.strictEqual(result.body.toString(), 'ERROR')
-      assert.strictEqual(result.res.statusCode, 500)
-    })
+
+    const result = await submitForm(form, '/t1/profile')
+
+    assert.strictEqual(routeCalled, 0)
+    assert.strictEqual(errorCalled, 1)
+    assert.strictEqual(result.body.toString(), 'ERROR')
+    assert.strictEqual(result.res.statusCode, 500)
   })
 
-  it('should work when uploading a file', function () {
+  it('should work when uploading a file', async () => {
     const upload = multer()
     const router = new express.Router()
     const form = new FormData()
@@ -86,22 +85,23 @@ describe('Express Integration', function () {
 
     form.append('avatar', util.file('large'))
 
-    router.post('/profile', upload.single('avatar'), function (req, res, next) {
+    router.post('/profile', upload.single('avatar'), (_, res) => {
       routeCalled++
       res.status(200).end('SUCCESS')
     })
 
-    router.use(function (_, req, res, next) {
+    router.use((_, __, res, ___) => {
       errorCalled++
       res.status(500).end('ERROR')
     })
 
     app.use('/t2', router)
-    return submitForm(form, '/t2/profile').then(function (result) {
-      assert.strictEqual(routeCalled, 1)
-      assert.strictEqual(errorCalled, 0)
-      assert.strictEqual(result.body.toString(), 'SUCCESS')
-      assert.strictEqual(result.res.statusCode, 200)
-    })
+
+    const result = await submitForm(form, '/t2/profile')
+
+    assert.strictEqual(routeCalled, 1)
+    assert.strictEqual(errorCalled, 0)
+    assert.strictEqual(result.body.toString(), 'SUCCESS')
+    assert.strictEqual(result.res.statusCode, 200)
   })
 })

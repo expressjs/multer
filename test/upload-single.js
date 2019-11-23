@@ -7,58 +7,47 @@ const FormData = require('form-data')
 const multer = require('../')
 const util = require('./_util')
 
-describe('upload.single', function () {
+describe('upload.single', () => {
   let parser
 
-  before(function () {
+  before(() => {
     parser = multer().single('file')
   })
 
-  it('should accept single file', function () {
+  it('should accept single file', async () => {
     const form = new FormData()
 
     form.append('name', 'Multer')
     form.append('file', util.file('small'))
 
-    return util.submitForm(parser, form).then(function (req) {
-      assert.strictEqual(req.body.name, 'Multer')
+    const req = await util.submitForm(parser, form)
+    assert.strictEqual(req.body.name, 'Multer')
 
-      return util.assertFile(req.file, 'file', 'small')
-    })
+    await util.assertFile(req.file, 'file', 'small')
   })
 
-  it('should reject multiple files', function () {
+  it('should reject multiple files', async () => {
     const form = new FormData()
 
     form.append('name', 'Multer')
     form.append('file', util.file('tiny'))
     form.append('file', util.file('tiny'))
 
-    return assertRejects(
+    await assertRejects(
       util.submitForm(parser, form),
-      function (err) {
-        assert.strictEqual(err.code, 'LIMIT_FILE_COUNT')
-        assert.strictEqual(err.field, 'file')
-
-        return true
-      }
+      (err) => err.code === 'LIMIT_FILE_COUNT' && err.field === 'file'
     )
   })
 
-  it('should reject unexpected field', function () {
+  it('should reject unexpected field', async () => {
     const form = new FormData()
 
     form.append('name', 'Multer')
     form.append('unexpected', util.file('tiny'))
 
-    return assertRejects(
+    await assertRejects(
       util.submitForm(parser, form),
-      function (err) {
-        assert.strictEqual(err.code, 'LIMIT_UNEXPECTED_FILE')
-        assert.strictEqual(err.field, 'unexpected')
-
-        return true
-      }
+      (err) => err.code === 'LIMIT_UNEXPECTED_FILE' && err.field === 'unexpected'
     )
   })
 })

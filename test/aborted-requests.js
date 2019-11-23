@@ -35,23 +35,22 @@ function createAbortStream (maxBytes) {
   })
 }
 
-describe('Aborted requests', function () {
-  it('should handle clients aborting the request', function () {
+describe('Aborted requests', () => {
+  it('should handle clients aborting the request', async () => {
     const form = new FormData()
     const parser = multer().single('file')
 
     form.append('file', util.file('small'))
 
-    const result = getLength(form).then((length) => {
-      const req = createAbortStream(length - 100)
+    const length = await getLength(form)
+    const req = createAbortStream(length - 100)
 
-      req.headers = {
-        'content-type': 'multipart/form-data; boundary=' + form.getBoundary(),
-        'content-length': length
-      }
+    req.headers = {
+      'content-type': `multipart/form-data; boundary=${form.getBoundary()}`,
+      'content-length': length
+    }
 
-      return pify(parser)(form.pipe(req), null)
-    })
+    const result = pify(parser)(form.pipe(req), null)
 
     return assertRejects(result, err => err.code === 'CLIENT_ABORTED')
   })

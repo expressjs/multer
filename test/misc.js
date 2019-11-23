@@ -6,23 +6,22 @@ const util = require('./_util')
 const multer = require('../')
 const FormData = require('form-data')
 
-describe('Misc', function () {
-  it('should handle unicode filenames', function () {
+describe('Misc', () => {
+  it('should handle unicode filenames', async () => {
     const form = new FormData()
     const parser = multer().single('file')
     const filename = '\ud83d\udca9.dat'
 
     form.append('file', util.file('small'), { filename: filename })
 
-    return util.submitForm(parser, form).then(function (req) {
-      assert.strictEqual(req.file.originalName, filename)
+    const req = await util.submitForm(parser, form)
+    assert.strictEqual(req.file.originalName, filename)
 
-      // Ignore content
-      req.file.stream.resume()
-    })
+    // Ignore content
+    req.file.stream.resume()
   })
 
-  it('should handle absent filenames', function () {
+  it('should handle absent filenames', async () => {
     const form = new FormData()
     const parser = multer().single('file')
     const stream = util.file('small')
@@ -33,64 +32,51 @@ describe('Misc', function () {
 
     form.append('file', stream, { knownLength: util.knownFileLength('small') })
 
-    return util.submitForm(parser, form).then(function (req) {
-      assert.strictEqual(req.file.originalName, undefined)
+    const req = await util.submitForm(parser, form)
+    assert.strictEqual(req.file.originalName, undefined)
 
-      // Ignore content
-      req.file.stream.resume()
-    })
+    // Ignore content
+    req.file.stream.resume()
   })
 
-  it('should present files in same order as they came', function () {
+  it('should present files in same order as they came', async () => {
     const parser = multer().array('themFiles', 2)
     const form = new FormData()
 
     form.append('themFiles', util.file('small'))
     form.append('themFiles', util.file('tiny'))
 
-    return util.submitForm(parser, form).then(function (req) {
-      assert.strictEqual(req.files.length, 2)
+    const req = await util.submitForm(parser, form)
+    assert.strictEqual(req.files.length, 2)
 
-      util.assertFiles([
-        [req.files[0], 'themFiles', 'small'],
-        [req.files[1], 'themFiles', 'tiny']
-      ])
-    })
+    util.assertFiles([
+      [req.files[0], 'themFiles', 'small'],
+      [req.files[1], 'themFiles', 'tiny']
+    ])
   })
 
-  it('should accept multiple requests', function () {
+  it('should accept multiple requests', async () => {
     const parser = multer().array('them-files')
 
-    function submitData (fileCount) {
+    async function submitData (fileCount) {
       const form = new FormData()
 
       for (let i = 0; i < fileCount; i++) {
         form.append('them-files', util.file('small'))
       }
 
-      return util.submitForm(parser, form).then(function (req) {
-        assert.strictEqual(req.files.length, fileCount)
+      const req = await util.submitForm(parser, form)
+      assert.strictEqual(req.files.length, fileCount)
 
-        return util.assertFiles(req.files.map(function (file) {
-          return [file, 'them-files', 'small']
-        }))
-      })
+      await util.assertFiles(req.files.map((file) => [file, 'them-files', 'small']))
     }
 
-    return Promise.all([9, 1, 5, 7, 2, 8, 3, 4].map(submitData))
+    await Promise.all([9, 1, 5, 7, 2, 8, 3, 4].map(submitData))
   })
 
-  it('should give error on old options', function () {
-    assert.throws(function () {
-      multer({ dest: '/tmp' })
-    })
-
-    assert.throws(function () {
-      multer({ storage: {} })
-    })
-
-    assert.throws(function () {
-      multer({ fileFilter: function () {} })
-    })
+  it('should give error on old options', () => {
+    assert.throws(() => multer({ dest: '/tmp' }))
+    assert.throws(() => multer({ storage: {} }))
+    assert.throws(() => multer({ fileFilter: () => {} }))
   })
 })
