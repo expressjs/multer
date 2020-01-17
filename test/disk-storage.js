@@ -169,6 +169,8 @@ describe('Disk Storage', function () {
   it('should create a directory when destination is a string', function (done) {
     var dest = path.join(temp.mkdirSync(), 'newDir')
 
+    assert.equal(fs.existsSync(dest), false)
+
     /* eslint-disable-next-line */
     var storage = multer.diskStorage({ destination: dest })
     assert.ok(fs.existsSync(dest), 'Destination was not created')
