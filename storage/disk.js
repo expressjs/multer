@@ -2,7 +2,7 @@ var fs = require('fs')
 var os = require('os')
 var path = require('path')
 var crypto = require('crypto')
-var mkdirp = require('mkdirp')
+var makeDir = require('make-dir')
 
 function getFilename (req, file, cb) {
   crypto.pseudoRandomBytes(16, function (err, raw) {
@@ -18,7 +18,7 @@ function DiskStorage (opts) {
   this.getFilename = (opts.filename || getFilename)
 
   if (typeof opts.destination === 'string') {
-    mkdirp.sync(opts.destination)
+    makeDir.sync(opts.destination)
     this.getDestination = function ($0, $1, cb) { cb(null, opts.destination) }
   } else {
     this.getDestination = (opts.destination || getDestination)
