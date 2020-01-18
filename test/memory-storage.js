@@ -28,8 +28,8 @@ describe('Memory Storage', function () {
 
       assert.equal(req.file.fieldname, 'small0')
       assert.equal(req.file.originalname, 'small0.dat')
-      assert.equal(req.file.size, 1778)
-      assert.equal(req.file.buffer.length, 1778)
+      assert.equal(req.file.size, 1803)
+      assert.equal(req.file.buffer.length, 1803)
 
       done()
     })
@@ -103,8 +103,8 @@ describe('Memory Storage', function () {
 
       assert.equal(req.files['tiny0'][0].fieldname, 'tiny0')
       assert.equal(req.files['tiny0'][0].originalname, 'tiny0.dat')
-      assert.equal(req.files['tiny0'][0].size, 122)
-      assert.equal(req.files['tiny0'][0].buffer.length, 122)
+      assert.equal(req.files['tiny0'][0].size, 128)
+      assert.equal(req.files['tiny0'][0].buffer.length, 128)
 
       assert.equal(req.files['tiny1'][0].fieldname, 'tiny1')
       assert.equal(req.files['tiny1'][0].originalname, 'tiny1.dat')
@@ -113,18 +113,18 @@ describe('Memory Storage', function () {
 
       assert.equal(req.files['small0'][0].fieldname, 'small0')
       assert.equal(req.files['small0'][0].originalname, 'small0.dat')
-      assert.equal(req.files['small0'][0].size, 1778)
-      assert.equal(req.files['small0'][0].buffer.length, 1778)
+      assert.equal(req.files['small0'][0].size, 1803)
+      assert.equal(req.files['small0'][0].buffer.length, 1803)
 
       assert.equal(req.files['small1'][0].fieldname, 'small1')
       assert.equal(req.files['small1'][0].originalname, 'small1.dat')
-      assert.equal(req.files['small1'][0].size, 315)
-      assert.equal(req.files['small1'][0].buffer.length, 315)
+      assert.equal(req.files['small1'][0].size, 329)
+      assert.equal(req.files['small1'][0].buffer.length, 329)
 
       assert.equal(req.files['medium'][0].fieldname, 'medium')
       assert.equal(req.files['medium'][0].originalname, 'medium.dat')
-      assert.equal(req.files['medium'][0].size, 13196)
-      assert.equal(req.files['medium'][0].buffer.length, 13196)
+      assert.equal(req.files['medium'][0].size, 13386)
+      assert.equal(req.files['medium'][0].buffer.length, 13386)
 
       assert.equal(req.files['large'][0].fieldname, 'large')
       assert.equal(req.files['large'][0].originalname, 'large.jpg')

@@ -47,8 +47,8 @@ describe('Unicode', function () {
       assert.equal(req.file.originalname, filename)
 
       assert.equal(req.file.fieldname, 'small0')
-      assert.equal(req.file.size, 1778)
-      assert.equal(util.fileSize(req.file.path), 1778)
+      assert.equal(req.file.size, 1803)
+      assert.equal(util.fileSize(req.file.path), 1803)
 
       done()
     })
