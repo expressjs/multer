@@ -21,3 +21,4 @@ node_modules
 
 # Coveralls
 coverage
+.nyc_output

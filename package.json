@@ -33,6 +33,7 @@
     "form-data": "^1.0.0-rc1",
     "fs-temp": "^1.1.2",
     "mocha": "^3.5.3",
+    "nyc": "^15.0.0",
     "rimraf": "^2.4.1",
     "standard": "^11.0.1",
     "testdata-w3c-json-form": "^1.0.0"
@@ -47,6 +48,7 @@
     "lib/"
   ],
   "scripts": {
-    "test": "standard && mocha"
+    "test": "standard && mocha",
+    "test-ci": "nyc npm run test --reporter=lcov"
   }
 }
