@@ -1,23 +1,28 @@
-# OS X
-.DS_Store*
+#       OS        #
+###################
+.DS_Store
 Icon?
-._*
-
-# Windows
+._
+.idea
 Thumbs.db
 ehthumbs.db
 Desktop.ini
-
-# Linux
 .directory
 *~
+tmp/
+temp/
 
 
-# npm
+#     Node.js     #
+###################
 node_modules
+package-lock.json
 *.log
 *.gz
 
 
-# Coveralls
+#    Coveralls    #
+###################
 coverage
+*.lcov
+.nyc_output
