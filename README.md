@@ -66,7 +66,7 @@ app.post('/profile', upload.array(), function (req, res, next) {
 })
 ```
 
-Here's an example on how this links to an HTML form. Suppose we have a form group with enctype="multipart/form-data" as follows:
+Here's an example on how multer is used an HTML form. Take special note of the `enctype="multipart/form-data"` and `name="uploaded_file"` fields:
 
 ```html
 <form action="/stats" enctype="multipart/form-data" method="post">
