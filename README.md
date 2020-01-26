@@ -78,7 +78,7 @@ Here's an example on how multer is used an HTML form. Take special note of the `
 </form>
 ```
 
-Then in your javascript file you would add these lines to access both the file and the body:
+Then in your javascript file you would add these lines to access both the file and the body. It is important that you use the `name` field value from the form in your upload function. This tells multer which field on the request it should look for the files in. If these fields aren't the same in the HTML form and on your server, your upload will fail:
 
 ```javascript
 var multer  = require('multer')
