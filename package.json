@@ -6,7 +6,7 @@
     "Hage Yaapa <captain@hacksparrow.com> (http://www.hacksparrow.com)",
     "Jaret Pfluger <https://github.com/jpfluger>",
     "Linus Unnebäck <linus@folkdatorn.se>",
-    "Imed Jaberi <https://github.com/3imed-jaberi>" 
+    "Imed Jaberi <https://github.com/3imed-jaberi>"
   ],
   "license": "MIT",
   "repository": "expressjs/multer",
@@ -23,6 +23,7 @@
     "append-field": "^1.0.0",
     "busboy": "^0.2.11",
     "concat-stream": "^1.5.2",
+    "istanbul": "^0.4.5",
     "mkdirp": "^0.5.1",
     "object-assign": "^4.1.1",
     "on-finished": "^2.3.0",
@@ -34,7 +35,6 @@
     "form-data": "^1.0.0-rc1",
     "fs-temp": "^1.1.2",
     "mocha": "^3.5.3",
-    "nyc": "^15.0.0",
     "rimraf": "^2.4.1",
     "standard": "^11.0.1",
     "testdata-w3c-json-form": "^1.0.0"
@@ -50,6 +50,6 @@
   ],
   "scripts": {
     "test": "standard && mocha",
-    "test-ci": "nyc npm run test --reporter=lcov"
+    "test-ci": "istanbul cover node_modules/mocha/bin/_mocha test/*.js"
   }
 }
