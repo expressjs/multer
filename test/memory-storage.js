@@ -124,8 +124,8 @@ describe('Memory Storage', function () {
 
       assert.equal(req.files['medium'][0].fieldname, 'medium')
       assert.equal(req.files['medium'][0].originalname, 'medium.dat')
-      assert.equal(req.files['medium'][0].size, 13386)
-      assert.equal(req.files['medium'][0].buffer.length, 13386)
+      assert.equal(req.files['medium'][0].size, currentOS.isWindows ? 13386 : 13196)
+      assert.equal(req.files['medium'][0].buffer.length, currentOS.isWindows ? 13386 : 13196)
 
       assert.equal(req.files['large'][0].fieldname, 'large')
       assert.equal(req.files['large'][0].originalname, 'large.jpg')

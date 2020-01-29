@@ -136,8 +136,8 @@ describe('Disk Storage', function () {
 
       assert.equal(req.files['medium'][0].fieldname, 'medium')
       assert.equal(req.files['medium'][0].originalname, 'medium.dat')
-      assert.equal(req.files['medium'][0].size, 13386)
-      assert.equal(util.fileSize(req.files['medium'][0].path), 13386)
+      assert.equal(req.files['medium'][0].size, currentOS.isWindows ? 13386 : 13196)
+      assert.equal(util.fileSize(req.files['medium'][0].path), currentOS.isWindows ? 13386 : 13196)
 
       assert.equal(req.files['large'][0].fieldname, 'large')
       assert.equal(req.files['large'][0].originalname, 'large.jpg')
