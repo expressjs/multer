@@ -1,6 +1,7 @@
 /* eslint-env mocha */
 
 var assert = require('assert')
+var currentOS = require('current-os')
 
 var fs = require('fs')
 var path = require('path')
@@ -41,7 +42,7 @@ describe('Disk Storage', function () {
 
       assert.equal(req.file.fieldname, 'small0')
       assert.equal(req.file.originalname, 'small0.dat')
-      assert.equal(req.file.size, 1803)
+      assert.equal(req.file.size, currentOS.isWindows ? 1803 : 1778)
       assert.equal(util.fileSize(req.file.path), 1803)
 
       done()
@@ -115,7 +116,7 @@ describe('Disk Storage', function () {
 
       assert.equal(req.files['tiny0'][0].fieldname, 'tiny0')
       assert.equal(req.files['tiny0'][0].originalname, 'tiny0.dat')
-      assert.equal(req.files['tiny0'][0].size, 128)
+      assert.equal(req.files['tiny0'][0].size, currentOS.isWindows ? 128 : 122)
       assert.equal(util.fileSize(req.files['tiny0'][0].path), 128)
 
       assert.equal(req.files['tiny1'][0].fieldname, 'tiny1')

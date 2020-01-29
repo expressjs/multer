@@ -1,6 +1,7 @@
 /* eslint-env mocha */
 
 var assert = require('assert')
+var currentOS = require('current-os')
 
 var util = require('./_util')
 var multer = require('../')
@@ -52,7 +53,7 @@ describe('Functionality', function () {
       util.submitForm(parser, env.form, function (err, req) {
         assert.ifError(err)
         assert.ok(startsWith(req.file.path, env.uploadDir))
-        assert.equal(util.fileSize(req.file.path), 1803)
+        assert.equal(util.fileSize(req.file.path), currentOS.isWindows ? 1803 : 1778)
         done()
       })
     })
