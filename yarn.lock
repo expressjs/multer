@@ -344,6 +344,11 @@ cross-spawn@^5.1.0:
     shebang-command "^1.2.0"
     which "^1.2.9"
 
+current-os@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/current-os/-/current-os-1.0.0.tgz#f2884cfddb852b8c32e5b00d7b0a21e45a556508"
+  integrity sha512-cL1GJNLGsVsanG/1CW8AH6ufs8FOBCRLS9occmxooYjl0JPkdIe8RTPAj2+PofAleQJp/fAVOcNDdZAG89m8eQ==
+
 debug-log@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/debug-log/-/debug-log-1.0.1.tgz#2307632d4c04382b8df8a32f70b895046d52745f"
