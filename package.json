@@ -8,7 +8,10 @@
     "Linus Unnebäck <linus@folkdatorn.se>"
   ],
   "license": "MIT",
-  "repository": "expressjs/multer",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/expressjs/multer.git"
+  },
   "keywords": [
     "form",
     "post",
@@ -50,5 +53,9 @@
   "scripts": {
     "test": "standard && mocha",
     "test-ci": "istanbul cover node_modules/mocha/bin/_mocha test/*.js"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/expressjs/multer/issues"
+  },
+  "homepage": "https://github.com/expressjs/multer#readme"
 }
