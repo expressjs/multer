@@ -30,7 +30,7 @@ describe('Memory Storage', function () {
       assert.equal(req.file.fieldname, 'small0')
       assert.equal(req.file.originalname, 'small0.dat')
       assert.equal(req.file.size, currentOS.isWindows ? 1803 : 1778)
-      assert.equal(req.file.buffer.length, 1803)
+      assert.equal(req.file.buffer.length, currentOS.isWindows ? 1803 : 1778)
 
       done()
     })
@@ -105,7 +105,7 @@ describe('Memory Storage', function () {
       assert.equal(req.files['tiny0'][0].fieldname, 'tiny0')
       assert.equal(req.files['tiny0'][0].originalname, 'tiny0.dat')
       assert.equal(req.files['tiny0'][0].size, currentOS.isWindows ? 128 : 122)
-      assert.equal(req.files['tiny0'][0].buffer.length, 128)
+      assert.equal(req.files['tiny0'][0].buffer.length, currentOS.isWindows ? 128 : 122)
 
       assert.equal(req.files['tiny1'][0].fieldname, 'tiny1')
       assert.equal(req.files['tiny1'][0].originalname, 'tiny1.dat')

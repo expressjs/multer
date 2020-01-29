@@ -39,7 +39,7 @@ describe('Reuse Middleware', function () {
           assert.equal(file.fieldname, 'them-files')
           assert.equal(file.originalname, 'small0.dat')
           assert.equal(file.size, currentOS.isWindows ? 1803 : 1778)
-          assert.equal(file.buffer.length, 1803)
+          assert.equal(file.buffer.length, currentOS.isWindows ? 1803 : 1778)
         })
 
         if (--pending === 0) done()

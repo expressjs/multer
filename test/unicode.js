@@ -49,7 +49,7 @@ describe('Unicode', function () {
 
       assert.equal(req.file.fieldname, 'small0')
       assert.equal(req.file.size, currentOS.isWindows ? 1803 : 1778)
-      assert.equal(util.fileSize(req.file.path), 1803)
+      assert.equal(util.fileSize(req.file.path), currentOS.isWindows ? 1803 : 1778)
 
       done()
     })
