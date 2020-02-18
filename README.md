@@ -176,7 +176,7 @@ var storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '_' + (Math.random().toString().split('.')[1])
-    cb(null, file.fieldname + '_' + uniqueHash)
+    cb(null, file.fieldname + '_' + uniqueSuffix)
   }
 })
 
