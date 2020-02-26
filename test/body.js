@@ -2,6 +2,7 @@
 
 const assert = require('assert')
 const stream = require('stream')
+const hasOwnProperty = require('has-own-property')
 
 const pify = require('pify')
 const util = require('./_util')
@@ -52,9 +53,9 @@ describe('body', () => {
       name: 'Multer',
       key: '',
       abc: '',
-      checkboxfull: [ 'cb1', 'cb2' ],
-      checkboxhalfempty: [ 'cb1', '' ],
-      checkboxempty: [ '', '' ]
+      checkboxfull: ['cb1', 'cb2'],
+      checkboxhalfempty: ['cb1', ''],
+      checkboxempty: ['', '']
     }))
   })
 
@@ -70,8 +71,8 @@ describe('body', () => {
 
     await pify(parser)(req, null)
 
-    assert.strictEqual(req.hasOwnProperty('body'), false)
-    assert.strictEqual(req.hasOwnProperty('files'), false)
+    assert.strictEqual(hasOwnProperty(req, 'body'), false)
+    assert.strictEqual(hasOwnProperty(req, 'files'), false)
   })
 
   it('should not process non-multipart GET request', async () => {
@@ -86,8 +87,8 @@ describe('body', () => {
 
     await pify(parser)(req, null)
 
-    assert.strictEqual(req.hasOwnProperty('body'), false)
-    assert.strictEqual(req.hasOwnProperty('files'), false)
+    assert.strictEqual(hasOwnProperty(req, 'body'), false)
+    assert.strictEqual(hasOwnProperty(req, 'files'), false)
   })
 
   for (const test of testData) {
@@ -115,9 +116,9 @@ describe('body', () => {
 
     assert.deepStrictEqual(req.body, recursiveNullify({
       obj: {
-        '0': 'a',
-        '2': 'c',
-        'x': 'yz'
+        0: 'a',
+        2: 'c',
+        x: 'yz'
       }
     }))
   })

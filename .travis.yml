@@ -1,10 +1,10 @@
 sudo: false
 language: node_js
 node_js:
+  - '13'
   - '12'
   - '10'
-  - '8'
-  - '8.3.0'
+  - '10.13.0'
 os:
   - linux
   - osx

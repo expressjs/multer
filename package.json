@@ -22,8 +22,9 @@
     "append-field": "^1.0.0",
     "busboy": "^0.3.1",
     "fs-temp": "^1.1.1",
+    "has-own-property": "^1.0.0",
     "on-finished": "^2.3.0",
-    "pify": "^4.0.1",
+    "pify": "^5.0.0",
     "pump": "^3.0.0",
     "stream-file-type": "^0.4.0",
     "type-is": "^1.6.18"
@@ -33,14 +34,14 @@
     "express": "^4.16.4",
     "form-data": "^3.0.0",
     "get-stream": "^5.1.0",
-    "hasha": "^5.1.0",
-    "mocha": "^6.1.4",
+    "hasha": "^5.2.0",
+    "mocha": "^7.1.0",
     "recursive-nullify": "^1.0.0",
-    "standard": "^12.0.1",
+    "standard": "^14.3.1",
     "testdata-w3c-json-form": "^1.0.0"
   },
   "engines": {
-    "node": ">=8.3"
+    "node": ">=10.13"
   },
   "files": [
     "LICENSE",
