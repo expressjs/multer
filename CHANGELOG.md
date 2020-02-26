@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.0.0-rc.1 - 2020-02-26
+
+- Breaking: drop support for Node.js < 10.13.x
+- Internal: achive 100% code coverage
+- Internal: test on macOS & Windows
+
 ## 2.0.0-beta.1 - 2019-11-23
 
 - Breaking: drop support for Node.js < 8.3.x
