@@ -1,5 +1,6 @@
 /* eslint-env mocha */
 
+const assert = require('assert')
 const assertRejects = require('assert-rejects')
 const FormData = require('form-data')
 const pify = require('pify')
@@ -25,6 +26,15 @@ function hasMessage (message) {
 }
 
 describe('Error Handling', () => {
+  it('should throw on null', () => {
+    assert.throws(() => multer(null))
+  })
+
+  it('should throw on boolean', () => {
+    assert.throws(() => multer(true))
+    assert.throws(() => multer(false))
+  })
+
   it('should respect parts limit', async () => {
     const form = new FormData()
     const parser = withLimits({ parts: 1 }, [

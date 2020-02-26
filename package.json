@@ -36,6 +36,7 @@
     "get-stream": "^5.1.0",
     "hasha": "^5.2.0",
     "mocha": "^7.1.0",
+    "nyc": "^15.0.0",
     "recursive-nullify": "^1.0.0",
     "standard": "^14.3.1",
     "testdata-w3c-json-form": "^1.0.0"
@@ -49,6 +50,6 @@
     "lib/"
   ],
   "scripts": {
-    "test": "standard && mocha"
+    "test": "standard && nyc --check-coverage --statements 100 mocha"
   }
 }

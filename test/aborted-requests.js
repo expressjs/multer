@@ -12,7 +12,7 @@ function getLength (form) {
   return pify(form.getLength).call(form)
 }
 
-function createAbortStream (maxBytes) {
+function createAbortStream (maxBytes, aborter) {
   let bytesPassed = 0
 
   return new PassThrough({
@@ -30,7 +30,7 @@ function createAbortStream (maxBytes) {
         this.push(chunk.slice(0, bytesLeft))
       }
 
-      process.nextTick(() => this.emit('aborted'))
+      process.nextTick(() => aborter(this))
     }
   })
 }
@@ -43,7 +43,7 @@ describe('Aborted requests', () => {
     form.append('file', util.file('small'))
 
     const length = await getLength(form)
-    const req = createAbortStream(length - 100)
+    const req = createAbortStream(length - 100, (stream) => stream.emit('aborted'))
 
     req.headers = {
       'content-type': `multipart/form-data; boundary=${form.getBoundary()}`,
@@ -53,5 +53,24 @@ describe('Aborted requests', () => {
     const result = pify(parser)(form.pipe(req), null)
 
     return assertRejects(result, err => err.code === 'CLIENT_ABORTED')
+  })
+
+  it('should handle clients erroring the request', async () => {
+    const form = new FormData()
+    const parser = multer().single('file')
+
+    form.append('file', util.file('small'))
+
+    const length = await getLength(form)
+    const req = createAbortStream(length - 100, (stream) => stream.emit('error', new Error('TEST_ERROR')))
+
+    req.headers = {
+      'content-type': `multipart/form-data; boundary=${form.getBoundary()}`,
+      'content-length': length
+    }
+
+    const result = pify(parser)(form.pipe(req), null)
+
+    return assertRejects(result, err => err.message === 'TEST_ERROR')
   })
 })
