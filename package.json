@@ -25,7 +25,6 @@
     "mkdirp": "^0.5.1",
     "object-assign": "^4.1.1",
     "on-finished": "^2.3.0",
-    "type-is": "^1.6.4",
     "xtend": "^4.0.0"
   },
   "devDependencies": {
