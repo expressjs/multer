@@ -12,7 +12,11 @@ function _middleware (limits, fields, fileStrategy) {
 
 class Multer {
   constructor (options) {
-    this.limits = options.limits
+    this.limits = {
+      fileSize: 200 * 1024 * 1024,
+      fields: 100,
+      ...options.limits
+    }
   }
 
   single (name) {

@@ -1,5 +1,6 @@
 /* eslint-env mocha */
 
+const assert = require('assert')
 const assertRejects = require('assert-rejects')
 const FormData = require('form-data')
 
@@ -17,5 +18,13 @@ describe('limits', () => {
       util.submitForm(parser, form),
       (err) => err.code === 'LIMIT_FILE_SIZE' && err.field === 'file'
     )
+  })
+
+  it('should apply default limits', () => {
+    const parser = multer()
+    assert.deepStrictEqual(parser.limits, {
+      fileSize: 209715200,
+      fields: 100
+    })
   })
 })

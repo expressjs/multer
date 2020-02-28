@@ -139,8 +139,8 @@ Key | Description | Default
 --- | --- | ---
 `fieldNameSize` | Max field name size | 100 bytes
 `fieldSize` | Max field value size | 1MB
-`fields` | Max number of non-file fields | Infinity
-`fileSize` | For multipart forms, the max file size (in bytes) | Infinity
+`fields` | Max number of non-file fields | 100 
+`fileSize` | For multipart forms, the max file size (in bytes) | 200MB
 `files` | For multipart forms, the max number of file fields | Infinity
 `parts` | For multipart forms, the max number of parts (fields + files) | Infinity
 `headerPairs` | For multipart forms, the max number of header key=>value pairs to parse | 2000
