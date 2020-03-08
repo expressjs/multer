@@ -208,6 +208,10 @@ the file (`file`) to aid with the decision.
 Note that `req.body` might not have been fully populated yet. It depends on the
 order that the client transmits fields and files to the server.
 
+For understanding the calling convention used in the callback (needing to pass
+null as the first param), refer to
+[Node.js error handling](https://www.joyent.com/node-js/production/design/errors)
+
 #### `MemoryStorage`
 
 The memory storage engine stores the files in memory as `Buffer` objects. It
