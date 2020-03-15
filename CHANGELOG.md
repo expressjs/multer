@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.0.0-rc.2 - 2020-03-15
+
+- Allow limits to be passed as string, e.g. `'12MB'`
+- Remove `parts` limit in favour of `fields` & `files`
+- Set reasonable defaults for all limits
+
 ## 2.0.0-rc.1 - 2020-02-26
 
 - Breaking: drop support for Node.js < 10.13.x
