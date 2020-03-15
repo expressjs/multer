@@ -1,6 +1,8 @@
 const createFileFilter = require('./lib/file-filter')
 const createMiddleware = require('./lib/middleware')
 
+const kLimits = Symbol('limits')
+
 function _middleware (limits, fields, fileStrategy) {
   return createMiddleware(() => ({
     fields: fields,
@@ -12,29 +14,29 @@ function _middleware (limits, fields, fileStrategy) {
 
 class Multer {
   constructor (options) {
-    this.limits = options.limits
+    this[kLimits] = options.limits
   }
 
   single (name) {
-    return _middleware(this.limits, [{ name: name, maxCount: 1 }], 'VALUE')
+    return _middleware(this[kLimits], [{ name: name, maxCount: 1 }], 'VALUE')
   }
 
   array (name, maxCount) {
-    return _middleware(this.limits, [{ name: name, maxCount: maxCount }], 'ARRAY')
+    return _middleware(this[kLimits], [{ name: name, maxCount: maxCount }], 'ARRAY')
   }
 
   fields (fields) {
-    return _middleware(this.limits, fields, 'OBJECT')
+    return _middleware(this[kLimits], fields, 'OBJECT')
   }
 
   none () {
-    return _middleware(this.limits, [], 'NONE')
+    return _middleware(this[kLimits], [], 'NONE')
   }
 
   any () {
     return createMiddleware(() => ({
       fields: [],
-      limits: this.limits,
+      limits: this[kLimits],
       fileFilter: () => {},
       fileStrategy: 'ARRAY'
     }))
