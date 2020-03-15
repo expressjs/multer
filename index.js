@@ -1,7 +1,17 @@
 const createFileFilter = require('./lib/file-filter')
 const createMiddleware = require('./lib/middleware')
 
+const bytes = require('bytes')
+
 const kLimits = Symbol('limits')
+
+function parseLimit (limits, key, defaultValue) {
+  const input = limits[key] == null ? defaultValue : limits[key]
+  const value = bytes.parse(input)
+  if (!Number.isFinite(value)) throw new Error(`Invalid limit "${key}" given: ${limits[key]}`)
+  if (!Number.isInteger(value)) throw new Error(`Invalid limit "${key}" given: ${value}`)
+  return value
+}
 
 function _middleware (limits, fields, fileStrategy) {
   return createMiddleware(() => ({
@@ -14,7 +24,14 @@ function _middleware (limits, fields, fileStrategy) {
 
 class Multer {
   constructor (options) {
-    this[kLimits] = options.limits
+    this[kLimits] = {
+      fieldNameSize: parseLimit(options.limits || {}, 'fieldNameSize', '100B'),
+      fieldSize: parseLimit(options.limits || {}, 'fieldSize', '8KB'),
+      fields: parseLimit(options.limits || {}, 'fields', 1000),
+      fileSize: parseLimit(options.limits || {}, 'fileSize', '8MB'),
+      files: parseLimit(options.limits || {}, 'files', 10),
+      headerPairs: parseLimit(options.limits || {}, 'headerPairs', 2000)
+    }
   }
 
   single (name) {

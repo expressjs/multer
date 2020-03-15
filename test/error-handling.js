@@ -35,19 +35,9 @@ describe('Error Handling', () => {
     assert.throws(() => multer(false))
   })
 
-  it('should respect parts limit', async () => {
-    const form = new FormData()
-    const parser = withLimits({ parts: 1 }, [
-      { name: 'small', maxCount: 1 }
-    ])
-
-    form.append('field0', 'BOOM!')
-    form.append('small', util.file('small'))
-
-    await assertRejects(
-      util.submitForm(parser, form),
-      hasCode('LIMIT_PART_COUNT')
-    )
+  it('should throw on invalid limits', () => {
+    assert.throws(() => multer({ limits: { files: 3.14 } }), /Invalid limit "files" given: 3.14/)
+    assert.throws(() => multer({ limits: { fileSize: 'foobar' } }), /Invalid limit "fileSize" given: foobar/)
   })
 
   it('should respect file size limit', async () => {

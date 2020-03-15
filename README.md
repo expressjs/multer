@@ -133,17 +133,18 @@ where you are handling the uploaded files.
 
 An object specifying the size limits of the following optional properties. Multer passes this object into busboy directly, and the details of the properties can be found on [busboy's page](https://github.com/mscdex/busboy#busboy-methods).
 
-The following integer values are available:
+The following limits are available:
 
 Key | Description | Default
 --- | --- | ---
-`fieldNameSize` | Max field name size | 100 bytes
-`fieldSize` | Max field value size | 1MB
-`fields` | Max number of non-file fields | Infinity
-`fileSize` | For multipart forms, the max file size (in bytes) | Infinity
-`files` | For multipart forms, the max number of file fields | Infinity
-`parts` | For multipart forms, the max number of parts (fields + files) | Infinity
-`headerPairs` | For multipart forms, the max number of header key=>value pairs to parse | 2000
+`fieldNameSize` | Max field name size | `'100B'`
+`fieldSize` | Max field value size | `'8KB'`
+`fields` | Max number of non-file fields | `1000`
+`fileSize` | The max file size | `'8MB'`
+`files` | The max number of file fields | `10`
+`headerPairs` | The max number of header key=>value pairs to parse | `2000` (same as Node's http)
+
+Bytes limits can be passed either as a number, or as a string with an appropriate prefix.
 
 Specifying the limits can help protect your site against denial of service (DoS) attacks.
 
