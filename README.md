@@ -137,12 +137,12 @@ The following limits are available:
 
 Key | Description | Default
 --- | --- | ---
-`fieldNameSize` | Max field name size | `'100B'`
-`fieldSize` | Max field value size | `'8KB'`
-`fields` | Max number of non-file fields | `1000`
-`fileSize` | The max file size | `'8MB'`
-`files` | The max number of file fields | `10`
-`headerPairs` | The max number of header key=>value pairs to parse | `2000` (same as Node's http)
+`fieldNameSize` | Max number of bytes per field name | `'100B'`
+`fieldSize` | Max number of bytes per field value | `'8KB'`
+`fields` | Max number of fields per request | `1000`
+`fileSize` | Max number of bytes per file | `'8MB'`
+`files` | Max number of files per request | `10`
+`headerPairs` | Max number of header key-value pairs | `2000` (same as Node's http)
 
 Bytes limits can be passed either as a number, or as a string with an appropriate prefix.
 
