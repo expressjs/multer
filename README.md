@@ -70,8 +70,8 @@ Key | Description
 --- | ---
 `fieldName` | Field name specified in the form
 `originalName` | Name of the file on the user's computer (`undefined` if no filename was supplied by the client)
-`size` | Size of the file in bytes
-`stream` | Stream of file
+`size` | Total size of the file in bytes
+`stream` | Readable stream of file data
 `detectedMimeType` | The detected mime-type, or null if we failed to detect
 `detectedFileExtension` | The typical file extension for files of the detected type, or empty string if we failed to detect (with leading `.` to match `path.extname`)
 `clientReportedMimeType` | The mime type reported by the client using the `Content-Type` header, or null<sup>1</sup> if the header was absent
