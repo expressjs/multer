@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.4.3 - 2020-04-21
+
+- Feature: Field Filter aborts operation upon error
+
 ## 1.4.2 - 2019-07-16
 
 - Docs: Add Russian translation for README (#662)
