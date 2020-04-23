@@ -95,7 +95,7 @@ Key | Descrição | Nota
 
 ### `multer(opts)`
 
-Multer aceita um objeto de opções, a propriedade mais básico dos é o`dest`, que diz ao Multer onde fazer o upload dos arquivos. No caso de você omitir o objeto de opções, os arquivos serão mantidos na memória e nunca gravados no disco.
+Multer aceita um objeto de opções, a propriedade mais básica é o `dest`, que diz ao Multer onde fazer o upload dos arquivos. No caso de você omitir o objeto de opções, os arquivos serão mantidos na memória e nunca gravados no disco.
 
 Por padrão, Multer irá renomear os arquivos para evitar conflitos de nomes. A função de renomeação pode ser personalizada de acordo com suas necessidades.
 
@@ -108,8 +108,7 @@ Key | Descrição
 `limits` | Limites dos dados enviados
 `preservePath` | Mantenha o caminho completo dos arquivos em vez de apenas o nome base
 
-Em um web app basico, somente `dest` pode ser necessário, e configurado como mostrado em
-o exemplo a seguir.
+Em um web app básico, somente `dest` pode ser necessário, e configurado como mostrado no exemplo a seguir:
 
 ```javascript
 var upload = multer({ dest: 'uploads/' })
@@ -151,7 +150,7 @@ Aceite apenas campos de texto. Se algum upload de arquivo for feito, erro com c�
 
 #### `.any()`
 
-AAceita todos os arquivos que são enviaos. Uma matriz de arquivos será armazenada em
+Aceita todos os arquivos que são enviaos. Uma matriz de arquivos será armazenada em
 `req.files`.
 
 **AVISO:** Certifique-se de sempre manipular os arquivos que um usuário envia.
@@ -183,15 +182,14 @@ Existem duas opções disponíveis, `destination` e `filename`. Ambas são funç
 
 **Nota:** Você é responsável por criar o diretório ao fornecer "destino" como uma função. Ao passar uma string, o multer se certificará de que o diretório foi criado para você.
 
-`filename` ié usado para determinar qual arquivo deve ser nomeado dentro da pasta.
+`filename` é usado para determinar qual arquivo deve ser nomeado dentro da pasta.
 Se não é dada `filename`, Cada arquivo receberá um nome aleatório que não inclui nenhuma extensão de arquivo.
 
 **Nota:** Multer não adicionará nenhuma extensão de arquivo para você, sua função deve retornar um nome de arquivo completo com uma extensão de arquivo.
 
 Cada função é passada pelo request (`req`) e algumas informações sobre o arquivo (`file`) para ajudar com a decisão.
 
-Observe que `req.body` pode não ter sido totalmente preenchido ainda. Depende do
-ordenar que o cliente transmita campos e arquivos para o servidor.
+Observe que `req.body` pode não ter sido totalmente preenchido ainda. Isso depende da ordem na qual o cliente transmite campos e arquivos para o servidor.
 
 #### `MemoryStorage`
 
