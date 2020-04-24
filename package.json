@@ -22,7 +22,7 @@
     "append-field": "^1.0.0",
     "busboy": "^0.2.11",
     "concat-stream": "^1.5.2",
-    "mkdirp": "^0.5.1",
+    "mkdirp": "^0.5.4",
     "object-assign": "^4.1.1",
     "on-finished": "^2.3.0",
     "type-is": "^1.6.4",
