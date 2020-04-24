@@ -39,9 +39,9 @@ describe('File ordering', function () {
 
     util.submitForm(parser, form, function (err, req) {
       assert.ifError(err)
-      assert.equal(req.files.length, 2)
-      assert.equal(req.files[0].originalname, 'small0.dat')
-      assert.equal(req.files[1].originalname, 'small1.dat')
+      assert.strictEqual(req.files.length, 2)
+      assert.strictEqual(req.files[0].originalname, 'small0.dat')
+      assert.strictEqual(req.files[1].originalname, 'small1.dat')
       done()
     })
   })

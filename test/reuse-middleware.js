@@ -30,15 +30,15 @@ describe('Reuse Middleware', function () {
       util.submitForm(parser, form, function (err, req) {
         assert.ifError(err)
 
-        assert.equal(req.body.name, 'Multer')
-        assert.equal(req.body.files, '' + fileCount)
-        assert.equal(req.files.length, fileCount)
+        assert.strictEqual(req.body.name, 'Multer')
+        assert.strictEqual(req.body.files, '' + fileCount)
+        assert.strictEqual(req.files.length, fileCount)
 
         req.files.forEach(function (file) {
-          assert.equal(file.fieldname, 'them-files')
-          assert.equal(file.originalname, 'small0.dat')
-          assert.equal(file.size, 1778)
-          assert.equal(file.buffer.length, 1778)
+          assert.strictEqual(file.fieldname, 'them-files')
+          assert.strictEqual(file.originalname, 'small0.dat')
+          assert.strictEqual(file.size, 1778)
+          assert.strictEqual(file.buffer.length, 1778)
         })
 
         if (--pending === 0) done()
