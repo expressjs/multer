@@ -32,11 +32,11 @@ describe('File Filter', function () {
 
     util.submitForm(parser, form, function (err, req) {
       assert.ifError(err)
-      assert.equal(req.files['notme'], undefined)
-      assert.equal(req.files['butme'][0].fieldname, 'butme')
-      assert.equal(req.files['butme'][0].originalname, 'tiny1.dat')
-      assert.equal(req.files['butme'][0].size, 7)
-      assert.equal(req.files['butme'][0].buffer.length, 7)
+      assert.strictEqual(req.files.notme, undefined)
+      assert.strictEqual(req.files.butme[0].fieldname, 'butme')
+      assert.strictEqual(req.files.butme[0].originalname, 'tiny1.dat')
+      assert.strictEqual(req.files.butme[0].size, 7)
+      assert.strictEqual(req.files.butme[0].buffer.length, 7)
       done()
     })
   })
@@ -49,7 +49,7 @@ describe('File Filter', function () {
     form.append('test', util.file('tiny0.dat'))
 
     util.submitForm(parser, form, function (err, req) {
-      assert.equal(err.message, 'Fake error')
+      assert.strictEqual(err.message, 'Fake error')
       done()
     })
   })

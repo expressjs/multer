@@ -29,12 +29,13 @@
     "xtend": "^4.0.0"
   },
   "devDependencies": {
+    "deep-equal": "^2.0.3",
     "express": "^4.13.1",
     "form-data": "^1.0.0-rc1",
     "fs-temp": "^1.1.2",
     "mocha": "^3.5.3",
     "rimraf": "^2.4.1",
-    "standard": "^11.0.1",
+    "standard": "^14.3.3",
     "testdata-w3c-json-form": "^1.0.0"
   },
   "engines": {
