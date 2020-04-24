@@ -95,7 +95,7 @@ Key | Descrição | Nota
 
 ### `multer(opts)`
 
-Multer aceita um objeto de opções, a propriedade mais básico dos é o`dest`, que diz ao Multer onde fazer o upload dos arquivos. No caso de você omitir o objeto de opções, os arquivos serão mantidos na memória e nunca gravados no disco.
+Multer aceita um objeto de opções, a propriedade mais básica é o `dest`, que diz ao Multer onde fazer o upload dos arquivos. No caso de você omitir o objeto de opções, os arquivos serão mantidos na memória e nunca gravados no disco.
 
 Por padrão, Multer irá renomear os arquivos para evitar conflitos de nomes. A função de renomeação pode ser personalizada de acordo com suas necessidades.
 
@@ -108,33 +108,29 @@ Key | Descrição
 `limits` | Limites dos dados enviados
 `preservePath` | Mantenha o caminho completo dos arquivos em vez de apenas o nome base
 
-Em um web app basico, somente `dest` pode ser necessário, e configurado como mostrado em
-o exemplo a seguir.
+Em um web app básico, somente o `dest` pode ser necessário, e configurado como mostrado no exemplo a seguir:
 
 ```javascript
 var upload = multer({ dest: 'uploads/' })
 ```
 
-Se você quiser mais controle sobre seus envios, você vai querer usar a opção `storage`
-em vez de `dest`. Multer vem com motores de armazenamento `DiskStorage`
-e `MemoryStorage`; Mais mecanismos estão disponíveis de terceiros.
+Se você quiser mais controle sobre seus envios, você ter que usar a opção `storage` em vez de `dest`. Multer vem com motores de armazenamento `DiskStorage` e `MemoryStorage`; Mais mecanismos estão disponíveis de terceiros.
 
 #### `.single(fieldname)`
 
-Aceite um único arquivo com o nome `fieldname`. O arquivo único será armazenado
-em `req.file`.
+Aceite um único arquivo com o nome `fieldname`. O arquivo único será armazenado em `req.file`.
 
 #### `.array(fieldname[, maxCount])`
 
-Aceite múltiplos arquivos, todos com o nome `fieldname`. Opcionalmente, erro se mais de `maxCount` forem enviados. O array de arquivos serão armazenados em
+Aceite múltiplos arquivos, todos com o nome `fieldname`. Opcional, gera um erro se mais de `maxCount` forem enviados. O array de arquivos serão armazenados em
 `req.files`.
 
 #### `.fields(fields)`
 
-Aceite uma mistura de arquivos, especificada por `fields`. Um objeto com array de arquivos
-será armazenado em `req.files`.
+Aceita uma mistura de arquivos, especificada por `fields`. Um objeto com um array de arquivos será armazenado em `req.files`.
 
-`fields` deve ser uma matriz de objetos com `name` e opcionalmente um `maxCount`.
+`fields` deve ser uma matriz de objetos com `name` e opcionalmente com `maxCount`.
+
 Exemplo:
 
 ```javascript
@@ -146,17 +142,15 @@ Exemplo:
 
 #### `.none()`
 
-Aceite apenas campos de texto. Se algum upload de arquivo for feito, erro com código 
-"LIMIT\_UNEXPECTED\_FILE" será emitido.
+Aceite apenas campo de texto. Se algum upload de arquivo for feito, um erro com código "LIMIT\_UNEXPECTED\_FILE" será emitido.
 
 #### `.any()`
 
-AAceita todos os arquivos que são enviaos. Uma matriz de arquivos será armazenada em
+Aceita todos os arquivos que são enviaos. Uma matriz de arquivos será armazenada em
 `req.files`.
 
 **AVISO:** Certifique-se de sempre manipular os arquivos que um usuário envia.
-Nunca adicione multer como global middleware já que um usuário mal-intencionado poderia fazer upload de arquivos para uma rota que você não previu. Use esta função apenas nas rotas
-onde você está lidando com os arquivos enviados.
+Nunca adicione o Multer como global no middleware, já que um usuário mal-intencionado poderia fazer upload de arquivos para uma rota que você não previu. Use esta função apenas nas rotas onde você está lidando com os arquivos enviados.
 
 ### `storage`
 
@@ -181,33 +175,31 @@ Existem duas opções disponíveis, `destination` e `filename`. Ambas são funç
 
 `destination` é usado para determinar em qual pasta os arquivos enviados devem ser armazenados. Isso também pode ser dado como uma `string` (e.g. `'/tmp/uploads'`). Se não é dada `destination`, o diretório padrão do sistema operacional para arquivos temporários é usado.
 
-**Nota:** Você é responsável por criar o diretório ao fornecer "destino" como uma função. Ao passar uma string, o multer se certificará de que o diretório foi criado para você.
+**Nota:** Você é responsável por criar o diretório ao fornecer o "destino" com uma função. Ao passar uma string, o Multer se certificará de que o diretório foi criado para você.
 
-`filename` ié usado para determinar qual arquivo deve ser nomeado dentro da pasta.
-Se não é dada `filename`, Cada arquivo receberá um nome aleatório que não inclui nenhuma extensão de arquivo.
+`filename` é usado para determinar qual arquivo deve ser nomeado dentro da pasta.
+Se não for passado `filename`, cada arquivo receberá um nome aleatório que não inclui nenhuma extensão de arquivo.
 
-**Nota:** Multer não adicionará nenhuma extensão de arquivo para você, sua função deve retornar um nome de arquivo completo com uma extensão de arquivo.
+**Nota:** Multer não adicionará nenhuma extensão de arquivo para você, sua função é retornar um nome para o arquivo completo com a extensão de arquivo.
 
 Cada função é passada pelo request (`req`) e algumas informações sobre o arquivo (`file`) para ajudar com a decisão.
 
-Observe que `req.body` pode não ter sido totalmente preenchido ainda. Depende do
-ordenar que o cliente transmita campos e arquivos para o servidor.
+Observe que `req.body` pode não ter sido totalmente preenchido ainda. Isso depende da ordem na qual o cliente transmite campos e arquivos para o servidor.
 
 #### `MemoryStorage`
 
-O mecanismo de armazenamento de memória armazena os arquivos na memória como um objeto `Buffer`. Não tem opções.
+O mecanismo de armazenamento na memória, armazena os arquivos na memória como um objeto `Buffer`. Não tendo opções.
 ```javascript
 var storage = multer.memoryStorage()
 var upload = multer({ storage: storage })
 ```
-Ao usar o armazenamento de memória, as informações do arquivo conterão um campo chamado
-`buffer` que contém o arquivo inteiro.
+Ao usar o armazenamento de memória, as informações do arquivo conterão um campo chamado `buffer` que contém o arquivo inteiro.
 
 **AVISO**: Fazer upload de arquivos muito grandes ou arquivos relativamente pequenos em grande número muito rapidamente pode fazer com que o aplicativo fique sem memória quando o armazenamento de memória é usado.
 
 ### `limits`
 
-Um objeto que especifica os limites de tamanho das seguintes propriedades opcionais. Multer passa esse objeto diretamente para o busboy, e os detalhes das propriedades podem ser encontrados em [busboy's page](https://github.com/mscdex/busboy#busboy-methods).
+Um objeto que especifica os limites de tamanho das seguintes propriedades opcionais. O Multer passa diretamente o objeto para o busboy, e os detalhes das propriedades podem ser encontrados em [busboy's page](https://github.com/mscdex/busboy#busboy-methods).
 
 Os seguintes valores inteiros estão disponíveis:
 
@@ -226,6 +218,7 @@ A especificação dos limites pode ajudar a proteger seu site contra ataques de 
 ### `fileFilter`
 
 Defina isso para uma função para controlar quais arquivos devem ser enviados e quais devem ser ignorados. 
+
 A função deve ficar assim:
 
 ```javascript
@@ -248,11 +241,9 @@ function fileFilter (req, file, cb) {
 
 ## Error handling
 
-Quando encontrar um erro, Multer delegará o erro para Express. Você pode
-exibir uma boa página de erro usando [the standard express way](http://expressjs.com/guide/error-handling.html).
+Quando encontrar um erro, Multer delegará o erro para Express. Você pode exibir uma boa página de erro usando [the standard express way](http://expressjs.com/guide/error-handling.html).
 
-Se você quer pegar erros especificamente do Multer, você pode enviar para o
-função de middleware . Além disso, se você quiser pegar apenas [the Multer errors](https://github.com/expressjs/multer/blob/master/lib/multer-error.js), você pode usar o `MulterError` classe que está ligado ao objeto `multer` (e.g. `err instanceof multer.MulterError`).
+Se você quer pegar erros especificamente do Multer, você pode enviar para o função de middleware. Além disso, se você quiser pegar apenas [os erros do Multer](https://github.com/expressjs/multer/blob/master/lib/multer-error.js), você pode usar a classe `MulterError` que está ligado ao objeto `multer` (e.g. `err instanceof multer.MulterError`).
 
 ```javascript
 var multer = require('multer')
@@ -275,6 +266,6 @@ app.post('/profile', function (req, res) {
 
 Para obter informações sobre como criar seu próprio mecanismo de armazenamento, veja [Multer Storage Engine](https://github.com/expressjs/multer/blob/master/StorageEngine.md).
 
-## License
+## Licença
 
 [MIT](LICENSE)
