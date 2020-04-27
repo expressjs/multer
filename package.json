@@ -48,6 +48,6 @@
     "lib/"
   ],
   "scripts": {
-    "test": "standard && mocha"
+    "test": "mocha"
   }
 }
