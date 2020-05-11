@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.4.2 - 2019-07-16
+
+- Docs: Add Russian translation for README (#662)
+- Docs: Patch zh-CN README base on newest README (#670)
+- Docs: Fix broken link in Readme (#679)
+- Docs: Fix broken link in Chinese Readme (#730)
+- Docs: Fix typo in Russian README (#738)
+- Docs: Add unit for fieldSize in busboy limit params (#734)
+- Internal: Make unit tests comaptible with Node.js 13.x (#752)
+
 ## 1.4.1 - 2018-10-11
 
 - Bugfix: Make sure that req.file.buffer always is a Buffer

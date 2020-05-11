@@ -21,8 +21,8 @@ describe('Expected files', function () {
     form.append('notme', util.file('small0.dat'))
 
     util.submitForm(parser, form, function (err, req) {
-      assert.equal(err.code, 'LIMIT_UNEXPECTED_FILE')
-      assert.equal(err.field, 'notme')
+      assert.strictEqual(err.code, 'LIMIT_UNEXPECTED_FILE')
+      assert.strictEqual(err.field, 'notme')
       done()
     })
   })
@@ -35,8 +35,8 @@ describe('Expected files', function () {
     form.append('notme', util.file('small1.dat'))
 
     util.submitForm(parser, form, function (err, req) {
-      assert.equal(err.code, 'LIMIT_UNEXPECTED_FILE')
-      assert.equal(err.field, 'notme')
+      assert.strictEqual(err.code, 'LIMIT_UNEXPECTED_FILE')
+      assert.strictEqual(err.field, 'notme')
       done()
     })
   })
@@ -49,8 +49,8 @@ describe('Expected files', function () {
     form.append('butme', util.file('small1.dat'))
 
     util.submitForm(parser, form, function (err, req) {
-      assert.equal(err.code, 'LIMIT_UNEXPECTED_FILE')
-      assert.equal(err.field, 'butme')
+      assert.strictEqual(err.code, 'LIMIT_UNEXPECTED_FILE')
+      assert.strictEqual(err.field, 'butme')
       done()
     })
   })
@@ -69,8 +69,8 @@ describe('Expected files', function () {
     util.submitForm(parser, form, function (err, req) {
       assert.ifError(err)
 
-      assert.equal(req.files['butme'].length, 2)
-      assert.equal(req.files['andme'].length, 1)
+      assert.strictEqual(req.files.butme.length, 2)
+      assert.strictEqual(req.files.andme.length, 1)
 
       done()
     })
@@ -89,8 +89,8 @@ describe('Expected files', function () {
     form.append('notme', util.file('empty.dat'))
 
     util.submitForm(parser, form, function (err, req) {
-      assert.equal(err.code, 'LIMIT_UNEXPECTED_FILE')
-      assert.equal(err.field, 'notme')
+      assert.strictEqual(err.code, 'LIMIT_UNEXPECTED_FILE')
+      assert.strictEqual(err.field, 'notme')
       done()
     })
   })
@@ -105,10 +105,10 @@ describe('Expected files', function () {
 
     util.submitForm(parser, form, function (err, req) {
       assert.ifError(err)
-      assert.equal(req.files.length, 3)
-      assert.equal(req.files[0].fieldname, 'butme')
-      assert.equal(req.files[1].fieldname, 'butme')
-      assert.equal(req.files[2].fieldname, 'andme')
+      assert.strictEqual(req.files.length, 3)
+      assert.strictEqual(req.files[0].fieldname, 'butme')
+      assert.strictEqual(req.files[1].fieldname, 'butme')
+      assert.strictEqual(req.files[2].fieldname, 'andme')
       done()
     })
   })

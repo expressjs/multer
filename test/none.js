@@ -22,10 +22,10 @@ describe('None', function () {
 
     util.submitForm(parser, form, function (err, req) {
       assert.ok(err)
-      assert.equal(err.code, 'LIMIT_UNEXPECTED_FILE')
-      assert.equal(req.files, undefined)
-      assert.equal(req.body['key1'], 'val1')
-      assert.equal(req.body['key2'], 'val2')
+      assert.strictEqual(err.code, 'LIMIT_UNEXPECTED_FILE')
+      assert.strictEqual(req.files, undefined)
+      assert.strictEqual(req.body.key1, 'val1')
+      assert.strictEqual(req.body.key2, 'val2')
       done()
     })
   })
@@ -38,9 +38,9 @@ describe('None', function () {
 
     util.submitForm(parser, form, function (err, req) {
       assert.ifError(err)
-      assert.equal(req.files, undefined)
-      assert.equal(req.body['key1'], 'val1')
-      assert.equal(req.body['key2'], 'val2')
+      assert.strictEqual(req.files, undefined)
+      assert.strictEqual(req.body.key1, 'val1')
+      assert.strictEqual(req.body.key2, 'val2')
       done()
     })
   })
