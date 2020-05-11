@@ -1,9 +1,15 @@
 sudo: false
 language: node_js
 node_js:
-  - "0.10"
-  - "0.12"
-  - "4"
-  - "6"
-  - "8"
-  - "10"
+  - 12
+before_install:
+  - echo "//repo.churchofjesuschrist.org/artifactory/api/npm/npm-fhd/:_authToken=${NPM_PUBLISH_TOKEN}" >> .npmrc
+  - echo "@fs:registry=https://repo.churchofjesuschrist.org/artifactory/api/npm/npm-fhd/" >> .npmrc
+deploy:
+  provider: npm
+  skip_cleanup: true
+  email: "dl-fh-eng-frontier@groups.ldschurch.org"
+  api_key: "$NPM_PUBLISH_TOKEN"
+  on:
+    branch: master 
+
