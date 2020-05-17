@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+<!-- <form action="/stats" enctype="multipart/form-data" method="post">
+  <div class="form-group">
+    <input type="file" class="form-control-file" name="uploaded_file">
+    <input type="text" class="form-control" placeholder="Number of speakers" name="nspeakers">
+    <input type="submit" value="Get me the stats!" class="btn btn-default">            
+  </div>
+</form> -->
+
+<button id="multer-test">test multer upload</button>
+
+<script type="text/javascript">
+	
+	const formData = new FormData();
+	const blob = new Blob(["sup brah"], { type: 'text/plain' });
+	formData.append('uploaded_file', blob);
+
+
+	const options = {
+		method: 'POST',
+		body: formData,
+		// headers: {
+		// 	'Content-Type': 'multipart/form-data'
+		// }
+	};
+	const postData = () => fetch('http://localhost:3000/stats', options)
+		.then(res => res.text())
+		.then(text => {
+			console.log('res as text:', text);
+		});
+
+	const multerTestButton = document.getElementById('multer-test');
+	multerTestButton.addEventListener('click', postData);
+
+</script>
+
+</body>
+</html>
