@@ -8,8 +8,8 @@ const upload = multer({ dest: './public/data/uploads/' })
 
 app.use('/', express.static('public'));
 
-app.post('/stats', upload.single('uploaded_file'), function (req, res) { 
-   res.send('you posted');
+app.post('/stats', upload.single('uploaded_file'), (req, res) => {
+   res.sendStatus(200);
 });
 
 app.get('/bruh', (req, res) => res.json({ message: 'bruh' }));

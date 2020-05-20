@@ -1,44 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title></title>
+	<title>Multer Example</title>
 </head>
 <body>
 
-<!-- <form action="/stats" enctype="multipart/form-data" method="post">
-  <div class="form-group">
-    <input type="file" class="form-control-file" name="uploaded_file">
-    <input type="text" class="form-control" placeholder="Number of speakers" name="nspeakers">
-    <input type="submit" value="Get me the stats!" class="btn btn-default">            
-  </div>
-</form> -->
+	<label>Enter text to upload:</label>
+	<input type="text" id="the-text" />
+	<button id="multer-test">send data with FormData</button>
 
-<button id="multer-test">test multer upload</button>
+	<script type="text/javascript">
+		const postData = () => {
 
-<script type="text/javascript">
-	
-	const formData = new FormData();
-	const blob = new Blob(["sup brah"], { type: 'text/plain' });
-	formData.append('uploaded_file', blob);
+			const theText = document.getElementById('the-text').value;
+			const formData = new FormData();
+			const blob = new Blob([theText], { type: 'text/plain' });
+			formData.append('uploaded_file', blob);
 
+			const options = {
+				method: 'POST',
+				body: formData
+			};
 
-	const options = {
-		method: 'POST',
-		body: formData,
-		// headers: {
-		// 	'Content-Type': 'multipart/form-data'
-		// }
-	};
-	const postData = () => fetch('http://localhost:3000/stats', options)
-		.then(res => res.text())
-		.then(text => {
-			console.log('res as text:', text);
-		});
+			fetch('http://localhost:3000/stats', options)
+			.then(res => res.text())
+			.then(() => console.log('upload received'));
+		};
 
-	const multerTestButton = document.getElementById('multer-test');
-	multerTestButton.addEventListener('click', postData);
-
-</script>
-
+		document.getElementById('multer-test').addEventListener('click', postData);
+	</script>
 </body>
 </html>
