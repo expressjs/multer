@@ -49,7 +49,7 @@ describe('Express Integration', function () {
     })
 
     router.use(function (err, req, res, next) {
-      assert.equal(err.code, 'LIMIT_FILE_SIZE')
+      assert.strictEqual(err.code, 'LIMIT_FILE_SIZE')
 
       errorCalled++
       res.status(500).end('ERROR')
@@ -59,10 +59,10 @@ describe('Express Integration', function () {
     submitForm(form, '/t1/profile', function (err, res, body) {
       assert.ifError(err)
 
-      assert.equal(routeCalled, 0)
-      assert.equal(errorCalled, 1)
-      assert.equal(body.toString(), 'ERROR')
-      assert.equal(res.statusCode, 500)
+      assert.strictEqual(routeCalled, 0)
+      assert.strictEqual(errorCalled, 1)
+      assert.strictEqual(body.toString(), 'ERROR')
+      assert.strictEqual(res.statusCode, 500)
 
       done()
     })
@@ -88,7 +88,7 @@ describe('Express Integration', function () {
     })
 
     router.use(function (err, req, res, next) {
-      assert.equal(err.message, 'TEST')
+      assert.strictEqual(err.message, 'TEST')
 
       errorCalled++
       res.status(500).end('ERROR')
@@ -98,10 +98,10 @@ describe('Express Integration', function () {
     submitForm(form, '/t2/profile', function (err, res, body) {
       assert.ifError(err)
 
-      assert.equal(routeCalled, 0)
-      assert.equal(errorCalled, 1)
-      assert.equal(body.toString(), 'ERROR')
-      assert.equal(res.statusCode, 500)
+      assert.strictEqual(routeCalled, 0)
+      assert.strictEqual(errorCalled, 1)
+      assert.strictEqual(body.toString(), 'ERROR')
+      assert.strictEqual(res.statusCode, 500)
 
       done()
     })

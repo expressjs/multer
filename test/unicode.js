@@ -44,12 +44,12 @@ describe('Unicode', function () {
     util.submitForm(parser, form, function (err, req) {
       assert.ifError(err)
 
-      assert.equal(path.basename(req.file.path), filename)
-      assert.equal(req.file.originalname, filename)
+      assert.strictEqual(path.basename(req.file.path), filename)
+      assert.strictEqual(req.file.originalname, filename)
 
-      assert.equal(req.file.fieldname, 'small0')
-      assert.equal(req.file.size, currentOS.isWindows ? 1803 : 1778)
-      assert.equal(util.fileSize(req.file.path), currentOS.isWindows ? 1803 : 1778)
+      assert.strictEqual(req.file.fieldname, 'small0')
+      assert.strictEqual(req.file.size, currentOS.isWindows ? 1803 : 1778)
+      assert.strictEqual(util.fileSize(req.file.path), currentOS.isWindows ? 1803 : 1778)
 
       done()
     })

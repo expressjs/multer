@@ -1,6 +1,7 @@
 /* eslint-env mocha */
 
 var assert = require('assert')
+var deepEqual = require('deep-equal')
 var stream = require('stream')
 
 var util = require('./_util')
@@ -24,11 +25,11 @@ describe('Fields', function () {
 
     util.submitForm(parser, form, function (err, req) {
       assert.ifError(err)
-      assert.deepEqual(req.body, {
+      assert(deepEqual(req.body, {
         name: 'Multer',
         key: 'value',
         abc: 'xyz'
-      })
+      }))
       done()
     })
   })
@@ -48,14 +49,14 @@ describe('Fields', function () {
 
     util.submitForm(parser, form, function (err, req) {
       assert.ifError(err)
-      assert.deepEqual(req.body, {
+      assert(deepEqual(req.body, {
         name: 'Multer',
         key: '',
         abc: '',
-        checkboxfull: [ 'cb1', 'cb2' ],
-        checkboxhalfempty: [ 'cb1', '' ],
-        checkboxempty: [ '', '' ]
-      })
+        checkboxfull: ['cb1', 'cb2'],
+        checkboxhalfempty: ['cb1', ''],
+        checkboxempty: ['', '']
+      }))
       done()
     })
   })
@@ -72,8 +73,8 @@ describe('Fields', function () {
 
     parser(req, null, function (err) {
       assert.ifError(err)
-      assert.equal(req.hasOwnProperty('body'), false)
-      assert.equal(req.hasOwnProperty('files'), false)
+      assert.strictEqual(Object.prototype.hasOwnProperty.call(req, 'body'), false)
+      assert.strictEqual(Object.prototype.hasOwnProperty.call(req, 'files'), false)
       done()
     })
   })
@@ -90,8 +91,8 @@ describe('Fields', function () {
 
     parser(req, null, function (err) {
       assert.ifError(err)
-      assert.equal(req.hasOwnProperty('body'), false)
-      assert.equal(req.hasOwnProperty('files'), false)
+      assert.strictEqual(Object.prototype.hasOwnProperty.call(req, 'body'), false)
+      assert.strictEqual(Object.prototype.hasOwnProperty.call(req, 'files'), false)
       done()
     })
   })
@@ -106,7 +107,7 @@ describe('Fields', function () {
 
       util.submitForm(parser, form, function (err, req) {
         assert.ifError(err)
-        assert.deepEqual(req.body, test.expected)
+        assert(deepEqual(req.body, test.expected))
         done()
       })
     })
@@ -121,13 +122,13 @@ describe('Fields', function () {
 
     util.submitForm(parser, form, function (err, req) {
       assert.ifError(err)
-      assert.deepEqual(req.body, {
+      assert(deepEqual(req.body, {
         obj: {
-          '0': 'a',
-          '2': 'c',
-          'x': 'yz'
+          0: 'a',
+          2: 'c',
+          x: 'yz'
         }
-      })
+      }))
       done()
     })
   })
