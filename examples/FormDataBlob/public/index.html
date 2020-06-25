@@ -22,9 +22,19 @@
 				body: formData
 			};
 
-			fetch('http://localhost:3000/stats', options)
-			.then(res => res.text())
-			.then(() => console.log('upload received'));
+			fetch('http://localhost:3000/upload', options)
+				.then(res => {
+					if (res.ok) {
+						return res.text()
+					}
+					return Promise.reject(res.statusText);
+				})
+				.then(() => alert('upload successful!'))
+				.catch(err => {
+					const errorText = 'error uploading';
+					console.error(`${errorText}: ${err}`);
+					alert(errorText);
+				});
 		};
 
 		document.getElementById('multer-test').addEventListener('click', postData);
