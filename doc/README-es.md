@@ -21,7 +21,7 @@ $ npm install --save multer
 
 ## Uso
 
-Multer añade un objeto `body` y un objeto `file` o `files` al objeto `request`. El objeto `body` coniene los valores correspondientes a los campos de texto del formulario, los objetos `file` o `files` contienen los archivos que serán subidos mediante el formulario.
+Multer añade un objeto `body` y un objeto `file` o `files` al objeto `request`. El objeto `body` contiene los valores correspondientes a los campos de texto del formulario, los objetos `file` o `files` contienen los archivos que serán subidos mediante el formulario.
 
 Ejemplo básico de cómo usarlo:
 
@@ -52,7 +52,7 @@ app.post('/photos/upload', upload.array('photos', 12), function (req, res, next)
 
 var cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
 app.post('/cool-profile', cpUpload, function (req, res, next) {
-  // req.files es un objeto (String -> Array) donde el nombre del campo es la clave (key) y el valor es el arreglo (arrya) de archivos
+  // req.files es un objeto (String -> Array) donde el nombre del campo es la clave (key) y el valor es el arreglo (array) de archivos
   //
   // Ejemplo
   //  req.files['avatar'][0] -> Archivo
@@ -95,7 +95,7 @@ Clave (Key) | Descripción | Nota
 
 ### `multer(opts)`
 
-Muler acepta un objeto para configurar sus opciones, la más básica de ellas es la propiedad `dest`, la cual informa a Multer dónde debe subir los archivos. En caso de que omitas el objeto con las opciones, los archivos serán guardados en la memoria y nunca serán escritos en el disco.
+Multer acepta un objeto para configurar sus opciones, la más básica de ellas es la propiedad `dest`, la cual informa a Multer dónde debe subir los archivos. En caso de que omitas el objeto con las opciones, los archivos serán guardados en la memoria y nunca serán escritos en el disco.
 
 Por defecto, Multer renombrará los archivos para evitar conflictos de nombres. La función usada para renombrarlos puede ser modificada acorde a tus necesidades.
 
@@ -211,7 +211,7 @@ Clave (Key) | Descripción | Por defecto
 `parts` | Para los formularios multiparte, el número máximo de partes (campos + archivos) | Infinito
 `headerPairs` | Para los formularios multiparte, el número máximo de cabeceras de pares clave(key)=> valor para analizar | 2000
 
-Especificar los límites puede ayudarte a protejer tu sitio contra ataques de privación del servicio  (DoS).
+Especificar los límites puede ayudarte a proteger tu sitio contra ataques de privación del servicio  (DoS).
 
 ### `fileFilter`
 
