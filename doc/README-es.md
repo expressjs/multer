@@ -1,6 +1,6 @@
 # Multer [![Build Status](https://travis-ci.org/expressjs/multer.svg?branch=master)](https://travis-ci.org/expressjs/multer) [![NPM version](https://badge.fury.io/js/multer.svg)](https://badge.fury.io/js/multer) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
 
-Multer es un "*middleware*"" de node.js para el manejo de `multipart/form-data`, el cuál es usado sobre todo para la subida de archivos. Está escrito sobre [busboy](https://github.com/mscdex/busboy) para maximizar su eficiencia.
+Multer es un "*middleware*" de node.js para el manejo de `multipart/form-data`, el cuál es usado sobre todo para la subida de archivos. Está escrito sobre [busboy](https://github.com/mscdex/busboy) para maximizar su eficiencia.
 
 **NOTA**: Multer no procesará ningún formulario basado en `multipart/form-data`.
 
@@ -13,7 +13,7 @@ Multer es un "*middleware*"" de node.js para el manejo de `multipart/form-data`,
 - [한국어](https://github.com/expressjs/multer/blob/master/doc/README-ko.md) (Korean)
 - [Русский язык](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (Russian)
 
-## Instralación
+## Instalación
 
 ```sh
 $ npm install --save multer
@@ -21,7 +21,7 @@ $ npm install --save multer
 
 ## Uso
 
-Multer añade un objeto `body` y un objeto `file` o `files` al objeto `request`. El objeto `body` coniene los valores correspondientes a los campos de texto del formulario, los objetos `file` o `files` contienen los archivos que serán subidos mediante el formulario.
+Multer añade un objeto `body` y un objeto `file` o `files` al objeto `request`. El objeto `body` contiene los valores correspondientes a los campos de texto del formulario, los objetos `file` o `files` contienen los archivos que serán subidos mediante el formulario.
 
 Ejemplo básico de cómo usarlo:
 
@@ -95,7 +95,7 @@ Clave (Key) | Descripción | Nota
 
 ### `multer(opts)`
 
-Muler acepta un objeto para configurar sus opciones, la más básica de ellas es la propiedad `dest`, la cual informa a Multer dónde debe subir los archivos. En caso de que omitas el objeto con las opciones, los archivos serán guardados en la memoria y nunca serán escritos en el disco.
+Multer acepta un objeto para configurar sus opciones, la más básica de ellas es la propiedad `dest`, la cual informa a Multer dónde debe subir los archivos. En caso de que omitas el objeto con las opciones, los archivos serán guardados en la memoria y nunca serán escritos en el disco.
 
 Por defecto, Multer renombrará los archivos para evitar conflictos de nombres. La función usada para renombrarlos puede ser modificada acorde a tus necesidades.
 
@@ -105,7 +105,7 @@ Clave (key) | Descripción
 --- | ---
 `dest` o `storage` | Donde se guardarán los archivos
 `fileFilter` | Función para controlar qué archivos son aceptados
-`limits` | Limites de los datos de subida
+`limits` | Límites de los datos de subida
 `preservePath` | Mantiene la dirección completa de la ubicación de los archivos, en vez de sólo sus nombres
 
 En la aplicación web promedio es probable que sólo se requiera `dest`, siendo configurado como en el siguiente ejemplo:
@@ -126,10 +126,10 @@ Acepta un arreglo (array), de archivos, todos con el nombre `fieldname`. Opciona
 
 #### `.fields(fields)`
 
-Acepta una mixtura de archivos, especificados por `field`. Un objeto con arreglos (arrays) de archivos será guardado en `req.files`
+Acepta una mezcla de archivos, especificados por `field`. Un objeto con arreglos (arrays) de archivos será guardado en `req.files`
 
-`fields` debiera ser un arreglo (array) de objetos con `name` y opcionalmente `maxCount`.
-Example:
+`fields` debería ser un arreglo (array) de objetos con `name` y opcionalmente `maxCount`.
+Ejemplo:
 
 ```javascript
 [
@@ -145,9 +145,9 @@ Acepta sólo campos de texto. En caso de intentar subir un archivo, se generará
 
 #### `.any()`
 
-Acepta todos los archivos que han sido enviado. Un arreglo (array) contieniendo los archivos será guardado en `req.files`.
+Acepta todos los archivos que han sido enviado. Un arreglo (array) conteniendo los archivos será guardado en `req.files`.
 
-**ADVERTENCIA:** Asegurate siempre manejar los archivos que los usuarios intenten subir. Nunca uses Multer como una función middleware de manera global dado que, de esta forma, un usuario malicioso podría subir archivos por medio de rutas que no has anticipado. Usa sólo esta función en rutas en las que estás esperando archivos.
+**ADVERTENCIA:** Asegúrate de siempre manejar los archivos que los usuarios intenten subir. Nunca uses Multer como una función middleware de manera global dado que, de esta forma, un usuario malicioso podría subir archivos por medio de rutas que no has anticipado. Usa sólo esta función en rutas en las que estás esperando archivos.
 
 ### `storage`
 
@@ -170,21 +170,21 @@ var upload = multer({ storage: storage })
 
 Hay dos opciones disponibles, `destination` y `filename`. Ambas son funciones que determinan dónde debería almacenarse el archivo.
 
-`destination` es usado para determinar la capeta en donde los archivos subidos deberían ser almacenados. Esto también puede ser informado mediante una `string` (por ejemplo: `'/tmp/uploads'`). Si ninguna propiedad `destination` es dada, entonces será usado el directorio por defecto en donde el sistema operativo almacena sus archivos temporales.
+`destination` es usado para determinar la capeta en donde los archivos subidos deberían ser almacenados. Esto también puede ser informado mediante un `string` (por ejemplo: `'/tmp/uploads'`). Si ninguna propiedad `destination` es dada, entonces será usado el directorio por defecto en donde el sistema operativo almacena sus archivos temporales.
 
-**Nota:** Al pasar `destination` como una función, tú eres el responsable de crear los directorios donde los archivos serán almacenado. Cuando una `string` es dada a `destination`, Multer se asegurará que el directorio sea creado en caso de no encontrar uno.
+**Nota:** Al pasar `destination` como una función, tú eres el responsable de crear los directorios donde los archivos serán almacenados. Cuando un `string` es dada a `destination`, Multer se asegurará de que el directorio sea creado en caso de no encontrar uno.
 
 `filename` es usado para determinar cómo debería ser nombrado el archivo dentro de la carpeta. Si `filename` no es provisto, a cada archivo se le asignará un nombre aleatorio que no incluirá ninguna extensión.
 
-**Nota:** Multer no añadirá ningúna extensión de archivos por tí, es tu función la que debería retornar un nombre completo, incluyendo también la extensión del archivo.
+**Nota:** Multer no añadirá ningúna extensión de archivos por ti, es tu función la que debería retornar un nombre completo, incluyendo también la extensión del archivo.
 
-El objeto request (`req`) y parte de la información del archivo (`file`) son pasadas a tu función para ayudar con la con la decisión en la nomenclatura.
+El objeto petición (`req`) y parte de la información del archivo (`file`) son pasadas a tu función para ayudar con la decisión en la nomenclatura.
 
 Nota que  `req.body` puede que no haya sido totalmente poblado todavía. Esto depende del orden en el que el cliente transmita sus campos y archivos hacia el servidor.
 
 #### `MemoryStorage`
 
-El mecanismo de almacenamiento en memoria almacena los archivos en la memoria en la forma de objetos `Buffer`. Para esto no se proveen opciones.
+El mecanismo de almacenamiento en memoria almacena los archivos en la memoria en forma de objetos `Buffer`. Para esto no se proveen opciones.
 
 ```javascript
 var storage = multer.memoryStorage()
@@ -197,7 +197,7 @@ Al usar el almacenamiento en memoria, la información del archivo contendrá un 
 
 ### `limits`
 
-Un objeto que especifica los  límites correpondientes a los tamaños de las siguientes propiedades. Multer pasa este objeto directamente a *busboy*, los detalles de las propiedades pueden encontrarse en [la página de busboy](https://github.com/mscdex/busboy#busboy-methods).
+Un objeto que especifica los límites correpondientes a los tamaños de las siguientes propiedades. Multer pasa este objeto directamente a *busboy*, los detalles de las propiedades pueden encontrarse en [la página de busboy](https://github.com/mscdex/busboy#busboy-methods).
 
 Los siguientes valores en números enteros están disponibles:
 
@@ -209,9 +209,9 @@ Clave (Key) | Descripción | Por defecto
 `fileSize` | Para formularios multiparte, el tamaño máximo de los archivos (en bytes) | Infinito
 `files` | Para los formularios multiparte, el número máximo de campos para archivos | Infinito
 `parts` | Para los formularios multiparte, el número máximo de partes (campos + archivos) | Infinito
-`headerPairs` | Para los formularios multiparte, el número máximo de cabeceras de pares clave(key)=> valor para analizar | 2000
+`headerPairs` | Para los formularios multiparte, el número máximo de cabeceras de pares clave=>valor para analizar | 2000
 
-Especificar los límites puede ayudarte a protejer tu sitio contra ataques de privación del servicio  (DoS).
+Especificar los límites puede ayudarte a protejer tu sitio contra ataques de denegación del servicio (DoS).
 
 ### `fileFilter`
 
@@ -239,7 +239,7 @@ function fileFilter (req, file, cb) {
 
 Al encontrarse con un error, Multer delegará ese error a Express. Puedes mostrar una linda página de error usando [la manera standard de Express](http://expressjs.com/guide/error-handling.html).
 
-Si quieres atajar los errores específicamente desde Multer, puedes llamar la función middleware tú mismo. También, si quieres atajar sólo [los errores de Multer](https://github.com/expressjs/multer/blob/master/lib/multer-error.js), puedes usar la clase `MulterError` que está adherida al mismo objeto `multer` (por ejemplo: `err instanceof multer.MulterError`).
+Si quieres capturar los errores específicamente desde Multer, puedes llamar la función middleware tú mismo. También, si quieres capturar sólo [los errores de Multer](https://github.com/expressjs/multer/blob/master/lib/multer-error.js), puedes usar la clase `MulterError` que está adherida al mismo objeto `multer` (por ejemplo: `err instanceof multer.MulterError`).
 
 ```javascript
 var multer = require('multer')
