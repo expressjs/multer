@@ -11,7 +11,7 @@ Multer 是一个 node.js 中间件，用于处理 `multipart/form-data` 类型�
 ## 其它语言
 
 - [English](https://github.com/expressjs/multer/blob/master/README.md) (英语)
-- [Spanish](https://github.com/expressjs/multer/blob/master/doc/README-es.md) (西班牙文)
+- [Español](https://github.com/expressjs/multer/blob/master/doc/README-es.md) (西班牙文)
 - [한국어](https://github.com/expressjs/multer/blob/master/doc/README-ko.md) (朝鲜语)
 - [Русский язык](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (俄語)
 - [Português](https://github.com/expressjs/multer/blob/master/doc/README-pt-br.md) (巴西葡萄牙语)
