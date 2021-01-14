@@ -41,8 +41,9 @@ DiskStorage.prototype._handleFile = function _handleFile (req, file, cb) {
       file.stream.pipe(outStream)
 
       if (connection) {
-        connection.on('error', function(error) {
-          outStream.end();
+        connection.on('error', function (error) {
+          outStream.end()
+          cb(error)
         })
       }
 
