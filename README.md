@@ -227,7 +227,7 @@ If no `filename` is given, each file will be given a random name that doesn't
 include any file extension.
 
 **Note:** Multer will not append any file extension for you, your function
-should return a filename complete with an file extension.
+should return a filename complete with a file extension.
 
 Each function gets passed both the request (`req`) and some information about
 the file (`file`) to aid with the decision.
