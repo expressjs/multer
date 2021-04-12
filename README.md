@@ -345,11 +345,11 @@ export default function FileLoader(): React.ReactNode {
           const { files } = e.target;
           // you can treat the e.target.files
           if (files.length === 0) {
-            console.log('You must choose one image');
+            console.log('You must choose at least one image');
             return;
           }
-          if (files.length > 1) {
-            console.log('max one  image');
+          if (files.length > 2) {
+            console.log('max two  images');
             return;
           }
           if (files[0].size > 4194304) {
@@ -377,6 +377,7 @@ export default function FileLoader(): React.ReactNode {
         accept="image/*"
         data-file={imageURL}
         onChange={handleChange}
+        multiple
       />
     </div>
   );
