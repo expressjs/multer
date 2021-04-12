@@ -322,9 +322,9 @@ app.post('/profile', function (req, res) {
 })
 ```
 
-### Client side examples
+## Client side examples
 
-## React JS
+### React JS
 
 
 This is an example of sending information through FormData to backend with ReacJS using typescript.
