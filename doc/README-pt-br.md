@@ -62,7 +62,7 @@ app.post('/cool-profile', cpUpload, function (req, res, next) {
 })
 ```
 
-Caso você precise lidar com forumário text-only multipart, você deve usar o método `.none()`:
+Caso você precise lidar com formulário text-only multipart, você deve usar o método `.none()`:
 
 ```javascript
 var express = require('express')
