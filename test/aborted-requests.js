@@ -1,15 +1,16 @@
 /* eslint-env mocha */
 
-const util = require('./_util')
-const multer = require('../')
+import assert from 'node:assert'
+import { PassThrough } from 'node:stream'
+import { promisify } from 'node:util'
 
-const assertRejects = require('assert-rejects')
-const FormData = require('form-data')
-const PassThrough = require('stream').PassThrough
-const pify = require('pify')
+import FormData from 'form-data'
+
+import * as util from './_util.js'
+import multer from '../index.js'
 
 function getLength (form) {
-  return pify(form.getLength).call(form)
+  return promisify(form.getLength).call(form)
 }
 
 function createAbortStream (maxBytes, aborter) {
@@ -50,9 +51,9 @@ describe('Aborted requests', () => {
       'content-length': length
     }
 
-    const result = pify(parser)(form.pipe(req), null)
+    const result = promisify(parser)(form.pipe(req), null)
 
-    return assertRejects(result, err => err.code === 'CLIENT_ABORTED')
+    return assert.rejects(result, err => err.code === 'CLIENT_ABORTED')
   })
 
   it('should handle clients erroring the request', async () => {
@@ -69,8 +70,8 @@ describe('Aborted requests', () => {
       'content-length': length
     }
 
-    const result = pify(parser)(form.pipe(req), null)
+    const result = promisify(parser)(form.pipe(req), null)
 
-    return assertRejects(result, err => err.message === 'TEST_ERROR')
+    return assert.rejects(result, err => err.message === 'TEST_ERROR')
   })
 })

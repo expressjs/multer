@@ -1,11 +1,12 @@
-const fs = require('fs')
-const path = require('path')
-const pify = require('pify')
-const hasha = require('hasha')
-const assert = require('assert')
-const stream = require('stream')
+import assert from 'node:assert'
+import fs from 'node:fs'
+import stream from 'node:stream'
+import { promisify } from 'node:util'
 
-const onFinished = pify(require('on-finished'))
+import hasha from 'hasha'
+import _onFinished from 'on-finished'
+
+const onFinished = promisify(_onFinished)
 
 const files = new Map([
   ['empty', {
@@ -50,15 +51,15 @@ const files = new Map([
   }]
 ])
 
-exports.file = function file (name) {
-  return fs.createReadStream(path.join(__dirname, 'files', name + files.get(name).extension))
+export function file (name) {
+  return fs.createReadStream(new URL(`files/${name}${files.get(name).extension}`, import.meta.url))
 }
 
-exports.knownFileLength = function knownFileLength (name) {
+export function knownFileLength (name) {
   return files.get(name).size
 }
 
-exports.assertFile = async (file, fieldName, fileName) => {
+export async function assertFile (file, fieldName, fileName) {
   if (!files.has(fileName)) {
     throw new Error(`No file named "${fileName}"`)
   }
@@ -80,15 +81,15 @@ exports.assertFile = async (file, fieldName, fileName) => {
   assert.strictEqual(hash, expected.hash)
 }
 
-exports.assertFiles = (files) => {
-  return Promise.all(files.map((args) => exports.assertFile(args[0], args[1], args[2])))
+export async function assertFiles (files) {
+  await Promise.all(files.map((args) => assertFile(args[0], args[1], args[2])))
 }
 
 function getLength (form) {
-  return pify(form.getLength).call(form)
+  return promisify(form.getLength).call(form)
 }
 
-exports.submitForm = async (multer, form) => {
+export async function submitForm (multer, form) {
   const length = await getLength(form)
   const req = new stream.PassThrough()
 
@@ -101,7 +102,7 @@ exports.submitForm = async (multer, form) => {
     'content-length': length
   }
 
-  await pify(multer)(req, null)
+  await promisify(multer)(req, null)
   await onFinished(req)
 
   return req

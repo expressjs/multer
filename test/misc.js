@@ -1,10 +1,11 @@
 /* eslint-env mocha */
 
-const assert = require('assert')
+import assert from 'node:assert'
+import { PassThrough, pipeline } from 'node:stream'
+import FormData from 'form-data'
 
-const util = require('./_util')
-const multer = require('../')
-const FormData = require('form-data')
+import * as util from './_util.js'
+import multer from '../index.js'
 
 describe('Misc', () => {
   it('should handle unicode filenames', async () => {
@@ -27,10 +28,9 @@ describe('Misc', () => {
     const stream = util.file('small')
 
     // Don't let FormData figure out a filename
-    delete stream.fd
-    delete stream.path
+    const hidden = pipeline(stream, new PassThrough(), () => {})
 
-    form.append('file', stream, { knownLength: util.knownFileLength('small') })
+    form.append('file', hidden, { knownLength: util.knownFileLength('small') })
 
     const req = await util.submitForm(parser, form)
     assert.strictEqual(req.file.originalName, undefined)

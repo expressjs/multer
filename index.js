@@ -1,7 +1,7 @@
-const createFileFilter = require('./lib/file-filter')
-const createMiddleware = require('./lib/middleware')
+import bytes from 'bytes'
 
-const bytes = require('bytes')
+import createFileFilter from './lib/file-filter.js'
+import createMiddleware from './lib/middleware.js'
 
 const kLimits = Symbol('limits')
 
@@ -60,7 +60,7 @@ class Multer {
   }
 }
 
-function multer (options = {}) {
+export default function multer (options = {}) {
   if (options === null) throw new TypeError('Expected object for argument "options", got null')
   if (typeof options !== 'object') throw new TypeError(`Expected object for argument "options", got ${typeof options}`)
 
@@ -70,5 +70,3 @@ function multer (options = {}) {
 
   return new Multer(options)
 }
-
-module.exports = multer

@@ -1,15 +1,16 @@
 /* eslint-env mocha */
 
-const assert = require('assert')
-const stream = require('stream')
-const hasOwnProperty = require('has-own-property')
+import assert from 'node:assert'
+import stream from 'node:stream'
+import { promisify } from 'node:util'
 
-const pify = require('pify')
-const util = require('./_util')
-const multer = require('../')
-const FormData = require('form-data')
-const testData = require('testdata-w3c-json-form')
-const recursiveNullify = require('recursive-nullify')
+import FormData from 'form-data'
+import hasOwnProperty from 'has-own-property'
+import recursiveNullify from 'recursive-nullify'
+import testData from 'testdata-w3c-json-form'
+
+import * as util from './_util.js'
+import multer from '../index.js'
 
 describe('body', () => {
   let parser
@@ -69,7 +70,7 @@ describe('body', () => {
       'content-length': 11
     }
 
-    await pify(parser)(req, null)
+    await promisify(parser)(req, null)
 
     assert.strictEqual(hasOwnProperty(req, 'body'), false)
     assert.strictEqual(hasOwnProperty(req, 'files'), false)
@@ -85,7 +86,7 @@ describe('body', () => {
       'content-length': 11
     }
 
-    await pify(parser)(req, null)
+    await promisify(parser)(req, null)
 
     assert.strictEqual(hasOwnProperty(req, 'body'), false)
     assert.strictEqual(hasOwnProperty(req, 'files'), false)

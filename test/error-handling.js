@@ -1,13 +1,13 @@
 /* eslint-env mocha */
 
-const assert = require('assert')
-const assertRejects = require('assert-rejects')
-const FormData = require('form-data')
-const pify = require('pify')
-const stream = require('stream')
+import assert from 'node:assert'
+import stream from 'node:stream'
+import { promisify } from 'node:util'
 
-const util = require('./_util')
-const multer = require('../')
+import FormData from 'form-data'
+
+import * as util from './_util.js'
+import multer from '../index.js'
 
 function withLimits (limits, fields) {
   return multer({ limits: limits }).fields(fields)
@@ -50,7 +50,7 @@ describe('Error Handling', () => {
     form.append('tiny', util.file('tiny'))
     form.append('small', util.file('small'))
 
-    await assertRejects(
+    await assert.rejects(
       util.submitForm(parser, form),
       hasCodeAndField('LIMIT_FILE_SIZE', 'small')
     )
@@ -66,7 +66,7 @@ describe('Error Handling', () => {
     form.append('small', util.file('small'))
     form.append('small', util.file('small'))
 
-    await assertRejects(
+    await assert.rejects(
       util.submitForm(parser, form),
       hasCode('LIMIT_FILE_COUNT')
     )
@@ -80,7 +80,7 @@ describe('Error Handling', () => {
 
     form.append('small', util.file('small'))
 
-    await assertRejects(
+    await assert.rejects(
       util.submitForm(parser, form),
       hasCode('LIMIT_FIELD_KEY')
     )
@@ -93,7 +93,7 @@ describe('Error Handling', () => {
     form.append('ok', 'SMILE')
     form.append('blowup', 'BOOM!')
 
-    await assertRejects(
+    await assert.rejects(
       util.submitForm(parser, form),
       hasCode('LIMIT_FIELD_KEY')
     )
@@ -106,7 +106,7 @@ describe('Error Handling', () => {
     form.append('field0', 'This is okay')
     form.append('field1', 'This will make the parser explode')
 
-    await assertRejects(
+    await assert.rejects(
       util.submitForm(parser, form),
       hasCodeAndField('LIMIT_FIELD_VALUE', 'field1')
     )
@@ -119,7 +119,7 @@ describe('Error Handling', () => {
     form.append('field0', 'BOOM!')
     form.append('field1', 'BOOM!')
 
-    await assertRejects(
+    await assert.rejects(
       util.submitForm(parser, form),
       hasCode('LIMIT_FIELD_COUNT')
     )
@@ -133,7 +133,7 @@ describe('Error Handling', () => {
 
     form.append('small', util.file('small'))
 
-    await assertRejects(
+    await assert.rejects(
       util.submitForm(parser, form),
       hasCodeAndField('LIMIT_UNEXPECTED_FILE', 'small')
     )
@@ -151,8 +151,8 @@ describe('Error Handling', () => {
 
     req.end(body)
 
-    await assertRejects(
-      pify(upload)(req, null),
+    await assert.rejects(
+      promisify(upload)(req, null),
       hasMessage('Multipart: Boundary not found')
     )
   })
@@ -176,8 +176,8 @@ describe('Error Handling', () => {
 
     req.end(body)
 
-    await assertRejects(
-      pify(upload)(req, null),
+    await assert.rejects(
+      promisify(upload)(req, null),
       hasMessage('Unexpected end of multipart data')
     )
   })
@@ -191,7 +191,7 @@ describe('Error Handling', () => {
     form.append('small', util.file('small'))
     form.append('small', util.file('small'))
 
-    await assertRejects(
+    await assert.rejects(
       util.submitForm(parser, form),
       hasCode('LIMIT_FILE_SIZE')
     )

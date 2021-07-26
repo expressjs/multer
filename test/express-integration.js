@@ -1,16 +1,17 @@
 /* eslint-env mocha */
 
-const assert = require('assert')
+import assert from 'node:assert'
+import { promisify } from 'node:util'
 
-const multer = require('../')
-const util = require('./_util')
+import express from 'express'
+import FormData from 'form-data'
+import getStream from 'get-stream'
+import _onFinished from 'on-finished'
 
-const pify = require('pify')
-const express = require('express')
-const FormData = require('form-data')
-const getStream = require('get-stream')
+import * as util from './_util.js'
+import multer from '../index.js'
 
-const onFinished = pify(require('on-finished'))
+const onFinished = promisify(_onFinished)
 
 const port = 34279
 
