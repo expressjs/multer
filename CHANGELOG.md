@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.0.0-rc.3 - 2021-06-29
+
+- Breaking: Convert package to ESM
+
+Migration Guide:
+
+This relases changes the package from a Common JS module to an EcmaScript module, and drops support for older versions of Node.
+
+- The minimum version of Node.js supported is now: `12.20.0`, `14.13.1`, and `16.0.0`
+- The package must now be imported using the native `import` syntax instead of with `require`
+
 ## 2.0.0-rc.2 - 2020-03-15
 
 - Allow limits to be passed as string, e.g. `'12MB'`
