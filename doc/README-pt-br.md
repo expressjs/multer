@@ -34,11 +34,11 @@ Não esqueça o `enctype="multipart/form-data"` em seu formulário.
 ```
 
 ```javascript
-var express = require('express')
-var multer  = require('multer')
-var upload = multer({ dest: 'uploads/' })
+const express = require('express')
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
 
-var app = express()
+const app = express()
 
 app.post('/profile', upload.single('avatar'), function (req, res, next) {
   // req.file is the `avatar` file
@@ -50,7 +50,7 @@ app.post('/photos/upload', upload.array('photos', 12), function (req, res, next)
   // req.body will contain the text fields, if there were any
 })
 
-var cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
+const cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
 app.post('/cool-profile', cpUpload, function (req, res, next) {
   // req.files is an object (String -> Array) where fieldname is the key, and the value is array of files
   //
@@ -65,10 +65,10 @@ app.post('/cool-profile', cpUpload, function (req, res, next) {
 Caso você precise lidar com formulário text-only multipart, você deve usar o método `.none()`:
 
 ```javascript
-var express = require('express')
-var app = express()
-var multer  = require('multer')
-var upload = multer()
+const express = require('express')
+const app = express()
+const multer  = require('multer')
+const upload = multer()
 
 app.post('/profile', upload.none(), function (req, res, next) {
   // req.body contains the text fields
@@ -111,7 +111,7 @@ Key | Descrição
 Em um web app básico, somente o `dest` pode ser necessário, e configurado como mostrado no exemplo a seguir:
 
 ```javascript
-var upload = multer({ dest: 'uploads/' })
+const upload = multer({ dest: 'uploads/' })
 ```
 
 Se você quiser mais controle sobre seus envios, você ter que usar a opção `storage` em vez de `dest`. Multer vem com motores de armazenamento `DiskStorage` e `MemoryStorage`; Mais mecanismos estão disponíveis de terceiros.
@@ -159,7 +159,7 @@ Nunca adicione o Multer como global no middleware, já que um usuário mal-inten
 O mecanismo de armazenamento em disco oferece controle total sobre o armazenamento de arquivos em disco.
 
 ```javascript
-var storage = multer.diskStorage({
+const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, '/tmp/my-uploads')
   },
@@ -168,7 +168,7 @@ var storage = multer.diskStorage({
   }
 })
 
-var upload = multer({ storage: storage })
+const upload = multer({ storage: storage })
 ```
 
 Existem duas opções disponíveis, `destination` e `filename`. Ambas são funções que determinam onde o arquivo deve ser armazenado.
@@ -190,8 +190,8 @@ Observe que `req.body` pode não ter sido totalmente preenchido ainda. Isso depe
 
 O mecanismo de armazenamento na memória, armazena os arquivos na memória como um objeto `Buffer`. Não tendo opções.
 ```javascript
-var storage = multer.memoryStorage()
-var upload = multer({ storage: storage })
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage })
 ```
 Ao usar o armazenamento de memória, as informações do arquivo conterão um campo chamado `buffer` que contém o arquivo inteiro.
 
@@ -246,8 +246,8 @@ Quando encontrar um erro, Multer delegará o erro para Express. Você pode exibi
 Se você quer pegar erros especificamente do Multer, você pode enviar para o função de middleware. Além disso, se você quiser pegar apenas [os erros do Multer](https://github.com/expressjs/multer/blob/master/lib/multer-error.js), você pode usar a classe `MulterError` que está ligado ao objeto `multer` (e.g. `err instanceof multer.MulterError`).
 
 ```javascript
-var multer = require('multer')
-var upload = multer().single('avatar')
+const multer = require('multer')
+const upload = multer().single('avatar')
 
 app.post('/profile', function (req, res) {
   upload(req, res, function (err) {
