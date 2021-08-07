@@ -34,11 +34,11 @@ No te olvides de `enctype="multipart/form-data"` en tu formulario.
 ```
 
 ```javascript
-var express = require('express')
-var multer  = require('multer')
-var upload = multer({ dest: 'uploads/' })
+const express = require('express')
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
 
-var app = express()
+const app = express()
 
 app.post('/profile', upload.single('avatar'), function (req, res, next) {
   // req.file es el `avatar` del archivo
@@ -50,7 +50,7 @@ app.post('/photos/upload', upload.array('photos', 12), function (req, res, next)
   // req.body tendrá los campos textuales, en caso de haber alguno.
 })
 
-var cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
+const cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
 app.post('/cool-profile', cpUpload, function (req, res, next) {
   // req.files es un objeto (String -> Array) donde el nombre del campo es la clave (key) y el valor es el arreglo (arrya) de archivos
   //
@@ -65,10 +65,10 @@ app.post('/cool-profile', cpUpload, function (req, res, next) {
 En caso de que necesites manejar un formulario multiparte (multipart form) que sólo contiene campos de texto, recomendamos usar el método `.none()`:
 
 ```javascript
-var express = require('express')
-var app = express()
-var multer  = require('multer')
-var upload = multer()
+const express = require('express')
+const app = express()
+const multer  = require('multer')
+const upload = multer()
 
 app.post('/profile', upload.none(), function (req, res, next) {
   // req.body contiene los campos textuales
@@ -111,7 +111,7 @@ Clave (key) | Descripción
 En la aplicación web promedio es probable que sólo se requiera `dest`, siendo configurado como en el siguiente ejemplo:
 
 ```javascript
-var upload = multer({ dest: 'uploads/' })
+const upload = multer({ dest: 'uploads/' })
 ```
 
 Si quieres más control sobre tus subidas, tendrás que usar la opción `storage` en vez de `dest`. Multer incorpora los mecanismos de almacenamiento `DiskStorage` y `MemoryStorage`; existen otros medios provistos por terceros.
@@ -156,7 +156,7 @@ Acepta todos los archivos que han sido enviado. Un arreglo (array) contieniendo 
 El mecanismo de almacenamiento en el disco otorga completo control en la escritura de archivos en tu disco.
 
 ```javascript
-var storage = multer.diskStorage({
+const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, '/tmp/my-uploads')
   },
@@ -165,7 +165,7 @@ var storage = multer.diskStorage({
   }
 })
 
-var upload = multer({ storage: storage })
+const upload = multer({ storage: storage })
 ```
 
 Hay dos opciones disponibles, `destination` y `filename`. Ambas son funciones que determinan dónde debería almacenarse el archivo.
@@ -187,8 +187,8 @@ Nota que  `req.body` puede que no haya sido totalmente poblado todavía. Esto de
 El mecanismo de almacenamiento en memoria almacena los archivos en la memoria en la forma de objetos `Buffer`. Para esto no se proveen opciones.
 
 ```javascript
-var storage = multer.memoryStorage()
-var upload = multer({ storage: storage })
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage })
 ```
 
 Al usar el almacenamiento en memoria, la información del archivo contendrá un campo llamado `buffer` que contiene el archivo entero.
@@ -242,8 +242,8 @@ Al encontrarse con un error, Multer delegará ese error a Express. Puedes mostra
 Si quieres atajar los errores específicamente desde Multer, puedes llamar la función middleware tú mismo. También, si quieres atajar sólo [los errores de Multer](https://github.com/expressjs/multer/blob/master/lib/multer-error.js), puedes usar la clase `MulterError` que está adherida al mismo objeto `multer` (por ejemplo: `err instanceof multer.MulterError`).
 
 ```javascript
-var multer = require('multer')
-var upload = multer().single('avatar')
+const multer = require('multer')
+const upload = multer().single('avatar')
 
 app.post('/profile', function (req, res) {
   upload(req, res, function (err) {

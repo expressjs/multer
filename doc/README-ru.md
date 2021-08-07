@@ -34,11 +34,11 @@ Multer добавляет объект `body` и объект `file` (или `fi
 ```
 
 ```javascript
-var express = require('express')
-var multer  = require('multer')
-var upload = multer({ dest: 'uploads/' })
+const express = require('express')
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
 
-var app = express()
+const app = express()
 
 app.post('/profile', upload.single('avatar'), function (req, res, next) {
   // req.file - файл `avatar`
@@ -50,7 +50,7 @@ app.post('/photos/upload', upload.array('photos', 12), function (req, res, next)
   // req.body сохранит текстовые поля, если они будут
 })
 
-var cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
+const cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
 app.post('/cool-profile', cpUpload, function (req, res, next) {
   // req.files - объект (String -> Array), где fieldname - ключ, и значение - массив файлов
   //
@@ -65,10 +65,10 @@ app.post('/cool-profile', cpUpload, function (req, res, next) {
 Если вам нужно обработать multipart-форму, содержащую только текст, используйте метод `.none()`:
 
 ```javascript
-var express = require('express')
-var app = express()
-var multer  = require('multer')
-var upload = multer()
+const express = require('express')
+const app = express()
+const multer  = require('multer')
+const upload = multer()
 
 app.post('/profile', upload.none(), function (req, res, next) {
   // req.body содержит текстовые поля
@@ -111,7 +111,7 @@ Multer принимает объект с опциями. Базовая опц�
 Обычно для веб-приложения нужно обязательно переопределить `dest`, как показано в примере ниже.
 
 ```javascript
-var upload = multer({ dest: 'uploads/' })
+const upload = multer({ dest: 'uploads/' })
 ```
 Если вам нужно больше возможностей для управления приложением, можно использовать `storage` вместо `dest`. Multer поставляется с двумя движками работы с памятью, `DiskStorage` и `MemoryStorage`, другие движки можно найти у сторонних разработчиков.
 
@@ -154,7 +154,7 @@ var upload = multer({ dest: 'uploads/' })
 Движок дискового пространства. Дает полный контроль над размещением файлов на диск. 
 
 ```javascript
-var storage = multer.diskStorage({
+const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, '/tmp/my-uploads')
   },
@@ -163,7 +163,7 @@ var storage = multer.diskStorage({
   }
 })
 
-var upload = multer({ storage: storage })
+const upload = multer({ storage: storage })
 ```
 
 Доступно две опции, расположение `destination` и имя файла `filename`. Обе эти функции определяют, где будет находиться файл после загрузки. 
@@ -186,8 +186,8 @@ var upload = multer({ storage: storage })
 Движок оперативной памяти сохраняет файлы в памяти как объекты типа `Buffer`. В этом случае нет никаких дополнительных опций.
 
 ```javascript
-var storage = multer.memoryStorage()
-var upload = multer({ storage: storage })
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage })
 ```
 Когда вы используете этот тип передачи, информация о файле будет содержать поле `buffer`, которое содержит весь файл. 
 
@@ -241,8 +241,8 @@ function fileFilter (req, file, cb) {
 Если вы хотите отлавливать ошибки конкретно от Multer, вам нужно вызывать собственную middleware для их обработки. Еще, если вы хотите отлавливать [исключительно ошибки Multer](https://github.com/expressjs/multer/blob/master/lib/make-error.js#L1-L9), вы можете использовать класс `MulterError`, который привязан к объекту `multer` (например, `err instanceof multer.MulterError`)
 
 ```javascript
-var multer = require('multer')
-var upload = multer().single('avatar')
+const multer = require('multer')
+const upload = multer().single('avatar')
 
 app.post('/profile', function (req, res) {
   upload(req, res, function (err) {
