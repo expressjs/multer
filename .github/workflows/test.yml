@@ -4,6 +4,9 @@ on:
   pull_request:
     branches:
     - master
+  push:
+    branches:
+    - explore-new-api
 
 jobs:
   test:
