@@ -1,7 +1,7 @@
 {
   "name": "multer",
   "description": "Middleware for handling `multipart/form-data`.",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "contributors": [
     "Hage Yaapa <captain@hacksparrow.com> (http://www.hacksparrow.com)",
     "Jaret Pfluger <https://github.com/jpfluger>",
@@ -22,19 +22,20 @@
     "append-field": "^1.0.0",
     "busboy": "^0.2.11",
     "concat-stream": "^1.5.2",
-    "mkdirp": "^0.5.1",
+    "mkdirp": "^0.5.4",
     "object-assign": "^4.1.1",
     "on-finished": "^2.3.0",
     "type-is": "^1.6.4",
     "xtend": "^4.0.0"
   },
   "devDependencies": {
+    "deep-equal": "^2.0.3",
     "express": "^4.13.1",
     "form-data": "^1.0.0-rc1",
     "fs-temp": "^1.1.2",
     "mocha": "^3.5.3",
     "rimraf": "^2.4.1",
-    "standard": "^11.0.1",
+    "standard": "^14.3.3",
     "testdata-w3c-json-form": "^1.0.0"
   },
   "engines": {

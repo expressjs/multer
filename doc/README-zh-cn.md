@@ -11,8 +11,10 @@ Multer 是一个 node.js 中间件，用于处理 `multipart/form-data` 类型�
 ## 其它语言
 
 - [English](https://github.com/expressjs/multer/blob/master/README.md) (英语)
+- [Español](https://github.com/expressjs/multer/blob/master/doc/README-es.md) (西班牙文)
 - [한국어](https://github.com/expressjs/multer/blob/master/doc/README-ko.md) (朝鲜语)
 - [Русский язык](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (俄語)
+- [Português](https://github.com/expressjs/multer/blob/master/doc/README-pt-br.md) (巴西葡萄牙语)
 
 ## 安装
 
@@ -28,11 +30,11 @@ Multer 会添加一个 `body` 对象 以及 `file` 或 `files` 对象 到 expres
 基本使用方法:
 
 ```javascript
-var express = require('express')
-var multer  = require('multer')
-var upload = multer({ dest: 'uploads/' })
+const express = require('express')
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
 
-var app = express()
+const app = express()
 
 app.post('/profile', upload.single('avatar'), function (req, res, next) {
   // req.file 是 `avatar` 文件的信息
@@ -44,7 +46,7 @@ app.post('/photos/upload', upload.array('photos', 12), function (req, res, next)
   // req.body 将具有文本域数据，如果存在的话
 })
 
-var cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
+const cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
 app.post('/cool-profile', cpUpload, function (req, res, next) {
   // req.files 是一个对象 (String -> Array) 键是文件名，值是文件数组
   //
@@ -59,10 +61,10 @@ app.post('/cool-profile', cpUpload, function (req, res, next) {
 如果你需要处理一个只有文本域的表单，你应当使用 `.none()`:
 
 ```javascript
-var express = require('express')
-var app = express()
-var multer  = require('multer')
-var upload = multer()
+const express = require('express')
+const app = express()
+const multer  = require('multer')
+const upload = multer()
 
 app.post('/profile', upload.none(), function (req, res, next) {
   // req.body 包含文本域
@@ -105,7 +107,7 @@ Key | Description
 通常，一般的网页应用，只需要设置 `dest` 属性，像这样：
 
 ```javascript
-var upload = multer({ dest: 'uploads/' })
+const upload = multer({ dest: 'uploads/' })
 ```
 
 如果你想在上传时进行更多的控制，你可以使用 `storage` 选项替代 `dest`。Multer 具有 `DiskStorage` 和 `MemoryStorage` 两个存储引擎；另外还可以从第三方获得更多可用的引擎。
@@ -151,7 +153,7 @@ Example:
 磁盘存储引擎可以让你控制文件的存储。
 
 ```javascript
-var storage = multer.diskStorage({
+const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, '/tmp/my-uploads')
   },
@@ -160,7 +162,7 @@ var storage = multer.diskStorage({
   }
 })
 
-var upload = multer({ storage: storage })
+const upload = multer({ storage: storage })
 ```
 
 有两个选项可用，`destination` 和 `filename`。他们都是用来确定文件存储位置的函数。
@@ -182,8 +184,8 @@ var upload = multer({ storage: storage })
 内存存储引擎将文件存储在内存中的 `Buffer` 对象，它没有任何选项。
 
 ```javascript
-var storage = multer.memoryStorage()
-var upload = multer({ storage: storage })
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage })
 ```
 
 当使用内存存储引擎，文件信息将包含一个 `buffer` 字段，里面包含了整个文件数据。
@@ -235,8 +237,8 @@ function fileFilter (req, file, cb) {
 如果你想捕捉 multer 发出的错误，你可以自己调用中间件程序。如果你想捕捉 [Multer 错误](https://github.com/expressjs/multer/blob/master/lib/multer-error.js)，你可以使用 `multer` 对象下的 `MulterError` 类 (即 `err instanceof multer.MulterError`)。
 
 ```javascript
-var multer = require('multer')
-var upload = multer().single('avatar')
+const multer = require('multer')
+const upload = multer().single('avatar')
 
 app.post('/profile', function (req, res) {
   upload(req, res, function (err) {

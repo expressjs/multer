@@ -52,7 +52,7 @@ describe('Functionality', function () {
       util.submitForm(parser, env.form, function (err, req) {
         assert.ifError(err)
         assert.ok(startsWith(req.file.path, env.uploadDir))
-        assert.equal(util.fileSize(req.file.path), 1778)
+        assert.strictEqual(util.fileSize(req.file.path), 1778)
         done()
       })
     })
@@ -67,7 +67,7 @@ describe('Functionality', function () {
 
       util.submitForm(parser, env.form, function (err, req) {
         assert.ifError(err)
-        assert.equal(req.file.filename, 'small0small0.dat')
+        assert.strictEqual(req.file.filename, 'small0small0.dat')
         done()
       })
     })
@@ -82,7 +82,7 @@ describe('Functionality', function () {
 
       util.submitForm(parser, env.form, function (err, req) {
         assert.ifError(err)
-        assert.equal(req.file.filename, 'tiny0tiny0.dat')
+        assert.strictEqual(req.file.filename, 'tiny0tiny0.dat')
         done()
       })
     })
@@ -98,9 +98,9 @@ describe('Functionality', function () {
 
       util.submitForm(parser, env.form, function (err, req) {
         assert.ifError(err)
-        assert.equal(req.files.length, 2)
-        assert.equal(req.files[0].filename, 'themFilessmall0.dat')
-        assert.equal(req.files[1].filename, 'themFilessmall1.dat')
+        assert.strictEqual(req.files.length, 2)
+        assert.strictEqual(req.files[0].filename, 'themFilessmall0.dat')
+        assert.strictEqual(req.files[1].filename, 'themFilessmall1.dat')
         done()
       })
     })
@@ -128,7 +128,7 @@ describe('Functionality', function () {
 
     util.submitForm(parser, form, function (err, req) {
       assert.ifError(err)
-      assert.equal(req.files.length, 2)
+      assert.strictEqual(req.files.length, 2)
       assert.ok(req.files[0].path.indexOf('/testforme-') >= 0)
       assert.ok(req.files[1].path.indexOf('/testforme-') >= 0)
       done()

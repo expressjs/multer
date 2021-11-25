@@ -7,9 +7,11 @@ Multer는 파일 업로드를 위해 사용되는 `multipart/form-data` 를 다�
 ## 번역
 
 이 문서는 아래의 언어로도 제공됩니다:
-- [English](https://github.com/expressjs/multer/blob/master/README.md)
+- [English](https://github.com/expressjs/multer/blob/master/README.md) (영어)
+- [Español](https://github.com/expressjs/multer/blob/master/doc/README-es.md) (스페인어)
 - [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (중국어)
 - [Русский язык](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (러시아)
+- [Português](https://github.com/expressjs/multer/blob/master/doc/README-pt-br.md) (포르투갈어 BR)
 
 ## 설치
 
@@ -24,11 +26,11 @@ Multer는 `body` 객체와 한 개의 `file` 혹은 여러개의 `files` 객체�
 기본 사용 예제:
 
 ```javascript
-var express = require('express')
-var multer  = require('multer')
-var upload = multer({ dest: 'uploads/' })
+const express = require('express')
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
 
-var app = express()
+const app = express()
 
 app.post('/profile', upload.single('avatar'), function (req, res, next) {
   // req.file 은 `avatar` 라는 필드의 파일 정보입니다.
@@ -40,7 +42,7 @@ app.post('/photos/upload', upload.array('photos', 12), function (req, res, next)
   // 텍스트 필드가 있는 경우, req.body가 이를 포함할 것입니다.
 })
 
-var cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
+const cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
 app.post('/cool-profile', cpUpload, function (req, res, next) {
   // req.files는 (String -> Array) 형태의 객체 입니다.
   // 필드명은 객체의 key에, 파일 정보는 배열로 value에 저장됩니다.
@@ -56,10 +58,10 @@ app.post('/cool-profile', cpUpload, function (req, res, next) {
 텍스트 전용 multipart 폼을 처리해야 하는 경우, 어떠한 multer 메소드 (`.single()`, `.array()`, `fields()`) 도 사용할 수 있습니다. 아래는 `.array()` 를 사용한 예제 입니다 :
 
 ```javascript
-var express = require('express')
-var app = express()
-var multer  = require('multer')
-var upload = multer()
+const express = require('express')
+const app = express()
+const multer  = require('multer')
+const upload = multer()
 
 app.post('/profile', upload.array(), function (req, res, next) {
   // req.body는 텍스트 필드를 포함합니다.
@@ -102,7 +104,7 @@ Key | Description
 보통의 웹 앱에서는 `dest` 옵션 정도만 필요할지도 모릅니다. 설정 방법은 아래의 예제에 나와있습니다.
 
 ```javascript
-var upload = multer({ dest: 'uploads/' })
+const upload = multer({ dest: 'uploads/' })
 ```
 
 만일 업로드를 더 제어하고 싶다면, `dest` 옵션 대신 `storage` 옵션을 사용할 수 있습니다. Multer는 스토리지 엔진인 `DiskStorage` 와 `MemoryStorage` 를 탑재하고 있습니다. 써드파티로부터 더 많은 엔진들을 사용할 수 있습니다.
@@ -146,7 +148,7 @@ var upload = multer({ dest: 'uploads/' })
 디스크 스토리지 엔진은 파일을 디스크에 저장하기 위한 모든 제어 기능을 제공합니다.
 
 ```javascript
-var storage = multer.diskStorage({
+const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, '/tmp/my-uploads')
   },
@@ -155,7 +157,7 @@ var storage = multer.diskStorage({
   }
 })
 
-var upload = multer({ storage: storage })
+const upload = multer({ storage: storage })
 ```
 
 `destination` 과 `filename` 의 두가지 옵션이 가능합니다. 두 옵션 모두 파일을 어디에 저장할 지를 정하는 함수입니다.
@@ -178,8 +180,8 @@ var upload = multer({ storage: storage })
 메모리 스토리지 엔진은 파일을 메모리에 `Buffer` 객체로 저장합니다. 이에 대해서는 어떤 옵션도 없습니다.
 
 ```javascript
-var storage = multer.memoryStorage()
-var upload = multer({ storage: storage })
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage })
 ```
 
 메모리 스토리지 사용시, 파일 정보는 파일 전체를 포함하는 `buffer` 라고 불리는 필드를 포함할 것입니다.
@@ -231,7 +233,7 @@ function fileFilter (req, file, cb) {
 만일 multer 로부터 특별히 에러를 캐치하고 싶다면, 직접 미들웨어 함수를 호출하세요.
 
 ```javascript
-var upload = multer().single('avatar')
+const upload = multer().single('avatar')
 
 app.post('/profile', function (req, res) {
   upload(req, res, function (err) {

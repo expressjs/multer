@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.4.3 - 2021-08-09
+
+- Bugfix: Avoid deprecated pseudoRandomBytes function (#774)
+- Docs: Add Português Brazil translation for README (#758)
+- Docs: Clarify the callback calling convention (#775)
+- Docs: Add example on how to link to html multipart form (#580)
+- Docs: Add Spanish translation for README (#838)
+- Docs: Add Math.random() to storage filename example (#841)
+- Docs: Fix mistakes in russian doc (#869)
+- Docs: Improve Português Brazil translation (#877)
+- Docs: Update var to const in all Readmes (#1024)
+- Internal: Bump mkdirp version (#862)
+- Internal: Bump Standard version (#878)
+
 ## 1.4.2 - 2019-07-16
 
 - Docs: Add Russian translation for README (#662)
