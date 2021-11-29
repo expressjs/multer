@@ -4,7 +4,7 @@ Multer es un "*middleware*" de node.js para el manejo de `multipart/form-data`, 
 
 **NOTA**: Multer no procesará ningún formulario basado en `multipart/form-data`.
 
-## Traducciones 
+## Traducciones
 
 Éste archivo README también está disponible en otros lenguajes:
 
@@ -53,7 +53,7 @@ app.post('/photos/upload', upload.array('photos', 12), function (req, res, next)
 
 const cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
 app.post('/cool-profile', cpUpload, function (req, res, next) {
-  // req.files es un objeto (String -> Array) donde el nombre del campo es la clave (key) y el valor es el arreglo (arrya) de archivos
+  // req.files es un objeto (String -> Array) donde el nombre del campo es la clave (key) y el valor es el arreglo (array) de archivos
   //
   // Ejemplo
   //  req.files['avatar'][0] -> Archivo
@@ -212,7 +212,7 @@ Clave (Key) | Descripción | Por defecto
 `parts` | Para los formularios multiparte, el número máximo de partes (campos + archivos) | Infinito
 `headerPairs` | Para los formularios multiparte, el número máximo de cabeceras de pares clave=>valor para analizar | 2000
 
-Especificar los límites puede ayudarte a protejer tu sitio contra ataques de denegación del servicio (DoS).
+Especificar los límites puede ayudarte a proteger tu sitio contra ataques de denegación del servicio (DoS).
 
 ### `fileFilter`
 
