@@ -21,8 +21,8 @@
     "middleware"
   ],
   "dependencies": {
+    "@fastify/busboy": "^1.0.0",
     "append-field": "^2.0.0",
-    "busboy": "^0.3.1",
     "bytes": "^3.1.0",
     "fs-temp": "^2.0.1",
     "has-own-property": "^2.0.0",
