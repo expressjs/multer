@@ -148,6 +148,33 @@ describe('Error Handling', function () {
     })
   })
 
+  it('should notify of missing field name', function (done) {
+    var req = new stream.PassThrough()
+    var storage = multer.memoryStorage()
+    var upload = multer({ storage: storage }).single('tiny0')
+    var boundary = 'AaB03x'
+    var body = [
+      '--' + boundary,
+      'Content-Disposition: form-data',
+      '',
+      'test content',
+      '--' + boundary,
+      ''
+    ].join('\r\n')
+
+    req.headers = {
+      'content-type': 'multipart/form-data; boundary=' + boundary,
+      'content-length': body.length
+    }
+
+    req.end(body)
+
+    upload(req, null, function (err) {
+      assert.strictEqual(err.code, 'MISSING_FIELD_NAME')
+      done()
+    })
+  })
+
   it('should report errors from storage engines', function (done) {
     var storage = multer.memoryStorage()
 
