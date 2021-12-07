@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.4.4 - 2021-12-07
+
+- Bugfix: Handle missing field names (#913)
+- Docs: Add Vietnamese translation (#803)
+- Docs: Improve Spanish translation (#948)
+
 ## 1.4.3 - 2021-08-09
 
 - Bugfix: Avoid deprecated pseudoRandomBytes function (#774)
