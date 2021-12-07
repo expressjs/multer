@@ -170,7 +170,7 @@ describe('Error Handling', function () {
     req.end(body)
 
     upload(req, null, function (err) {
-      assert.strictEqual(err.code, 'LIMIT_MISSING_FIELD_NAME')
+      assert.strictEqual(err.code, 'MISSING_FIELD_NAME')
       done()
     })
   })
