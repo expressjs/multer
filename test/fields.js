@@ -132,4 +132,23 @@ describe('Fields', function () {
       done()
     })
   })
+
+  it('should convert JSON fields into objects', function (done) {
+    var form = new FormData()
+
+    form.append('obj{}', JSON.stringify({
+      x: 1, foo: 'bar'
+    }))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.ifError(err)
+      assert(deepEqual(req.body, {
+        obj: {
+          x: 1,
+          foo: 'bar'
+        }
+      }))
+      done()
+    })
+  })
 })
