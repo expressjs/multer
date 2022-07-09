@@ -34,8 +34,8 @@ describe('Issue #232', function () {
     util.submitForm(parser, form, function (err, req) {
       assert.ok(err, 'an error was given')
 
-      assert.equal(err.code, 'LIMIT_FILE_SIZE')
-      assert.equal(err.field, 'file')
+      assert.strictEqual(err.code, 'LIMIT_FILE_SIZE')
+      assert.strictEqual(err.field, 'file')
 
       done()
     })
