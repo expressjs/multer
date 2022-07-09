@@ -12,9 +12,12 @@
 هذا الملف متاح أيضًا بلغات أخرى:
 
 - [English](https://github.com/expressjs/multer/blob/master/README.md) (الإنجليزية)
+- [Español](https://github.com/expressjs/multer/blob/master/doc/README-es.md) (الإسبانية)
 - [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (الصينية)
 - [한국어](https://github.com/expressjs/multer/blob/master/doc/README-ko.md) (الكورية)
 - [Русский язык](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (الروسية)
+- [Việt Nam](https://github.com/expressjs/multer/blob/master/doc/README-vi.md) (الفتنامية)
+- [Português](https://github.com/expressjs/multer/blob/master/doc/README-pt-br.md) (البرتغالية)
 
 
 ## التنصيب
