@@ -44,6 +44,8 @@ Multer.prototype._makeMiddleware = function (fields, fileStrategy) {
       fileFilter(req, file, cb)
     }
 
+    console.log('- middleware setup -')
+
     return {
       limits: this.limits,
       preservePath: this.preservePath,
