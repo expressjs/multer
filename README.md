@@ -143,6 +143,7 @@ Key | Description
 `dest` or `storage` | Where to store the files
 `fileFilter` | Function to control which files are accepted
 `limits` | Limits of the uploaded data
+`parseJsonFields` | Parse fields that have the content-type `application/json`
 `preservePath` | Keep the full path of files instead of just the base name
 
 In an average web app, only `dest` might be required, and configured as shown in
@@ -303,6 +304,13 @@ function fileFilter (req, file, cb) {
 
 }
 ```
+
+### `parseJsonFields`
+
+Fields may also have a `Content-Type` header. If you set `parseJsonFields` to
+`true` these fields will be parsed using `JSON.parse()` instead of handled as
+plain text strings. This way you don't need to unroll complex JSON structures
+that are transmitted alongside uploaded files as url-encoded fields.
 
 ## Error handling
 
