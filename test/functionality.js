@@ -134,4 +134,27 @@ describe('Functionality', function () {
       done()
     })
   })
+
+  it('should preserve async_hooks context', function (done) {
+    makeStandardEnv(function (err, env) {
+      if (err) return done(err)
+
+      var parser = env.upload.single('small0')
+      env.form.append('small0', util.file('small0.dat'))
+
+      try {
+        var asyncHooks = require('node:async_hooks')
+        var asyncLocalStorage = new asyncHooks.AsyncLocalStorage()
+        asyncLocalStorage.run('foo', function () {
+          util.submitForm(parser, env.form, function (err, req) {
+            assert.ifError(err)
+            assert.strictEqual(asyncLocalStorage.getStore(), 'foo')
+            done()
+          })
+        })
+      } catch (_) {
+        // don't test async_hooks functionality in environments that don't support it
+      }
+    })
+  })
 })
