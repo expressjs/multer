@@ -25,6 +25,14 @@ Multer는 `body` 객체와 한 개의 `file` 혹은 여러개의 `files` 객체�
 
 기본 사용 예제:
 
+양식에서`enctype="multipart/form-data"` 부분을 누락하지 마십시오.
+
+```html
+<form action="/profile" method="post" enctype="multipart/form-data">
+  <input type="file" name="avatar" />
+</form>
+```
+
 ```javascript
 const express = require('express')
 const multer  = require('multer')
