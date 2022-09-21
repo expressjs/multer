@@ -2,7 +2,7 @@
 
 Multer es un "*middleware*" de node.js para el manejo de `multipart/form-data`, el cuál es usado sobre todo para la subida de archivos. Está escrito sobre [busboy](https://github.com/mscdex/busboy) para maximizar su eficiencia.
 
-**NOTA**: Multer no procesará ningún formulario basado en `multipart/form-data`.
+**NOTA**: Multer no procesará ningún formulario que no esté basado en `multipart/form-data`.
 
 ## Traducciones
 
