@@ -4,6 +4,7 @@ import createFileFilter from './lib/file-filter.js'
 import createMiddleware from './lib/middleware.js'
 
 const kLimits = Symbol('limits')
+const kDisableDetection = Symbol('disableDetection')
 
 function parseLimit (limits, key, defaultValue) {
   const input = limits[key] == null ? defaultValue : limits[key]
@@ -13,12 +14,13 @@ function parseLimit (limits, key, defaultValue) {
   return value
 }
 
-function _middleware (limits, fields, fileStrategy) {
+function _middleware (limits, fields, fileStrategy, disableDetection) {
   return createMiddleware(() => ({
     fields: fields,
     limits: limits,
     fileFilter: createFileFilter(fields),
-    fileStrategy: fileStrategy
+    fileStrategy: fileStrategy,
+    disableDetection: disableDetection
   }))
 }
 
@@ -32,22 +34,23 @@ class Multer {
       files: parseLimit(options.limits || {}, 'files', 10),
       headerPairs: parseLimit(options.limits || {}, 'headerPairs', 2000)
     }
+    this[kDisableDetection] = !!options.disableDetection
   }
 
   single (name) {
-    return _middleware(this[kLimits], [{ name: name, maxCount: 1 }], 'VALUE')
+    return _middleware(this[kLimits], [{ name: name, maxCount: 1 }], 'VALUE', this[kDisableDetection])
   }
 
   array (name, maxCount) {
-    return _middleware(this[kLimits], [{ name: name, maxCount: maxCount }], 'ARRAY')
+    return _middleware(this[kLimits], [{ name: name, maxCount: maxCount }], 'ARRAY', this[kDisableDetection])
   }
 
   fields (fields) {
-    return _middleware(this[kLimits], fields, 'OBJECT')
+    return _middleware(this[kLimits], fields, 'OBJECT', this[kDisableDetection])
   }
 
   none () {
-    return _middleware(this[kLimits], [], 'NONE')
+    return _middleware(this[kLimits], [], 'NONE', this[kDisableDetection])
   }
 
   any () {
@@ -55,7 +58,8 @@ class Multer {
       fields: [],
       limits: this[kLimits],
       fileFilter: () => {},
-      fileStrategy: 'ARRAY'
+      fileStrategy: 'ARRAY',
+      disableDetection: this[kDisableDetection]
     }))
   }
 }

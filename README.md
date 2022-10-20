@@ -84,9 +84,10 @@ Key | Description
 Multer accepts an options object, the following are the options that can be
 passed to Multer.
 
-Key      | Description
--------- | -----------
-`limits` | Limits of the uploaded data [(full description)](#limits)
+Key                | Description
+------------------ | -----------
+`limits`           | Limits of the uploaded data [(full description)](#limits)
+`disableDetection` | Disable the mime type and file extension detection
 
 #### `.single(fieldname)`
 

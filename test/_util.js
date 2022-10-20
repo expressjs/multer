@@ -59,7 +59,7 @@ export function knownFileLength (name) {
   return files.get(name).size
 }
 
-export async function assertFile (file, fieldName, fileName) {
+export async function assertFile (file, fieldName, fileName, { disableDetection } = { disableDetection: false }) {
   if (!files.has(fileName)) {
     throw new Error(`No file named "${fileName}"`)
   }
@@ -73,8 +73,8 @@ export async function assertFile (file, fieldName, fileName) {
   assert.strictEqual(file.clientReportedMimeType, expected.clientReportedMimeType)
   assert.strictEqual(file.clientReportedFileExtension, expected.extension)
 
-  assert.strictEqual(file.detectedMimeType, expected.detectedMimeType)
-  assert.strictEqual(file.detectedFileExtension, expected.detectedFileExtension)
+  assert.strictEqual(file.detectedMimeType, disableDetection ? null : expected.detectedMimeType)
+  assert.strictEqual(file.detectedFileExtension, disableDetection ? '' : expected.detectedFileExtension)
 
   const hash = await hasha.fromStream(file.stream, { algorithm: 'md5' })
 

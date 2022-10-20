@@ -49,4 +49,16 @@ describe('upload.single', () => {
       (err) => err.code === 'LIMIT_UNEXPECTED_FILE' && err.field === 'unexpected'
     )
   })
+
+  it('should disable detection', async () => {
+    const parser = multer({ disableDetection: true }).fields([
+      { name: 'set-1', maxCount: 1 }
+    ])
+
+    const form = new FormData()
+    form.append('set-1', util.file('medium'))
+
+    const req = await util.submitForm(parser, form)
+    await util.assertFile(req.files['set-1'][0], 'set-1', 'medium', { disableDetection: true })
+  })
 })
