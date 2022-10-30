@@ -9,6 +9,7 @@ on top of [busboy](https://github.com/mscdex/busboy) for maximum efficiency.
 
 This README is also available in other languages:
 
+- [العربية](https://github.com/expressjs/multer/blob/master/doc/README-ar.md) (Arabic)
 - [Español](https://github.com/expressjs/multer/blob/master/doc/README-es.md) (Spanish)
 - [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (Chinese)
 - [한국어](https://github.com/expressjs/multer/blob/master/doc/README-ko.md) (Korean)
