@@ -20,7 +20,7 @@
   ],
   "dependencies": {
     "append-field": "^1.0.0",
-    "busboy": "^0.2.11",
+    "busboy": "^1.6.0",
     "concat-stream": "^1.5.2",
     "mkdirp": "^0.5.4",
     "object-assign": "^4.1.1",
@@ -33,7 +33,7 @@
     "express": "^4.13.1",
     "form-data": "^1.0.0-rc1",
     "fs-temp": "^1.1.2",
-    "mocha": "^3.5.3",
+    "mocha": "^10.1.0",
     "rimraf": "^2.4.1",
     "standard": "^14.3.3",
     "testdata-w3c-json-form": "^1.0.0"
