@@ -5,7 +5,7 @@ on top of [busboy](https://github.com/mscdex/busboy) for maximum efficiency.
 
 **NOTE**: Multer will not process any form which is not multipart (`multipart/form-data`).
 
-## Translations 
+## Translations
 
 This README is also available in other languages:
 
@@ -16,6 +16,7 @@ This README is also available in other languages:
 - [Русский язык](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (Russian)
 - [Việt Nam](https://github.com/expressjs/multer/blob/master/doc/README-vi.md) (Vietnam)
 - [Português](https://github.com/expressjs/multer/blob/master/doc/README-pt-br.md) (Portuguese Brazil)
+- [Français](https://github.com/expressjs/multer/blob/master/doc/README-fr.md) (French)
 
 ## Installation
 
@@ -33,7 +34,7 @@ Don't forget the `enctype="multipart/form-data"` in your form.
 
 ```html
 <form action="/profile" method="post" enctype="multipart/form-data">
-  <input type="file" name="avatar" />
+    <input type="file" name="avatar" />
 </form>
 ```
 
@@ -83,11 +84,11 @@ Here's an example on how multer is used an HTML form. Take special note of the `
 
 ```html
 <form action="/stats" enctype="multipart/form-data" method="post">
-  <div class="form-group">
-    <input type="file" class="form-control-file" name="uploaded_file">
-    <input type="text" class="form-control" placeholder="Number of speakers" name="nspeakers">
-    <input type="submit" value="Get me the stats!" class="btn btn-default">            
-  </div>
+    <div class="form-group">
+        <input type="file" class="form-control-file" name="uploaded_file">
+        <input type="text" class="form-control" placeholder="Number of speakers" name="nspeakers">
+        <input type="submit" value="Get me the stats!" class="btn btn-default">
+    </div>
 </form>
 ```
 
@@ -97,9 +98,9 @@ Then in your javascript file you would add these lines to access both the file a
 const multer  = require('multer')
 const upload = multer({ dest: './public/data/uploads/' })
 app.post('/stats', upload.single('uploaded_file'), function (req, res) {
-   // req.file is the name of your file in the form above, here 'uploaded_file'
-   // req.body will hold the text fields, if there were any 
-   console.log(req.file, req.body)
+  // req.file is the name of your file in the form above, here 'uploaded_file'
+  // req.body will hold the text fields, if there were any 
+  console.log(req.file, req.body)
 });
 ```
 
