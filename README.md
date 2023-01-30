@@ -34,7 +34,7 @@ Don't forget the `enctype="multipart/form-data"` in your form.
 
 ```html
 <form action="/profile" method="post" enctype="multipart/form-data">
-    <input type="file" name="avatar" />
+  <input type="file" name="avatar" />
 </form>
 ```
 
@@ -84,11 +84,11 @@ Here's an example on how multer is used an HTML form. Take special note of the `
 
 ```html
 <form action="/stats" enctype="multipart/form-data" method="post">
-    <div class="form-group">
-        <input type="file" class="form-control-file" name="uploaded_file">
-        <input type="text" class="form-control" placeholder="Number of speakers" name="nspeakers">
-        <input type="submit" value="Get me the stats!" class="btn btn-default">
-    </div>
+  <div class="form-group">
+    <input type="file" class="form-control-file" name="uploaded_file">
+    <input type="text" class="form-control" placeholder="Number of speakers" name="nspeakers">
+    <input type="submit" value="Get me the stats!" class="btn btn-default">
+  </div>
 </form>
 ```
 

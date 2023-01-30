@@ -97,14 +97,11 @@ Ensuite, dans votre fichier javascript, vous ajouterez ces lignes pour accéder 
 const multer  = require('multer')
 const upload = multer({ dest: './public/data/uploads/' })
 app.post('/stats', upload.single('uploaded_file'), function (req, res) {
-   // req.file est le nom de votre fichier dans le formulaire ci-dessus, ici 'uploaded_file'
-   // req.body contiendra les champs de texte, s'il y en avait
-   console.log(req.file, req.body)
+  // req.file est le nom de votre fichier dans le formulaire ci-dessus, ici 'uploaded_file'
+  // req.body contiendra les champs de texte, s'il y en avait
+  console.log(req.file, req.body)
 });
 ```
-
-
-
 ## API
 
 ### Informations sur les fichiers
