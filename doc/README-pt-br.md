@@ -1,6 +1,6 @@
 # Multer [![Build Status](https://travis-ci.org/expressjs/multer.svg?branch=master)](https://travis-ci.org/expressjs/multer) [![NPM version](https://badge.fury.io/js/multer.svg)](https://badge.fury.io/js/multer) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
 
-Multer é um middleware node.js para manipulação `multipart/form-data`, que é usado principalmente para fazer upload de arquivos.  escrito em cima do [busboy](https://github.com/mscdex/busboy) para máxima eficiência.
+Multer é um middleware node.js para manipulação `multipart/form-data`, que é usado principalmente para fazer upload de arquivos. Foi escrito em cima do [busboy](https://github.com/mscdex/busboy) para máxima eficiência.
 
 **NOTA**: Multer não processará nenhum formulário que não seja multipart (`multipart/form-data`).
 
