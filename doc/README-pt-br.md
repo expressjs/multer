@@ -56,7 +56,7 @@ app.post('/cool-profile', cpUpload, function (req, res, next) {
   // req.files é um objeto (String -> Array) onde fieldname é a chave e o valor é array de arquivos
   //
   // e.g.
-  //  req.files['avatar'][0] -> Arquivo
+  //  req.files['avatar'][0] -> File
   //  req.files['gallery'] -> Array
   //
   // req.body conterá os campos de texto, se houver
