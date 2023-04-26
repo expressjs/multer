@@ -253,9 +253,9 @@ const upload = multer().single('avatar')
 app.post('/profile', function (req, res) {
   upload(req, res, function (err) {
     if (err instanceof multer.MulterError) {
-      // Ocorreu um erro Multer durante o upload.
+      // Ocorreu um erro durante o upload.
     } else if (err) {
-      // Ocorreu um erro Multer durante o upload.
+      // Ocorreu um erro durante o upload.
     }
 
     // Tudo correu bem.
