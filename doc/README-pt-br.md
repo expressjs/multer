@@ -26,7 +26,7 @@ Multer adiciona um objeto `body` e um `file` ou objeto `files` para objeto `requ
 
 Exemplo de uso básico:
 
-Não esqueça o `enctype='multipart/form-data'` em seu formulário.
+Não esqueça o `enctype="multipart/form-data"` em seu formulário.
 
 ```html
 <form action="/profile" method="post" enctype="multipart/form-data">
