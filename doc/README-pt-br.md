@@ -4,7 +4,7 @@ Multer é um middleware node.js para manipulação `multipart/form-data`, que é
 
 **NOTA**: Multer não processará nenhum formulário que não seja multipart (`multipart/form-data`).
 
-## Traduções 
+## Traduções
 
 Este README também está disponível em outros idiomas:
 
@@ -108,6 +108,7 @@ Key | Descrição
 `fileFilter` | Função para controlar quais arquivos são aceitos
 `limits` | Limites dos dados enviados
 `preservePath` | Mantenha o caminho completo dos arquivos em vez de apenas o nome base
+`defParamCharset` | Para formulários de multipart, o character set padrão usado para headers (como filename). **Default**: `'latin1'`.
 
 Em um web app básico, somente o `dest` pode ser necessário, e configurado como mostrado no exemplo a seguir:
 
@@ -218,7 +219,7 @@ A especificação dos limites pode ajudar a proteger seu site contra ataques de 
 
 ### `fileFilter`
 
-Defina isso para uma função para controlar quais arquivos devem ser enviados e quais devem ser ignorados. 
+Defina isso para uma função para controlar quais arquivos devem ser enviados e quais devem ser ignorados.
 
 A função deve ficar assim:
 

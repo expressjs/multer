@@ -99,7 +99,7 @@ const multer  = require('multer')
 const upload = multer({ dest: './public/data/uploads/' })
 app.post('/stats', upload.single('uploaded_file'), function (req, res) {
   // req.file is the name of your file in the form above, here 'uploaded_file'
-  // req.body will hold the text fields, if there were any 
+  // req.body will hold the text fields, if there were any
   console.log(req.file, req.body)
 });
 ```
@@ -141,6 +141,7 @@ Key | Description
 `fileFilter` | Function to control which files are accepted
 `limits` | Limits of the uploaded data
 `preservePath` | Keep the full path of files instead of just the base name
+`defParamCharset` | For multipart forms, the default character set to use for values of part header parameters (e.g. filename) that are not extended parameters (that contain an explicit charset). **Default**: `'latin1'`.
 
 In an average web app, only `dest` might be required, and configured as shown in
 the following example.

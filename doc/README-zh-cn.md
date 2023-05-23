@@ -104,6 +104,7 @@ Key | Description
 `fileFilter` | 文件过滤器，控制哪些文件可以被接受
 `limits` | 限制上传的数据
 `preservePath` | 保存包含文件名的完整文件路径
+`defParamCharset` | 对于多部分表单，用于标题的默认字符集（例如文件名）. **Default**: `'latin1'`.
 
 通常，一般的网页应用，只需要设置 `dest` 属性，像这样：
 
