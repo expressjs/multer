@@ -9,15 +9,14 @@ di atas [busboy](https://github.com/mscdex/busboy) untuk efisiensi maksimum.
 
 README ini juga tersedia dalam bahasa-bahasa lain:
 
-- [Bahasa Indonesia](https://github.com/expressjs/multer/blob/master/doc/README-id.md) (Indonesia)
-- [العربية](https://github.com/expressjs/multer/blob/master/doc/README-ar.md) (Arabic)
-- [Español](https://github.com/expressjs/multer/blob/master/doc/README-es.md) (Spanish)
-- [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (Chinese)
-- [한국어](https://github.com/expressjs/multer/blob/master/doc/README-ko.md) (Korean)
-- [Русский язык](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (Russian)
+- [العربية](https://github.com/expressjs/multer/blob/master/doc/README-ar.md) (Arab)
+- [Español](https://github.com/expressjs/multer/blob/master/doc/README-es.md) (Spanyol)
+- [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (Cina)
+- [한국어](https://github.com/expressjs/multer/blob/master/doc/README-ko.md) (Korea)
+- [Русский язык](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (Russia)
 - [Việt Nam](https://github.com/expressjs/multer/blob/master/doc/README-vi.md) (Vietnam)
-- [Português](https://github.com/expressjs/multer/blob/master/doc/README-pt-br.md) (Portuguese Brazil)
-- [Français](https://github.com/expressjs/multer/blob/master/doc/README-fr.md) (French)
+- [Português](https://github.com/expressjs/multer/blob/master/doc/README-pt-br.md) (Portugis Brasil)
+- [Français](https://github.com/expressjs/multer/blob/master/doc/README-fr.md) (Perancis)
 
 ## Instalasi
 

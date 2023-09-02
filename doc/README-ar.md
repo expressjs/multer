@@ -11,6 +11,7 @@
 
 هذا الملف متاح أيضًا بلغات أخرى:
 
+- [Bahasa Indonesia](https://github.com/expressjs/multer/blob/master/doc/README-id.md) (إندونيسيا)
 - [English](https://github.com/expressjs/multer/blob/master/README.md) (الإنجليزية)
 - [Español](https://github.com/expressjs/multer/blob/master/doc/README-es.md) (الإسبانية)
 - [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (الصينية)

@@ -9,6 +9,7 @@ Il est écrit au-dessus de [busboy](https://github.com/mscdex/busboy) pour une e
 
 This README is also available in other languages:
 
+- [Bahasa Indonesia](https://github.com/expressjs/multer/blob/master/doc/README-id.md) (Indonésie)
 - [العربية](https://github.com/expressjs/multer/blob/master/doc/README-ar.md) (Arabe)
 - [Español](https://github.com/expressjs/multer/blob/master/doc/README-es.md) (Espagnol)
 - [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (Chinois)
