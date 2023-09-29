@@ -84,7 +84,7 @@ Este es un ejemplo de cómo se utiliza multer en un formulario HTML. Presta espe
   <div class="form-group">
     <input type="file" class="form-control-file" name="uploaded_file">
     <input type="text" class="form-control" placeholder="Number of speakers" name="nspeakers">
-    <input type="submit" value="Get me the stats!" class="btn btn-default">            
+    <input type="submit" value="Get me the stats!" class="btn btn-default">
   </div>
 </form>
 ```
@@ -135,6 +135,7 @@ Clave (key) | Descripción
 `fileFilter` | Función para controlar qué archivos son aceptados
 `limits` | Límites de los datos subidos
 `preservePath` | Mantiene la ruta completa de la ubicación de los archivos, en vez de sólo sus nombres
+`defParamCharset` | Para formularios de multipart, se utiliza el character set predeterminado para los encabezados (como el nombre de filename). **Default**: `'latin1'`.
 
 En la aplicación web promedio es probable que sólo se requiera `dest`, siendo configurado como en el siguiente ejemplo:
 

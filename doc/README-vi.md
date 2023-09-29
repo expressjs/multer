@@ -117,6 +117,8 @@ Dưới đây là các tùy chọn mà bạn có thể sử dụng:
 | `fileFilter`          | Hàm để xử lý chỉ những file nào mới được chấp nhận |
 | `limits`              | Giới hạn dung lượng file được upload               |
 | `preservePath`        | Giữ đầy đủ đường dẫn tới file thay vì chỉ tên file |
+| `defParamCharset`     | Đối với biểu mẫu nhiều phần, bộ ký tự mặc định     |
+|                       | được sử dụng cho tiêu đề (chẳng hạn như tên tệp)   |
 
 Nói chung với web app, chỉ `dest` mới cần khai báo, như bên dưới:
 
