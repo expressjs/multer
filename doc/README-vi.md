@@ -8,6 +8,7 @@ Multer là thư viện trung gian hỗ trợ việc xử lý `multipart/form-dat
 
 Các bạn có thể đọc ở các bản dịch ngôn ngữ khác:
 
+- [Bahasa Indonesia](https://github.com/expressjs/multer/blob/master/doc/README-id.md) (Indonesia)
 - [English](https://github.com/expressjs/multer/blob/master/README.md) (Tiếng Anh)
 - [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (Chinese)
 - [한국어](https://github.com/expressjs/multer/blob/master/doc/README-ko.md) (Korean)
