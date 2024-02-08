@@ -290,11 +290,14 @@ function fileFilter (req, file, cb) {
   // The function should call `cb` with a boolean
   // to indicate if the file should be accepted
 
+  // To accept the file pass `true`, like so:
+  cb(null, true)
+
   // To reject this file pass `false`, like so:
   cb(null, false)
 
-  // To accept the file pass `true`, like so:
-  cb(null, true)
+  // To reject this file with custom error pass `false` and `error message`, like so:
+  cb(null, false, new Error("Your custom error message..."))
 
   // You can always pass an error if something goes wrong:
   cb(new Error('I don\'t have a clue!'))
