@@ -8,7 +8,7 @@ Multer é um middleware node.js para manipulação `multipart/form-data`, que é
 
 Este README também está disponível em outros idiomas:
 
-- [English](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (Inglês)
+- [English](https://github.com/expressjs/multer/blob/master/README.md) (Inglês)
 - [Español](https://github.com/expressjs/multer/blob/master/doc/README-es.md) (Espanhol)
 - [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (Chinês)
 - [한국어](https://github.com/expressjs/multer/blob/master/doc/README-ko.md) (Coreano)
