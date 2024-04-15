@@ -9,10 +9,15 @@ Multer é um middleware node.js para manipulação `multipart/form-data`, que é
 Este README também está disponível em outros idiomas:
 
 - [English](https://github.com/expressjs/multer/blob/master/README.md) (Inglês)
+- [العربية](https://github.com/expressjs/multer/blob/master/doc/README-ar.md) (Árabe)
 - [Español](https://github.com/expressjs/multer/blob/master/doc/README-es.md) (Espanhol)
 - [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (Chinês)
 - [한국어](https://github.com/expressjs/multer/blob/master/doc/README-ko.md) (Coreano)
 - [Русский язык](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (Russo)
+- [Việt Nam](https://github.com/expressjs/multer/blob/master/doc/README-vi.md) (Vietnã)
+- [Português](https://github.com/expressjs/multer/blob/master/doc/README-pt-br.md) (Português Brasil)
+- [Français](https://github.com/expressjs/multer/blob/master/doc/README-fr.md) (Francês)
+- [O'zbek tili](https://github.com/expressjs/multer/blob/master/doc/README-uz.md) (Uzbequistão)
 
 ## Instalação
 
@@ -74,6 +79,30 @@ const upload = multer()
 app.post('/profile', upload.none(), function (req, res, next) {
   // req.body contém os campos de texto
 })
+```
+
+Aqui está um exemplo de como o multer é usado em um formulário HTML. Onde adicionamos `enctype="multipart/form-data"` no form e no input `name="uploaded_file"`:
+
+```html
+<form action="/stats" enctype="multipart/form-data" method="post">
+  <div class="form-group">
+    <input type="file" class="form-control-file" name="uploaded_file">
+    <input type="text" class="form-control" placeholder="Número de palestrantes" name="nspeakers">
+    <input type="submit" value="Obter as estatísticas!" class="btn btn-default">
+  </div>
+</form>
+```
+
+Então, em seu arquivo javascript, você adicionaria essas linhas para acessar o arquivo e o corpo. É importante que você use o valor do campo `name` do formulário em sua função de upload. Isso informa ao multer em qual campo da solicitação ele deve procurar os arquivos. Se esses campos não forem iguais no formulário HTML e no seu servidor, seu upload falhará:
+
+```javascript
+const multer  = require('multer')
+const upload = multer({ dest: './public/data/uploads/' })
+app.post('/stats', upload.single('uploaded_file'), function (req, res) {
+  // req.fileé o nome do seu arquivo no formato acima, aqui 'uploaded_file'
+  // req.body irá conter os campos de texto, se houver algum
+  console.log(req.file, req.body)
+});
 ```
 
 ## API
@@ -186,6 +215,10 @@ Se não for passado `filename`, cada arquivo receberá um nome aleatório que n�
 Cada função é passada pelo request (`req`) e algumas informações sobre o arquivo (`file`) para ajudar com a decisão.
 
 Observe que `req.body` pode não ter sido totalmente preenchido ainda. Isso depende da ordem na qual o cliente transmite campos e arquivos para o servidor.
+
+Para entender a convenção de chamada usada no callback (precisando passar
+null como o primeiro parâmetro), consulte em
+[Manipulação de erros no Node.js](https://web.archive.org/web/20220417042018/https://www.joyent.com/node-js/production/design/errors)
 
 #### `MemoryStorage`
 
