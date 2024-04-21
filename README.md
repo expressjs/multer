@@ -81,7 +81,7 @@ app.post('/profile', upload.none(), function (req, res, next) {
 })
 ```
 
-Here's an example on how multer is used an HTML form. Take special note of the `enctype="multipart/form-data"` and `name="uploaded_file"` fields:
+Here's an example on how multer is used in a HTML form. Take special note of the `enctype="multipart/form-data"` and `name="uploaded_file"` fields:
 
 ```html
 <form action="/stats" enctype="multipart/form-data" method="post">
