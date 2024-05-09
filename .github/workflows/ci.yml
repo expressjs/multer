@@ -10,7 +10,6 @@ jobs:
     strategy:
       matrix:
         name:
-        - Node.js 0.8
         - Node.js 0.10
         - Node.js 0.12
         - io.js 1.x
@@ -37,11 +36,6 @@ jobs:
         - Node.js 22.x
 
         include:
-        - name: Node.js 0.8
-          node-version: "0.8"
-          npm-i: mocha@2.5.3
-          npm-rm: nyc
-
         - name: Node.js 0.10
           node-version: "0.10"
           npm-i: mocha@3.5.3 nyc@10.3.2
