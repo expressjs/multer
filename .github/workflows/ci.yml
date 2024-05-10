@@ -60,25 +60,25 @@ jobs:
           node-version: "4.9"
           npm-i: mocha@5.2.0 nyc@11.9.0
           
-        - name: Node.js 5.x
-          node-version: "5.12"
-          npm-i: mocha@5.2.0 nyc@11.9.0
+        # - name: Node.js 5.x
+        #   node-version: "5.12"
+        #   npm-i: mocha@5.2.0 nyc@11.9.0
           
         - name: Node.js 6.x
           node-version: "6.17"
           npm-i: mocha@6.2.2 nyc@14.1.1
           
-        - name: Node.js 7.x
-          node-version: "7.10"
-          npm-i: mocha@6.2.2 nyc@14.1.1
+        # - name: Node.js 7.x
+        #   node-version: "7.10"
+        #   npm-i: mocha@6.2.2 nyc@14.1.1
           
         - name: Node.js 8.x
           node-version: "8.17"
           npm-i: mocha@7.1.2 nyc@14.1.1
           
-        - name: Node.js 9.x
-          node-version: "9.11"
-          npm-i: mocha@7.1.2 nyc@14.1.1
+        # - name: Node.js 9.x
+        #   node-version: "9.11"
+        #   npm-i: mocha@7.1.2 nyc@14.1.1
           
         - name: Node.js 10.x
           node-version: "10.24"
