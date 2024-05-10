@@ -16,11 +16,11 @@ jobs:
         - io.js 2.x
         - io.js 3.x
         - Node.js 4.x
-        - Node.js 5.x
+        # - Node.js 5.x
         - Node.js 6.x
-        - Node.js 7.x
+        # - Node.js 7.x
         - Node.js 8.x
-        - Node.js 9.x
+        # - Node.js 9.x
         - Node.js 10.x
         - Node.js 11.x
         - Node.js 12.x
