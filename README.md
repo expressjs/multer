@@ -4,6 +4,7 @@ Multer is a node.js middleware for handling `multipart/form-data`, which is prim
 on top of [busboy](https://github.com/mscdex/busboy) for maximum efficiency.
 
 **NOTE**: Multer will not process any form which is not multipart (`multipart/form-data`).
+
 **Issue with Multer: `req.file` Undefined**
 
 When using Multer with an HTML form, you might encounter an issue where `req.file` is `undefined` initially. This often happens due to browser caching. Closing and reopening the browser tab may resolve this issue by forcing the browser to fetch a fresh version of the form. To avoid this, clear browser cache or use cache-busting techniques. Check browser developer tools for better debugging and verification.
