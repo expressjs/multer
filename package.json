@@ -36,7 +36,7 @@
     "mocha": "^10.4.0",
     "nyc": "^15.1.0",
     "rimraf": "^2.4.1",
-    "standard": "^14.3.3",
+    "standard": "^14.3.4",
     "testdata-w3c-json-form": "^1.0.0"
   },
   "engines": {

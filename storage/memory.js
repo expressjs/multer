@@ -1,21 +1,26 @@
-var concat = require('concat-stream')
+const concat = require('concat-stream')
 
-function MemoryStorage (opts) {}
+class MemoryStorage {
+  constructor (opts = {}) {
+    this.opts = opts
+  }
 
-MemoryStorage.prototype._handleFile = function _handleFile (req, file, cb) {
-  file.stream.pipe(concat({ encoding: 'buffer' }, function (data) {
-    cb(null, {
-      buffer: data,
-      size: data.length
+  _handleFile (req, file, cb) {
+    const concatStream = concat({ encoding: 'buffer' }, (data) => {
+      cb(null, {
+        buffer: data,
+        size: data.length
+      })
     })
-  }))
+
+    file.stream.on('error', (err) => cb(err))
+    file.stream.pipe(concatStream)
+  }
+
+  _removeFile (req, file, cb) {
+    delete file.buffer
+    cb(null)
+  }
 }
 
-MemoryStorage.prototype._removeFile = function _removeFile (req, file, cb) {
-  delete file.buffer
-  cb(null)
-}
-
-module.exports = function (opts) {
-  return new MemoryStorage(opts)
-}
+module.exports = (opts) => new MemoryStorage(opts)
