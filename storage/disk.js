@@ -19,7 +19,7 @@ function getDestination (req, file) {
 class DiskStorage {
   constructor (opts = {}) {
     this.getFilename = opts.filename || getFilename
-    this.maxSize = opts.maxSize || Infinity 
+    this.maxSize = opts.maxSize || Infinity
 
     if (typeof opts.destination === 'string') {
       mkdirp.sync(opts.destination)
