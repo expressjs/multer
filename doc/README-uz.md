@@ -16,6 +16,7 @@ Bu README boshqa tillarda ham mavjud:
 - [Português](https://github.com/expressjs/multer/blob/master/doc/README-pt-br.md) (portugalcha)
 -  [Русский язык](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (ruscha)
 - [Français](https://github.com/expressjs/multer/blob/master/doc/README-fr.md) (fransuzcha)
+- [தமிழ்](https://github.com/expressjs/multer/blob/master/doc/README-ta.md) (Tamil)
 
 
 ## O'rnatish
