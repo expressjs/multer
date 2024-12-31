@@ -14,14 +14,25 @@ function getDestination (req, file, cb) {
   cb(null, os.tmpdir())
 }
 
-function DiskStorage (opts) {
-  this.getFilename = (opts.filename || getFilename)
+function DiskStorage(opts) {
+  this.getFilename = opts.filename || getFilename;
+  const destinationDatatype = typeof opts.destination;
 
-  if (typeof opts.destination === 'string') {
-    mkdirp.sync(opts.destination)
-    this.getDestination = function ($0, $1, cb) { cb(null, opts.destination) }
+  if (destinationDatatype === "string") {
+    mkdirp.sync(opts.destination);
+    this.getDestination = function ($0, $1, cb) {
+      cb(null, opts.destination);
+    };
+  } else if (destinationDatatype === "function") {
+    const dummyCb = (x, path) => {
+      mkdirp.sync(path);
+    };
+    opts.destination(null, null, dummyCb);
+    this.getDestination = opts.destination || getDestination;
   } else {
-    this.getDestination = (opts.destination || getDestination)
+    throw new TypeError(
+      `Expected "destination" to be a string or a function, instead got a ${destinationDatatype}`
+    );
   }
 }
 
