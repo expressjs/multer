@@ -3,9 +3,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.4.5-lts.2
+
+- Fix out-of-band error event from busboy (#1177)
+
 ## 1.4.5-lts.1
 
 - No changes
+
 ## 1.4.4-lts.1
 
 - Bugfix: Bump busboy to fix CVE-2022-24434 (#1097)
