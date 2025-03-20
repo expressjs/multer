@@ -1,6 +1,7 @@
 /* eslint-env mocha */
 
 var assert = require('assert')
+var http = require('http')
 
 var multer = require('../')
 var util = require('./_util')
@@ -104,5 +105,49 @@ describe('Express Integration', function () {
 
       done()
     })
+  })
+
+  it('should not crash on malformed request', function (done) {
+    var upload = multer()
+
+    app.post('/upload', upload.single('file'), function (req, res) {
+      res.status(500).end('Request should not be processed')
+    })
+
+    app.use(function (err, req, res, next) {
+      assert.strictEqual(err.message, 'Unexpected end of form')
+      res.status(200).end('Correct error')
+    })
+
+    var boundary = 'AaB03x'
+    var body = [
+      '--' + boundary,
+      'Content-Disposition: form-data; name="file"; filename="test.txt"',
+      'Content-Type: text/plain',
+      '',
+      'test without end boundary'
+    ].join('\r\n')
+    var options = {
+      hostname: 'localhost',
+      port,
+      path: '/upload',
+      method: 'POST',
+      headers: {
+        'content-type': 'multipart/form-data; boundary=' + boundary,
+        'content-length': body.length
+      }
+    }
+
+    var req = http.request(options, (res) => {
+      assert.strictEqual(res.statusCode, 200)
+      done()
+    })
+
+    req.on('error', (err) => {
+      done(err)
+    })
+
+    req.write(body)
+    req.end()
   })
 })
