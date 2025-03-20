@@ -115,7 +115,7 @@ describe('Express Integration', function () {
     })
 
     app.use(function (err, req, res, next) {
-      assert.strictEqual(err.message, 'Unexpected end of multipart data')
+      assert.strictEqual(err.message, 'Unexpected end of form')
       res.status(200).end('Correct error')
     })
 
@@ -129,7 +129,7 @@ describe('Express Integration', function () {
     ].join('\r\n')
     var options = {
       hostname: 'localhost',
-      port: port,
+      port,
       path: '/upload',
       method: 'POST',
       headers: {
@@ -138,12 +138,12 @@ describe('Express Integration', function () {
       }
     }
 
-    var req = http.request(options, function (res) {
+    var req = http.request(options, (res) => {
       assert.strictEqual(res.statusCode, 200)
       done()
     })
 
-    req.on('error', function (err) {
+    req.on('error', (err) => {
       done(err)
     })
 
