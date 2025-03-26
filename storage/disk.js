@@ -36,8 +36,17 @@ DiskStorage.prototype._handleFile = function _handleFile (req, file, cb) {
 
       var finalPath = path.join(destination, filename)
       var outStream = fs.createWriteStream(finalPath)
+      var connection = req.socket || req.connection
 
       file.stream.pipe(outStream)
+
+      if (connection) {
+        connection.on('error', function (error) {
+          outStream.end()
+          cb(error)
+        })
+      }
+
       outStream.on('error', cb)
       outStream.on('finish', function () {
         cb(null, {
