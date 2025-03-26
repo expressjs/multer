@@ -244,7 +244,7 @@ describe('Error Handling', function () {
     req.end(body)
 
     upload(req, null, function (err) {
-      assert.strictEqual(err.message, 'Unexpected end of multipart data')
+      assert.strictEqual(err.message, 'Unexpected end of form')
       done()
     })
   })
