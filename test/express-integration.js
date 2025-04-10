@@ -115,17 +115,19 @@ describe('Express Integration', function () {
     })
 
     app.use(function (err, req, res, next) {
-      assert.strictEqual(err.message, 'Unexpected end of form')
+      assert.strictEqual(err.message, 'Malformed part header')
       res.status(200).end('Correct error')
     })
 
     var boundary = 'AaB03x'
+    // this payload causes two errors to be emitted by busboy: `Malformed part header` and `Unexpected end of form`
     var body = [
       '--' + boundary,
       'Content-Disposition: form-data; name="file"; filename="test.txt"',
       'Content-Type: text/plain',
       '',
-      'test without end boundary'
+      '--' + boundary + '--',
+      ''
     ].join('\r\n')
     var options = {
       hostname: 'localhost',
