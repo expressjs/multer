@@ -102,6 +102,7 @@ Key | Description
 `fileFilter` | 어떤 파일을 허용할지 제어하는 함수
 `limits` | 업로드 된 데이터의 한도
 `preservePath` | 파일의 base name 대신 보존할 파일의 전체 경로
+`defParamCharset` | multipart 양식의 경우 헤더에 사용되는 기본 character set(예: 파일 filename). **Default**: `'latin1'`.
 
 보통의 웹 앱에서는 `dest` 옵션 정도만 필요할지도 모릅니다. 설정 방법은 아래의 예제에 나와있습니다.
 
