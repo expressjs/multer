@@ -55,8 +55,8 @@ app.post('/photos/upload', upload.array('photos', 12), function (req, res, next)
   // req.body agar matnli maydonlar (fields) bo'lsa, ularni saqlanadi
 })
 
-const coolOptions = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
-app.post('/cool-profile', coolOptions, function (req, res, next) {
+const uploadMiddleware = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
+app.post('/cool-profile', uploadMiddleware, function (req, res, next) {
   // req.files - bu ob'ekt (String -> Array), matn maydoni(fieldname) - bu key, va qiymat - fayllar massivi
   //
   // misol:

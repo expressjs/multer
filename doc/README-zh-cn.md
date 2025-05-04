@@ -47,8 +47,8 @@ app.post('/photos/upload', upload.array('photos', 12), function (req, res, next)
   // req.body 将具有文本域数据，如果存在的话
 })
 
-const coolOptions = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
-app.post('/cool-profile', coolOptions, function (req, res, next) {
+const uploadMiddleware = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
+app.post('/cool-profile', uploadMiddleware, function (req, res, next) {
   // req.files 是一个对象 (String -> Array) 键是文件名，值是文件数组
   //
   // 例如：

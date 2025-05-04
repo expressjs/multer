@@ -51,8 +51,8 @@ app.post('/photos/upload', upload.array('photos', 12), function (req, res, next)
   // req.body contendrá los campos de texto, si los hubiera.
 })
 
-const coolOptions = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
-app.post('/cool-profile', coolOptions, function (req, res, next) {
+const uploadMiddleware = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
+app.post('/cool-profile', uploadMiddleware, function (req, res, next) {
   // req.files es un objeto (String -> Array) donde el nombre del campo es la clave (key) y el valor es el arreglo (array) de archivos
   //
   // Ejemplo
