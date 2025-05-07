@@ -44,8 +44,8 @@ app.post('/photos/upload', upload.array('photos', 12), function (req, res, next)
   // 텍스트 필드가 있는 경우, req.body가 이를 포함할 것입니다.
 })
 
-const cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
-app.post('/cool-profile', cpUpload, function (req, res, next) {
+const uploadMiddleware = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
+app.post('/cool-profile', uploadMiddleware, function (req, res, next) {
   // req.files는 (String -> Array) 형태의 객체 입니다.
   // 필드명은 객체의 key에, 파일 정보는 배열로 value에 저장됩니다.
   //

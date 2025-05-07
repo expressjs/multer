@@ -7,7 +7,7 @@
 **ملاحظة**: لن يقوم Multer بمعالجة أي شكل غير متعدد الأجزاء (`multipart/form-data`).
 
 
-## الترجمات 
+## الترجمات
 
 هذا الملف متاح أيضًا بلغات أخرى:
 
@@ -63,8 +63,8 @@ app.post('/photos/upload', upload.array('photos', 12), function (req, res, next)
   // req.body will contain the text fields, if there were any
 })
 
-var cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
-app.post('/cool-profile', cpUpload, function (req, res, next) {
+var uploadMiddleware = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
+app.post('/cool-profile', uploadMiddleware, function (req, res, next) {
   // req.files is an object (String -> Array) where fieldname is the key, and the value is array of files
   //
   // e.g.
@@ -101,18 +101,18 @@ app.post('/profile', upload.none(), function (req, res, next) {
 
 مفتاح | وصف | ملاحظة
 --- | --- | ---
-`fieldname` | اسم المُدخَل المحدد في الإستمارة | 
-`originalname` | اسم الملف على كمبيوتر المستخدم | 
-`encoding` | نوع تشفير الملف | 
-`mimetype` | نوع  ملف ملحقات بريد إنترنت متعددة الأغراض ( MIME ) | 
-`size` | حجم الملف بالبايت | 
+`fieldname` | اسم المُدخَل المحدد في الإستمارة |
+`originalname` | اسم الملف على كمبيوتر المستخدم |
+`encoding` | نوع تشفير الملف |
+`mimetype` | نوع  ملف ملحقات بريد إنترنت متعددة الأغراض ( MIME ) |
+`size` | حجم الملف بالبايت |
 `destination` | المجلد الذي تم حفظ الملف إليه | `تخزين على الاسطوانة` (`DiskStorage`)
 `filename` | اسم الملف داخل "الوجهة" ( `destination` ) | `تخزين على الاسطوانة` (`DiskStorage`)
 `path` | المسار الكامل للملف الذي تم تحميله | `تخزين على الاسطوانة` (`DiskStorage`)
 `buffer` | "ذاكرة" (`Buffer`) للملف بأكمله | `تخزين على الذاكرة ` (`MemoryStorage`)
 
 
-### `multer(opts)` 
+### `multer(opts)`
 
 يقبل Multer كائن الخيارات ، وأهمها خاصية `dest`، والتي تحدد مكان تحميل الملفات. في حال حذفت كائن الخيارات ، سيتم الاحتفاظ بالملفات في الذاكرة ولن تتم كتابتها مطلقًا على القرص.
 
@@ -122,10 +122,10 @@ app.post('/profile', upload.none(), function (req, res, next) {
 
 مفتاح | وصف
 --- | ---
-`dest` أو `storage` | مكان لتخزين الملفات 
+`dest` أو `storage` | مكان لتخزين الملفات
 `fileFilter` | دالة للسيطرة على الملفات التي يتم قبولها
-`limits` | حدود البيانات التي تم تحميلها 
-`preservePath` | الاحتفظ بالمسار الكامل للملفات بدلاً من الاسم الأساسي 
+`limits` | حدود البيانات التي تم تحميلها
+`preservePath` | الاحتفظ بالمسار الكامل للملفات بدلاً من الاسم الأساسي
 
 في تطبيق ويب متوسط  ​​، قد تكون هناك حاجة  فقط إلى `dest`، وتكوينها كما هو موضح في
 المثال التالي :

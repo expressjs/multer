@@ -56,8 +56,8 @@ app.post('/photos/upload', upload.array('photos', 12), function (req, res, next)
   // req.body will contain the text fields, if there were any
 })
 
-const cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
-app.post('/cool-profile', cpUpload, function (req, res, next) {
+const uploadMiddleware = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
+app.post('/cool-profile', uploadMiddleware, function (req, res, next) {
   // req.files is an object (String -> Array) where fieldname is the key, and the value is array of files
   //
   // e.g.
@@ -100,7 +100,7 @@ const multer  = require('multer')
 const upload = multer({ dest: './public/data/uploads/' })
 app.post('/stats', upload.single('uploaded_file'), function (req, res) {
   // req.file is the name of your file in the form above, here 'uploaded_file'
-  // req.body will hold the text fields, if there were any 
+  // req.body will hold the text fields, if there were any
   console.log(req.file, req.body)
 });
 ```

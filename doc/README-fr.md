@@ -1,6 +1,6 @@
 # Multer [![Build Status](https://travis-ci.org/expressjs/multer.svg?branch=master)](https://travis-ci.org/expressjs/multer) [![NPM version](https://badge.fury.io/js/multer.svg)](https://badge.fury.io/js/multer) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
 
-Multer est un middleware node.js pour la gestion des données `multipart/form-data` qui est principalement utilisé pour télécharger des fichiers. 
+Multer est un middleware node.js pour la gestion des données `multipart/form-data` qui est principalement utilisé pour télécharger des fichiers.
 Il est écrit au-dessus de [busboy](https://github.com/mscdex/busboy) pour une efficacité maximale.
 
 **NOTE**: Multer ne traitera aucun formulaire qui ne soit pas un multipart (`multipart/form-data`).
@@ -55,8 +55,8 @@ app.post('/photos/upload', upload.array('photos', 12), function (req, res, next)
   // req.body contiendra les champs de texte, s'il y en avait
 })
 
-const cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
-app.post('/cool-profile', cpUpload, function (req, res, next) {
+const uploadMiddleware = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
+app.post('/cool-profile', uploadMiddleware, function (req, res, next) {
   // req.files est un objet (String -> Array) où fieldname est la clé et la valeur est un tableau de fichiers
   //
   // e.g.
@@ -87,7 +87,7 @@ Voici un exemple d'utilisation de multer dans un formulaire HTML. Faites particu
   <div class="form-group">
     <input type="file" class="form-control-file" name="uploaded_file">
     <input type="text" class="form-control" placeholder="Number of speakers" name="nspeakers">
-    <input type="submit" value="Get me the stats!" class="btn btn-default">            
+    <input type="submit" value="Get me the stats!" class="btn btn-default">
   </div>
 </form>
 ```
@@ -232,7 +232,7 @@ doit renvoyer un nom de fichier complet avec une extension de fichier.
 Chaque fonction reçoit à la fois la requête (`req`) et des informations sur
 le dossier (`file`) pour aider à la décision.
 
-Notez que `req.body` n'a peut-être pas encore été entièrement rempli. Cela dépend de l'ordre 
+Notez que `req.body` n'a peut-être pas encore été entièrement rempli. Cela dépend de l'ordre
 où le client transmet les champs et les fichiers au serveur.
 
 Pour comprendre la convention d'appel utilisée dans le rappel (nécessité de passer

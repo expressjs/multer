@@ -4,7 +4,7 @@ Multer - bu nodejs middleware bo'lib, asosan `multipart/form-data` shaklda yubor
 
 **Muhim**: Multer `multipart` bo'lmagan har qanday formani qayta ishlamaydi.
 
-## Tarjimalar 
+## Tarjimalar
 
 Bu README boshqa tillarda ham mavjud:
 
@@ -55,8 +55,8 @@ app.post('/photos/upload', upload.array('photos', 12), function (req, res, next)
   // req.body agar matnli maydonlar (fields) bo'lsa, ularni saqlanadi
 })
 
-const cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
-app.post('/cool-profile', cpUpload, function (req, res, next) {
+const uploadMiddleware = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
+app.post('/cool-profile', uploadMiddleware, function (req, res, next) {
   // req.files - bu ob'ekt (String -> Array), matn maydoni(fieldname) - bu key, va qiymat - fayllar massivi
   //
   // misol:
@@ -100,7 +100,7 @@ Kalit(key) | Ta'rif                                 | Eslatma
 
 ### `multer(opts)`
 
-Multer qo'shimcha ob'ekt qabul qiladi, ulardan eng asosiysi - `dest`, 
+Multer qo'shimcha ob'ekt qabul qiladi, ulardan eng asosiysi - `dest`,
 Multerga fayllarni qayerga yuklash kerakligini aytadigan xususiyat. Agarda siz qo'shimcha(`options`) ob'ektni tashlab ketsangiz, fayllar xotirada saqlanadi va hech qachon diskka yozilmaydi.
 
 Standart holatda - Multer nomlashda kelib chiqishi mumkin bo'lgan muammolarni oldini olish uchun fayllar nomini o'zgartiradi. O'z talablaringizga mos ravishda nomlash funksiyasini sozlay olashingiz mumkin.
@@ -156,7 +156,7 @@ Ushbu so'rov barcha fayllarni qabul qiladi, fayllar `req.files` ichida saqlanadi
 
 #### `DiskStorage`
 
-Diskka saqlash motori(engine) sizga fayllarni saqlashda to'liq nazorat qilish imkonini beradi. 
+Diskka saqlash motori(engine) sizga fayllarni saqlashda to'liq nazorat qilish imkonini beradi.
 
 ```javascript
 const storage = multer.diskStorage({
@@ -202,7 +202,7 @@ Xotirada saqlash paytida, fayl ma'lumotlari `buffer` deb nomlanadigan maydonni o
 
 ### `limits`
 
-Quyidagi xususiyatlar o'lchov(limit)larni aniqlaydigan obyekt. Multer ushbu obyektni to'g'ridan-to'g'ri busboy ga o'tkazadi va xususiyatlar tafsilotlari [busboy sahifasida](https://github.com/mscdex/busboy#busboy-methods)dan topishingiz mumkin. 
+Quyidagi xususiyatlar o'lchov(limit)larni aniqlaydigan obyekt. Multer ushbu obyektni to'g'ridan-to'g'ri busboy ga o'tkazadi va xususiyatlar tafsilotlari [busboy sahifasida](https://github.com/mscdex/busboy#busboy-methods)dan topishingiz mumkin.
 
 Quyidagi butun qiymatlar mavjud:
 
@@ -225,7 +225,7 @@ Bu, qaysi fayllarni yuklashi, qaysilarini o'tkazib yuborish kerakligini boshqari
 ```javascript
 function fileFilter (req, file, cb) {
 
-  // Bu funksiya, faylni qabul qilish kerakligini anglatish uchun `cb` ni 
+  // Bu funksiya, faylni qabul qilish kerakligini anglatish uchun `cb` ni
   // boolean qiymat bilan chaqirish kerak.
 
   // Faylni qabul qilishni rad etish uchun false quyudagicha berilishi kerak:

@@ -51,8 +51,8 @@ app.post('/photos/upload', upload.array('photos', 12), function (req, res, next)
   // req.body contendrá los campos de texto, si los hubiera.
 })
 
-const cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
-app.post('/cool-profile', cpUpload, function (req, res, next) {
+const uploadMiddleware = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
+app.post('/cool-profile', uploadMiddleware, function (req, res, next) {
   // req.files es un objeto (String -> Array) donde el nombre del campo es la clave (key) y el valor es el arreglo (array) de archivos
   //
   // Ejemplo
@@ -84,7 +84,7 @@ Este es un ejemplo de cómo se utiliza multer en un formulario HTML. Presta espe
   <div class="form-group">
     <input type="file" class="form-control-file" name="uploaded_file">
     <input type="text" class="form-control" placeholder="Number of speakers" name="nspeakers">
-    <input type="submit" value="Get me the stats!" class="btn btn-default">            
+    <input type="submit" value="Get me the stats!" class="btn btn-default">
   </div>
 </form>
 ```
