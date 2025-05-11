@@ -47,6 +47,9 @@
     "lib/"
   ],
   "scripts": {
-    "test": "standard && mocha"
+    "lint": "standard",
+    "test": "mocha --reporter spec --exit --check-leaks test/",
+    "test-ci": "nyc --reporter=lcov --reporter=text npm test",
+    "test-cov": "nyc --reporter=html --reporter=text npm test"
   }
 }
