@@ -49,7 +49,7 @@
   ],
   "scripts": {
     "lint": "standard",
-    "test": "standard && mocha --reporter spec --bail --exit --check-leaks test/",
+    "test": "mocha --reporter spec --bail --exit --check-leaks test/",
     "test-ci": "nyc --reporter=lcov --reporter=text npm test",
     "test-cov": "nyc --reporter=html --reporter=text npm test"
   }
