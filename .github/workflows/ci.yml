@@ -11,8 +11,6 @@ jobs:
       fail-fast: false
       matrix:
         name:
-        - Node.js 6.x
-        - Node.js 8.x
         - Node.js 10.x
         - Node.js 11.x
         - Node.js 12.x
@@ -30,16 +28,9 @@ jobs:
         - Node.js 24.x
 
         include:
-        - name: Node.js 6.x
-          node-version: "6.17"
-          npm-i: mocha@6.2.2 nyc@14.1.1
-
-        - name: Node.js 8.x
-          node-version: "8.17"
-          npm-i: mocha@7.1.2 nyc@14.1.1
 
         - name: Node.js 10.x
-          node-version: "10.24"
+          node-version: "10.16"
           npm-i: mocha@8.4.0
           
         - name: Node.js 11.x
