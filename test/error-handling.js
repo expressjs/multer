@@ -1,13 +1,13 @@
 /* eslint-env mocha */
 
-import assert from 'node:assert'
-import stream from 'node:stream'
-import { promisify } from 'node:util'
+const assert = require('node:assert')
+const stream = require('stream')
+const { promisify } = require('node:util')
 
-import FormData from 'form-data'
+const FormData = require('form-data')
 
-import * as util from './_util.js'
-import multer from '../index.js'
+const util = require('./_util')
+const multer = require('../')
 
 function withLimits (limits, fields) {
   return multer({ limits: limits }).fields(fields)

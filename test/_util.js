@@ -1,10 +1,11 @@
-import assert from 'node:assert'
-import fs from 'node:fs'
-import stream from 'node:stream'
-import { promisify } from 'node:util'
+const path = require('path')
+const assert = require('node:assert')
+const fs = require('node:fs')
+const stream = require('node:stream')
+const { promisify } = require('node:util')
 
-import hasha from 'hasha'
-import _onFinished from 'on-finished'
+const hasha = require('hasha')
+const _onFinished = require('on-finished')
 
 const onFinished = promisify(_onFinished)
 
@@ -51,15 +52,15 @@ const files = new Map([
   }]
 ])
 
-export function file (name) {
-  return fs.createReadStream(new URL(`files/${name}${files.get(name).extension}`, import.meta.url))
+exports.file = function file (name) {
+  return fs.createReadStream(path.join(__dirname, 'files', name + files.get(name).extension))
 }
 
-export function knownFileLength (name) {
+exports.knownFileLength = function knownFileLength (name) {
   return files.get(name).size
 }
 
-export async function assertFile (file, fieldName, fileName) {
+exports.assertFile = async function assertFile (file, fieldName, fileName) {
   if (!files.has(fileName)) {
     throw new Error(`No file named "${fileName}"`)
   }
@@ -81,15 +82,15 @@ export async function assertFile (file, fieldName, fileName) {
   assert.strictEqual(hash, expected.hash)
 }
 
-export async function assertFiles (files) {
-  await Promise.all(files.map((args) => assertFile(args[0], args[1], args[2])))
+exports.assertFiles = async function assertFiles (files) {
+  await Promise.all(files.map((args) => exports.assertFile(args[0], args[1], args[2])))
 }
 
 function getLength (form) {
   return promisify(form.getLength).call(form)
 }
 
-export async function submitForm (multer, form) {
+exports.submitForm = async (multer, form) => {
   const length = await getLength(form)
   const req = new stream.PassThrough()
 

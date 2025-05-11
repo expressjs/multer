@@ -1,16 +1,15 @@
 /* eslint-env mocha */
 
-import assert from 'node:assert'
-import stream from 'node:stream'
-import { promisify } from 'node:util'
+const assert = require('node:assert')
+const stream = require('node:stream')
+const { promisify } = require('node:util')
 
-import FormData from 'form-data'
-import hasOwnProperty from 'has-own-property'
-import recursiveNullify from 'recursive-nullify'
-import testData from 'testdata-w3c-json-form'
+const FormData = require('form-data')
+const recursiveNullify = require('recursive-nullify')
+const testData = require('testdata-w3c-json-form')
 
-import * as util from './_util.js'
-import multer from '../index.js'
+const util = require('./_util')
+const multer = require('../')
 
 describe('body', () => {
   let parser
@@ -72,8 +71,8 @@ describe('body', () => {
 
     await promisify(parser)(req, null)
 
-    assert.strictEqual(hasOwnProperty(req, 'body'), false)
-    assert.strictEqual(hasOwnProperty(req, 'files'), false)
+    assert.strictEqual(Object.hasOwn(req, 'body'), false)
+    assert.strictEqual(Object.hasOwn(req, 'files'), false)
   })
 
   it('should not process non-multipart GET request', async () => {
@@ -88,8 +87,8 @@ describe('body', () => {
 
     await promisify(parser)(req, null)
 
-    assert.strictEqual(hasOwnProperty(req, 'body'), false)
-    assert.strictEqual(hasOwnProperty(req, 'files'), false)
+    assert.strictEqual(Object.hasOwn(req, 'body'), false)
+    assert.strictEqual(Object.hasOwn(req, 'files'), false)
   })
 
   for (const test of testData) {

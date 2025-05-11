@@ -1,11 +1,11 @@
 /* eslint-env mocha */
 
-import assert from 'node:assert'
-import { PassThrough, pipeline } from 'node:stream'
-import FormData from 'form-data'
+const assert = require('node:assert')
+const { PassThrough, pipeline } = require('node:stream')
+const FormData = require('form-data')
 
-import * as util from './_util.js'
-import multer from '../index.js'
+const util = require('./_util')
+const multer = require('../')
 
 describe('Misc', () => {
   it('should handle unicode filenames', async () => {
