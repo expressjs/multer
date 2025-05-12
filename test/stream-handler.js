@@ -33,7 +33,6 @@ describe('Custom Stream Handler', function () {
     done()
   })
 
-
   it('should work with default stream handler', function (done) {
     var form = new FormData()
     var upload = multer({ dest: TEMP_DIR })
