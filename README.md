@@ -142,6 +142,7 @@ Key | Description
 `fileFilter` | Function to control which files are accepted
 `limits` | Limits of the uploaded data
 `preservePath` | Keep the full path of files instead of just the base name
+`streamHandler` | Function to handle reading the request stream into busboy
 
 In an average web app, only `dest` might be required, and configured as shown in
 the following example.
@@ -243,6 +244,33 @@ order that the client transmits fields and files to the server.
 For understanding the calling convention used in the callback (needing to pass
 null as the first param), refer to
 [Node.js error handling](https://web.archive.org/web/20220417042018/https://www.joyent.com/node-js/production/design/errors)
+
+### `streamHandler`
+
+The `streamHandler` option allows you to customize how the request data is fed to busboy.
+By default, multer pipes the request directly to busboy using `req.pipe(busboy)`.
+
+This is useful in environments where the request body is pre-processed, like in
+Google Cloud Functions where the raw body is available as `req.rawBody`.
+
+The function takes the request object and the busboy instance:
+
+```javascript
+function customStreamHandler(req, busboy) {
+  // If in Google Cloud Functions or similar environment
+  if (req.rawBody) {
+    busboy.end(req.rawBody)
+  } else {
+    // Fall back to default behavior
+    req.pipe(busboy)
+  }
+}
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  streamHandler: customStreamHandler
+})
+```
 
 #### `MemoryStorage`
 
