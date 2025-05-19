@@ -11,8 +11,6 @@ jobs:
       fail-fast: false
       matrix:
         name:
-        - Node.js 6.x
-        - Node.js 8.x
         - Node.js 10.x
         - Node.js 11.x
         - Node.js 12.x
@@ -30,14 +28,6 @@ jobs:
         - Node.js 24.x
 
         include:
-        - name: Node.js 6.x
-          node-version: "6.17"
-          npm-i: mocha@6.2.2 nyc@14.1.1
-
-        - name: Node.js 8.x
-          node-version: "8.17"
-          npm-i: mocha@7.1.2 nyc@14.1.1
-
         - name: Node.js 10.x
           node-version: "10.24"
           npm-i: mocha@8.4.0
@@ -56,9 +46,11 @@ jobs:
           
         - name: Node.js 14.x
           node-version: "14.21"
+          npm-i: mocha@9.2.2
           
         - name: Node.js 15.x
           node-version: "15.14"
+          npm-i: mocha@9.2.2
           
         - name: Node.js 16.x
           node-version: "16.20"
@@ -106,14 +98,6 @@ jobs:
           npm config set strict-ssl false
         fi
         dirname "$(nvm which ${{ matrix.node-version }})" >> "$GITHUB_PATH"
-
-    - name: Configure npm
-      run: |
-        if [[ "$(npm config get package-lock)" == "true" ]]; then
-          npm config set package-lock false
-        else
-          npm config set shrinkwrap false
-        fi
 
     - name: Remove npm module(s) ${{ matrix.npm-rm }}
       run: npm rm --silent --save-dev ${{ matrix.npm-rm }}
