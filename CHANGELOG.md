@@ -20,7 +20,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## 1.4.4-lts.1
 
 - Bugfix: Bump busboy to fix CVE-2022-24434 (#1097)
-- Breaking: Require Node.js 6.0.0 or later (#1097)
+- Breaking: Require Node.js 10.16.0 or later (#1097)
 
 ## 1.4.4 - 2021-12-07
 
