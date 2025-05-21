@@ -2,13 +2,13 @@
 
 Multer es un "*middleware*" de node.js para el manejo de `multipart/form-data`, el cuál es usado sobre todo para la subida de archivos. Está escrito sobre [busboy](https://github.com/mscdex/busboy) para maximizar su eficiencia.
 
-**NOTA**: Multer no procesará ningún formulario basado en `multipart/form-data`.
+**NOTA**: Multer no procesará ningún formulario que no sea multiparte (`multipart/form-data`).
 
 ## Traducciones
 
 Éste archivo README también está disponible en otros lenguajes:
 
-- [Engilsh](https://github.com/expressjs/multer/blob/master/README.md) (Inglés)
+- [English](https://github.com/expressjs/multer/blob/master/README.md) (Inglés)
 - [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (Chino)
 - [한국어](https://github.com/expressjs/multer/blob/master/doc/README-ko.md) (Coreano)
 - [Русский язык](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (Ruso)
@@ -42,28 +42,28 @@ const upload = multer({ dest: 'uploads/' })
 const app = express()
 
 app.post('/profile', upload.single('avatar'), function (req, res, next) {
-  // req.file es el `avatar` del archivo
-  // req.body tendrá los campos textuales, en caso de haber alguno.
+  // req.file es el archivo del `avatar`
+  // req.body contendrá los campos de texto, si los hubiera.
 })
 
 app.post('/photos/upload', upload.array('photos', 12), function (req, res, next) {
   // req.files es el arreglo (array) de archivos `photos`
-  // req.body tendrá los campos textuales, en caso de haber alguno.
+  // req.body contendrá los campos de texto, si los hubiera.
 })
 
-const cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
-app.post('/cool-profile', cpUpload, function (req, res, next) {
+const uploadMiddleware = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
+app.post('/cool-profile', uploadMiddleware, function (req, res, next) {
   // req.files es un objeto (String -> Array) donde el nombre del campo es la clave (key) y el valor es el arreglo (array) de archivos
   //
   // Ejemplo
   //  req.files['avatar'][0] -> Archivo
   //  req.files['gallery'] -> Array
   //
-  // req.body tendrá los campos textuales, en caso de haber alguno.
+  // req.body contendrá los campos de texto, si los hubiera.
 })
 ```
 
-En caso de que necesites manejar un formulario multiparte (multipart form) que sólo contiene campos de texto, recomendamos usar el método `.none()`:
+En caso de que necesites manejar un formulario multiparte (multipart form) que sólo contiene campos de texto, deberias usar el método `.none()`:
 
 ```javascript
 const express = require('express')
@@ -76,6 +76,33 @@ app.post('/profile', upload.none(), function (req, res, next) {
 })
 ```
 
+
+Este es un ejemplo de cómo se utiliza multer en un formulario HTML. Presta especial atención en los campos `enctype="multipart/form-data"` y `name="uploaded_file"`:
+
+```html
+<form action="/stats" enctype="multipart/form-data" method="post">
+  <div class="form-group">
+    <input type="file" class="form-control-file" name="uploaded_file">
+    <input type="text" class="form-control" placeholder="Number of speakers" name="nspeakers">
+    <input type="submit" value="Get me the stats!" class="btn btn-default">
+  </div>
+</form>
+```
+
+Luego en tu archivo javascript agrega estas líneas para acceder tanto al archivo (file) como al body.Es importante que uses el valor del campo `name` del formulario, en tu función de subida. Esto le indica a multer en qué campo de la petición debe buscar los archivos. Si estos campos no son los mismos en el formulario HTML y en tu servidor, la subida fallará:
+
+```javascript
+const multer  = require('multer')
+const upload = multer({ dest: './public/data/uploads/' })
+app.post('/stats', upload.single('uploaded_file'), function (req, res) {
+   // req.file es el nombre de tu archivo en el formulario anterior, en este caso 'uploaded_file'
+   // req.body contendrá los campos de texto, si los hubiera.
+   console.log(req.file, req.body)
+});
+```
+
+
+
 ## API
 
 ### Información del archivo
@@ -84,15 +111,15 @@ Cada archivo contiene la siguiente información:
 
 Clave (Key) | Descripción | Nota
 --- | --- | ---
-`fieldname` | Es el nombre del campo especificado en el formulario |
+`fieldname` | Nombre del campo especificado en el formulario |
 `originalname` | Nombre del archivo en la computadora del usuario |
 `encoding` | Tipo de codificación del archivo |
 `mimetype` | Mime type del archivo |
 `size` | Tamaño del archivo en Bytes |
-`destination` | La carpeta en donde el archivo ha sido guardado | `DiskStorage`
+`destination` | La carpeta donde se guardó el archivo | `DiskStorage`
 `filename` | El nombre del archivo en `destination` | `DiskStorage`
-`path` | El camino completo donde se ha subido el archivo (full path) | `DiskStorage`
-`buffer` | Un `Buffer` con el archivo completo | `MemoryStorage`
+`path` | La ruta completa al archivo subido | `DiskStorage`
+`buffer` | Un `Buffer` del archivo completo | `MemoryStorage`
 
 ### `multer(opts)`
 
@@ -106,8 +133,8 @@ Clave (key) | Descripción
 --- | ---
 `dest` o `storage` | Donde se guardarán los archivos
 `fileFilter` | Función para controlar qué archivos son aceptados
-`limits` | Límites de los datos de subida
-`preservePath` | Mantiene la dirección completa de la ubicación de los archivos, en vez de sólo sus nombres
+`limits` | Límites de los datos subidos
+`preservePath` | Mantiene la ruta completa de la ubicación de los archivos, en vez de sólo sus nombres
 
 En la aplicación web promedio es probable que sólo se requiera `dest`, siendo configurado como en el siguiente ejemplo:
 
@@ -146,7 +173,7 @@ Acepta sólo campos de texto. En caso de intentar subir un archivo, se generará
 
 #### `.any()`
 
-Acepta todos los archivos que han sido enviado. Un arreglo (array) conteniendo los archivos será guardado en `req.files`.
+Acepta todos los archivos que han sido enviados. Un arreglo (array) conteniendo los archivos, será guardado en `req.files`.
 
 **ADVERTENCIA:** Asegúrate de siempre manejar los archivos que los usuarios intenten subir. Nunca uses Multer como una función middleware de manera global dado que, de esta forma, un usuario malicioso podría subir archivos por medio de rutas que no has anticipado. Usa sólo esta función en rutas en las que estás esperando archivos.
 
@@ -154,7 +181,7 @@ Acepta todos los archivos que han sido enviado. Un arreglo (array) conteniendo l
 
 #### `DiskStorage`
 
-El mecanismo de almacenamiento en el disco otorga completo control en la escritura de archivos en tu disco.
+El motor de almacenamiento en disco te ofrece un control total sobre el almacenamiento de archivos en tu disco.
 
 ```javascript
 const storage = multer.diskStorage({
@@ -171,21 +198,24 @@ const upload = multer({ storage: storage })
 
 Hay dos opciones disponibles, `destination` y `filename`. Ambas son funciones que determinan dónde debería almacenarse el archivo.
 
-`destination` es usado para determinar la capeta en donde los archivos subidos deberían ser almacenados. Esto también puede ser informado mediante un `string` (por ejemplo: `'/tmp/uploads'`). Si ninguna propiedad `destination` es dada, entonces será usado el directorio por defecto en donde el sistema operativo almacena sus archivos temporales.
+`destination` se utiliza para determinar en qué carpeta se almacenarán los archivos subidos. Tambien se puede proporcionar como un `string` (por ejemplo: `'/tmp/uploads'`). Si no se proporciona `destination`, se utilizara el directorio predeterminado del sistema operativo para archivos temporales.
 
-**Nota:** Al pasar `destination` como una función, tú eres el responsable de crear los directorios donde los archivos serán almacenados. Cuando un `string` es dada a `destination`, Multer se asegurará de que el directorio sea creado en caso de no encontrar uno.
+**Nota:** Al pasar `destination` como una función, tú eres el responsable de crear los directorios donde los archivos serán almacenados. Cuando asignas un `string` a `destination`, Multer se asegurará de que el directorio sea creado en caso de no encontrarlo.
 
 `filename` es usado para determinar cómo debería ser nombrado el archivo dentro de la carpeta. Si `filename` no es provisto, a cada archivo se le asignará un nombre aleatorio que no incluirá ninguna extensión.
 
-**Nota:** Multer no añadirá ningúna extensión de archivos por ti, es tu función la que debería retornar un nombre completo, incluyendo también la extensión del archivo.
+**Nota:** Multer no añadirá ningúna extensión de archivos por ti, es tu función la que debería retornar un nombre completo, que incluya también la extensión del archivo.
 
 El objeto petición (`req`) y parte de la información del archivo (`file`) son pasadas a tu función para ayudar con la decisión en la nomenclatura.
 
 Nota que  `req.body` puede que no haya sido totalmente poblado todavía. Esto depende del orden en el que el cliente transmita sus campos y archivos hacia el servidor.
 
+Para comprender la convención de llamada utilizada en el callback (necesitas pasar null como primer parametro), consulta en
+[Node.js manejo de errores](https://web.archive.org/web/20220417042018/https://www.joyent.com/node-js/production/design/errors)
+
 #### `MemoryStorage`
 
-El mecanismo de almacenamiento en memoria almacena los archivos en la memoria en forma de objetos `Buffer`. Para esto no se proveen opciones.
+El motor de almacenamiento en memoria almacena los archivos en memoria como objetos `Buffer`. Para esto no se proveen opciones.
 
 ```javascript
 const storage = multer.memoryStorage()
@@ -198,7 +228,7 @@ Al usar el almacenamiento en memoria, la información del archivo contendrá un 
 
 ### `limits`
 
-Un objeto que especifica los límites correpondientes a los tamaños de las siguientes propiedades. Multer pasa este objeto directamente a *busboy*, los detalles de las propiedades pueden encontrarse en [la página de busboy](https://github.com/mscdex/busboy#busboy-methods).
+Un objeto especifica los límites correpondientes a los tamaños de las siguientes propiedades opcionales. Multer pasa este objeto directamente a *busboy*, los detalles de las propiedades pueden encontrarse en [la página de busboy](https://github.com/mscdex/busboy#busboy-methods).
 
 Los siguientes valores en números enteros están disponibles:
 
@@ -206,7 +236,7 @@ Clave (Key) | Descripción | Por defecto
 --- | --- | ---
 `fieldNameSize` | Tamaño máximo del nombre del campo | 100 bytes
 `fieldSize` | Tamaño máximo de los valores para cada campo (en bytes) | 1MB
-`fields` | Número máximo de la cantidad de campos | Infinito
+`fields` | Número máximo de campos que no son archivos | Infinito
 `fileSize` | Para formularios multiparte, el tamaño máximo de los archivos (en bytes) | Infinito
 `files` | Para los formularios multiparte, el número máximo de campos para archivos | Infinito
 `parts` | Para los formularios multiparte, el número máximo de partes (campos + archivos) | Infinito
@@ -216,7 +246,7 @@ Especificar los límites puede ayudarte a proteger tu sitio contra ataques de de
 
 ### `fileFilter`
 
-Asigna ésto a una función que controle cuáles archivos deben ser subidos y cuáles deben ser omitidos. La función debería verse como ésta:
+Asigna ésto a una función para controlar cuáles archivos deben ser subidos y cuáles deben ser omitidos. La función debería verse como ésta:
 
 ```javascript
 function fileFilter (req, file, cb) {

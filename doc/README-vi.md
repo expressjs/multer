@@ -54,11 +54,11 @@ app.post('/photos/upload', upload.array('photos', 12), function(
   // req.body sẽ giữ thông tin gắn kèm (vd: text fields), nếu có
 });
 
-var cpUpload = upload.fields([
+var uploadMiddleware = upload.fields([
   { name: 'avatar', maxCount: 1 },
   { name: 'gallery', maxCount: 8 },
 ]);
-app.post('/cool-profile', cpUpload, function(req, res, next) {
+app.post('/cool-profile', uploadMiddleware, function(req, res, next) {
   // req.files là một object kiểu (String -> Array) mà fieldname là key, và value là mảng các files
   //
   // vd:
