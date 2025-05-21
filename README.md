@@ -138,10 +138,14 @@ The following are the options that can be passed to Multer.
 
 Key | Description
 --- | ---
-`dest` or `storage` | Where to store the files
-`fileFilter` | Function to control which files are accepted
-`limits` | Limits of the uploaded data
-`preservePath` | Keep the full path of files instead of just the base name
+`dest` or `storage` | Where to store the files.
+`fileFilter` | Function to control which files are accepted.
+`limits` | Limits of the uploaded data. **Defaults:** check [busboy's page](https://github.com/mscdex/busboy#exports)
+`preservePath` | Keep the full path of files instead of just the base name. **Default:** check [busboy's page](https://github.com/mscdex/busboy#exports)
+`charset` | Character set to use when one isn't defined. Sets busboy's option `defCharset`. **Default:** `utf-8`. List of [available charsets](https://github.com/mscdex/busboy/blob/master/lib/utils.js#L384)
+`paramCharset` | For multipart forms, the default character set to use for values of part header parameters (e.g. filename) that are not extended parameters (that contain an explicit charset). Sets busboy's option `defParamCharset`. **Default:** `utf-8`. List of [available charsets](https://github.com/mscdex/busboy/blob/master/lib/utils.js#L384).
+`writableHVM` | Node Stream highWaterMark to use for the parser stream. Sets busboy's option `highWaterMark`. **Default:** check [busboy's page](https://github.com/mscdex/busboy#exports)
+`readableHVM` | Node Stream highWaterMark to use for individual file streams. Sets busboy's option `fileHwm`. **Default:** check [busboy's page](https://github.com/mscdex/busboy#exports)
 
 In an average web app, only `dest` might be required, and configured as shown in
 the following example.
@@ -263,7 +267,7 @@ memory storage is used.
 
 ### `limits`
 
-An object specifying the size limits of the following optional properties. Multer passes this object into busboy directly, and the details of the properties can be found on [busboy's page](https://github.com/mscdex/busboy#busboy-methods).
+An object specifying the size limits of the following optional properties. Multer passes this object into busboy directly, and the details of the properties can be found on [busboy's page](https://github.com/mscdex/busboy#exports).
 
 The following integer values are available:
 

@@ -18,6 +18,10 @@ function Multer (options) {
   }
 
   this.limits = options.limits
+  this.charset = typeof options.charset === 'string' ? options.charset : 'utf-8'
+  this.paramCharset = typeof options.paramCharset === 'string' ? options.paramCharset : 'utf-8'
+  this.writableHVM = options.writableHVM
+  this.readableHVM = options.readableHVM
   this.preservePath = options.preservePath
   this.fileFilter = options.fileFilter || allowAll
 }
@@ -48,6 +52,10 @@ Multer.prototype._makeMiddleware = function (fields, fileStrategy) {
       limits: this.limits,
       preservePath: this.preservePath,
       storage: this.storage,
+      charset: this.charset,
+      paramCharset: this.paramCharset,
+      writableHVM: this.writableHVM,
+      readableHVM: this.readableHVM,
       fileFilter: wrappedFileFilter,
       fileStrategy: fileStrategy
     }
