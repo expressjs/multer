@@ -7,6 +7,8 @@ Multer는 파일 업로드를 위해 사용되는 `multipart/form-data` 를 다�
 ## 번역
 
 이 문서는 아래의 언어로도 제공됩니다:
+
+- [العربية](https://github.com/expressjs/multer/blob/master/doc/README-ar.md) (아라비아 말)
 - [English](https://github.com/expressjs/multer/blob/master/README.md) (영어)
 - [Español](https://github.com/expressjs/multer/blob/master/doc/README-es.md) (스페인어)
 - [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (중국어)
@@ -42,8 +44,8 @@ app.post('/photos/upload', upload.array('photos', 12), function (req, res, next)
   // 텍스트 필드가 있는 경우, req.body가 이를 포함할 것입니다.
 })
 
-const cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
-app.post('/cool-profile', cpUpload, function (req, res, next) {
+const uploadMiddleware = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
+app.post('/cool-profile', uploadMiddleware, function (req, res, next) {
   // req.files는 (String -> Array) 형태의 객체 입니다.
   // 필드명은 객체의 key에, 파일 정보는 배열로 value에 저장됩니다.
   //

@@ -4,10 +4,11 @@ Multer — это middleware для фреймворка express для обра
 
 **ВАЖНО**: Multer не обрабатывает никакой другой тип форм, кроме `multipart/form-data`.
 
-## Переводы 
+## Переводы
 
 Это README также доступно на других языках:
 
+- [العربية](https://github.com/expressjs/multer/blob/master/doc/README-ar.md) (арабский)
 - [English](https://github.com/expressjs/multer/blob/master/README.md) (Английский)
 - [Español](https://github.com/expressjs/multer/blob/master/doc/README-es.md) (Испанский)
 - [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (Китайский)
@@ -51,8 +52,8 @@ app.post('/photos/upload', upload.array('photos', 12), function (req, res, next)
   // req.body сохранит текстовые поля, если они будут
 })
 
-const cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
-app.post('/cool-profile', cpUpload, function (req, res, next) {
+const uploadMiddleware = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
+app.post('/cool-profile', uploadMiddleware, function (req, res, next) {
   // req.files - объект (String -> Array), где fieldname - ключ, и значение - массив файлов
   //
   // например:
@@ -152,7 +153,7 @@ const upload = multer({ dest: 'uploads/' })
 
 #### `DiskStorage`
 
-Движок дискового пространства. Дает полный контроль над размещением файлов на диск. 
+Движок дискового пространства. Дает полный контроль над размещением файлов на диск.
 
 ```javascript
 const storage = multer.diskStorage({
@@ -167,13 +168,13 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage })
 ```
 
-Доступно две опции, расположение `destination` и имя файла `filename`. Обе эти функции определяют, где будет находиться файл после загрузки. 
+Доступно две опции, расположение `destination` и имя файла `filename`. Обе эти функции определяют, где будет находиться файл после загрузки.
 
 `destination` используется, чтобы задать каталог, в котором будут размещены файлы. Может быть задан строкой (например, `'/tmp/uploads'`). Если не задано расположение `destination`, операционная система воспользуется для сохранения каталогом для временных файлов.
 
-**Важно:** Вы должны создать каталог, когда используете `destination`. При передачи в качестве аргумента строки, Multer проверяет, что каталог создан. 
+**Важно:** Вы должны создать каталог, когда используете `destination`. При передачи в качестве аргумента строки, Multer проверяет, что каталог создан.
 
-`filename` используется, чтобы определить, как будет назван файл внутри каталога. Если 
+`filename` используется, чтобы определить, как будет назван файл внутри каталога. Если
 имя файла `filename` не задано, каждому файлу будет сконфигурировано случайное имя без расширения файла.
 
 **Важно:** Multer не добавляет никакого файлового расширения, ваша функция должна возвращать имя файла с необходимым расширением.
@@ -190,13 +191,13 @@ const upload = multer({ storage: storage })
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage })
 ```
-Когда вы используете этот тип передачи, информация о файле будет содержать поле `buffer`, которое содержит весь файл. 
+Когда вы используете этот тип передачи, информация о файле будет содержать поле `buffer`, которое содержит весь файл.
 
 **ПРЕДУПРЕЖДЕНИЕ**: Загрузка очень больших файлов, или относительно небольших файлов в большом количестве может вызвать переполнение памяти.
 
 ### `limits`
 
-Объект, устанавливающий ограничения. Multer прокидывает этот объект напрямую в busboy, поэтому детали можно посмотреть 
+Объект, устанавливающий ограничения. Multer прокидывает этот объект напрямую в busboy, поэтому детали можно посмотреть
 [на странице с методами busboy](https://github.com/mscdex/busboy#busboy-methods).
 
 Доступны следующие целочисленные значения:
@@ -215,7 +216,7 @@ const upload = multer({ storage: storage })
 
 ### `fileFilter`
 
-Задают функцию для того, чтобы решать, какие файлы будут загружены, а какие — нет. Функция может выглядеть так: 
+Задают функцию для того, чтобы решать, какие файлы будут загружены, а какие — нет. Функция может выглядеть так:
 
 ```javascript
 function fileFilter (req, file, cb) {

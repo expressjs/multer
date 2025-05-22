@@ -1,20 +1,23 @@
-# Multer [![Build Status](https://badgen.net/github/checks/expressjs/multer/master?label=ci)](https://github.com/expressjs/multer/actions/workflows/ci.yml) [![Test Coverage](https://badgen.net/coveralls/c/github/expressjs/multer/master)](https://coveralls.io/r/expressjs/multer?branch=master) [![NPM version](https://badge.fury.io/js/multer.svg)](https://badge.fury.io/js/multer) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
+# Multer [![NPM Version][npm-version-image]][npm-url] [![NPM Downloads][npm-downloads-image]][npm-url] [![Build Status][ci-image]][ci-url] [![Test Coverage][test-image]][test-url] [![OpenSSF Scorecard Badge][ossf-scorecard-badge]][ossf-scorecard-visualizer]
 
 Multer is a node.js middleware for handling `multipart/form-data`, which is primarily used for uploading files. It is written
 on top of [busboy](https://github.com/mscdex/busboy) for maximum efficiency.
 
 **NOTE**: Multer will not process any form which is not multipart (`multipart/form-data`).
 
-## Translations 
+## Translations
 
 This README is also available in other languages:
 
+- [العربية](https://github.com/expressjs/multer/blob/master/doc/README-ar.md) (Arabic)
 - [Español](https://github.com/expressjs/multer/blob/master/doc/README-es.md) (Spanish)
 - [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (Chinese)
 - [한국어](https://github.com/expressjs/multer/blob/master/doc/README-ko.md) (Korean)
 - [Русский язык](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (Russian)
 - [Việt Nam](https://github.com/expressjs/multer/blob/master/doc/README-vi.md) (Vietnam)
 - [Português](https://github.com/expressjs/multer/blob/master/doc/README-pt-br.md) (Portuguese Brazil)
+- [Français](https://github.com/expressjs/multer/blob/master/doc/README-fr.md) (French)
+- [O'zbek tili](https://github.com/expressjs/multer/blob/master/doc/README-uz.md) (Uzbek)
 
 ## Installation
 
@@ -53,8 +56,8 @@ app.post('/photos/upload', upload.array('photos', 12), function (req, res, next)
   // req.body will contain the text fields, if there were any
 })
 
-const cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
-app.post('/cool-profile', cpUpload, function (req, res, next) {
+const uploadMiddleware = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
+app.post('/cool-profile', uploadMiddleware, function (req, res, next) {
   // req.files is an object (String -> Array) where fieldname is the key, and the value is array of files
   //
   // e.g.
@@ -78,14 +81,14 @@ app.post('/profile', upload.none(), function (req, res, next) {
 })
 ```
 
-Here's an example on how multer is used an HTML form. Take special note of the `enctype="multipart/form-data"` and `name="uploaded_file"` fields:
+Here's an example on how multer is used in a HTML form. Take special note of the `enctype="multipart/form-data"` and `name="uploaded_file"` fields:
 
 ```html
 <form action="/stats" enctype="multipart/form-data" method="post">
   <div class="form-group">
     <input type="file" class="form-control-file" name="uploaded_file">
     <input type="text" class="form-control" placeholder="Number of speakers" name="nspeakers">
-    <input type="submit" value="Get me the stats!" class="btn btn-default">            
+    <input type="submit" value="Get me the stats!" class="btn btn-default">
   </div>
 </form>
 ```
@@ -96,9 +99,9 @@ Then in your javascript file you would add these lines to access both the file a
 const multer  = require('multer')
 const upload = multer({ dest: './public/data/uploads/' })
 app.post('/stats', upload.single('uploaded_file'), function (req, res) {
-   // req.file is the name of your file in the form above, here 'uploaded_file'
-   // req.body will hold the text fields, if there were any 
-   console.log(req.file, req.body)
+  // req.file is the name of your file in the form above, here 'uploaded_file'
+  // req.body will hold the text fields, if there were any
+  console.log(req.file, req.body)
 });
 ```
 
@@ -239,7 +242,7 @@ order that the client transmits fields and files to the server.
 
 For understanding the calling convention used in the callback (needing to pass
 null as the first param), refer to
-[Node.js error handling](https://www.joyent.com/node-js/production/design/errors)
+[Node.js error handling](https://web.archive.org/web/20220417042018/https://www.joyent.com/node-js/production/design/errors)
 
 #### `MemoryStorage`
 
@@ -331,3 +334,13 @@ For information on how to build your own storage engine, see [Multer Storage Eng
 ## License
 
 [MIT](LICENSE)
+
+[ci-image]: https://badgen.net/github/checks/expressjs/multer/master?label=ci
+[ci-url]: https://github.com/expressjs/multer/actions/workflows/ci.yml
+[test-url]: https://coveralls.io/r/expressjs/multer?branch=master
+[test-image]: https://badgen.net/coveralls/c/github/expressjs/multer/master
+[npm-downloads-image]: https://badgen.net/npm/dm/multer
+[npm-url]: https://npmjs.org/package/multer
+[npm-version-image]: https://badgen.net/npm/v/multer
+[ossf-scorecard-badge]: https://api.scorecard.dev/projects/github.com/expressjs/multer/badge
+[ossf-scorecard-visualizer]: https://ossf.github.io/scorecard-visualizer/#/projects/github.com/expressjs/multer
