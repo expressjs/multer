@@ -1,0 +1,11 @@
+--99999
+Content-Disposition: form-data; name="textField"
+Content-Type: text/plain; charset=ISO-8859-1
+
+foo
+--99999
+Content-Disposition: form-data; name="fileField"
+Content-Type: application/octet-stream
+
+foo
+--99999--
