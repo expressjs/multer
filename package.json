@@ -9,8 +9,6 @@
   ],
   "license": "MIT",
   "repository": "expressjs/multer",
-  "type": "module",
-  "exports": "./index.js",
   "keywords": [
     "form",
     "post",
@@ -22,7 +20,7 @@
   ],
   "dependencies": {
     "@fastify/busboy": "^1.0.0",
-    "append-field": "^2.0.0",
+    "append-field": "^1.0.0",
     "bytes": "^3.1.0",
     "fs-temp": "^2.0.1",
     "has-own-property": "^2.0.0",

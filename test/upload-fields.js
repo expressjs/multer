@@ -1,10 +1,10 @@
 /* eslint-env mocha */
 
-import assert from 'node:assert'
-import FormData from 'form-data'
+const assert = require('node:assert')
+const FormData = require('form-data')
 
-import * as util from './_util.js'
-import multer from '../index.js'
+const multer = require('../')
+const util = require('./_util')
 
 describe('upload.fields', () => {
   let parser
