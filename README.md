@@ -9,15 +9,17 @@ on top of [busboy](https://github.com/mscdex/busboy) for maximum efficiency.
 
 This README is also available in other languages:
 
-- [العربية](https://github.com/expressjs/multer/blob/main/doc/README-ar.md) (Arabic)
-- [Español](https://github.com/expressjs/multer/blob/main/doc/README-es.md) (Spanish)
-- [简体中文](https://github.com/expressjs/multer/blob/main/doc/README-zh-cn.md) (Chinese)
-- [한국어](https://github.com/expressjs/multer/blob/main/doc/README-ko.md) (Korean)
-- [Русский язык](https://github.com/expressjs/multer/blob/main/doc/README-ru.md) (Russian)
-- [Việt Nam](https://github.com/expressjs/multer/blob/main/doc/README-vi.md) (Vietnam)
-- [Português](https://github.com/expressjs/multer/blob/main/doc/README-pt-br.md) (Portuguese Brazil)
-- [Français](https://github.com/expressjs/multer/blob/main/doc/README-fr.md) (French)
-- [O'zbek tili](https://github.com/expressjs/multer/blob/main/doc/README-uz.md) (Uzbek)
+|                                                                                |                 |
+| ------------------------------------------------------------------------------ | --------------- |
+| [العربية](https://github.com/expressjs/multer/blob/main/doc/README-ar.md)      | Arabic          |
+| [简体中文](https://github.com/expressjs/multer/blob/main/doc/README-zh-cn.md)  | Chinese         |
+| [Français](https://github.com/expressjs/multer/blob/main/doc/README-fr.md)     | French          |
+| [한국어](https://github.com/expressjs/multer/blob/main/doc/README-ko.md)       | Korean          |
+| [Português](https://github.com/expressjs/multer/blob/main/doc/README-pt-br.md) | Portuguese (BR) |
+| [Русский язык](https://github.com/expressjs/multer/blob/main/doc/README-ru.md) | Russian         |
+| [Español](https://github.com/expressjs/multer/blob/main/doc/README-es.md)      | Spanish         |
+| [O'zbek tili](https://github.com/expressjs/multer/blob/main/doc/README-uz.md)  | Uzbek           |
+| [Việt Nam](https://github.com/expressjs/multer/blob/main/doc/README-vi.md)     | Vietnamese      |
 
 ## Installation
 
