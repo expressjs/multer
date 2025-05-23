@@ -8,12 +8,12 @@ Multer는 파일 업로드를 위해 사용되는 `multipart/form-data` 를 다�
 
 이 문서는 아래의 언어로도 제공됩니다:
 
-- [العربية](https://github.com/expressjs/multer/blob/master/doc/README-ar.md) (아라비아 말)
-- [English](https://github.com/expressjs/multer/blob/master/README.md) (영어)
-- [Español](https://github.com/expressjs/multer/blob/master/doc/README-es.md) (스페인어)
-- [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (중국어)
-- [Русский язык](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (러시아)
-- [Português](https://github.com/expressjs/multer/blob/master/doc/README-pt-br.md) (포르투갈어 BR)
+- [العربية](https://github.com/expressjs/multer/blob/main/doc/README-ar.md) (아라비아 말)
+- [English](https://github.com/expressjs/multer/blob/main/README.md) (영어)
+- [Español](https://github.com/expressjs/multer/blob/main/doc/README-es.md) (스페인어)
+- [简体中文](https://github.com/expressjs/multer/blob/main/doc/README-zh-cn.md) (중국어)
+- [Русский язык](https://github.com/expressjs/multer/blob/main/doc/README-ru.md) (러시아)
+- [Português](https://github.com/expressjs/multer/blob/main/doc/README-pt-br.md) (포르투갈어 BR)
 
 ## 설치
 
@@ -251,16 +251,16 @@ app.post('/profile', function (req, res) {
 
 ## 커스텀 스토리지 엔진
 
-자신만의 고유한 스토리지 엔진을 구축하기 위한 정보를 얻기 위해서는 [Multer Storage Engine](https://github.com/expressjs/multer/blob/master/StorageEngine.md) 문서를 참고하세요.
+자신만의 고유한 스토리지 엔진을 구축하기 위한 정보를 얻기 위해서는 [Multer Storage Engine](https://github.com/expressjs/multer/blob/main/StorageEngine.md) 문서를 참고하세요.
 
 ## 라이센스
 
 [MIT](LICENSE)
 
-[ci-image]: https://badgen.net/github/checks/expressjs/multer/master?label=ci
+[ci-image]: https://github.com/expressjs/multer/actions/workflows/ci.yml/badge.svg
 [ci-url]: https://github.com/expressjs/multer/actions/workflows/ci.yml
-[test-url]: https://coveralls.io/r/expressjs/multer?branch=master
-[test-image]: https://badgen.net/coveralls/c/github/expressjs/multer/master
+[test-url]: https://coveralls.io/r/expressjs/multer?branch=main
+[test-image]: https://badgen.net/coveralls/c/github/expressjs/multer/main
 [npm-downloads-image]: https://badgen.net/npm/dm/multer
 [npm-url]: https://npmjs.org/package/multer
 [npm-version-image]: https://badgen.net/npm/v/multer

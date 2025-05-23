@@ -11,13 +11,13 @@
 
 هذا الملف متاح أيضًا بلغات أخرى:
 
-- [English](https://github.com/expressjs/multer/blob/master/README.md) (الإنجليزية)
-- [Español](https://github.com/expressjs/multer/blob/master/doc/README-es.md) (الإسبانية)
-- [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (الصينية)
-- [한국어](https://github.com/expressjs/multer/blob/master/doc/README-ko.md) (الكورية)
-- [Русский язык](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (الروسية)
-- [Việt Nam](https://github.com/expressjs/multer/blob/master/doc/README-vi.md) (الفتنامية)
-- [Português](https://github.com/expressjs/multer/blob/master/doc/README-pt-br.md) (البرتغالية)
+- [English](https://github.com/expressjs/multer/blob/main/README.md) (الإنجليزية)
+- [Español](https://github.com/expressjs/multer/blob/main/doc/README-es.md) (الإسبانية)
+- [简体中文](https://github.com/expressjs/multer/blob/main/doc/README-zh-cn.md) (الصينية)
+- [한국어](https://github.com/expressjs/multer/blob/main/doc/README-ko.md) (الكورية)
+- [Русский язык](https://github.com/expressjs/multer/blob/main/doc/README-ru.md) (الروسية)
+- [Việt Nam](https://github.com/expressjs/multer/blob/main/doc/README-vi.md) (الفتنامية)
+- [Português](https://github.com/expressjs/multer/blob/main/doc/README-pt-br.md) (البرتغالية)
 
 
 ## التنصيب
@@ -279,7 +279,7 @@ function fileFilter (req, file, cb) {
 عند مواجهة خطأ ، سيقوم Multer بتفويض الخطأ إلى Express. يمكنك
 عرض صفحة خطأ لطيفة باستخدام [طريقة Express القياسية](http://expressjs.com/guide/error-handling.html).
 
-إذا كنت تريد إنتقاء الأخطاء والحصول على [أخطاء Multer فقط](https://github.com/expressjs/multer/blob/master/lib/multer-error.js)، فيمكنك نداء بدالة الوسيطة من قبل نفسك. أيضًا ، إذا كنت تريد التقاط أخطاء Multer فقط ، فيمكنك استخدام صنف `MulterError` المتصل بالكائن` multer` نفسه (على سبيل المثال `err instanceof multer.MulterError`).
+إذا كنت تريد إنتقاء الأخطاء والحصول على [أخطاء Multer فقط](https://github.com/expressjs/multer/blob/main/lib/multer-error.js)، فيمكنك نداء بدالة الوسيطة من قبل نفسك. أيضًا ، إذا كنت تريد التقاط أخطاء Multer فقط ، فيمكنك استخدام صنف `MulterError` المتصل بالكائن` multer` نفسه (على سبيل المثال `err instanceof multer.MulterError`).
 
 <div dir='ltr'>
 
@@ -304,16 +304,16 @@ app.post('/profile', function (req, res) {
 
 ## محرك التخزين الخاص بك
 
-للحصول على معلومات حول كيفية إنشاء محرك التخزين الخاص بك ، راجع [محرك تخزين Multer](https://github.com/expressjs/multer/blob/master/StorageEngine.md).
+للحصول على معلومات حول كيفية إنشاء محرك التخزين الخاص بك ، راجع [محرك تخزين Multer](https://github.com/expressjs/multer/blob/main/StorageEngine.md).
 
 ## الترخيص
 
 [MIT](LICENSE)
 
-[ci-image]: https://badgen.net/github/checks/expressjs/multer/master?label=ci
+[ci-image]: https://github.com/expressjs/multer/actions/workflows/ci.yml/badge.svg
 [ci-url]: https://github.com/expressjs/multer/actions/workflows/ci.yml
-[test-url]: https://coveralls.io/r/expressjs/multer?branch=master
-[test-image]: https://badgen.net/coveralls/c/github/expressjs/multer/master
+[test-url]: https://coveralls.io/r/expressjs/multer?branch=main
+[test-image]: https://badgen.net/coveralls/c/github/expressjs/multer/main
 [npm-downloads-image]: https://badgen.net/npm/dm/multer
 [npm-url]: https://npmjs.org/package/multer
 [npm-version-image]: https://badgen.net/npm/v/multer

@@ -8,12 +8,12 @@ Multer — это middleware для фреймворка express для обра
 
 Это README также доступно на других языках:
 
-- [العربية](https://github.com/expressjs/multer/blob/master/doc/README-ar.md) (арабский)
-- [English](https://github.com/expressjs/multer/blob/master/README.md) (Английский)
-- [Español](https://github.com/expressjs/multer/blob/master/doc/README-es.md) (Испанский)
-- [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (Китайский)
-- [한국어](https://github.com/expressjs/multer/blob/master/doc/README-ko.md) (Корейский)
-- [Português](https://github.com/expressjs/multer/blob/master/doc/README-pt-br.md) (бр Португальский)
+- [العربية](https://github.com/expressjs/multer/blob/main/doc/README-ar.md) (арабский)
+- [English](https://github.com/expressjs/multer/blob/main/README.md) (Английский)
+- [Español](https://github.com/expressjs/multer/blob/main/doc/README-es.md) (Испанский)
+- [简体中文](https://github.com/expressjs/multer/blob/main/doc/README-zh-cn.md) (Китайский)
+- [한국어](https://github.com/expressjs/multer/blob/main/doc/README-ko.md) (Корейский)
+- [Português](https://github.com/expressjs/multer/blob/main/doc/README-pt-br.md) (бр Португальский)
 
 ## Установка
 
@@ -240,7 +240,7 @@ function fileFilter (req, file, cb) {
 
 Когда выбрасывается исключение, Multer делегирует его обработку Express. Вы можете выводить страницу ошибки [стандартными для express способами](http://expressjs.com/guide/error-handling.html).
 
-Если вы хотите отлавливать ошибки конкретно от Multer, вам нужно вызывать собственную middleware для их обработки. Еще, если вы хотите отлавливать [исключительно ошибки Multer](https://github.com/expressjs/multer/blob/master/lib/make-error.js#L1-L9), вы можете использовать класс `MulterError`, который привязан к объекту `multer` (например, `err instanceof multer.MulterError`)
+Если вы хотите отлавливать ошибки конкретно от Multer, вам нужно вызывать собственную middleware для их обработки. Еще, если вы хотите отлавливать [исключительно ошибки Multer](https://github.com/expressjs/multer/blob/main/lib/make-error.js#L1-L9), вы можете использовать класс `MulterError`, который привязан к объекту `multer` (например, `err instanceof multer.MulterError`)
 
 ```javascript
 const multer = require('multer')
@@ -261,16 +261,16 @@ app.post('/profile', function (req, res) {
 
 ## Собственные движки для сохранения файлов
 
-Чтобы получить информацию, как создать собственный движок для обработки загрузки файлов, смотрите страницу [Multer Storage Engine](https://github.com/expressjs/multer/blob/master/StorageEngine.md).
+Чтобы получить информацию, как создать собственный движок для обработки загрузки файлов, смотрите страницу [Multer Storage Engine](https://github.com/expressjs/multer/blob/main/StorageEngine.md).
 
 ## Лицензия
 
 [MIT](LICENSE)
 
-[ci-image]: https://badgen.net/github/checks/expressjs/multer/master?label=ci
+[ci-image]: https://github.com/expressjs/multer/actions/workflows/ci.yml/badge.svg
 [ci-url]: https://github.com/expressjs/multer/actions/workflows/ci.yml
-[test-url]: https://coveralls.io/r/expressjs/multer?branch=master
-[test-image]: https://badgen.net/coveralls/c/github/expressjs/multer/master
+[test-url]: https://coveralls.io/r/expressjs/multer?branch=main
+[test-image]: https://badgen.net/coveralls/c/github/expressjs/multer/main
 [npm-downloads-image]: https://badgen.net/npm/dm/multer
 [npm-url]: https://npmjs.org/package/multer
 [npm-version-image]: https://badgen.net/npm/v/multer

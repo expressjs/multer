@@ -10,12 +10,12 @@ Multer 是一个 node.js 中间件，用于处理 `multipart/form-data` 类型�
 
 ## 其它语言
 
-- [العربية](https://github.com/expressjs/multer/blob/master/doc/README-ar.md) (阿拉伯语)
-- [English](https://github.com/expressjs/multer/blob/master/README.md) (英语)
-- [Español](https://github.com/expressjs/multer/blob/master/doc/README-es.md) (西班牙文)
-- [한국어](https://github.com/expressjs/multer/blob/master/doc/README-ko.md) (朝鲜语)
-- [Русский язык](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (俄語)
-- [Português](https://github.com/expressjs/multer/blob/master/doc/README-pt-br.md) (巴西葡萄牙语)
+- [العربية](https://github.com/expressjs/multer/blob/main/doc/README-ar.md) (阿拉伯语)
+- [English](https://github.com/expressjs/multer/blob/main/README.md) (英语)
+- [Español](https://github.com/expressjs/multer/blob/main/doc/README-es.md) (西班牙文)
+- [한국어](https://github.com/expressjs/multer/blob/main/doc/README-ko.md) (朝鲜语)
+- [Русский язык](https://github.com/expressjs/multer/blob/main/doc/README-ru.md) (俄語)
+- [Português](https://github.com/expressjs/multer/blob/main/doc/README-pt-br.md) (巴西葡萄牙语)
 
 ## 安装
 
@@ -235,7 +235,7 @@ function fileFilter (req, file, cb) {
 
 当遇到一个错误，multer 将会把错误发送给 express。你可以使用一个比较好的错误展示页 ([express标准方式](http://expressjs.com/guide/error-handling.html))。
 
-如果你想捕捉 multer 发出的错误，你可以自己调用中间件程序。如果你想捕捉 [Multer 错误](https://github.com/expressjs/multer/blob/master/lib/multer-error.js)，你可以使用 `multer` 对象下的 `MulterError` 类 (即 `err instanceof multer.MulterError`)。
+如果你想捕捉 multer 发出的错误，你可以自己调用中间件程序。如果你想捕捉 [Multer 错误](https://github.com/expressjs/multer/blob/main/lib/multer-error.js)，你可以使用 `multer` 对象下的 `MulterError` 类 (即 `err instanceof multer.MulterError`)。
 
 ```javascript
 const multer = require('multer')
@@ -262,10 +262,10 @@ app.post('/profile', function (req, res) {
 
 [MIT](LICENSE)
 
-[ci-image]: https://badgen.net/github/checks/expressjs/multer/master?label=ci
+[ci-image]: https://github.com/expressjs/multer/actions/workflows/ci.yml/badge.svg
 [ci-url]: https://github.com/expressjs/multer/actions/workflows/ci.yml
-[test-url]: https://coveralls.io/r/expressjs/multer?branch=master
-[test-image]: https://badgen.net/coveralls/c/github/expressjs/multer/master
+[test-url]: https://coveralls.io/r/expressjs/multer?branch=main
+[test-image]: https://badgen.net/coveralls/c/github/expressjs/multer/main
 [npm-downloads-image]: https://badgen.net/npm/dm/multer
 [npm-url]: https://npmjs.org/package/multer
 [npm-version-image]: https://badgen.net/npm/v/multer
