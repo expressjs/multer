@@ -8,14 +8,14 @@ Multer - bu nodejs middleware bo'lib, asosan `multipart/form-data` shaklda yubor
 
 Bu README boshqa tillarda ham mavjud:
 
-- [العربية](https://github.com/expressjs/multer/blob/master/doc/README-ar.md) (arabcha)
-- [English](https://github.com/expressjs/multer/blob/master/README.md) (inglizcha)
-- [Español](https://github.com/expressjs/multer/blob/master/doc/README-es.md) (ispancha)
-- [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (xitoycha)
-- [한국어](https://github.com/expressjs/multer/blob/master/doc/README-ko.md) (korescha)
-- [Português](https://github.com/expressjs/multer/blob/master/doc/README-pt-br.md) (portugalcha)
--  [Русский язык](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (ruscha)
-- [Français](https://github.com/expressjs/multer/blob/master/doc/README-fr.md) (fransuzcha)
+- [العربية](https://github.com/expressjs/multer/blob/main/doc/README-ar.md) (arabcha)
+- [English](https://github.com/expressjs/multer/blob/main/README.md) (inglizcha)
+- [Español](https://github.com/expressjs/multer/blob/main/doc/README-es.md) (ispancha)
+- [简体中文](https://github.com/expressjs/multer/blob/main/doc/README-zh-cn.md) (xitoycha)
+- [한국어](https://github.com/expressjs/multer/blob/main/doc/README-ko.md) (korescha)
+- [Português](https://github.com/expressjs/multer/blob/main/doc/README-pt-br.md) (portugalcha)
+-  [Русский язык](https://github.com/expressjs/multer/blob/main/doc/README-ru.md) (ruscha)
+- [Français](https://github.com/expressjs/multer/blob/main/doc/README-fr.md) (fransuzcha)
 
 
 ## O'rnatish
@@ -244,7 +244,7 @@ function fileFilter (req, file, cb) {
 
 Xatoga duch kelganda, Multer xatoni Expressga yuboradi. [standart express usuli](http://expressjs.com/guide/error-handling.html)dan foydalanib xatoni tartibliroq chiqarishingiz mumkin.
 
-Agar siz Multerdan chiqqan xatolarni aniqlamoqchi bo'lsangiz o'zingiz `middleware` funksiya yozishingiz mumkin. Shuningdek, agar siz faqat [Multer xatolarini](https://github.com/expressjs/multer/blob/master/lib/multer-error.js) ushlamoqchi bo'lsangiz, siz `multer` ob'ektiga yozilgan `MulterError` class ni ishlatishingiz mumkin (masalan, `err instanceof multer.MulterError`).
+Agar siz Multerdan chiqqan xatolarni aniqlamoqchi bo'lsangiz o'zingiz `middleware` funksiya yozishingiz mumkin. Shuningdek, agar siz faqat [Multer xatolarini](https://github.com/expressjs/multer/blob/main/lib/multer-error.js) ushlamoqchi bo'lsangiz, siz `multer` ob'ektiga yozilgan `MulterError` class ni ishlatishingiz mumkin (masalan, `err instanceof multer.MulterError`).
 
 
 ```javascript
@@ -266,16 +266,16 @@ app.post('/profile', function (req, res) {
 
 ## Maxsus saqlash mexanizmi
 
-O'zingizning saqlash dvigatelingizni qanday yaratish haqida ma'lumot olish: [Maxsus saqlash mexanizmi](https://github.com/expressjs/multer/blob/master/StorageEngine.md).
+O'zingizning saqlash dvigatelingizni qanday yaratish haqida ma'lumot olish: [Maxsus saqlash mexanizmi](https://github.com/expressjs/multer/blob/main/StorageEngine.md).
 
 ## Litsenziya
 
 [MIT](LICENSE)
 
-[ci-image]: https://badgen.net/github/checks/expressjs/multer/master?label=ci
+[ci-image]: https://github.com/expressjs/multer/actions/workflows/ci.yml/badge.svg
 [ci-url]: https://github.com/expressjs/multer/actions/workflows/ci.yml
-[test-url]: https://coveralls.io/r/expressjs/multer?branch=master
-[test-image]: https://badgen.net/coveralls/c/github/expressjs/multer/master
+[test-url]: https://coveralls.io/r/expressjs/multer?branch=main
+[test-image]: https://badgen.net/coveralls/c/github/expressjs/multer/main
 [npm-downloads-image]: https://badgen.net/npm/dm/multer
 [npm-url]: https://npmjs.org/package/multer
 [npm-version-image]: https://badgen.net/npm/v/multer
