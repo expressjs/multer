@@ -12,6 +12,7 @@ Các bạn có thể đọc ở các bản dịch ngôn ngữ khác:
 - [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (Chinese)
 - [한국어](https://github.com/expressjs/multer/blob/master/doc/README-ko.md) (Korean)
 - [Русский язык](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (Russian)
+- [தமிழ்](https://github.com/expressjs/multer/blob/master/doc/README-ta.md) (Tiếng Tamil)
 
 ## Cài đặt
 

@@ -18,6 +18,7 @@
 - [Русский язык](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (الروسية)
 - [Việt Nam](https://github.com/expressjs/multer/blob/master/doc/README-vi.md) (الفتنامية)
 - [Português](https://github.com/expressjs/multer/blob/master/doc/README-pt-br.md) (البرتغالية)
+- [தமிழ்](https://github.com/expressjs/multer/blob/master/doc/README-ta.md) (التاميل)
 
 
 ## التنصيب
