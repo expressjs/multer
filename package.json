@@ -20,7 +20,7 @@
   ],
   "dependencies": {
     "append-field": "^1.0.0",
-    "busboy": "^1.0.0",
+    "@fastify/busboy": "^1.0.0",
     "concat-stream": "^1.5.2",
     "mkdirp": "^0.5.6",
     "object-assign": "^4.1.1",
@@ -30,7 +30,7 @@
   "devDependencies": {
     "deep-equal": "^2.0.3",
     "express": "^4.13.1",
-    "form-data": "^1.0.0-rc1",
+    "form-data": "^4.0.2",
     "fs-temp": "^1.1.2",
     "mocha": "^11.3.0",
     "nyc": "^15.1.0",
