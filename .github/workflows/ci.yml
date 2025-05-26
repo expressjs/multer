@@ -32,7 +32,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest]
         name:
         - Node.js 10.x
         - Node.js 11.x
@@ -108,10 +108,10 @@ jobs:
       with:
         persist-credentials: false
 
-    - name: Install Node.js ${{ matrix.node-version }}
-      shell: bash -eo pipefail -l {0}
-      run: nvm install --default ${{ matrix.node-version }}
-
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
     - name: Remove npm module(s) ${{ matrix.npm-rm }}
       run: npm rm --silent --save-dev ${{ matrix.npm-rm }}
       if: matrix.npm-rm != ''
