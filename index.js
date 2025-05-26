@@ -19,6 +19,8 @@ function Multer (options) {
 
   this.limits = options.limits
   this.preservePath = options.preservePath
+  // TODO: next major version change default to utf-8
+  this.charset = options.charset || 'latin1'
   this.fileFilter = options.fileFilter || allowAll
 }
 
@@ -47,6 +49,7 @@ Multer.prototype._makeMiddleware = function (fields, fileStrategy) {
     return {
       limits: this.limits,
       preservePath: this.preservePath,
+      charset: this.charset,
       storage: this.storage,
       fileFilter: wrappedFileFilter,
       fileStrategy: fileStrategy
@@ -77,6 +80,7 @@ Multer.prototype.any = function () {
     return {
       limits: this.limits,
       preservePath: this.preservePath,
+      charset: this.charset,
       storage: this.storage,
       fileFilter: this.fileFilter,
       fileStrategy: 'ARRAY'
