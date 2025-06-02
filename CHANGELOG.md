@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.0.1
+
+- Fix [CVE-2025-48997](https://www.cve.org/CVERecord?id=CVE-2025-48997) ([GHSA-g5hg-p3ph-g8qg](https://github.com/expressjs/multer/security/advisories/GHSA-g5hg-p3ph-g8qg))
+
 ## 2.0.0
 
 - **Breaking change: The minimum supported Node version is now 10.16.0**
