@@ -49,6 +49,6 @@
     "lib/"
   ],
   "scripts": {
-    "test": "standard && c8 --check-coverage --statements 100 mocha"
+    "test": "standard && c8 --check-coverage --statements 100 mocha --exit"
   }
 }
