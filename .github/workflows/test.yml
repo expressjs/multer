@@ -3,17 +3,18 @@ name: Node CI
 on:
   pull_request:
     branches:
-    - master
+    - v3
   push:
     branches:
-    - explore-new-api
+    - v3
 
 jobs:
   test:
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, macOS-latest, windows-latest]
-        node: [12.20.0, 14.13.1, 16.0.0]
+        node: [12.20.0, 14.13.1, 16.0.0, 16, 17, 18, 19, 20, 21, 22, 23, 24]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v2
