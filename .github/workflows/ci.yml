@@ -14,16 +14,9 @@ jobs:
       contents: read  # for actions/checkout to fetch code
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         name:
-        - Node.js 0.10
-        - Node.js 0.12
-        - io.js 1.x
-        - io.js 2.x
-        - io.js 3.x
-        - Node.js 4.x
-        - Node.js 6.x
-        - Node.js 8.x
         - Node.js 10.x
         - Node.js 11.x
         - Node.js 12.x
@@ -37,40 +30,10 @@ jobs:
         - Node.js 20.x
         - Node.js 21.x
         - Node.js 22.x
+        - Node.js 23.x
+        - Node.js 24.x
 
         include:
-        - name: Node.js 0.10
-          node-version: "0.10"
-          npm-i: mocha@3.5.3 nyc@10.3.2
-          
-        - name: Node.js 0.12
-          node-version: "0.12"
-          npm-i: mocha@3.5.3 nyc@10.3.2
-          
-        - name: io.js 1.x
-          node-version: "1.8"
-          npm-i: mocha@3.5.3 nyc@10.3.2
-          
-        - name: io.js 2.x
-          node-version: "2.5"
-          npm-i: mocha@3.5.3 nyc@10.3.2
-          
-        - name: io.js 3.x
-          node-version: "3.3"
-          npm-i: mocha@3.5.3 nyc@10.3.2
-          
-        - name: Node.js 4.x
-          node-version: "4.9"
-          npm-i: mocha@5.2.0 nyc@11.9.0
-
-        - name: Node.js 6.x
-          node-version: "6.17"
-          npm-i: mocha@6.2.2 nyc@14.1.1
-
-        - name: Node.js 8.x
-          node-version: "8.17"
-          npm-i: mocha@7.1.2 nyc@14.1.1
-
         - name: Node.js 10.x
           node-version: "10.24"
           npm-i: mocha@8.4.0
@@ -89,9 +52,11 @@ jobs:
           
         - name: Node.js 14.x
           node-version: "14.21"
+          npm-i: mocha@9.2.2
           
         - name: Node.js 15.x
           node-version: "15.14"
+          npm-i: mocha@9.2.2
           
         - name: Node.js 16.x
           node-version: "16.20"
@@ -109,10 +74,16 @@ jobs:
           node-version: "20.9"
           
         - name: Node.js 21.x
-          node-version: "21.1"
+          node-version: "21"
           
         - name: Node.js 22.x
-          node-version: "22.0"
+          node-version: "22"
+
+        - name: Node.js 23.x
+          node-version: "23"
+
+        - name: Node.js 24.x
+          node-version: "24"
 
     steps:
     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -133,14 +104,6 @@ jobs:
           npm config set strict-ssl false
         fi
         dirname "$(nvm which ${{ matrix.node-version }})" >> "$GITHUB_PATH"
-
-    - name: Configure npm
-      run: |
-        if [[ "$(npm config get package-lock)" == "true" ]]; then
-          npm config set package-lock false
-        else
-          npm config set shrinkwrap false
-        fi
 
     - name: Remove npm module(s) ${{ matrix.npm-rm }}
       run: npm rm --silent --save-dev ${{ matrix.npm-rm }}

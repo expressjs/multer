@@ -1,4 +1,4 @@
-# Multer [![Build Status](https://travis-ci.org/expressjs/multer.svg?branch=master)](https://travis-ci.org/expressjs/multer) [![NPM version](https://badge.fury.io/js/multer.svg)](https://badge.fury.io/js/multer) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
+# Multer [![NPM Version][npm-version-image]][npm-url] [![NPM Downloads][npm-downloads-image]][npm-url] [![Build Status][ci-image]][ci-url] [![Test Coverage][test-image]][test-url] [![OpenSSF Scorecard Badge][ossf-scorecard-badge]][ossf-scorecard-visualizer]
 
 Multer는 파일 업로드를 위해 사용되는 `multipart/form-data` 를 다루기 위한 node.js 의 미들웨어 입니다. 효율성을 최대화 하기 위해 [busboy](https://github.com/mscdex/busboy) 를 기반으로 하고 있습니다.
 
@@ -8,12 +8,12 @@ Multer는 파일 업로드를 위해 사용되는 `multipart/form-data` 를 다�
 
 이 문서는 아래의 언어로도 제공됩니다:
 
-- [العربية](https://github.com/expressjs/multer/blob/master/doc/README-ar.md) (아라비아 말)
-- [English](https://github.com/expressjs/multer/blob/master/README.md) (영어)
-- [Español](https://github.com/expressjs/multer/blob/master/doc/README-es.md) (스페인어)
-- [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (중국어)
-- [Русский язык](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (러시아)
-- [Português](https://github.com/expressjs/multer/blob/master/doc/README-pt-br.md) (포르투갈어 BR)
+- [العربية](https://github.com/expressjs/multer/blob/main/doc/README-ar.md) (아라비아 말)
+- [English](https://github.com/expressjs/multer/blob/main/README.md) (영어)
+- [Español](https://github.com/expressjs/multer/blob/main/doc/README-es.md) (스페인어)
+- [简体中文](https://github.com/expressjs/multer/blob/main/doc/README-zh-cn.md) (중국어)
+- [Русский язык](https://github.com/expressjs/multer/blob/main/doc/README-ru.md) (러시아)
+- [Português](https://github.com/expressjs/multer/blob/main/doc/README-pt-br.md) (포르투갈어 BR)
 
 ## 설치
 
@@ -251,8 +251,18 @@ app.post('/profile', function (req, res) {
 
 ## 커스텀 스토리지 엔진
 
-자신만의 고유한 스토리지 엔진을 구축하기 위한 정보를 얻기 위해서는 [Multer Storage Engine](https://github.com/expressjs/multer/blob/master/StorageEngine.md) 문서를 참고하세요.
+자신만의 고유한 스토리지 엔진을 구축하기 위한 정보를 얻기 위해서는 [Multer Storage Engine](https://github.com/expressjs/multer/blob/main/StorageEngine.md) 문서를 참고하세요.
 
 ## 라이센스
 
 [MIT](LICENSE)
+
+[ci-image]: https://github.com/expressjs/multer/actions/workflows/ci.yml/badge.svg
+[ci-url]: https://github.com/expressjs/multer/actions/workflows/ci.yml
+[test-url]: https://coveralls.io/r/expressjs/multer?branch=main
+[test-image]: https://badgen.net/coveralls/c/github/expressjs/multer/main
+[npm-downloads-image]: https://badgen.net/npm/dm/multer
+[npm-url]: https://npmjs.org/package/multer
+[npm-version-image]: https://badgen.net/npm/v/multer
+[ossf-scorecard-badge]: https://api.scorecard.dev/projects/github.com/expressjs/multer/badge
+[ossf-scorecard-visualizer]: https://ossf.github.io/scorecard-visualizer/#/projects/github.com/expressjs/multer
