@@ -25,7 +25,6 @@
     "append-field": "^2.0.0",
     "bytes": "^3.1.0",
     "fs-temp": "^2.0.1",
-    "has-own-property": "^2.0.0",
     "on-finished": "^2.3.0",
     "stream-file-type": "^0.6.1",
     "type-is": "^1.6.18"
