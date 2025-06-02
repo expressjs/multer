@@ -50,6 +50,8 @@
   ],
   "scripts": {
     "lint": "standard",
-    "test": "c8 --check-coverage --statements 100 mocha"
+    "test": "mocha",
+    "test:ci": "c8 --reporter=lcovonly --reporter=text --check-coverage --statements 100 npm test",
+    "test:cov": "c8 --reporter=html --reporter=text npm test"
   }
 }
