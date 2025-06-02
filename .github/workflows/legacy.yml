@@ -3,14 +3,10 @@ name: legacy
 on:
   push:
     branches:
-      - explore-new-api
-    paths-ignore:
-      - '*.md'
+      - v3
   pull_request:
     branches:
-      - explore-new-api
-    paths-ignore:
-      - '*.md'
+      - v3
 
 permissions:
   contents: read
