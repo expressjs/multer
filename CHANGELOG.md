@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## unreleased
+
+- Support node >=18.0.0
+
 ## 3.0.0-alpha.1 - 2025-05-23
 
 - No functional changes compared to `2.0.0-rc.4`.
