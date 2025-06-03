@@ -12,7 +12,7 @@ function Multer (options) {
   if (options.storage) {
     this.storage = options.storage
   } else if (options.dest) {
-    this.storage = diskStorage({ destination: options.dest })
+    this.storage = diskStorage({ destination: options.dest, mkdirOpts: options.mkdirOpts })
   } else {
     this.storage = memoryStorage()
   }
