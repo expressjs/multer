@@ -21,13 +21,13 @@
     "middleware"
   ],
   "dependencies": {
-    "@fastify/busboy": "^1.0.0",
+    "@fastify/busboy": "^2.1.1",
     "append-field": "^2.0.0",
     "bytes": "^3.1.0",
     "fs-temp": "^2.0.1",
-    "on-finished": "^2.3.0",
+    "on-finished": "^2.4.1",
     "stream-file-type": "^0.6.1",
-    "type-is": "^1.6.18"
+    "type-is": "^2.0.1"
   },
   "devDependencies": {
     "c8": "^7.7.3",
