@@ -20,9 +20,9 @@ const port = 34279
 describe('Express Integration', () => {
   let app, server
 
-  before((done) => {
+  before(() => {
     app = express()
-    server = app.listen(port, done)
+    server = app.listen(port)
   })
 
   after((done) => {
