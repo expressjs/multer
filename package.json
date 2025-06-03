@@ -41,7 +41,7 @@
     "testdata-w3c-json-form": "^1.0.0"
   },
   "engines": {
-    "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
+    "node": ">= 18"
   },
   "files": [
     "LICENSE",
@@ -49,6 +49,9 @@
     "lib/"
   ],
   "scripts": {
-    "test": "standard && c8 --check-coverage --statements 100 mocha --exit"
+    "lint": "standard",
+    "test": "mocha",
+    "test:ci": "c8 --reporter=lcovonly --reporter=text --check-coverage --statements 100 npm test",
+    "test:cov": "c8 --reporter=html --reporter=text npm test"
   }
 }
