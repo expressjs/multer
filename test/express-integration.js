@@ -2,6 +2,7 @@
 
 import assert from 'node:assert'
 import { promisify } from 'node:util'
+import { AsyncLocalStorage } from 'node:async_hooks'
 
 import express from 'express'
 import FormData from 'form-data'
@@ -10,6 +11,7 @@ import _onFinished from 'on-finished'
 
 import * as util from './_util.js'
 import multer from '../index.js'
+import http from 'node:http'
 
 const onFinished = promisify(_onFinished)
 
@@ -18,9 +20,9 @@ const port = 34279
 describe('Express Integration', () => {
   let app, server
 
-  before((done) => {
+  before(() => {
     app = express()
-    server = app.listen(port, done)
+    server = app.listen(port)
   })
 
   after((done) => {
@@ -104,5 +106,50 @@ describe('Express Integration', () => {
     assert.strictEqual(errorCalled, 0)
     assert.strictEqual(result.body.toString(), 'SUCCESS')
     assert.strictEqual(result.res.statusCode, 200)
+  })
+
+  it('should handle async local storage', async () => {
+    const upload = multer()
+    const router = new express.Router()
+    const form = new FormData()
+
+    const als = new AsyncLocalStorage()
+
+    form.append('avatar', util.file('large'))
+
+    router.use((_req, _res, next) => {
+      als.run({ hello: 'world' }, () => {
+        next()
+      })
+    })
+
+    router.post('/profile', upload.single('avatar'), (_, res) => {
+      res.status(200).end('SUCCESS')
+    })
+
+    router.get('/hello', (_, res) => {
+      const store = als.getStore()
+      res.status(200).json(store)
+    })
+
+    app.use('/t3', router)
+
+    const result = await submitForm(form, '/t3/profile')
+
+    assert.strictEqual(result.body.toString(), 'SUCCESS')
+    assert.strictEqual(result.res.statusCode, 200)
+
+    http.get(`http://localhost:${port}/t3/hello`, (res) => {
+      let data = ''
+
+      res.on('data', (chunk) => {
+        data += chunk
+      })
+
+      res.on('end', () => {
+        const store = JSON.parse(data)
+        assert.deepStrictEqual(store, { hello: 'world' })
+      })
+    })
   })
 })
