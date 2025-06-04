@@ -19,5 +19,6 @@ node_modules
 *.gz
 
 
-# Coveralls
+# Coverage & Test Output
 coverage
+.nyc_output
