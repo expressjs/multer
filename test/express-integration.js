@@ -70,7 +70,9 @@ describe('Express Integration', function () {
 
   it('should work when receiving error from fileFilter', function (done) {
     function fileFilter (req, file, cb) {
-      cb(new Error('TEST'))
+      if (file.mimetype !== 'image/png') {
+        return cb(new Error('Only PNG files are allowed'))
+      }
     }
 
     var upload = multer({ fileFilter: fileFilter })
@@ -80,7 +82,7 @@ describe('Express Integration', function () {
     var routeCalled = 0
     var errorCalled = 0
 
-    form.append('avatar', util.file('large.jpg'))
+    form.append('avatar', util.file('small0.dat'))
 
     router.post('/profile', upload.single('avatar'), function (req, res, next) {
       routeCalled++
@@ -88,7 +90,7 @@ describe('Express Integration', function () {
     })
 
     router.use(function (err, req, res, next) {
-      assert.strictEqual(err.message, 'TEST')
+      assert.strictEqual(err.message, 'Only PNG files are allowed')
 
       errorCalled++
       res.status(500).end('ERROR')

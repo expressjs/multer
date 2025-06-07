@@ -10,7 +10,7 @@ var temp = require('fs-temp')
 var rimraf = require('rimraf')
 var FormData = require('form-data')
 
-function assertFileProperties(file, name) {
+function assertFileProperties (file, name) {
   const expectedSize = util.fileSizeByName(name)
   assert.strictEqual(file.fieldname, path.parse(name).name)
   assert.strictEqual(file.originalname, name)
@@ -44,7 +44,7 @@ describe('Disk Storage', function () {
 
     util.submitForm(parser, form, function (err, req) {
       assert.ifError(err)
-      
+
       assert.strictEqual(req.body.name, 'Multer')
 
       assertFileProperties(req.file, 'small0.dat')
@@ -117,7 +117,7 @@ describe('Disk Storage', function () {
       assertFileProperties(req.files.small1[0], 'small1.dat')
       assertFileProperties(req.files.medium[0], 'medium.dat')
       assertFileProperties(req.files.large[0], 'large.jpg')
-      
+
       done()
     })
   })

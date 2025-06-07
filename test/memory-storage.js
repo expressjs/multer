@@ -7,7 +7,7 @@ var util = require('./_util')
 var multer = require('../')
 var FormData = require('form-data')
 
-function assertFileProperties(file, name) {
+function assertFileProperties (file, name) {
   const expectedSize = util.fileSizeByName(name)
   assert.strictEqual(file.fieldname, path.parse(name).name)
   assert.strictEqual(file.originalname, name)
@@ -69,7 +69,7 @@ describe('Memory Storage', function () {
       assert(deepEqual(req.body.checkboxempty, ['', '']))
 
       assertFileProperties(req.file, 'empty.dat')
-      
+
       done()
     })
   })
