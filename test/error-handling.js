@@ -14,6 +14,60 @@ function withLimits (limits, fields) {
 }
 
 describe('Error Handling', function () {
+  const invalidPlainObj = ['not an plain object', ['storage', 'limits']]
+
+  const invalidLimitOptions = [
+    { option: 'fieldNameSize', value: -100 },
+    { option: 'fieldSize', value: 0.5 },
+    { option: 'fields', value: '10' },
+    { option: 'files', value: 'foo' },
+    { option: 'fileSize', value: 1048.15 },
+    { option: 'parts', value: '0' },
+    { option: 'headersPairs', value: -10.55 }
+  ]
+
+  invalidLimitOptions.forEach(({ option, value }) => {
+    it(`should throw an invalid limit option error for ${option} with value ${value}`, () => {
+      assert.throws(
+        () => multer({ limits: { [option]: value } }),
+        (err) => {
+          return (
+            err instanceof multer.MulterError &&
+              err.name === 'MulterError' &&
+              err.code === 'LIMIT_OPTION_ERROR' &&
+              err.field === `option "${option}" value: ${value}` &&
+              err.message === `Limit option must be an integer: option "${option}" value: ${value}`
+          )
+        },
+          `Expected multer to reject ${option} value for ${value}`
+      )
+    })
+  })
+
+  it('should throw argument type error if limits is not a plain object', function () {
+    invalidPlainObj.forEach(option=>{
+      assert.throws(
+        () => multer({ limits: option }),
+        (err) => {
+          return err instanceof TypeError && err.message === 'Expected limits to be a plain object'
+        },
+        'Expected multer to throw TypeError for non-object limits'
+      )
+    })
+  })
+
+  it('should throw type error if options is not a plain object', function () {
+    invalidPlainObj.forEach(option=>{
+      assert.throws(
+        () => multer(option),
+        (err) => {
+          return err instanceof TypeError && err.message === 'Expected object for argument options'
+        },
+        'Expected multer to throw TypeError for non plain object options'
+      )
+    })
+  })
+
   it('should be an instance of both `Error` and `MulterError` classes in case of the Multer\'s error', function (done) {
     var form = new FormData()
     var storage = multer.diskStorage({ destination: os.tmpdir() })
