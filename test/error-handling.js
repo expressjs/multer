@@ -45,7 +45,7 @@ describe('Error Handling', function () {
   })
 
   it('should throw argument type error if limits is not a plain object', function () {
-    invalidPlainObj.forEach(option=>{
+    invalidPlainObj.forEach(option => {
       assert.throws(
         () => multer({ limits: option }),
         (err) => {
@@ -57,7 +57,7 @@ describe('Error Handling', function () {
   })
 
   it('should throw type error if options is not a plain object', function () {
-    invalidPlainObj.forEach(option=>{
+    invalidPlainObj.forEach(option => {
       assert.throws(
         () => multer(option),
         (err) => {
