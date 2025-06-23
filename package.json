@@ -1,7 +1,7 @@
 {
   "name": "multer",
   "description": "Middleware for handling `multipart/form-data`.",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "contributors": [
     "Hage Yaapa <captain@hacksparrow.com> (http://www.hacksparrow.com)",
     "Jaret Pfluger <https://github.com/jpfluger>",

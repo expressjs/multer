@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.0.2
+
+- Fix [CVE-2025-7338](https://www.cve.org/CVERecord?id=CVE-2025-7338) ([GHSA-fjgf-rc76-4x9p](https://github.com/expressjs/multer/security/advisories/GHSA-fjgf-rc76-4x9p))
+
+
 ## 2.0.1
 
 - Fix [CVE-2025-48997](https://www.cve.org/CVERecord?id=CVE-2025-48997) ([GHSA-g5hg-p3ph-g8qg](https://github.com/expressjs/multer/security/advisories/GHSA-g5hg-p3ph-g8qg))
