@@ -1,4 +1,4 @@
-# Multer [![Build Status](https://travis-ci.org/expressjs/multer.svg?branch=master)](https://travis-ci.org/expressjs/multer) [![NPM version](https://badge.fury.io/js/multer.svg)](https://badge.fury.io/js/multer) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
+# Multer [![NPM Version][npm-version-image]][npm-url] [![NPM Downloads][npm-downloads-image]][npm-url] [![Build Status][ci-image]][ci-url] [![Test Coverage][test-image]][test-url] [![OpenSSF Scorecard Badge][ossf-scorecard-badge]][ossf-scorecard-visualizer]
 
 Multer est un middleware node.js pour la gestion des données `multipart/form-data` qui est principalement utilisé pour télécharger des fichiers.
 Il est écrit au-dessus de [busboy](https://github.com/mscdex/busboy) pour une efficacité maximale.
@@ -9,14 +9,14 @@ Il est écrit au-dessus de [busboy](https://github.com/mscdex/busboy) pour une e
 
 This README is also available in other languages:
 
-- [العربية](https://github.com/expressjs/multer/blob/master/doc/README-ar.md) (Arabe)
-- [Español](https://github.com/expressjs/multer/blob/master/doc/README-es.md) (Espagnol)
-- [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (Chinois)
-- [한국어](https://github.com/expressjs/multer/blob/master/doc/README-ko.md) (Coréen)
-- [Русский язык](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (Russe)
-- [Việt Nam](https://github.com/expressjs/multer/blob/master/doc/README-vi.md) (Vietnamien)
-- [Português](https://github.com/expressjs/multer/blob/master/doc/README-pt-br.md) (Portugais du Brésil)
-- [Français](https://github.com/expressjs/multer/blob/master/doc/README-fr.md) (Français)
+- [العربية](https://github.com/expressjs/multer/blob/main/doc/README-ar.md) (Arabe)
+- [Español](https://github.com/expressjs/multer/blob/main/doc/README-es.md) (Espagnol)
+- [简体中文](https://github.com/expressjs/multer/blob/main/doc/README-zh-cn.md) (Chinois)
+- [한국어](https://github.com/expressjs/multer/blob/main/doc/README-ko.md) (Coréen)
+- [Русский язык](https://github.com/expressjs/multer/blob/main/doc/README-ru.md) (Russe)
+- [Việt Nam](https://github.com/expressjs/multer/blob/main/doc/README-vi.md) (Vietnamien)
+- [Português](https://github.com/expressjs/multer/blob/main/doc/README-pt-br.md) (Portugais du Brésil)
+- [Français](https://github.com/expressjs/multer/blob/main/doc/README-fr.md) (Français)
 
 ## Installation
 
@@ -303,7 +303,7 @@ En cas d'erreur, Multer déléguera l'erreur à Express. Vous pouvez
 afficher une belle page d'erreur en utilisant [la voie express standard](http://expressjs.com/guide/error-handling.html).
 
 Si vous souhaitez détecter les erreurs spécifiquement de Multer, vous pouvez appeler la
-fonction middleware par vous-même. Aussi, si vous voulez attraper seulement [les erreurs Multer](https://github.com/expressjs/multer/blob/master/lib/multer-error.js), vous pouvez utiliser la classe `MulterError` qui est jointe à l'objet `multer` lui-même (par exemple `err instanceof multer.MulterError`).
+fonction middleware par vous-même. Aussi, si vous voulez attraper seulement [les erreurs Multer](https://github.com/expressjs/multer/blob/main/lib/multer-error.js), vous pouvez utiliser la classe `MulterError` qui est jointe à l'objet `multer` lui-même (par exemple `err instanceof multer.MulterError`).
 
 ```javascript
 const multer = require('multer')
@@ -324,8 +324,18 @@ app.post('/profile', function (req, res) {
 
 ## Moteur de stockage personnalisé
 
-Pour plus d'informations sur la création de votre propre moteur de stockage, consultez [Multer Storage Engine](https://github.com/expressjs/multer/blob/master/StorageEngine.md).
+Pour plus d'informations sur la création de votre propre moteur de stockage, consultez [Multer Storage Engine](https://github.com/expressjs/multer/blob/main/StorageEngine.md).
 
 ## License
 
 [MIT](LICENSE)
+
+[ci-image]: https://github.com/expressjs/multer/actions/workflows/ci.yml/badge.svg
+[ci-url]: https://github.com/expressjs/multer/actions/workflows/ci.yml
+[test-url]: https://coveralls.io/r/expressjs/multer?branch=main
+[test-image]: https://badgen.net/coveralls/c/github/expressjs/multer/main
+[npm-downloads-image]: https://badgen.net/npm/dm/multer
+[npm-url]: https://npmjs.org/package/multer
+[npm-version-image]: https://badgen.net/npm/v/multer
+[ossf-scorecard-badge]: https://api.scorecard.dev/projects/github.com/expressjs/multer/badge
+[ossf-scorecard-visualizer]: https://ossf.github.io/scorecard-visualizer/#/projects/github.com/expressjs/multer

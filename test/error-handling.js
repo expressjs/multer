@@ -175,6 +175,19 @@ describe('Error Handling', function () {
     })
   })
 
+  it('should notify of missing field name', function (done) {
+    var form = new FormData()
+    var storage = multer.memoryStorage()
+    var parser = multer({ storage: storage }).single('small0')
+
+    form.append('', util.file('small0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.strictEqual(err.code, 'MISSING_FIELD_NAME')
+      done()
+    })
+  })
+
   it('should report errors from storage engines', function (done) {
     var storage = multer.memoryStorage()
 
@@ -244,7 +257,7 @@ describe('Error Handling', function () {
     req.end(body)
 
     upload(req, null, function (err) {
-      assert.strictEqual(err.message, 'Unexpected end of multipart data')
+      assert.strictEqual(err.message, 'Unexpected end of form')
       done()
     })
   })

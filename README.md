@@ -1,4 +1,4 @@
-# Multer [![Build Status](https://badgen.net/github/checks/expressjs/multer/master?label=ci)](https://github.com/expressjs/multer/actions/workflows/ci.yml) [![Test Coverage](https://badgen.net/coveralls/c/github/expressjs/multer/master)](https://coveralls.io/r/expressjs/multer?branch=master) [![NPM version](https://badge.fury.io/js/multer.svg)](https://badge.fury.io/js/multer) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
+# Multer [![NPM Version][npm-version-image]][npm-url] [![NPM Downloads][npm-downloads-image]][npm-url] [![Build Status][ci-image]][ci-url] [![Test Coverage][test-image]][test-url] [![OpenSSF Scorecard Badge][ossf-scorecard-badge]][ossf-scorecard-visualizer]
 
 Multer is a node.js middleware for handling `multipart/form-data`, which is primarily used for uploading files. It is written
 on top of [busboy](https://github.com/mscdex/busboy) for maximum efficiency.
@@ -9,20 +9,22 @@ on top of [busboy](https://github.com/mscdex/busboy) for maximum efficiency.
 
 This README is also available in other languages:
 
-- [العربية](https://github.com/expressjs/multer/blob/master/doc/README-ar.md) (Arabic)
-- [Español](https://github.com/expressjs/multer/blob/master/doc/README-es.md) (Spanish)
-- [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (Chinese)
-- [한국어](https://github.com/expressjs/multer/blob/master/doc/README-ko.md) (Korean)
-- [Русский язык](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (Russian)
-- [Việt Nam](https://github.com/expressjs/multer/blob/master/doc/README-vi.md) (Vietnam)
-- [Português](https://github.com/expressjs/multer/blob/master/doc/README-pt-br.md) (Portuguese Brazil)
-- [Français](https://github.com/expressjs/multer/blob/master/doc/README-fr.md) (French)
-- [O'zbek tili](https://github.com/expressjs/multer/blob/master/doc/README-uz.md) (Uzbek)
+|                                                                                |                 |
+| ------------------------------------------------------------------------------ | --------------- |
+| [العربية](https://github.com/expressjs/multer/blob/main/doc/README-ar.md)      | Arabic          |
+| [简体中文](https://github.com/expressjs/multer/blob/main/doc/README-zh-cn.md)  | Chinese         |
+| [Français](https://github.com/expressjs/multer/blob/main/doc/README-fr.md)     | French          |
+| [한국어](https://github.com/expressjs/multer/blob/main/doc/README-ko.md)       | Korean          |
+| [Português](https://github.com/expressjs/multer/blob/main/doc/README-pt-br.md) | Portuguese (BR) |
+| [Русский язык](https://github.com/expressjs/multer/blob/main/doc/README-ru.md) | Russian         |
+| [Español](https://github.com/expressjs/multer/blob/main/doc/README-es.md)      | Spanish         |
+| [O'zbek tili](https://github.com/expressjs/multer/blob/main/doc/README-uz.md)  | Uzbek           |
+| [Việt Nam](https://github.com/expressjs/multer/blob/main/doc/README-vi.md)     | Vietnamese      |
 
 ## Installation
 
 ```sh
-$ npm install --save multer
+$ npm install multer
 ```
 
 ## Usage
@@ -232,7 +234,7 @@ If no `filename` is given, each file will be given a random name that doesn't
 include any file extension.
 
 **Note:** Multer will not append any file extension for you, your function
-should return a filename complete with an file extension.
+should return a filename complete with a file extension.
 
 Each function gets passed both the request (`req`) and some information about
 the file (`file`) to aid with the decision.
@@ -308,7 +310,7 @@ When encountering an error, Multer will delegate the error to Express. You can
 display a nice error page using [the standard express way](http://expressjs.com/guide/error-handling.html).
 
 If you want to catch errors specifically from Multer, you can call the
-middleware function by yourself. Also, if you want to catch only [the Multer errors](https://github.com/expressjs/multer/blob/master/lib/multer-error.js), you can use the `MulterError` class that is attached to the `multer` object itself (e.g. `err instanceof multer.MulterError`).
+middleware function by yourself. Also, if you want to catch only [the Multer errors](https://github.com/expressjs/multer/blob/main/lib/multer-error.js), you can use the `MulterError` class that is attached to the `multer` object itself (e.g. `err instanceof multer.MulterError`).
 
 ```javascript
 const multer = require('multer')
@@ -329,8 +331,18 @@ app.post('/profile', function (req, res) {
 
 ## Custom storage engine
 
-For information on how to build your own storage engine, see [Multer Storage Engine](https://github.com/expressjs/multer/blob/master/StorageEngine.md).
+For information on how to build your own storage engine, see [Multer Storage Engine](https://github.com/expressjs/multer/blob/main/StorageEngine.md).
 
 ## License
 
 [MIT](LICENSE)
+
+[ci-image]: https://github.com/expressjs/multer/actions/workflows/ci.yml/badge.svg
+[ci-url]: https://github.com/expressjs/multer/actions/workflows/ci.yml
+[test-url]: https://coveralls.io/r/expressjs/multer?branch=main
+[test-image]: https://badgen.net/coveralls/c/github/expressjs/multer/main
+[npm-downloads-image]: https://badgen.net/npm/dm/multer
+[npm-url]: https://npmjs.org/package/multer
+[npm-version-image]: https://badgen.net/npm/v/multer
+[ossf-scorecard-badge]: https://api.scorecard.dev/projects/github.com/expressjs/multer/badge
+[ossf-scorecard-visualizer]: https://ossf.github.io/scorecard-visualizer/#/projects/github.com/expressjs/multer

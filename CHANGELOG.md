@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.0.1
+
+- Fix [CVE-2025-48997](https://www.cve.org/CVERecord?id=CVE-2025-48997) ([GHSA-g5hg-p3ph-g8qg](https://github.com/expressjs/multer/security/advisories/GHSA-g5hg-p3ph-g8qg))
+
+## 2.0.0
+
+- **Breaking change: The minimum supported Node version is now 10.16.0**
+- Fix [CVE-2025-47935](https://www.cve.org/CVERecord?id=CVE-2025-47935) ([GHSA-44fp-w29j-9vj5](https://github.com/expressjs/multer/security/advisories/GHSA-44fp-w29j-9vj5))
+- Fix [CVE-2025-47944](https://www.cve.org/CVERecord?id=CVE-2025-47944) ([GHSA-4pg4-qvpc-4q3h](https://github.com/expressjs/multer/security/advisories/GHSA-4pg4-qvpc-4q3h))
+
+## 1.4.5-lts.2
+
+- Fix out-of-band error event from busboy (#1177)
+
+## 1.4.5-lts.1
+
+- No changes
+
+## 1.4.4-lts.1
+
+- Bugfix: Bump busboy to fix CVE-2022-24434 (#1097)
+- Breaking: Require Node.js 10.16.0 or later (#1097)
+
 ## 1.4.4 - 2021-12-07
 
 - Bugfix: Handle missing field names (#913)

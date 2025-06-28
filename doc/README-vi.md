@@ -1,4 +1,4 @@
-# Multer [![Build Status](https://travis-ci.org/expressjs/multer.svg?branch=master)](https://travis-ci.org/expressjs/multer) [![NPM version](https://badge.fury.io/js/multer.svg)](https://badge.fury.io/js/multer) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
+# Multer [![NPM Version][npm-version-image]][npm-url] [![NPM Downloads][npm-downloads-image]][npm-url] [![Build Status][ci-image]][ci-url] [![Test Coverage][test-image]][test-url] [![OpenSSF Scorecard Badge][ossf-scorecard-badge]][ossf-scorecard-visualizer]
 
 Multer là thư viện trung gian hỗ trợ việc xử lý `multipart/form-data`, mục đích chính cho việc upload file. Thư viện này dựa trên [busboy](https://github.com/mscdex/busboy) để hiệu quả hơn.
 
@@ -8,10 +8,10 @@ Multer là thư viện trung gian hỗ trợ việc xử lý `multipart/form-dat
 
 Các bạn có thể đọc ở các bản dịch ngôn ngữ khác:
 
-- [English](https://github.com/expressjs/multer/blob/master/README.md) (Tiếng Anh)
-- [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (Chinese)
-- [한국어](https://github.com/expressjs/multer/blob/master/doc/README-ko.md) (Korean)
-- [Русский язык](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (Russian)
+- [English](https://github.com/expressjs/multer/blob/main/README.md) (Tiếng Anh)
+- [简体中文](https://github.com/expressjs/multer/blob/main/doc/README-zh-cn.md) (Chinese)
+- [한국어](https://github.com/expressjs/multer/blob/main/doc/README-ko.md) (Korean)
+- [Русский язык](https://github.com/expressjs/multer/blob/main/doc/README-ru.md) (Russian)
 
 ## Cài đặt
 
@@ -262,7 +262,7 @@ function fileFilter(req, file, cb) {
 Khi một lỗi xảy ra, Multer sẽ gửi lỗi đó cho Express. Bạn có thể hiển thị
 đẹp hơn sử dụng [cách bắt lỗi chuẩn của Express](http://expressjs.com/guide/error-handling.html).
 
-Nếu bạn muốn bắt các lỗi cụ thể từ Multer, bạn có thể tự gọi hàm trung gian (middleware) này. Ngoài ra, nếu bạn chỉ muốn bắt [lỗi của Multer](https://github.com/expressjs/multer/blob/master/lib/multer-error.js), bạn có thể dùng class `MulterError` được đính kèm với chính object `multer` (vd: `err instanceof multer.MulterError`).
+Nếu bạn muốn bắt các lỗi cụ thể từ Multer, bạn có thể tự gọi hàm trung gian (middleware) này. Ngoài ra, nếu bạn chỉ muốn bắt [lỗi của Multer](https://github.com/expressjs/multer/blob/main/lib/multer-error.js), bạn có thể dùng class `MulterError` được đính kèm với chính object `multer` (vd: `err instanceof multer.MulterError`).
 
 ```javascript
 var multer = require('multer');
@@ -283,8 +283,18 @@ app.post('/profile', function(req, res) {
 
 ## Tùy chọn storage engine
 
-Để làm sao tự xây dựng cơ chế lưu file riêng của mình, hãy xem [Multer Storage Engine](https://github.com/expressjs/multer/blob/master/StorageEngine.md).
+Để làm sao tự xây dựng cơ chế lưu file riêng của mình, hãy xem [Multer Storage Engine](https://github.com/expressjs/multer/blob/main/StorageEngine.md).
 
 ## License
 
 [MIT](LICENSE)
+
+[ci-image]: https://github.com/expressjs/multer/actions/workflows/ci.yml/badge.svg
+[ci-url]: https://github.com/expressjs/multer/actions/workflows/ci.yml
+[test-url]: https://coveralls.io/r/expressjs/multer?branch=main
+[test-image]: https://badgen.net/coveralls/c/github/expressjs/multer/main
+[npm-downloads-image]: https://badgen.net/npm/dm/multer
+[npm-url]: https://npmjs.org/package/multer
+[npm-version-image]: https://badgen.net/npm/v/multer
+[ossf-scorecard-badge]: https://api.scorecard.dev/projects/github.com/expressjs/multer/badge
+[ossf-scorecard-visualizer]: https://ossf.github.io/scorecard-visualizer/#/projects/github.com/expressjs/multer
