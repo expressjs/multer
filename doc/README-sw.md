@@ -1,6 +1,6 @@
 # Multer [![Build Status](https://badgen.net/github/checks/expressjs/multer/master?label=ci)](https://github.com/expressjs/multer/actions/workflows/ci.yml) [![Test Coverage](https://badgen.net/coveralls/c/github/expressjs/multer/master)](https://coveralls.io/r/expressjs/multer?branch=master) [![NPM version](https://badge.fury.io/js/multer.svg)](https://badge.fury.io/js/multer) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
 
-Multer ni **middleware ya Node.js** inayokusadia kushughulikia fomu za `multipart/form-data`, ambazo hutumika hasa kwa kupakia faili zenye picha, document na pia maandishi. Imejengwa juu ya [busboy](https://github.com/mscdex/busboy) kwa lengo la kutoa ufanisi na kurahisisha kazi ya ku kupakia picha,file na maandishi kwa pamoja.
+Multer ni **middleware ya Node.js** inayokusadia kushughulikia fomu za `multipart/form-data`, ambazo hutumika hasa kwa kupakia faili zenye picha, document na pia maandishi kwa wakati moja. Imejengwa juu ya [busboy](https://github.com/mscdex/busboy) kwa lengo la kutoa ufanisi na kurahisisha kazi ya kupakia picha,file na maandishi kwa pamoja.
 
 **Kidokezo**: Multer haiwezi kushughulikia fomati nyingine isipokuwa `multipart/form-data`.
 
@@ -26,7 +26,7 @@ $ npm install --save multer
 
 ## Matumizi
 
-Multer huongeza objekti ya `body` na objekti ya `file` au `files` kwenye objekti ya `request`.Objekti ya `body` inahifadhi viingilio vya maandishi kutoka kwenye fomu,na pia  objekti ya `file` au `files` inahifadhi **faili zilizopakiwa kupitia fomu hiyo kama picha**.
+Multer huongeza objekti mbili kwenye objekti ya `request`: objekti ya `body` inayoshikilia maelezo yote ya sehemu za maandishi za fomu, na objekti ya `file` au `files` inayojumuisha faili zote zilizopakiwa kupitia fomu hiyo. Hii inafanya iwe rahisi kupata data zote pamoja na faili zinapofika kwenye seva.
 
 Mfano wa matumizi ya Multer:
 
@@ -46,13 +46,13 @@ const upload = multer({ dest: 'uploads/' })
 const app = express()
 
 app.post('/profile', upload.single('avatar'), (req, res) => {
-  // req.file ni 'avatar' fili
+  // req.file ni 'avatar' fieli
   // req.body itashikilia maandishi viingilio kama zipo zozote.
 })
 
 app.post('/photos/upload', upload.array('photos', 12), (req, res) => {
   // req.files ni array ya 'photo' file
-  // req.body itakuwa na maandishi viingilio kama zipo zozote.
+  // req.body itashikilia maandishi viingilio kama zipo zozote.
 })
 
 const uploadMiddleware = upload.fields([
@@ -68,7 +68,7 @@ app.post('/cool-profile', uploadMiddleware, (req, res) => {
 })
 ```
 
-Ikiwa unahitaji kushughulikia fomati yenye maandishi tu bila faili inashauriwa utumie mbinu ya 
+Ikiwa unahitaji kushughulikia fomati yenye maandishi tu bila faili inashauriwa utumie mbinu ya:  
 `.none()`
 
 ```javascript
@@ -81,7 +81,7 @@ app.post('/profile', upload.none(), (req, res) => {
 })
 ```
 
-Huu hapa ni mfano wa jinsi Multer inavyotumika katika fomu ya HTML.Chukua tahadhari maalum kwa enctype="multipart/form-data" na sehemu ya name="uploaded_file":
+ kwa mfano wa hapo chini tunangalia jinsi gani Multer inavyotumika katika fomu ya HTML.Chukua tahadhari maalum kwa `enctype="multipart/form-data"` na sehemu ya `name="uploaded_file"`:
 
 ```html
 <form action="/stats" enctype="multipart/form-data" method="post">
@@ -93,7 +93,7 @@ Huu hapa ni mfano wa jinsi Multer inavyotumika katika fomu ya HTML.Chukua tahadh
 </form>
 ```
 
-Kisha, katika faili yako ya JavaScript, ungeongeza mistari hii ili kufikia faili pamoja na maudhui ya body.Ni muhimu kutumia thamani ya sehemu ya `name` kutoka kwenye fomu ndani ya kazi yako ya kupakia (upload function).Hii uieleza program ya Multer ni sehemu gani katika ombi lako(request) inapaswa kutafuta faili.Ikiwa sehemu hizi hazifanani kati ya fomu ya HTML na seva(server) yako, upakiaji (upload) utafeli.
+Kisha, katika faili yako ya JavaScript, uongeze mistari hii ili uweze kufikia faili pamoja na maudhui ya body.Ni muhimu kutumia thamani ya sehemu ya `name` kutoka kwenye fomu ndani ya kazi yako ya kupakia (upload function).Hii uieleza program ya Multer ni sehemu gani katika ombi lako(request) inapaswa kutafuta faili.Ikiwa sehemu hizi hazifanani kati ya fomu ya HTML na seva(server) yako, upakiaji (upload) utafeli.
 
 ```javascript
 const multer  = require('multer')
@@ -104,6 +104,8 @@ app.post('/stats', upload.single('uploaded_file'), function (req, res) {
   console.log(req.file, req.body)
 });
 ```
+
+
 
 ## API
 
@@ -125,7 +127,7 @@ Key | Description | Note
 
 ### `multer(opts)`
 
-Multer hukuwa na chaguo (options object), ambazo msingi wake ni mali (property) ya `dest`, inayo iambia programu ya Multer mahali pa kupakia faili. Ikiwa huhitaji kuweka kitu cha chaguo, faili zitahifadhiwa kwenye kumbukumbu ya muda (memory) na hazitaandikwa kwenye diski.
+Multer ukubali chaguo objekti (options object), ambazo msingi wake ni mali (property) ya `dest`, inayo iambia programu ya Multer mahali pa kupakia faili. Ikiwa huhitaji kuweka kitu cha chaguo, faili zitahifadhiwa kwenye kumbukumbu ya muda (memory) na hazitaandikwa kwenye diski.
 
 Kwa kawaida, Multer itabadilisha majina ya faili ili kuepuka migongano ya majina. Kazi ya kubadilisha majina inaweza kubinafsishwa kulingana na mahitaji yako.
 
@@ -135,9 +137,9 @@ Hizi hapa ni chaguzi ambazo zinaweza kutumiwa na programu ya Multer.
 |-------------------|-------------------------------------|
 | `dest`            | Folda ya kuhifadhi                   |
 | `storage`         | Uchanganuzi zaidi (DiskStorage/MemStorage) |
-| `fileFilter`      | Chaguo la kuepuka baadhi ya faili   |
-| `limits`          | Mipaka ya ukubwa, idadi, nk.        |
-| `preservePath`    | Endelevu njia halisi                 |
+| `fileFilter`      | Chaguo la kuepuka baadhi ya faili zitakubalika  |
+| `limits`          | idadi ya ukubwa wa data        |
+| `preservePath`    | Hifathi njia halisi badala ya jina too               |
 
 Katika programu ya tuvuti ya kawaida, chaguo pekee kinachoweza kuhitajika ni `dest`, na kinaweza kusanidiwa kama ilivyoonyeshwa katika mfano ufuatao.
 
