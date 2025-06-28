@@ -26,11 +26,11 @@ $ npm install --save multer
 
 ## Matumizi
 
-Multer huongeza objekti mbili kwenye objekti ya `request`: objekti ya `body` inayoshikilia maelezo yote ya sehemu za maandishi za fomu, na objekti ya `file` au `files` inayojumuisha faili zote zilizopakiwa kupitia fomu hiyo. Hii inafanya iwe rahisi kupata data zote pamoja na faili zinapofika kwenye seva.
+Multer huongeza objekti mbili kwenye objekti ya `request` na objekti ya `body` inayoshikilia maelezo yote ya sehemu za maandishi za fomu, na objekti ya `file` au `files` inayojumuisha faili zote zilizopakiwa kupitia fomu hiyo kama picha. Hii inafanya iwe rahisi kupata data zote pamoja na faili zinapofika kwenye serva yako.
 
 Mfano wa matumizi ya Multer:
 
-Usisahau kutumia sifa (attributes) ya HTML `<enctype="multipart/form-data">` ndani ya fom yako.
+Usisahau kutumia sifa (attribute) ya HTML`<enctype="multipart/form-data">` ndani ya fomu yako.
 
 ```html
 <form action="/profile" method="post" enctype="multipart/form-data">
@@ -46,7 +46,7 @@ const upload = multer({ dest: 'uploads/' })
 const app = express()
 
 app.post('/profile', upload.single('avatar'), (req, res) => {
-  // req.file ni 'avatar' fieli
+  // req.file ni 'avatar' faili
   // req.body itashikilia maandishi viingilio kama zipo zozote.
 })
 
@@ -60,7 +60,7 @@ const uploadMiddleware = upload.fields([
   { name: 'gallery', maxCount: 8 }
 ])
 app.post('/cool-profile', uploadMiddleware, (req, res) => {
-  // req.files ni object yenye arrays ya faili
+  // req.files ni objekti yenye arrays ya faili
   // mfano.
   //  req.files['avatar'][0] -> File
   //  req.files['gallery'] -> Array
@@ -81,7 +81,7 @@ app.post('/profile', upload.none(), (req, res) => {
 })
 ```
 
- kwa mfano wa hapo chini tunangalia jinsi gani Multer inavyotumika katika fomu ya HTML.Chukua tahadhari maalum kwa `enctype="multipart/form-data"` na sehemu ya `name="uploaded_file"`:
+Kwa mfano wa hapo chini tunangalia jinsi gani programu ya `Multer` inavyotumika katika fomu ya `HTML`.Chukua tahadhari maalum kwa sehemu ya `enctype="multipart/form-data"` na ya `name="uploaded_file"` ukiwa unaunda fomu yako kwa kutumia `HTML`.
 
 ```html
 <form action="/stats" enctype="multipart/form-data" method="post">
@@ -93,7 +93,7 @@ app.post('/profile', upload.none(), (req, res) => {
 </form>
 ```
 
-Kisha, katika faili yako ya JavaScript, uongeze mistari hii ili uweze kufikia faili pamoja na maudhui ya body.Ni muhimu kutumia thamani ya sehemu ya `name` kutoka kwenye fomu ndani ya kazi yako ya kupakia (upload function).Hii uieleza program ya Multer ni sehemu gani katika ombi lako(request) inapaswa kutafuta faili.Ikiwa sehemu hizi hazifanani kati ya fomu ya HTML na seva(server) yako, upakiaji (upload) utafeli.
+Kisha, katika faili yako ya javaScript, uongeze msimbo(code) hii uweze kufikia faili pamoja na maudhui ya body.Ni muhimu kutumia thamani ya sehemu ya `name` kutoka kwenye fomu ndani ya kazi yako ya kupakia (upload function).Hii uieleza program ya Multer ni sehemu gani katika ombi lako (request) inapaswa kutafuta faili. Ikiwa sehemu hizi hazifanani kati ya fomu ya HTML na serva yako, upakiaji wako utafeli.
 
 ```javascript
 const multer  = require('multer')
@@ -113,56 +113,55 @@ app.post('/stats', upload.single('uploaded_file'), function (req, res) {
 
 Kila faili ina tarifa zifwatazo:
 
-Key | Description | Note
+Key | Maelezo | Noti
 --- | --- | ---
-`fieldname` | Jina la sehemu (field) lililotangazwa katika fomu |
+`fieldname` | jina la sehemu (field) lililotangazwa katika fomu |
 `originalname` | jina la file lilipo kwenye kompyuta ya mtumiaji |
 `encoding` | Aina ya usimbaji wa faili |
 `mimetype` | Aina ya faili (mime type) |
 `size` | Ukubwa wa faili kwa byte   |
 `destination` | Folda ambayo faili imehifadhiwa | `DiskStorage`
-`filename` | Jina la faili ndani ya folda ya `destination` linatengenezwa kwa njia ya kiotomatiki. | `DiskStorage`
-`path` |Njia kamili ya faili iliypohifathidhiwa kwa ajili ya `upload` | `DiskStorage`
+`filename` | jina la faili ndani ya folda ya `destination` linatengenezwa kwa njia ya kiotomatiki. | `DiskStorage`
+`path` |Njia kamili ya faili iliyohifadhiwa kwa ajili ya `upload` | `DiskStorage`
 `buffer` | Hifadhi ya muda (`Buffer`) ya faili nzima | `MemoryStorage`
 
 ### `multer(opts)`
 
 Multer ukubali chaguo objekti (options object), ambazo msingi wake ni mali (property) ya `dest`, inayo iambia programu ya Multer mahali pa kupakia faili. Ikiwa huhitaji kuweka kitu cha chaguo, faili zitahifadhiwa kwenye kumbukumbu ya muda (memory) na hazitaandikwa kwenye diski.
 
-Kwa kawaida, Multer itabadilisha majina ya faili ili kuepuka migongano ya majina. Kazi ya kubadilisha majina inaweza kubinafsishwa kulingana na mahitaji yako.
+Kwa kawaida, `Multer` itabadilisha majina ya faili ili kuepuka migongano ya majina. Kazi ya kubadilisha majina inaweza kubinafsishwa kulingana na mahitaji yako.
 
 Hizi hapa ni chaguzi ambazo zinaweza kutumiwa na programu ya Multer.
 
-| Chaguo (Option)   | Maelezo                  |
+| Chaguo (Option)   | Maelezo           |
 |-------------------|-------------------------------------|
-| `dest`            | Folda ya kuhifadhi                   |
-| `storage`         | Uchanganuzi zaidi (DiskStorage/MemStorage) |
-| `fileFilter`      | Chaguo la kuepuka baadhi ya faili zitakubalika  |
-| `limits`          | idadi ya ukubwa wa data        |
-| `preservePath`    | Hifathi njia halisi badala ya jina too               |
+| `dest` au `storage` | Wapi kuhifadhi fiali     |
+| `fileFilter`| Chaguo la kuepuka baadhi ya faili zitakubalika  |
+| `limits`          | Idadi ya ukubwa wa data        |
+| `preservePath`    | Hifathi njia halisi badala ya jina too      |
 
-Katika programu ya tuvuti ya kawaida, chaguo pekee kinachoweza kuhitajika ni `dest`, na kinaweza kusanidiwa kama ilivyoonyeshwa katika mfano ufuatao.
+Katika programu ya ukurasa wa tuvuti ya kawaida, unaweza kuhitaji `dest` peke yake, na kinaweza kusanidiwa kama ilivyo onyeshwa katika mfano ufuatao.
 
 ```javascript 
 const upload = multer({ dest: 'uploads/' })
 ```
 
-kama unahitaji udthibiti kwa ajili ya upload yako. utahitajika kutumia chaguwo (option) ya `storage` badala ya `dest`. Multer inakuja na `storage engine` yake ambazo ni  `DiskStorage` na `MemoryStorage`storage injin.Zengine zinapatika kutoka kwa programu zengine.
+kama unahitaji udthibiti kwa ajili ya `upload` yako utahitajika kutumia chaguwo (option) ya `storage` badala ya `dest`. Multer inakuja na `storage engine` zake ambazo ni  `DiskStorage` na `MemoryStorage`storage injin.Zengine zinapatika kutoka kwa programu zengine.
 
 #### `.single(fieldname)`
 
-Kubali faili moja lenye jina `fieldname`. Faili hiyo moja itahifadhiwa katika `req.file`.
+Hii mbinu hutumika kukubali faili moja lenye jina `fieldname`. Faili hiyo moja itahifadhiwa katika `req.file`.
 
 
 #### `.array(fieldname[, maxCount])`
 
-Kubali orodha  ya `Array` ya faili, zote zikiwa na jina `fieldname`. Hiari, toa kosa ikiwa faili zaidi ya `maxCount` zitapakiwa. file ambazo zipo kwa mfumo wa Orodha (array)  zitahifadhiwa katika `req.files`.
+Hii mbinu hutumika kukubali orodha za faili zaidi ya mbili, `Array` za faili kwa kutumia kingilio kimoja, zote zikiwa na jina `fieldname`.Kuna chaguwo ya kupata alama ya hitilafu kama idadi ya faili imezidi kiwangu kilicho wekwa hiyo ni `maxCount`
 
 #### `.fields(fields)`
 
-Kubali mchanganyiko wa faili, uliobainishwa kwa kutumia `fields`. file ambazo zipo kwa mfumo wa Orodha (array)  zitahifadhiwa katika `req.files`.
+Hii mbinu hutumika pale fomu ya mtumiaji ina viiabatinishi vingi na unataka kuvitumia kila kimoja kwa njia tafauti katika fomu moja, iliobainishwa kwa kutumia `fields`.Fiali ambazo zipo kwa mfumo wa Orodha (array) zitahifadhiwa katika `req.files`.
 
-`fields` inapaswa kuwa orodha ya vitu (objects) vyenye jina `name` na hiari `maxCount`.
+`fields` inapaswa kuwa na orodha ya vitu (objects) vyenye jina `name` na hiari(option) ya `maxCount`.
 Mfano:
 
 ```javascript
@@ -174,22 +173,22 @@ Mfano:
 
 #### `.none()`
 
-Kubali sehemu za maandishi pekee. Ikiwa faili lolote litajaribu kupakiwa, kosa lenye msimbo(code)  
-"LIMIT\_UNEXPECTED\_FILE" itarushwa.
+Hi mbinu hutimika kukubali sehemu za maandishi peke yake. Ikiwa faili lolote litajaribu kupakiwa, Hitilafu yenye msimbo(code) itarushwa na kuonekana kwenye terminal.
+"LIMIT\_UNEXPECTED\_FILE" .
 
 #### `.any()`
 
-Mbinu hii inakubali faili zote zinazopitishwa kupitia mtandao. Orodha(array) yoyote ya faili itawekwa katika `req.files`.
+Mbinu hii inakubali faili zote zinazopitishwa kupitia fomu. Orodha(array) yoyote ya faili itawekwa katika `req.files`.
 
 **Tahadhari:** Hakikisha unashughulikia kila faili linalopakiwa na mtumiaji.  
-Usiongeze **multer** kama middleware ya kimataifa kwa sababu mtumiaji mwengine ambaye hana ruhusa na nia mbaya anaweza kubainisha file yake anaweza kupakia faili kwenye njia (route) ambayo hukutarajia.  
-Tumia fungsi hizi tu kwenye njia ambazo unashughulikia faili zilizopakiwa.
+Usiongeze **multer** kama middleware ya global kwa sababu mtumiaji mwengine ambaye hana ruhusa na nia mbaya anaweza kubainisha file yake na anaweza kupakia faili kwenye njia (route) ambayo hukutarajia.  
+Tumia functions hizi tu kwenye njia ambazo unashughulikia faili zilizopakiwa.
 
-### `storage`
+### `Hifadhi (storage)`
 
 #### `DiskStorage`
 
-Hii (`disk storage` injin ) inakupa udhibiti kamili wa jinsi faili zinavyohifadhiwa kwenye diski.
+Hii (`disk storage` injin ) inakupa udhibiti kamili wa jinsi faili zinavyo hifadhiwa kwenye diski.
 
 ```javascript
 const storage = multer.diskStorage({
@@ -204,32 +203,33 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 ```
+
 Kuna chaguzi mbili zinazopatikana: `destination` na `filename`. Zote ni functions ambazo  
-zinazobainisha mahali faili linapaswa kuhifadhiwa.
+zinazobainisha mahali faili inapaswa kuhifadhiwa.
 
 `destination` hutumika kubainisha folda ambayo faili zilizopakiwa zitahifadhiwa ndani yake.  
 Hii pia inaweza kutolewa kama `string` (mfano: `'/tmp/uploads'`).  
 Ikiwa hakuna `destination` iliyotolewa, saraka ya chaguo-msingi ya mfumo wa uendeshaji kwa ajili ya faili za muda (temporary files) itatumika.
 
 **Kumbuka:** Wewe ndiye unawajibika kuunda saraka (directory) unapotoa `destination` kama kazi (function).  
-Unapopitisha `destination` kama string, multer itahakikisha saraka hiyo inaundwa kwa ajili yako.
+Unapopitisha `destination` kama maandishi, multer itahakikisha saraka hiyo inaundwa kwa ajili yako.
 
 `filename` hutumika kubainisha jina la faili ndani ya folda.  
 Ikiwa hakuna `filename` itakayotolewa, kila faili itapewa jina la nasibu lisilo na kiambatanisho cha faili (file extension).
 
 **Kumbuka:** Multer haitoi kiambatanisho cha faili (file extension) kwa jina la faili kwa niaba yako,  
-kazi yako inapaswa kurudisha jina la faili lililo kamili pamoja na kiambatanisho chake.
+kazi(function) yako inapaswa kurudisha jina la faili lililo kamili pamoja na kiambatanisho chake.
 
-Kazi kila moja hupokea maombi (`req`) pamoja na taarifa fulani kuhusu faili (`file`) kusaidia katika uamuzi.
+Kila Kazi(function) moja hupokea maombi (`req`) pamoja na taarifa fulani kuhusu faili (`file`) kusaidia katika uamuzi.
 
 Kumbuka kwamba `req.body` huenda bado haijakamilika kujazwa kabisa.  
-Hii inategemea mfuatano wa jinsi mteja anavyotuma sehemu za fomu na faili kwenye seva.
+Hii inategemea mfuatano wa jinsi mteja anavyotuma sehemu za fomu na faili kwenye serva.
 
 Kwa kuelewa jinsi ya kuitisha callback inayotumia mlinganyo wa kupitisha `null` kama parameta ya kwanza,  
 rejelea [Node.js error handling](https://web.archive.org/web/20220417042018/https://www.joyent.com/node-js/production/design/errors).
 
 
-#### `MemoryStorage`
+#### `Uhifadhi wa Kumbukumbu (MemoryStorage)`
 
 Injini ya hifadhi ya kumbukumbu (memory storage engine) inahifadhi faili kama vitu vya `Buffer` kwenye kumbukumbu.  
 Haina chaguzi yoyote.
@@ -245,22 +245,39 @@ Unapotumia hifadhi ya kumbukumbu (memory storage), taarifa za faili zitakuwa na 
 **TAHATHARI:** Kupakia faili kubwa sana, au faili ndogo kwa wingi kwa haraka sana, kunaweza  
 kusababisha programu yako kukosa kumbukumbu (memory) endapo hutumia hifadhi ya kumbukumbu.
 
-### `limits`
+### `Mipaka (limits)`
 
-Kitu (object) kinachobainisha mipaka ya ukubwa wa mali zifuatazo za hiari.  
-Multer hupitisha kitu hiki moja kwa moja kwa busboy, na maelezo ya mali hizi yanaweza kupatikana kwenye [ukurasa wa busboy](https://github.com/mscdex/busboy#busboy-methods).
+limits ni chaguo inayotumika kudhibiti ukubwa na idadi ya faili zinazopakiwa kwenye serva yako, ili kuzuia matatizo kama idadi ya faili na kuzuwia kupakia mafali mengi kwa wakati moja.  
+Multer hupitisha objekti hiyo moja kwa moja kwa `busboy`, na maelezo yake yanaweza kupatikana kwenye [ukurasa wa busboy](https://github.com/mscdex/busboy#busboy-methods).
+
+Mfano:
+
+```javaScript
+const upload = multer({
+  storage: ...,   // mipangilio ya kuhifadhi faili
+  limits: {
+    fieldNameSize: 100,        // ukubwa wa herufi kwa jina la field (baiti)
+    fieldSize: 1024 * 1024,    // ukubwa wa data ya maandishi (field value) kwa baiti
+    fields: 10,                // idadi ya fields za maandishi (zisizo faili)
+    fileSize: 5 * 1024 * 1024, // ukubwa wa faili moja (5MB)
+    files: 5,                  // idadi ya faili zinazoruhusiwa
+    parts: 15,                 // jumla ya fields + fiali
+    headerPairs: 2000          // max key=>value pairs kwenye header
+  }
+});
+```
 
 Haya ni maadili ya nambari (integer) yanayopatikana:
 
-Key | Description | Default
+Funguo (Key) | Maelezo (Description) | Thamani ya Default
 --- | --- | ---
-`fieldNameSize` | Max field name size | 100 bytes
-`fieldSize` | Max field value size (in bytes) | 1MB
-`fields` | Max number of non-file fields | Infinity
-`fileSize` | For multipart forms, the max file size (in bytes) | Infinity
-`files` | For multipart forms, the max number of file fields | Infinity
-`parts` | For multipart forms, the max number of parts (fields + files) | Infinity
-`headerPairs` | For multipart forms, the max number of header key=>value pairs to parse | 2000
+`fieldNameSize` | Ukubwa mkubwa wa jina la field (baiti) | Bytes 100
+`fieldSize` | Ukubwa mkubwa wa thamani ya field (baiti) | 1MB
+`fields` | Idadi kubwa ya fields zisizo za faili | Bila kikomo (Infinity)
+`fileSize` |Kwa fomu za multipart, ukubwa mkubwa wa faili (baiti) | Bila kikomo (Infinity)
+`files` | Kwa fomu za multipart, idadi kubwa ya fields za faili | Bila kikomo (Infinity)
+`parts` | Kwa fomu za multipart, jumla ya sehemu (fields + files)(fields + files) | Bila kikomo (Infinity)
+`headerPairs` | Kwa fomu za multipart, idadi kubwa ya header key=>value pairs za kuchakata| 2000
 
 Kuweka mipaka kunaweza kusaidia kulinda tovuti yako dhidi ya mashambulizi ya **kuzuia huduma** (Denial of Service - DoS).
 
@@ -275,24 +292,24 @@ function fileFilter (req, file, cb) {
   // Kazi hii inapaswa kuita `cb` kwa kutumia boolean
   // kuonyesha kama faili inapaswa kukubaliwa
 
-  // Kwamnkuza faili hii, pitisha `false`, kama ifuatavyo:
+  // Kuikata faili hii, pitisha `false`, kama ifuatavyo:
   cb(null, false)
 
-  // Kwamkubali faili hii, pitisha `true`, kama ifuatavyo:
+  // Kuikubali faili hii, pitisha `true`, kama ifuatavyo:
   cb(null, true)
 
-  // Pia unaweza kuwasilisha hitilafu (error) kama kuna tatizo:
-  cb(new Error('Sina wazo!'))
+  // Pia unaweza kuwasilisha hitilafu (error) kama tatizo litatokea :
+  cb(new Error('Sijuwi kunaendelea nini!'))
 
 }
 
 ```
 
-## Error handling
+## Kushughulikia hitilafu (Error handling)
 
-Unapokutana na kosa (error), Multer ataelekeza kosa hilo kwa Express. Unaweza kuonyesha ukurasa mzuri wa kosa kwa kutumia [njia ya kawaida ya Express](http://expressjs.com/guide/error-handling.html).
+Unapokutana na kosa au hitilafu (error), Multer itaipa majukumu hayo kwa Express. Unaweza kuonyesha hitilafu vizuri kwa kutumia [njia ya kawaida ya Express](http://expressjs.com/guide/error-handling.html).
 
-Ikiwa unataka kushika makosa maalum kutoka Multer, unaweza kuitisha mwenyewe function ya middleware. Pia, kama unataka kushika makosa tu ya [Multer errors](https://github.com/expressjs/multer/blob/master/lib/multer-error.js), unaweza kutumia darasa la `MulterError` lililoambatanishwa na kitu cha `multer` (mfano: `err instanceof multer.MulterError`).
+Ikiwa unataka kushika makosa maalum kutoka Multer, unaweza kuitisha mwenyewe function ya middleware. Pia, kama unataka kushika hitilafu tu ya [Multer errors](https://github.com/expressjs/multer/blob/master/lib/multer-error.js), unaweza kutumia darasa la `MulterError` lililoambatanishwa na objekti ya `multer` (mfano: `err instanceof multer.MulterError`).
 
 ```javascript
 const multer = require('multer')
@@ -301,9 +318,9 @@ const upload = multer().single('avatar')
 app.post('/profile', function (req, res) {
   upload(req, res, function (err) {
     if (err instanceof multer.MulterError) {
-      // Kumetokea kosa la Multer wakati wa kupakia faili.
+      // Kumetokea hitilafu la Multer wakati wa kupakia faili.
     } else if (err) {
-      // Kumetokea kosa lisilojulikana wakati wa kupakia faili.
+      // Kumetokea hitilafu isilojulikana wakati wa kupakia faili.
     }
 
     // Kila kitu kilienda sawa.
@@ -311,7 +328,7 @@ app.post('/profile', function (req, res) {
 })
 ```
 
-## Injini ya kuhifadhi maalum (Custom storage engine)
+## Injini maalum ya kuhifadhi (Custom storage engine)
 
 Kwa taarifa kuhusu jinsi ya kujenga injini yako mwenyewe ya kuhifadhi, tazama [Multer Storage Engine](https://github.com/expressjs/multer/blob/master/StorageEngine.md).
 
