@@ -322,7 +322,6 @@ app.post('/profile', function (req, res) {
     } else if (err) {
       // Kumetokea hitilafu isilojulikana wakati wa kupakia faili.
     }
-
     // Kila kitu kilienda sawa.
   })
 })
