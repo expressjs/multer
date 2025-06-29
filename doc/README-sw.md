@@ -28,7 +28,7 @@ $ npm install --save multer
 
 ## Matumizi
 
-Multer huongeza objekti mbili kwenye objekti ya `request` na objekti ya `body` inayoshikilia maelezo yote ya sehemu za maandishi za fomu, na objekti ya `file` au `files` inayojumuisha faili zote zilizopakiwa kupitia fomu hiyo kama picha. Hii inafanya iwe rahisi kupata data zote pamoja na faili zinapofika kwenye serva yako.
+Multer huongeza vitu viwili kwenye objekti ya `request`.Hivi ni objekti ya `body` inayoshikilia maelezo yote ya sehemu za maandishi za fomu,na objekti ya `file` au `files` inayojumuisha faili zote zilizopakiwa kupitia fomu hiyo kama mfano picha,nyaraka,faili za sauti,na aina zengine za faili.Hii inafanya iwe rahisi kupata data zote pamoja na kuzituma kwenye seva yako.
 
 Mfano wa matumizi ya Multer:
 
