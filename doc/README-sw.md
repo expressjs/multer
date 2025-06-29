@@ -8,15 +8,17 @@ Multer ni **middleware ya Node.js** inayokusadia kushughulikia fomu za `multipar
 
 Hi README faili inapatikana pia kwa lugha zingine:
 
-- [العربية](https://github.com/expressjs/multer/blob/master/doc/README-ar.md) (Kiarabu)
-- [Español](https://github.com/expressjs/multer/blob/master/doc/README-es.md) (Kispanyola)
-- [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (Kichina)
-- [한국어](https://github.com/expressjs/multer/blob/master/doc/README-ko.md) (Kikorea)
-- [Русский язык](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (Kirusi)
-- [Việt Nam](https://github.com/expressjs/multer/blob/master/doc/README-vi.md) (Kiviatnam)
-- [Português](https://github.com/expressjs/multer/blob/master/doc/README-pt-br.md) (Kiportuguali cha Brazil)
-- [Français](https://github.com/expressjs/multer/blob/master/doc/README-fr.md) (Kifaransa)
-- [O'zbek tili](https://github.com/expressjs/multer/blob/master/doc/README-uz.md) (Kiuzbeki)
+| Lugha Asilia                                                                  | Kiswahili              |
+| ----------------------------------------------------------------------------- | ---------------------- |
+| [العربية](https://github.com/expressjs/multer/blob/main/doc/README-ar.md)     | Kiarabu                |
+| [简体中文](https://github.com/expressjs/multer/blob/main/doc/README-zh-cn.md)  | Kichina                |
+| [Français](https://github.com/expressjs/multer/blob/main/doc/README-fr.md)    | Kifaransa              |
+| [한국어](https://github.com/expressjs/multer/blob/main/doc/README-ko.md)        | Kikorea                |
+| [Português (Brasil)](https://github.com/expressjs/multer/blob/main/doc/README-pt-br.md) | Kiportugali (Brazil)   |
+| [Русский язык](https://github.com/expressjs/multer/blob/main/doc/README-ru.md) | Kirusi                 |
+| [Español](https://github.com/expressjs/multer/blob/main/doc/README-es.md)     | Kihispania             |
+| [Oʻzbek tili](https://github.com/expressjs/multer/blob/main/doc/README-uz.md) | Kiuzbeki               |
+| [Tiếng Việt](https://github.com/expressjs/multer/blob/main/doc/README-vi.md)  | Kivietinamu            |
 
 ## Usakinishaji
 
