@@ -18,6 +18,7 @@ describe('Reuse Middleware', function () {
     var pending = 8
 
     function submitData (fileCount) {
+      var expectedSize = util.fileSizeByName('small0.dat')
       var form = new FormData()
 
       form.append('name', 'Multer')
@@ -37,8 +38,8 @@ describe('Reuse Middleware', function () {
         req.files.forEach(function (file) {
           assert.strictEqual(file.fieldname, 'them-files')
           assert.strictEqual(file.originalname, 'small0.dat')
-          assert.strictEqual(file.size, 1778)
-          assert.strictEqual(file.buffer.length, 1778)
+          assert.strictEqual(file.size, expectedSize)
+          assert.strictEqual(file.buffer.length, expectedSize)
         })
 
         if (--pending === 0) done()
