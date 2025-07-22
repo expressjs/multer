@@ -9,6 +9,10 @@
   ],
   "license": "MIT",
   "repository": "expressjs/multer",
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/express"
+  },
   "keywords": [
     "form",
     "post",
