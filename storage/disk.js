@@ -1,66 +1,85 @@
-var fs = require('fs')
-var os = require('os')
-var path = require('path')
-var crypto = require('crypto')
-var mkdirp = require('mkdirp')
+const fs = require('fs')
+const os = require('os')
+const path = require('path')
+const crypto = require('crypto')
+const mkdirp = require('mkdirp')
+const { promisify } = require('util')
 
-function getFilename (req, file, cb) {
-  crypto.randomBytes(16, function (err, raw) {
-    cb(err, err ? undefined : raw.toString('hex'))
-  })
+const randomBytes = promisify(crypto.randomBytes)
+const unlink = promisify(fs.unlink)
+
+function getFilename (req, file) {
+  return randomBytes(16).then((raw) => raw.toString('hex'))
 }
 
-function getDestination (req, file, cb) {
-  cb(null, os.tmpdir())
+function getDestination (req, file) {
+  return Promise.resolve(os.tmpdir())
 }
 
-function DiskStorage (opts) {
-  this.getFilename = (opts.filename || getFilename)
+class DiskStorage {
+  constructor (opts = {}) {
+    this.getFilename = opts.filename || getFilename
+    this.maxSize = opts.maxSize || Infinity
 
-  if (typeof opts.destination === 'string') {
-    mkdirp.sync(opts.destination)
-    this.getDestination = function ($0, $1, cb) { cb(null, opts.destination) }
-  } else {
-    this.getDestination = (opts.destination || getDestination)
+    if (typeof opts.destination === 'string') {
+      mkdirp.sync(opts.destination)
+      this.getDestination = function () {
+        return Promise.resolve(opts.destination)
+      }
+    } else {
+      this.getDestination = opts.destination || getDestination
+    }
   }
-}
 
-DiskStorage.prototype._handleFile = function _handleFile (req, file, cb) {
-  var that = this
+  async _handleFile (req, file, cb) {
+    try {
+      const destination = await this.getDestination(req, file)
+      const filename = await this.getFilename(req, file)
+      const finalPath = path.join(destination, filename)
+      const outStream = fs.createWriteStream(finalPath)
 
-  that.getDestination(req, file, function (err, destination) {
-    if (err) return cb(err)
+      let bytesWritten = 0
 
-    that.getFilename(req, file, function (err, filename) {
-      if (err) return cb(err)
+      // Track the file size and reject if it exceeds the maxSize
+      file.stream.on('data', (chunk) => {
+        bytesWritten += chunk.length
+        if (bytesWritten > this.maxSize) {
+          file.stream.destroy() // Stop the upload
+          outStream.destroy() // Ensure the output stream is also closed
+          return cb(new Error('File exceeds maximum size'))
+        }
+      })
 
-      var finalPath = path.join(destination, filename)
-      var outStream = fs.createWriteStream(finalPath)
+      // Handle errors from file.stream
+      file.stream.on('error', cb)
 
       file.stream.pipe(outStream)
+
       outStream.on('error', cb)
       outStream.on('finish', function () {
         cb(null, {
           destination: destination,
           filename: filename,
           path: finalPath,
-          size: outStream.bytesWritten
+          size: bytesWritten
         })
       })
-    })
-  })
+    } catch (err) {
+      cb(err)
+    }
+  }
+
+  async _removeFile (req, file, cb) {
+    try {
+      await unlink(file.path)
+      delete file.destination
+      delete file.filename
+      delete file.path
+      cb(null)
+    } catch (err) {
+      cb(err)
+    }
+  }
 }
 
-DiskStorage.prototype._removeFile = function _removeFile (req, file, cb) {
-  var path = file.path
-
-  delete file.destination
-  delete file.filename
-  delete file.path
-
-  fs.unlink(path, cb)
-}
-
-module.exports = function (opts) {
-  return new DiskStorage(opts)
-}
+module.exports = (opts) => new DiskStorage(opts)
