@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Multer Example</title>
+</head>
+<body>
+
+	<label>Choose a file to upload:</label>
+	<input type="file" id="the-file" />
+	<button id="multer-test">send image with FormData</button>
+
+	<script type="text/javascript">
+		const postData = () => {
+
+			const fileInputNode = document.getElementById('the-file');
+
+			const formData = new FormData();
+
+			formData.append('uploaded_file', fileInputNode.files[0]);
+
+			const options = {
+				method: 'POST',
+				body: formData
+			};
+
+			fetch('http://localhost:3000/upload', options)
+				.then(res => {
+					if (res.ok) {
+						return res.text()
+					}
+					return Promise.reject(res.statusText);
+				})
+				.then(() => alert('upload successful!'))
+				.catch(err => {
+					const errorText = 'error uploading';
+					console.error(`${errorText}: ${err}`);
+					alert(errorText);
+				});
+		};
+
+		document.getElementById('multer-test').addEventListener('click', postData);
+	</script>
+</body>
+</html>
