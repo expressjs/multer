@@ -15,10 +15,12 @@ function getDestination (req, file, cb) {
 }
 
 function DiskStorage (opts) {
+  var mkdirOpts = (opts.mkdirOpts || {})
+
   this.getFilename = (opts.filename || getFilename)
 
   if (typeof opts.destination === 'string') {
-    mkdirp.sync(opts.destination)
+    mkdirp.sync(opts.destination, mkdirOpts)
     this.getDestination = function ($0, $1, cb) { cb(null, opts.destination) }
   } else {
     this.getDestination = (opts.destination || getDestination)
