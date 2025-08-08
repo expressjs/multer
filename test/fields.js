@@ -1,13 +1,20 @@
 /* eslint-env mocha */
 
 var assert = require('assert')
-var deepEqual = require('deep-equal')
 var stream = require('stream')
 
 var util = require('./_util')
 var multer = require('../')
 var FormData = require('form-data')
-var testData = require('testdata-w3c-json-form')
+var rawTestData = require('testdata-w3c-json-form')
+
+var testData = rawTestData.map(function (t) {
+  return {
+    name: t.name,
+    fields: t.fields,
+    expected: util.toNullProtoDeep(t.expected)
+  }
+})
 
 describe('Fields', function () {
   var parser
@@ -25,7 +32,7 @@ describe('Fields', function () {
 
     util.submitForm(parser, form, function (err, req) {
       assert.ifError(err)
-      assert(deepEqual(req.body, {
+      assert.deepStrictEqual(req.body, util.toNullProtoDeep({
         name: 'Multer',
         key: 'value',
         abc: 'xyz'
@@ -49,7 +56,7 @@ describe('Fields', function () {
 
     util.submitForm(parser, form, function (err, req) {
       assert.ifError(err)
-      assert(deepEqual(req.body, {
+      assert.deepStrictEqual(req.body, util.toNullProtoDeep({
         name: 'Multer',
         key: '',
         abc: '',
@@ -107,7 +114,7 @@ describe('Fields', function () {
 
       util.submitForm(parser, form, function (err, req) {
         assert.ifError(err)
-        assert(deepEqual(req.body, test.expected))
+        assert.deepStrictEqual(req.body, test.expected)
         done()
       })
     })
@@ -122,7 +129,7 @@ describe('Fields', function () {
 
     util.submitForm(parser, form, function (err, req) {
       assert.ifError(err)
-      assert(deepEqual(req.body, {
+      assert.deepStrictEqual(req.body, util.toNullProtoDeep({
         obj: {
           0: 'a',
           2: 'c',
