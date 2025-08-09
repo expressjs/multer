@@ -29,7 +29,6 @@
     "type-is": "^1.6.18"
   },
   "devDependencies": {
-    "deep-equal": "^2.0.3",
     "express": "^4.21.2",
     "form-data": "^4.0.2",
     "fs-temp": "^1.2.1",
