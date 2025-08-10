@@ -459,4 +459,20 @@ describe('Error Handling', function () {
       done()
     })
   })
+
+  it('should throw TypeError if options is not an object', function () {
+    assert.throws(() => {
+      multer(null)
+    }, {
+      name: 'TypeError',
+      message: 'Expected object for argument options'
+    })
+
+    assert.throws(() => {
+      multer('invalid')
+    }, {
+      name: 'TypeError',
+      message: 'Expected object for argument options'
+    })
+  })
 })
