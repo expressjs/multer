@@ -5,6 +5,7 @@ var deepEqual = require('deep-equal')
 
 var fs = require('fs')
 var path = require('path')
+var os = require('os')
 var util = require('./_util')
 var multer = require('../')
 var temp = require('fs-temp')
@@ -182,6 +183,62 @@ describe('Disk Storage', function () {
       assert.strictEqual(err.code, 'ENOENT')
       assert.strictEqual(path.dirname(err.path), directory)
 
+      done()
+    })
+  })
+
+  it('should use default destination when none is provided', function (done) {
+    var storage = multer.diskStorage({})
+    var upload = multer({ storage: storage })
+    var parser = upload.single('file')
+    var form = new FormData()
+
+    form.append('file', util.file('small0.dat'))
+
+    util.submitForm(parser, form, (err, req) => {
+      assert.ifError(err)
+
+      // Verify that the file was stored in the system's temporary directory
+      assert.strictEqual(path.dirname(req.file.path), os.tmpdir())
+
+      done()
+    })
+  })
+
+  it('should handle error in getDestination', function (done) {
+    var storage = multer.diskStorage({
+      destination: function (req, file, cb) {
+        cb(new Error('Test getDestination error'))
+      }
+    })
+    var upload = multer({ storage: storage })
+    var parser = upload.single('file')
+    var form = new FormData()
+
+    form.append('file', util.file('small0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert(err)
+      assert.strictEqual(err.message, 'Test getDestination error')
+      done()
+    })
+  })
+
+  it('should handle error in getFilename', function (done) {
+    var storage = multer.diskStorage({
+      filename: function (req, file, cb) {
+        cb(new Error('Test getFilename error'))
+      }
+    })
+    var upload = multer({ storage: storage })
+    var parser = upload.single('file')
+    var form = new FormData()
+
+    form.append('file', util.file('small0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert(err)
+      assert.strictEqual(err.message, 'Test getFilename error')
       done()
     })
   })
