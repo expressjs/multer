@@ -52,43 +52,43 @@ jobs:
 
         include:
         - name: Node.js 10.x
-          node-version: "10.24"
+          node-version: "10"
           npm-i: mocha@8.4.0
           
         - name: Node.js 11.x
-          node-version: "11.15"
+          node-version: "11"
           npm-i: mocha@8.4.0
           
         - name: Node.js 12.x
-          node-version: "12.22"
+          node-version: "12"
           npm-i: mocha@9.2.2
           
         - name: Node.js 13.x
-          node-version: "13.14"
+          node-version: "13"
           npm-i: mocha@9.2.2
           
         - name: Node.js 14.x
-          node-version: "14.21"
+          node-version: "14"
           npm-i: mocha@9.2.2
           
         - name: Node.js 15.x
-          node-version: "15.14.0"
+          node-version: "15"
           npm-i: mocha@9.2.2
           
         - name: Node.js 16.x
-          node-version: "16.20.2"
+          node-version: "16"
           
         - name: Node.js 17.x
-          node-version: "17.9.1"
+          node-version: "17"
           
         - name: Node.js 18.x
-          node-version: "18.20.8"
+          node-version: "18"
           
         - name: Node.js 19.x
-          node-version: "19.9.0"
+          node-version: "19"
           
         - name: Node.js 20.x
-          node-version: "20.19.2"
+          node-version: "20"
           
         - name: Node.js 21.x
           node-version: "21"
