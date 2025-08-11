@@ -60,3 +60,58 @@ describe('Unicode', function () {
     })
   })
 })
+
+describe('UTF-8 filenames', function () {
+  var uploadDir, upload
+
+  beforeEach(function (done) {
+    temp.mkdir(function (err, path) {
+      if (err) return done(err)
+
+      var storage = multer.diskStorage({
+        destination: path,
+        filename: function (req, file, cb) {
+          cb(null, file.originalname)
+        }
+      })
+
+      uploadDir = path
+      upload = multer({ storage: storage, charset: 'utf-8' })
+
+      done()
+    })
+  })
+
+  afterEach(function (done) {
+    rimraf(uploadDir, done)
+  })
+
+  it('should handle UTF-8 filenames', function (done) {
+    var req = new stream.PassThrough()
+    var boundary = 'AaB03x'
+    var body = [
+      '--' + boundary,
+      'Content-Disposition: form-data; name="small0"; filename="ÖoϪ.dat"',
+      'Content-Type: text/plain',
+      '',
+      'test with UTF-8 filename',
+      '--' + boundary + '--'
+    ].join('\r\n')
+
+    req.headers = {
+      'content-type': 'multipart/form-data; boundary=' + boundary,
+      'content-length': body.length
+    }
+
+    req.end(body)
+
+    upload.single('small0')(req, null, function (err) {
+      assert.ifError(err)
+
+      assert.strictEqual(req.file.originalname, 'ÖoϪ.dat')
+      assert.strictEqual(req.file.fieldname, 'small0')
+
+      done()
+    })
+  })
+})
