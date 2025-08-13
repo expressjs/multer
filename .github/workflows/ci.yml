@@ -54,7 +54,7 @@ jobs:
           npm-i: mocha@8.4.0
           
         - name: Node.js 11.x
-          node-version: "11.0.0"
+          node-version: "11.15"
           npm-i: mocha@8.4.0
           
         - name: Node.js 12.x
@@ -62,7 +62,7 @@ jobs:
           npm-i: mocha@9.2.2
           
         - name: Node.js 13.x
-          node-version: "13.0.0"
+          node-version: "13.14"
           npm-i: mocha@9.2.2
           
         - name: Node.js 14.x
@@ -89,16 +89,16 @@ jobs:
           node-version: "20.0.0"
           
         - name: Node.js 21.x
-          node-version: "21.0.0"
+          node-version: "21"
           
         - name: Node.js 22.x
-          node-version: "22.0.0"
+          node-version: "22"
 
         - name: Node.js 23.x
-          node-version: "23.0.0"
+          node-version: "23"
 
         - name: Node.js 24.x
-          node-version: "24.0.0"
+          node-version: "24"
 
     runs-on: ${{ matrix.os }}
     steps:
