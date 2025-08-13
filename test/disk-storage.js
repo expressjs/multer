@@ -10,10 +10,10 @@ var temp = require('fs-temp')
 var rimraf = require('rimraf')
 var FormData = require('form-data')
 
-function assertFileProperties (file, name) {
-  const expectedSize = util.fileSizeByName(name)
-  assert.strictEqual(file.fieldname, path.parse(name).name)
-  assert.strictEqual(file.originalname, name)
+function assertFileProperties (file, expectedFieldname, expectedOriginalname) {
+  const expectedSize = util.fileSizeByName(expectedOriginalname)
+  assert.strictEqual(file.fieldname, expectedFieldname)
+  assert.strictEqual(file.originalname, expectedOriginalname)
   assert.strictEqual(file.size, expectedSize)
   assert.strictEqual(util.fileSize(file.path), expectedSize)
 }
@@ -47,7 +47,7 @@ describe('Disk Storage', function () {
 
       assert.strictEqual(req.body.name, 'Multer')
 
-      assertFileProperties(req.file, 'small0.dat')
+      assertFileProperties(req.file, 'small0', 'small0.dat')
 
       done()
     })
@@ -79,7 +79,7 @@ describe('Disk Storage', function () {
       assert(deepEqual(req.body.checkboxhalfempty, ['cb1', '']))
       assert(deepEqual(req.body.checkboxempty, ['', '']))
 
-      assertFileProperties(req.file, 'empty.dat')
+      assertFileProperties(req.file, 'empty', 'empty.dat')
 
       done()
     })
@@ -110,13 +110,13 @@ describe('Disk Storage', function () {
 
       assert(deepEqual(req.body, {}))
 
-      assertFileProperties(req.files.empty[0], 'empty.dat')
-      assertFileProperties(req.files.tiny0[0], 'tiny0.dat')
-      assertFileProperties(req.files.tiny1[0], 'tiny1.dat')
-      assertFileProperties(req.files.small0[0], 'small0.dat')
-      assertFileProperties(req.files.small1[0], 'small1.dat')
-      assertFileProperties(req.files.medium[0], 'medium.dat')
-      assertFileProperties(req.files.large[0], 'large.jpg')
+      assertFileProperties(req.files.empty[0], 'empty', 'empty.dat')
+      assertFileProperties(req.files.tiny0[0], 'tiny0', 'tiny0.dat')
+      assertFileProperties(req.files.tiny1[0], 'tiny1', 'tiny1.dat')
+      assertFileProperties(req.files.small0[0], 'small0', 'small0.dat')
+      assertFileProperties(req.files.small1[0], 'small1', 'small1.dat')
+      assertFileProperties(req.files.medium[0], 'medium', 'medium.dat')
+      assertFileProperties(req.files.large[0], 'large', 'large.jpg')
 
       done()
     })
@@ -154,6 +154,21 @@ describe('Disk Storage', function () {
     util.submitForm(parser, form, function (err, req) {
       assert.strictEqual(err.code, 'ENOENT')
       assert.strictEqual(path.dirname(err.path), directory)
+
+      done()
+    })
+  })
+
+  it('should handle case where fieldname and originalname did not match', function (done) {
+    var form = new FormData()
+    var parser = upload.single('profilePic')
+
+    form.append('profilePic', util.file('large.jpg'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.ifError(err)
+
+      assertFileProperties(req.file, 'profilePic', 'large.jpg')
 
       done()
     })
