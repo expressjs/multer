@@ -4,7 +4,11 @@ var diskStorage = require('./storage/disk')
 var memoryStorage = require('./storage/memory')
 var MulterError = require('./lib/multer-error')
 
-function allowAll (req, file, cb) {
+function allowAllFiles (req, file, cb) {
+  cb(null, true)
+}
+
+function allowAllFields (req, fieldname, value, cb) {
   cb(null, true)
 }
 
@@ -19,7 +23,8 @@ function Multer (options) {
 
   this.limits = options.limits
   this.preservePath = options.preservePath
-  this.fileFilter = options.fileFilter || allowAll
+  this.fileFilter = options.fileFilter || allowAllFiles
+  this.fieldFilter = options.fieldFilter || allowAllFields
 }
 
 Multer.prototype._makeMiddleware = function (fields, fileStrategy) {
@@ -49,7 +54,8 @@ Multer.prototype._makeMiddleware = function (fields, fileStrategy) {
       preservePath: this.preservePath,
       storage: this.storage,
       fileFilter: wrappedFileFilter,
-      fileStrategy: fileStrategy
+      fileStrategy: fileStrategy,
+      fieldFilter: this.fieldFilter
     }
   }
 
@@ -79,6 +85,7 @@ Multer.prototype.any = function () {
       preservePath: this.preservePath,
       storage: this.storage,
       fileFilter: this.fileFilter,
+      fieldFilter: this.fieldFilter,
       fileStrategy: 'ARRAY'
     }
   }
