@@ -20,6 +20,8 @@ This README is also available in other languages:
 | [Español](https://github.com/expressjs/multer/blob/main/doc/README-es.md)      | Spanish         |
 | [O'zbek tili](https://github.com/expressjs/multer/blob/main/doc/README-uz.md)  | Uzbek           |
 | [Việt Nam](https://github.com/expressjs/multer/blob/main/doc/README-vi.md)     | Vietnamese      |
+| [Türkçe](https://github.com/expressjs/multer/blob/main/doc/README-tr.md)       | Turkish         |
+
 
 ## Installation
 
