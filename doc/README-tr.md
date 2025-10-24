@@ -113,7 +113,11 @@ app.post("/profile", upload.none(), function (req, res, next) {
 </form>
 ```
 
-Javascript dosyasında dosya ve metin alanlarını almak için:
+Ardından JavaScript dosyanızda, hem dosyaya hem de body’ye erişmek için bu satırları eklemeniz gerekir. Upload fonksiyonunuzda formdaki `name` alanı değerini kullanmanız önemlidir. Bu, multer’a request içindeki hangi alanda dosya araması gerektiğini söyler. Eğer bu alanlar HTML formunda ve sunucuda aynı değilse, yükleme başarısız olur.
+
+
+
+
 
 ```javascript
 const multer = require("multer");
