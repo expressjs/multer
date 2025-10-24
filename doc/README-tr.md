@@ -164,7 +164,7 @@ Daha fazla kontrol için storage seçeneğini kullanabilirsiniz. Multer, DiskSto
 
 #### `.single(fieldname)`
 
-Tek bir dosya kabul eder ve fieldname ile eşleşen dosyayı `req.file` içine koyar.
+Tek bir dosya kabul eder ve `fieldname` ile eşleşen dosyayı `req.file` içine koyar.
 
 #### `.array(fieldname[, maxCount])`
 
