@@ -77,7 +77,7 @@ app.post("/cool-profile", uploadMiddleware, function (req, res, next) {
 });
 ```
 
-Metin verilerini bir multipart formu işlemek için .none() metodunu kullanabilirsiniz:
+Sadece metin verilerini içeren bir multipart formu işlemek için .none() metodunu kullanabilirsiniz:
 
 ```javascript
 const express = require("express");
