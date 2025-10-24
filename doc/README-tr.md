@@ -223,7 +223,7 @@ const upload = multer({ storage: storage });
 dosyanın nerede saklanacağını belirleyen işlevlerdir.
 
 `destination`, yüklenen dosyaların hangi klasörde
-saklanacağını belirlemek için kullanılır. Bu, `string` olarak da verilebilir (ör. `‘/tmp/uploads’`). Eğer
+saklanacağını belirlemek için kullanılır. Bu, `string` olarak da verilebilir (ör. `'/tmp/uploads'`). Eğer
 `destination` verilmezse, işletim sisteminin geçici dosyalar için varsayılan
 dizini kullanılır.
 
