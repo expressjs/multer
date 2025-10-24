@@ -92,7 +92,11 @@ app.post("/profile", upload.none(), function (req, res, next) {
 });
 ```
 
-HTML formunda multer kullanımı örneği:
+İşte multer'ın HTML formunda nasıl kullanıldığına dair bir örnek. `Enctype="multipart/form-data"` ve `name="uploaded_file"` alanlarına özellikle dikkat edin:
+
+
+
+
 
 ```html
 <form action="/stats" enctype="multipart/form-data" method="post">
