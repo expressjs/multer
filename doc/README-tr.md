@@ -143,7 +143,7 @@ Her dosya aşağıdaki bilgileri içerir:
 
 Multer bir options (ayarlar) nesnesi kabul eder. En temel seçenek `dest` olup, dosyaların nereye yükleneceğini belirtir. Eğer options nesnesi verilmezse dosyalar bellekte tutulur ve diske yazılmaz.
 
-Varsayılan olarak, Multer dosyaları yeniden adlandırır. Yeniden adlandırma fonksiyonu ihtiyacınıza göre özelleştirilebilir.
+Varsayılan olarak, ad çakışmalarını önlemek için Multer dosyaları yeniden adlandırır. Yeniden adlandırma fonksiyonu ihtiyacınıza göre özelleştirilebilir.
 
 Multer’a geçirilebilecek seçenekler:
 
