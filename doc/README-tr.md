@@ -51,7 +51,7 @@ const app = express();
 
 app.post("/profile", upload.single("avatar"), function (req, res, next) {
    // req.file `avatar` dosyasıdır
-  // req.body formdaki metin alanlarını tutar
+  // req.body varsa formdaki metin alanlarını tutar
 });
 
 app.post(
