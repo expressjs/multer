@@ -68,24 +68,13 @@ const uploadMiddleware = upload.fields([
   { name: "gallery", maxCount: 8 },
 ]);
 app.post("/cool-profile", uploadMiddleware, function (req, res, next) {
-   // req.files bir nesnedir (String -> Array)
-  // örn:
-  //  req.files['avatar'][0] -> Dosya
-  //  req.files['gallery'] -> Dizi
-  //
-  // req.body varsa metin alanlarını içerir
-
-
+  
 // req.files bir nesnedir (String -> Array) ve burada fieldname (alan adı) anahtar, değer ise dosyaların bulunduğu bir dizidir.
 // Örneğin:
-// req.files['avatar'][0] -> Dosya
-// req.files['gallery'] -> Dizi
+// req.files['avatar'][0] -> File
+// req.files['gallery'] -> Array
 //
 // req.body varsa metin alanların içerir
-
-
-
-
 
 });
 ```
