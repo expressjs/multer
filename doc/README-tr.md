@@ -166,7 +166,7 @@ Ortalama bir web uygulamasında genellikle sadece `dest` gerekir:
 const upload = multer({ dest: "uploads/" });
 ```
 
-Daha fazla kontrol için storage seçeneğini kullanabilirsiniz. Multer, DiskStorage ve MemoryStorage depolama motorları ile gelir; üçüncü taraf motorlar da mevcuttur.
+Daha fazla kontrol için `storage` seçeneğini kullanabilirsiniz. `Multer`, `DiskStorage` ve `MemoryStorage` depolama motorları ile gelir; üçüncü taraf motorlar da mevcuttur.
 
 #### `.single(fieldname)`
 
