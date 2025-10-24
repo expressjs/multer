@@ -272,7 +272,7 @@ Kullanılabilir tamsayı değerleri şöyledir:
 | Anahtar          | Açıklama                                                                 | Varsayılan  |
 | ---------------- | ------------------------------------------------------------------------ | ------------ |
 | `fieldNameSize`  | Maksimum alan adı boyutu                                                 | 100 bayt     |
-| `fieldSize`      | Maksimum alan değeri boyutu (bayt cinsinden)                             | 1MB          |
+| `fieldSize`      | Maksimum alan değeri boyutu (byte cinsinden)                             | 1MB          |
 | `fields`         | Dosya olmayan alanların maksimum sayısı                                  | Sonsuz       |
 | `fileSize`       | Çok parçalı (multipart) formlar için maksimum dosya boyutu (bayt cinsinden) | Sonsuz       |
 | `files`          | Çok parçalı (multipart) formlar için maksimum dosya alanı sayısı         | Sonsuz       |
