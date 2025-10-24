@@ -30,7 +30,7 @@ $ npm install multer
 
 ## Kullanım
 
-Multer, request nesnesine bir body nesnesi ve bir file veya files nesnesi ekler. body nesnesi formdaki metin alanlarının değerlerini içerir; file veya files nesnesi ise form aracılığıyla yüklenen dosyaları içerir.
+Multer, `request` nesnesine bir `body` nesnesi ve bir `file` veya `files` nesnesi ekler. `body` nesnesi formdaki metin alanlarının değerlerini içerir; `file` veya `files` nesnesi ise form aracılığıyla yüklenen dosyaları içerir.
 
 Temel kullanım örneği:
 
