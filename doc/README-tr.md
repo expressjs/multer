@@ -168,7 +168,7 @@ Tek bir dosya kabul eder ve `fieldname` ile eşleşen dosyayı `req.file` içine
 
 #### `.array(fieldname[, maxCount])`
 
-Birden fazla dosya kabul eder ve `fieldname` ile eşleşenleri `req.files` dizisine koyar. Opsiyonel olarak `maxCount’tan` fazla dosya yüklenirse hata verir.
+Birden fazla dosya kabul eder ve `fieldname` ile eşleşenleri `req.files` dizisine koyar. Opsiyonel olarak `maxCount`'tan fazla dosya yüklenirse hata verir.
 
 #### `.fields(fields)`
 
