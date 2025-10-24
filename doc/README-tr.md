@@ -59,7 +59,7 @@ app.post(
   upload.array("photos", 12),
   function (req, res, next) {
      // req.files `photos` dosyalarının dizisidir
-    // req.body metin alanlarını içerir
+    // req.body varsa metin alanlarını içerir
   }
 );
 
