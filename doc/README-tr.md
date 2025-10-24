@@ -73,7 +73,7 @@ app.post("/cool-profile", uploadMiddleware, function (req, res, next) {
   //  req.files['avatar'][0] -> Dosya
   //  req.files['gallery'] -> Dizi
   //
-  // req.body metin alanlarını içerir
+  // req.body varsa metin alanlarını içerir
 });
 ```
 
