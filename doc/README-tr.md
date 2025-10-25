@@ -142,7 +142,7 @@ Her dosya aşağıdaki bilgileri içerir:
 | `encoding`     | Dosyanın kodlama tipi                    |                 |
 | `mimetype`     | Dosyanın MIME tipi                        |                 |
 | `size`         | Dosyanın boyutu (byte)                   |                 |
-| `destination`  | Dosyanın kaydedileceği klasör            | `DiskStorage`   |
+| `destination`  | Dosyanın 'destination' içindeki adı       | `DiskStorage`   |
 | `filename`     | Dosyanın klasör içindeki adı             | `DiskStorage`   |
 | `path`         | Yüklenen dosyanın tam yolu               | `DiskStorage`   |
 | `buffer`       | Dosyanın tamamını içeren `Buffer`       | `MemoryStorage` |
