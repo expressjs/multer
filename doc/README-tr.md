@@ -207,7 +207,7 @@ Ağ üzerinden gelen tüm dosyaları kabul eder. Bir dizi dosya
 **UYARI:** Kullanıcıların yüklediği dosyaları her zaman kendiniz işlediğinizden emin olun.
 Kötü niyetli bir kullanıcı, sizin öngörmediğiniz bir rotaya dosya yükleyebileceğinden, multer'ı asla global bir orta katman yazılımı olarak eklemeyin.
 Bu işlevi yalnızca, yüklenen dosyaları işlediğiniz rotalarda kullanın.
-**ÖNERİ:** Multer'ı bir orta katman yazılımı olarak kullanmak yerine, dosya yüklemeyi işleyen bir orta katman yazılımı kullanın.
+
 
 ### `storage`
 
