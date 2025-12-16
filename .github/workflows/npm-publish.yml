@@ -1,0 +1,37 @@
+name: Publish package to npm
+
+on:
+  release:
+    types: [created]
+
+concurrency:
+  group: "${{ github.workflow }} ✨ ${{ github.ref }}"
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "lts/*"
+          registry-url: "https://registry.npmjs.org"
+
+      # npm stage publish requires npm >= 11.15.0
+      - name: Upgrade npm
+        run: npm install -g npm@latest
+
+      - name: Stage publish to npm
+        run: npm stage publish
