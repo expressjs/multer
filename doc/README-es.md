@@ -135,6 +135,7 @@ Clave (key) | Descripción
 `fileFilter` | Función para controlar qué archivos son aceptados
 `limits` | Límites de los datos subidos
 `preservePath` | Mantiene la ruta completa de la ubicación de los archivos, en vez de sólo sus nombres
+`defParamCharset` | Conjunto de caracteres por defecto para usar en valores de parámetros de encabezados de partes (ej. nombre de archivo) que no son parámetros extendidos (que contienen un conjunto de caracteres explícito). Por defecto: `'latin1'`
 
 En la aplicación web promedio es probable que sólo se requiera `dest`, siendo configurado como en el siguiente ejemplo:
 
