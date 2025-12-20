@@ -144,6 +144,7 @@ Key | Description
 `fileFilter` | Function to control which files are accepted
 `limits` | Limits of the uploaded data
 `preservePath` | Keep the full path of files instead of just the base name
+`preserveBody` | Extend existing request body, by default it is false
 
 In an average web app, only `dest` might be required, and configured as shown in
 the following example.
