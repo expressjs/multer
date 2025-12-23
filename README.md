@@ -40,11 +40,21 @@ Don't forget the `enctype="multipart/form-data"` in your form.
   <input type="file" name="avatar" />
 </form>
 ```
+### CommonJS and ES Module interoperability
+
+Multer v2 is published as an ES module.
+
+When using Multer v2 from CommonJS (`require`), `require("multer")`
+returns a module namespace object rather than the middleware function.
+
+Use the default export explicitly:
 
 ```javascript
-const express = require('express')
-const multer  = require('multer')
-const upload = multer({ dest: 'uploads/' })
+const express = require("express");
+const multer = require("multer").default;
+
+const upload = multer({ dest: "uploads/" });
+
 
 const app = express()
 
