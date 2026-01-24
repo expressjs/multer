@@ -103,7 +103,7 @@ Mỗi file sẽ chứa các thông tin sau:
 ### Tham số `multer(opts)`
 
 Multer chấp nhận một biến options. Cơ bản là thuộc tính `dest`, là nơi sẽ lưu
-file được uplaod. Trong trường hợp bỏ qua options này, file sẽ được giữ trong
+file được upload. Trong trường hợp bỏ qua options này, file sẽ được giữ trong
 RAM và không được lưu trên ổ cứng.
 
 Mặc định, Multer sẽ đổi tên các file, vì vậy để tránh bị trùng lặp, bạn có thể
