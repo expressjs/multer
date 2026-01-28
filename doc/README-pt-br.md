@@ -152,7 +152,7 @@ Aceite um único arquivo com o nome `fieldname`. O arquivo único será armazena
 
 #### `.array(fieldname[, maxCount])`
 
-Aceite múltiplos arquivos, todos com o nome `fieldname`. Opcional, gera um errose forem enviados mais de `maxCount`. O array de arquivos serão armazenados em
+Aceite múltiplos arquivos, todos com o nome `fieldname`. Opcional, gera um erro se forem enviados mais de `maxCount`. O array de arquivos serão armazenados em
 `req.files`.
 
 #### `.fields(fields)`
