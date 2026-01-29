@@ -144,6 +144,7 @@ Key | Description
 `fileFilter` | Function to control which files are accepted
 `limits` | Limits of the uploaded data
 `preservePath` | Keep the full path of files instead of just the base name
+`charset` | For multipart forms, the default character set to use for values of part header parameters (e.g. filename) that are not extended parameters (that contain an explicit charset). **Default**: `'latin1'`.
 
 In an average web app, only `dest` might be required, and configured as shown in
 the following example.
