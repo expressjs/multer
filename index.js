@@ -19,7 +19,7 @@ function Multer (options) {
 
   this.limits = options.limits
   this.preservePath = options.preservePath
-  this.defParamCharset = options.defParamCharset || 'latin1'
+  this.defParamCharset = options.defParamCharset || 'utf8'
   this.fileFilter = options.fileFilter || allowAll
 }
 
