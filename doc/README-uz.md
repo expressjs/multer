@@ -113,7 +113,7 @@ Kalit(key) | Ta'rif
 `fileFilter` | Qaysi fayllar qabul qilinishini boshqarish funksiyasi
 `limits` | Yuklash chegarasi
 `preservePath` | Asosiy nom o'rniga fayllarning to'liq yo'lini saqlash
-`defParamCharset` | Kengaytirilgan parametrlar bo'lmagan qism sarlavha parametrlari qiymatlari (masalan, fayl nomi) uchun ishlatish uchun standart belgilar to'plami (aniq belgilar to'plamini o'z ichiga olmaydi). Standart: `'latin1'`
+`defParamCharset` | Kengaytirilgan parametrlar bo'lmagan qism sarlavha parametrlari qiymatlari (masalan, fayl nomi) uchun ishlatish uchun standart belgilar to'plami (aniq belgilar to'plamini o'z ichiga olmaydi). Standart: `'utf8'`
 
 O'rtacha veb-ilovada faqat `dest` kerak bo'lishi mumkin va quyidagicha sozlanishi mumkin
 
