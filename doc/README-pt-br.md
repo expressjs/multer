@@ -137,6 +137,7 @@ Key | Descrição
 `fileFilter` | Função para controlar quais arquivos são aceitos
 `limits` | Limites dos dados enviados
 `preservePath` | Mantenha o caminho completo dos arquivos em vez de apenas o nome base
+`defParamCharset` | Conjunto de caracteres padrão para usar em valores de parâmetros de cabeçalho de parte (por exemplo, nome do arquivo) que não são parâmetros estendidos (que contêm um conjunto de caracteres explícito). Padrão: `'latin1'`
 
 Em um web app básico, somente o `dest` pode ser necessário, e configurado como mostrado no exemplo a seguir:
 
