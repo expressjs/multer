@@ -27,3 +27,21 @@ exports.submitForm = function submitForm (multer, form, cb) {
     })
   })
 }
+
+exports.toNullProtoDeep = function toNullProtoDeep (value) {
+  if (Array.isArray(value)) {
+    return value.map(function (item) { return toNullProtoDeep(item) })
+  }
+
+  if (value && typeof value === 'object') {
+    var out = Object.create(null)
+
+    Object.keys(value).forEach(function (key) {
+      out[key] = toNullProtoDeep(value[key])
+    })
+
+    return out
+  }
+
+  return value
+}

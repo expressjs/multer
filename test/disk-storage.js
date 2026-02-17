@@ -1,7 +1,6 @@
 /* eslint-env mocha */
 
 var assert = require('assert')
-var deepEqual = require('deep-equal')
 
 var fs = require('fs')
 var path = require('path')
@@ -71,9 +70,9 @@ describe('Disk Storage', function () {
       assert.strictEqual(req.body.version, '')
       assert.strictEqual(req.body.year, '')
 
-      assert(deepEqual(req.body.checkboxfull, ['cb1', 'cb2']))
-      assert(deepEqual(req.body.checkboxhalfempty, ['cb1', '']))
-      assert(deepEqual(req.body.checkboxempty, ['', '']))
+      assert.deepStrictEqual(req.body.checkboxfull, ['cb1', 'cb2'])
+      assert.deepStrictEqual(req.body.checkboxhalfempty, ['cb1', ''])
+      assert.deepStrictEqual(req.body.checkboxempty, ['', ''])
 
       assert.strictEqual(req.file.fieldname, 'empty')
       assert.strictEqual(req.file.originalname, 'empty.dat')
@@ -107,7 +106,7 @@ describe('Disk Storage', function () {
     util.submitForm(parser, form, function (err, req) {
       assert.ifError(err)
 
-      assert(deepEqual(req.body, {}))
+      assert.deepStrictEqual(req.body, util.toNullProtoDeep({}))
 
       assert.strictEqual(req.files.empty[0].fieldname, 'empty')
       assert.strictEqual(req.files.empty[0].originalname, 'empty.dat')
@@ -158,10 +157,10 @@ describe('Disk Storage', function () {
     util.submitForm(parser, form, function (err, req) {
       assert.strictEqual(err.code, 'LIMIT_UNEXPECTED_FILE')
       assert.strictEqual(err.field, 'small0')
-      assert(deepEqual(err.storageErrors, []))
+      assert.deepStrictEqual(err.storageErrors, [])
 
       var files = fs.readdirSync(uploadDir)
-      assert(deepEqual(files, []))
+      assert.deepStrictEqual(files, [])
 
       done()
     })
