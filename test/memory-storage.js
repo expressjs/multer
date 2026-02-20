@@ -2,10 +2,18 @@
 
 var assert = require('assert')
 var deepEqual = require('deep-equal')
-
 var util = require('./_util')
 var multer = require('../')
 var FormData = require('form-data')
+
+function assertFileProperties (file, expectedFieldname, expectedOriginalname) {
+  const expectedSize = util.fileSizeByName(expectedOriginalname)
+  assert.strictEqual(file.fieldname, expectedFieldname)
+  assert.strictEqual(file.originalname, expectedOriginalname)
+  assert.strictEqual(file.size, expectedSize)
+  assert.ok(Buffer.isBuffer(file.buffer))
+  assert.strictEqual(file.buffer.length, expectedSize)
+}
 
 describe('Memory Storage', function () {
   var upload
@@ -27,10 +35,7 @@ describe('Memory Storage', function () {
 
       assert.strictEqual(req.body.name, 'Multer')
 
-      assert.strictEqual(req.file.fieldname, 'small0')
-      assert.strictEqual(req.file.originalname, 'small0.dat')
-      assert.strictEqual(req.file.size, 1778)
-      assert.strictEqual(req.file.buffer.length, 1778)
+      assertFileProperties(req.file, 'small0', 'small0.dat')
 
       done()
     })
@@ -62,11 +67,7 @@ describe('Memory Storage', function () {
       assert(deepEqual(req.body.checkboxhalfempty, ['cb1', '']))
       assert(deepEqual(req.body.checkboxempty, ['', '']))
 
-      assert.strictEqual(req.file.fieldname, 'empty')
-      assert.strictEqual(req.file.originalname, 'empty.dat')
-      assert.strictEqual(req.file.size, 0)
-      assert.strictEqual(req.file.buffer.length, 0)
-      assert.strictEqual(Buffer.isBuffer(req.file.buffer), true)
+      assertFileProperties(req.file, 'empty', 'empty.dat')
 
       done()
     })
@@ -97,40 +98,28 @@ describe('Memory Storage', function () {
 
       assert(deepEqual(req.body, {}))
 
-      assert.strictEqual(req.files.empty[0].fieldname, 'empty')
-      assert.strictEqual(req.files.empty[0].originalname, 'empty.dat')
-      assert.strictEqual(req.files.empty[0].size, 0)
-      assert.strictEqual(req.files.empty[0].buffer.length, 0)
+      assertFileProperties(req.files.empty[0], 'empty', 'empty.dat')
+      assertFileProperties(req.files.tiny0[0], 'tiny0', 'tiny0.dat')
+      assertFileProperties(req.files.tiny1[0], 'tiny1', 'tiny1.dat')
+      assertFileProperties(req.files.small0[0], 'small0', 'small0.dat')
+      assertFileProperties(req.files.small1[0], 'small1', 'small1.dat')
+      assertFileProperties(req.files.medium[0], 'medium', 'medium.dat')
+      assertFileProperties(req.files.large[0], 'large', 'large.jpg')
 
-      assert.strictEqual(req.files.tiny0[0].fieldname, 'tiny0')
-      assert.strictEqual(req.files.tiny0[0].originalname, 'tiny0.dat')
-      assert.strictEqual(req.files.tiny0[0].size, 122)
-      assert.strictEqual(req.files.tiny0[0].buffer.length, 122)
+      done()
+    })
+  })
 
-      assert.strictEqual(req.files.tiny1[0].fieldname, 'tiny1')
-      assert.strictEqual(req.files.tiny1[0].originalname, 'tiny1.dat')
-      assert.strictEqual(req.files.tiny1[0].size, 7)
-      assert.strictEqual(req.files.tiny1[0].buffer.length, 7)
+  it('should handle case where fieldname and originalname did not match', function (done) {
+    var form = new FormData()
+    var parser = upload.single('profilePic')
 
-      assert.strictEqual(req.files.small0[0].fieldname, 'small0')
-      assert.strictEqual(req.files.small0[0].originalname, 'small0.dat')
-      assert.strictEqual(req.files.small0[0].size, 1778)
-      assert.strictEqual(req.files.small0[0].buffer.length, 1778)
+    form.append('profilePic', util.file('large.jpg'))
 
-      assert.strictEqual(req.files.small1[0].fieldname, 'small1')
-      assert.strictEqual(req.files.small1[0].originalname, 'small1.dat')
-      assert.strictEqual(req.files.small1[0].size, 315)
-      assert.strictEqual(req.files.small1[0].buffer.length, 315)
+    util.submitForm(parser, form, function (err, req) {
+      assert.ifError(err)
 
-      assert.strictEqual(req.files.medium[0].fieldname, 'medium')
-      assert.strictEqual(req.files.medium[0].originalname, 'medium.dat')
-      assert.strictEqual(req.files.medium[0].size, 13196)
-      assert.strictEqual(req.files.medium[0].buffer.length, 13196)
-
-      assert.strictEqual(req.files.large[0].fieldname, 'large')
-      assert.strictEqual(req.files.large[0].originalname, 'large.jpg')
-      assert.strictEqual(req.files.large[0].size, 2413677)
-      assert.strictEqual(req.files.large[0].buffer.length, 2413677)
+      assertFileProperties(req.file, 'profilePic', 'large.jpg')
 
       done()
     })
