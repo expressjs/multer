@@ -332,6 +332,69 @@ app.post('/profile', function (req, res) {
 })
 ```
 
+## Client side examples
+
+### React JS
+
+
+This is an example of sending information through FormData to backend with ReacJS using typescript.
+
+```
+import React, { useState, useCallback } from 'react';
+import axios from 'axios';
+
+export default function FileLoader(): React.ReactNode {
+  const [imageURL, setImageURL] = useState('');
+
+  const handleChange = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
+      try {
+        const data = new FormData();
+        data.append('file', 'name');
+        if (e.target.files) {
+          const { files } = e.target;
+          // you can treat the e.target.files
+          if (files.length === 0) {
+            console.log('You must choose at least one image');
+            return;
+          }
+          if (files.length > 2) {
+            console.log('max two  images');
+            return;
+          }
+          if (files[0].size > 4194304) {
+            console.log('Tmax size: 4Mb');
+            return;
+          }
+          data.set('image', files[0]);
+          const response = await axios.post('your endpoint address', data);
+          const { url } = response.data;
+          setImageURL(url);
+        }
+      } catch (err) {
+        console.error(err.message);
+      }
+    },
+    []
+  );
+
+  return (
+    <div>
+      {imageURL && <img src={imageURL} alt="choosen" />}
+      <input
+        type="file"
+        id="file"
+        accept="image/*"
+        data-file={imageURL}
+        onChange={handleChange}
+        multiple
+      />
+    </div>
+  );
+}
+
+```
+
 ## Custom storage engine
 
 For information on how to build your own storage engine, see [Multer Storage Engine](https://github.com/expressjs/multer/blob/main/StorageEngine.md).
