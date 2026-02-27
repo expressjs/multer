@@ -32,6 +32,7 @@ jobs:
         - Node.js 22.x
         - Node.js 23.x
         - Node.js 24.x
+        - Node.js 25.x
 
         include:
         - name: Node.js 10.x
@@ -84,6 +85,9 @@ jobs:
 
         - name: Node.js 24.x
           node-version: "24"
+
+        - name: Node.js 25.x
+          node-version: "25"
 
     steps:
     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
