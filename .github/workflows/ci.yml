@@ -1,21 +1,36 @@
 name: ci
 
 on:
-- pull_request
-- push
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '*.md'
+  pull_request:
 
 permissions:
   contents: read
-
 jobs:
-  test:
-    permissions:
-      checks: write  # for coverallsapp/github-action to create new checks
-      contents: read  # for actions/checkout to fetch code
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+
+      - name: Install dependencies
+        run: npm install --ignore-scripts --include=dev
+
+      - name: Run lint
+        run: npm run lint
+  test:
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-latest, windows-latest]
         name:
         - Node.js 10.x
         - Node.js 11.x
@@ -35,7 +50,7 @@ jobs:
 
         include:
         - name: Node.js 10.x
-          node-version: "10.24"
+          node-version: "10.16.0"
           npm-i: mocha@8.4.0
           
         - name: Node.js 11.x
@@ -43,7 +58,7 @@ jobs:
           npm-i: mocha@8.4.0
           
         - name: Node.js 12.x
-          node-version: "12.22"
+          node-version: "12.0.0"
           npm-i: mocha@9.2.2
           
         - name: Node.js 13.x
@@ -51,27 +66,27 @@ jobs:
           npm-i: mocha@9.2.2
           
         - name: Node.js 14.x
-          node-version: "14.21"
+          node-version: "14.0.0"
           npm-i: mocha@9.2.2
           
         - name: Node.js 15.x
-          node-version: "15.14"
+          node-version: "15.0.0"
           npm-i: mocha@9.2.2
           
         - name: Node.js 16.x
-          node-version: "16.20"
+          node-version: "16.0.0"
           
         - name: Node.js 17.x
-          node-version: "17.9"
+          node-version: "17.0.0"
           
         - name: Node.js 18.x
-          node-version: "18.18"
+          node-version: "18.0.0"
           
         - name: Node.js 19.x
-          node-version: "19.9"
+          node-version: "19.0.0"
           
         - name: Node.js 20.x
-          node-version: "20.9"
+          node-version: "20.0.0"
           
         - name: Node.js 21.x
           node-version: "21"
@@ -85,26 +100,16 @@ jobs:
         - name: Node.js 24.x
           node-version: "24"
 
+    runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+    - uses: actions/checkout@v4
+      with:
+        persist-credentials: false
 
-    - name: Install Node.js ${{ matrix.node-version }}
-      shell: bash -eo pipefail -l {0}
-      run: |
-        nvm install --default ${{ matrix.node-version }}
-        if [[ "${{ matrix.node-version }}" == 0.* && "$(cut -d. -f2 <<< "${{ matrix.node-version }}")" -lt 10 ]]; then
-          nvm install --alias=npm 0.10
-          nvm use ${{ matrix.node-version }}
-          if [[ "$(npm -v)" == 1.1.* ]]; then
-            nvm exec npm npm install -g npm@1.1
-            ln -fs "$(which npm)" "$(dirname "$(nvm which npm)")/npm"
-          else
-            sed -i '1s;^.*$;'"$(printf '#!%q' "$(nvm which npm)")"';' "$(readlink -f "$(which npm)")"
-          fi
-          npm config set strict-ssl false
-        fi
-        dirname "$(nvm which ${{ matrix.node-version }})" >> "$GITHUB_PATH"
-
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
     - name: Remove npm module(s) ${{ matrix.npm-rm }}
       run: npm rm --silent --save-dev ${{ matrix.npm-rm }}
       if: matrix.npm-rm != ''
@@ -116,43 +121,41 @@ jobs:
     - name: Install Node.js dependencies
       run: npm install
 
-    - name: List environment
-      id: list_env
-      shell: bash
-      run: |
-        echo "node@$(node -v)"
-        echo "npm@$(npm -v)"
-        npm -s ls ||:
-        (npm -s ls --depth=0 ||:) | awk -F'[ @]' 'NR>1 && $2 { print $2 "=" $3 }' >> "$GITHUB_OUTPUT"
-
-    - name: Lint code
-      run: npm run lint
-
     - name: Run tests
       shell: bash
-      run: |
-        if npm -ps ls nyc | grep -q nyc; then
-          npm run test-ci
-        else
-          npm test
-        fi
+      run: npm run test-ci
 
-    - name: Collect code coverage
-      uses: coverallsapp/github-action@09b709cf6a16e30b0808ba050c7a6e8a5ef13f8d # master
-      if: steps.list_env.outputs.nyc != ''
+    - name: Upload code coverage
+      uses: actions/upload-artifact@v4
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        flag-name: run-${{ matrix.test_number }}
-        parallel: true
+        name: coverage-node-${{ matrix.node-version }}-${{ matrix.os }}
+        path: ./coverage/lcov.info
+        retention-days: 1
 
   coverage:
-    permissions:
-      checks: write  # for coverallsapp/github-action to create new checks
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-    - name: Upload code coverage
-      uses: coverallsapp/github-action@09b709cf6a16e30b0808ba050c7a6e8a5ef13f8d # master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        parallel-finished: true
+      needs: test
+      runs-on: ubuntu-latest
+      permissions:
+        contents: read
+        checks: write
+      steps:
+        - uses: actions/checkout@v4
+  
+        - name: Install lcov
+          shell: bash
+          run: sudo apt-get -y install lcov
+  
+        - name: Collect coverage reports
+          uses: actions/download-artifact@v4
+          with:
+            path: ./coverage
+            pattern: coverage-node-*
+  
+        - name: Merge coverage reports
+          shell: bash
+          run: find ./coverage -name lcov.info -exec printf '-a %q\n' {} \; | xargs lcov -o ./lcov.info
+  
+        - name: Upload coverage report
+          uses: coverallsapp/github-action@v2
+          with:
+            file: ./lcov.info
