@@ -327,4 +327,42 @@ describe('Error Handling', function () {
       sock.on('error', function () {})
     })
   })
+
+  it('should not error when close event fires while file write is pending', function (done) {
+    // Regression test for race condition where req.close fires before
+    // readableEnded is set, but file data has been fully received.
+    // This can happen with in-process test tools like supertest on ARM.
+    var form = new FormData()
+    var storage = multer.memoryStorage()
+    var upload = multer({ storage: storage }).single('small0')
+
+    form.append('small0', util.file('small0.dat'))
+
+    form.getLength(function (err, length) {
+      if (err) return done(err)
+
+      var req = new stream.PassThrough()
+
+      req.headers = {
+        'content-type': 'multipart/form-data; boundary=' + form.getBoundary(),
+        'content-length': length
+      }
+
+      // Simulate race condition: emit close shortly after piping completes
+      form.on('end', function () {
+        setImmediate(function () {
+          req.emit('close')
+        })
+      })
+
+      form.pipe(req)
+
+      upload(req, null, function (err) {
+        if (err) return done(new Error('Should not error: ' + err.message))
+        assert.ok(req.file, 'File should be present')
+        assert.ok(req.file.buffer, 'File buffer should be present')
+        done()
+      })
+    })
+  })
 })
