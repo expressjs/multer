@@ -280,6 +280,110 @@ describe('Error Handling', function () {
     })
   })
 
+  it('should allow client to finish sending body before error response', function (done) {
+    this.timeout(10000)
+
+    var upload = multer({ storage: multer.memoryStorage() }).single('expected')
+
+    var server = http.createServer(function (req, res) {
+      upload(req, res, function (err) {
+        res.statusCode = err ? 500 : 200
+        res.end(err ? err.code : 'OK')
+      })
+    })
+
+    server.listen(0, function () {
+      var port = server.address().port
+      var boundary = 'Drain' + Date.now()
+      var preamble = [
+        '--' + boundary,
+        'Content-Disposition: form-data; name="unexpected"; filename="test.bin"',
+        'Content-Type: application/octet-stream',
+        '',
+        ''
+      ].join('\r\n')
+      var footer = '\r\n--' + boundary + '--\r\n'
+      var chunk = Buffer.alloc(32 * 1024, 97)
+      var totalChunks = 24
+      var contentLength = Buffer.byteLength(preamble) +
+        (chunk.length * totalChunks) +
+        Buffer.byteLength(footer)
+
+      var sock = new net.Socket()
+      var socketError = null
+      var response = ''
+      var sentChunks = 0
+      var finished = false
+      var timeout = setTimeout(function () {
+        if (finished) return
+        finished = true
+        sock.destroy()
+        server.close(function () {
+          done(new Error('timed out while uploading request body'))
+        })
+      }, 8000)
+
+      function finish (err) {
+        if (finished) return
+        finished = true
+        clearTimeout(timeout)
+        server.close(function () {
+          done(err)
+        })
+      }
+
+      function writeChunk () {
+        if (sentChunks >= totalChunks) {
+          sock.write(footer)
+          return
+        }
+
+        sentChunks += 1
+        var canContinue = sock.write(chunk)
+
+        if (canContinue) {
+          setTimeout(writeChunk, 2)
+        } else {
+          sock.once('drain', function () {
+            setTimeout(writeChunk, 2)
+          })
+        }
+      }
+
+      sock.connect(port, '127.0.0.1', function () {
+        sock.write(
+          'POST / HTTP/1.1\r\n' +
+          'Host: localhost\r\n' +
+          'Connection: close\r\n' +
+          'Content-Type: multipart/form-data; boundary=' + boundary + '\r\n' +
+          'Content-Length: ' + contentLength + '\r\n\r\n'
+        )
+        sock.write(preamble)
+        writeChunk()
+      })
+
+      sock.on('data', function (buf) {
+        response += buf.toString('utf8')
+      })
+
+      sock.on('error', function (err) {
+        socketError = err
+      })
+
+      sock.on('close', function () {
+        if (socketError) return finish(socketError)
+
+        try {
+          assert.strictEqual(sentChunks, totalChunks)
+          assert.ok(/HTTP\/1\.1 500/.test(response))
+          finish()
+        } catch (err) {
+          finish(err)
+        }
+      })
+    })
+  })
+
   it('should not hang when client aborts multipart upload', function (done) {
     this.timeout(5000)
 
