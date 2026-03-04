@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.1.1
+
+- Fix [CVE-2026-3520](https://www.cve.org/CVERecord?id=CVE-2026-3520) ([GHSA-5528-5vmv-3xc2](https://github.com/expressjs/multer/security/advisories/GHSA-5528-5vmv-3xc2))
+- fix error/abort handling
+
 ## 2.1.0
 
 - Add `defParamCharset` option for UTF-8 filename support ([#1210](https://github.com/expressjs/multer/pull/1210))
