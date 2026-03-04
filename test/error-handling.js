@@ -5,6 +5,7 @@ var assert = require('assert')
 var os = require('os')
 var util = require('./_util')
 var multer = require('../')
+var removeUploadedFiles = require('../lib/remove-uploaded-files')
 var stream = require('stream')
 var FormData = require('form-data')
 var http = require('http')
@@ -429,6 +430,33 @@ describe('Error Handling', function () {
       })
 
       sock.on('error', function () {})
+    })
+  })
+
+  it('should not overflow call stack when cleaning up many files (memory storage sync remove)', function (done) {
+    // - without setImmediate in remove-uploaded-files, synchronous _removeFile (e.g. memory storage)
+    //     causes handleFile(0) -> remove -> cb() -> handleFile(1) -> ... in one stack,
+    //     leading to "Maximum call stack size exceeded"
+    // - use enough files to exceed typical node stack depth (~10k - 30k)
+
+    this.timeout(10 * 1000)
+
+    var fileCount = 25000
+    var uploadedFiles = []
+
+    for (var i = 0; i < fileCount; i++) {
+      uploadedFiles.push({ fieldname: 'file', originalname: 'f.dat', buffer: Buffer.alloc(0) })
+    }
+
+    function syncRemove (file, cb) {
+      delete file.buffer
+      cb(null)
+    }
+
+    removeUploadedFiles(uploadedFiles, syncRemove, function (err, errors) {
+      assert.ifError(err)
+      assert.strictEqual(errors.length, 0)
+      done()
     })
   })
 })
