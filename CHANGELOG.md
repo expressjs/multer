@@ -6,7 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## 2.1.1
 
 - Fix [CVE-2026-3520](https://www.cve.org/CVERecord?id=CVE-2026-3520) ([GHSA-5528-5vmv-3xc2](https://github.com/expressjs/multer/security/advisories/GHSA-5528-5vmv-3xc2))
-
+- fix error/abort handling
 
 ## 2.1.0
 
