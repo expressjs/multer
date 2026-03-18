@@ -66,6 +66,70 @@ describe('Error Handling', function () {
     })
   })
 
+  it('should accept file exactly at fileSize limit', function (done) {
+    // tiny0.dat is 122 bytes - set limit to exactly that
+    var form = new FormData()
+    var parser = withLimits({ fileSize: 122 }, [
+      { name: 'tiny0', maxCount: 1 }
+    ])
+
+    form.append('tiny0', util.file('tiny0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.ifError(err)
+      assert.strictEqual(req.files.tiny0[0].size, 122)
+      done()
+    })
+  })
+
+  it('should reject file 1 byte over fileSize limit', function (done) {
+    // tiny0.dat is 122 bytes - set limit to 121 (1 byte less)
+    var form = new FormData()
+    var parser = withLimits({ fileSize: 121 }, [
+      { name: 'tiny0', maxCount: 1 }
+    ])
+
+    form.append('tiny0', util.file('tiny0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.strictEqual(err.code, 'LIMIT_FILE_SIZE')
+      assert.strictEqual(err.field, 'tiny0')
+      done()
+    })
+  })
+
+  it('should accept empty file when fileSize limit is 0', function (done) {
+    // empty.dat is 0 bytes
+    var form = new FormData()
+    var parser = withLimits({ fileSize: 0 }, [
+      { name: 'empty', maxCount: 1 }
+    ])
+
+    form.append('empty', util.file('empty.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.ifError(err)
+      assert.strictEqual(req.files.empty[0].size, 0)
+      done()
+    })
+  })
+
+  it('should reject non-empty file when fileSize limit is 0', function (done) {
+    // tiny1.dat is 7 bytes
+    var form = new FormData()
+    var parser = withLimits({ fileSize: 0 }, [
+      { name: 'tiny1', maxCount: 1 }
+    ])
+
+    form.append('tiny1', util.file('tiny1.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.strictEqual(err.code, 'LIMIT_FILE_SIZE')
+      assert.strictEqual(err.field, 'tiny1')
+      done()
+    })
+  })
+
   it('should respect file count limit', function (done) {
     var form = new FormData()
     var parser = withLimits({ files: 1 }, [
