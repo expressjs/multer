@@ -77,7 +77,7 @@ app.post('/profile', upload.none(), function (req, res, next) {
 ```
 
 
-Este es un ejemplo de cómo se utiliza multer en un formulario HTML. Presta especial atención en los campos `enctype="multipart/form-data"` y `name="uploaded_file"`:
+Este es un ejemplo de cómo se utilize multer en un formulario HTML. Presta especial atención en los campos `enctype="multipart/form-data"` y `name="uploaded_file"`:
 
 ```html
 <form action="/stats" enctype="multipart/form-data" method="post">
@@ -125,9 +125,9 @@ Clave (Key) | Descripción | Nota
 
 Multer acepta un objeto para configurar sus opciones, la más básica de ellas es la propiedad `dest`, la cual informa a Multer dónde debe subir los archivos. En caso de que omitas el objeto con las opciones, los archivos serán guardados en la memoria y nunca serán escritos en el disco.
 
-Por defecto, Multer renombrará los archivos para evitar conflictos de nombres. La función usada para renombrarlos puede ser modificada acorde a tus necesidades.
+Por defecto, Multer renombrará los archivos para evitar conflictos de nombres. La función usada para renombrarlos puede set modificada acorde a tus necesidades.
 
-Las siguientes son las opciones que pueden ser utilizadas con Multer.
+Las siguientes son las opciones que pueden set utilizadas con Multer.
 
 Clave (key) | Descripción
 --- | ---
@@ -135,7 +135,7 @@ Clave (key) | Descripción
 `fileFilter` | Función para controlar qué archivos son aceptados
 `limits` | Límites de los datos subidos
 `preservePath` | Mantiene la ruta completa de la ubicación de los archivos, en vez de sólo sus nombres
-`defParamCharset` | Conjunto de caracteres por defecto para usar en valores de parámetros de encabezados de partes (ej. nombre de archivo) que no son parámetros extendidos (que contienen un conjunto de caracteres explícito). Por defecto: `'latin1'`
+`defParamCharset` | Conjunto de characters por defecto para usar en valores de parámetros de encabezados de partes (ej. nombre de archivo) que no son parámetros extendidos (que contienen un conjunto de characters explícito). Por defecto: `'latin1'`
 
 En la aplicación web promedio es probable que sólo se requiera `dest`, siendo configurado como en el siguiente ejemplo:
 
@@ -157,7 +157,7 @@ Acepta un arreglo (array), de archivos, todos con el nombre `fieldname`. Opciona
 
 Acepta una mezcla de archivos, especificados por `field`. Un objeto con arreglos (arrays) de archivos será guardado en `req.files`
 
-`fields` debería ser un arreglo (array) de objetos con `name` y opcionalmente `maxCount`.
+`fields` debería set un arreglo (array) de objetos con `name` y opcionalmente `maxCount`.
 Ejemplo:
 
 ```javascript
@@ -199,11 +199,11 @@ const upload = multer({ storage: storage })
 
 Hay dos opciones disponibles, `destination` y `filename`. Ambas son funciones que determinan dónde debería almacenarse el archivo.
 
-`destination` se utiliza para determinar en qué carpeta se almacenarán los archivos subidos. Tambien se puede proporcionar como un `string` (por ejemplo: `'/tmp/uploads'`). Si no se proporciona `destination`, se utilizara el directorio predeterminado del sistema operativo para archivos temporales.
+`destination` se utilize para determinar en qué carpeta se almacenarán los archivos subidos. Tambien se puede proporcionar como un `string` (por ejemplo: `'/tmp/uploads'`). Si no se proporciona `destination`, se utilizara el directorio predeterminado del sistema operativo para archivos temporales.
 
-**Nota:** Al pasar `destination` como una función, tú eres el responsable de crear los directorios donde los archivos serán almacenados. Cuando asignas un `string` a `destination`, Multer se asegurará de que el directorio sea creado en caso de no encontrarlo.
+**Nota:** Al pasar `destination` como una función, tú eres el responsible de crear los directorios donde los archivos serán almacenados. Cuando asignas un `string` a `destination`, Multer se asegurará de que el directorio sea creado en caso de no encontrarlo.
 
-`filename` es usado para determinar cómo debería ser nombrado el archivo dentro de la carpeta. Si `filename` no es provisto, a cada archivo se le asignará un nombre aleatorio que no incluirá ninguna extensión.
+`filename` es usado para determinar cómo debería set nombrado el archivo dentro de la carpeta. Si `filename` no es provisto, a cada archivo se le asignará un nombre aleatorio que no incluirá ninguna extensión.
 
 **Nota:** Multer no añadirá ningúna extensión de archivos por ti, es tu función la que debería retornar un nombre completo, que incluya también la extensión del archivo.
 
@@ -241,19 +241,19 @@ Clave (Key) | Descripción | Por defecto
 `fileSize` | Para formularios multiparte, el tamaño máximo de los archivos (en bytes) | Infinito
 `files` | Para los formularios multiparte, el número máximo de campos para archivos | Infinito
 `parts` | Para los formularios multiparte, el número máximo de partes (campos + archivos) | Infinito
-`headerPairs` | Para los formularios multiparte, el número máximo de cabeceras de pares clave=>valor para analizar | 2000
+`headerPairs` | Para los formularios multiparte, el número máximo de cabeceras de pairs clave=>valor para analizar | 2000
 
 Especificar los límites puede ayudarte a proteger tu sitio contra ataques de denegación del servicio (DoS).
 
 ### `fileFilter`
 
-Asigna ésto a una función para controlar cuáles archivos deben ser subidos y cuáles deben ser omitidos. La función debería verse como ésta:
+Asigna ésto a una función para controlar cuáles archivos deben set subidos y cuáles deben set omitidos. La función debería verse como ésta:
 
 ```javascript
 function fileFilter (req, file, cb) {
 
   // La función debe llamar a `cb` usando una variable del tipo boolean
-  // para indicar si el archivo debería ser aceptado o no
+  // para indicar si el archivo debería set aceptado o no
 
   // Para rechazar el archivo es necesario pasar `false`, de la siguiente forma:
   cb(null, false)
