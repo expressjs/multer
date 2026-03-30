@@ -103,7 +103,7 @@ Kalit(key) | Ta'rif                                 | Eslatma
 Multer qo'shimcha ob'ekt qabul qiladi, ulardan eng asosiysi - `dest`,
 Multerga fayllarni qayerga yuklash kerakligini aytadigan xususiyat. Agarda siz qo'shimcha(`options`) ob'ektni tashlab ketsangiz, fayllar xotirada saqlanadi va hech qachon diskka yozilmaydi.
 
-Standart holatda - Multer nomlashda kelib chiqishi mumkin bo'lgan muammolarni oldini olish uchun fayllar nomini o'zgartiradi. O'z talablaringizga mos ravishda nomlash funksiyasini sozlay olashingiz mumkin.
+Standard holatda - Multer nomlashda kelib chiqishi mumkin bo'lgan muammolarni oldini olish uchun fayllar nomini o'zgartiradi. O'z talablaringizga mos ravishda nomlash funksiyasini sozlay olashingiz mumkin.
 
 Quyidagilar Multerga qo'shimcha qiymat sifati berilishi mumkin:
 
@@ -113,7 +113,7 @@ Kalit(key) | Ta'rif
 `fileFilter` | Qaysi fayllar qabul qilinishini boshqarish funksiyasi
 `limits` | Yuklash chegarasi
 `preservePath` | Asosiy nom o'rniga fayllarning to'liq yo'lini saqlash
-`defParamCharset` | Kengaytirilgan parametrlar bo'lmagan qism sarlavha parametrlari qiymatlari (masalan, fayl nomi) uchun ishlatish uchun standart belgilar to'plami (aniq belgilar to'plamini o'z ichiga olmaydi). Standart: `'latin1'`
+`defParamCharset` | Kengaytirilgan parametrlar bo'lmagan qism sarlavha parametrlari qiymatlari (masalan, fayl nomi) uchun ishlatish uchun standard belgilar to'plami (aniq belgilar to'plamini o'z ichiga olmaydi). Standard: `'latin1'`
 
 O'rtacha veb-ilovada faqat `dest` kerak bo'lishi mumkin va quyidagicha sozlanishi mumkin
 
@@ -186,7 +186,7 @@ Har bir funksiya `req` so'rovini va fayl haqida ma'lumotlarni (`file`) olish uch
 
 Diqqat qiling, `req.body` hali to'liq to'ldirilmagan bo'lishi mumkin. Bu mijozning maydon(field)larni va fayllarni serverga qanday yuborishiga bog'liq bo'ladi.
 
-Callback funktsiyasida ishlatiladigan chaqirish tartibini tushunish uchun (birinchi parametr sifatida null o‘tkazish talab etilishi) ko‘rish uchun quyidagi manzilga murojaat qiling:
+Callback funktsiyasida ishlatiladigan chaqirish tartibini tushunish uchun (birinchi parameter sifatida null o‘tkazish talab etilishi) ko‘rish uchun quyidagi manzilga murojaat qiling:
 [Node.js da xatoliklarni ushlash](https://web.archive.org/web/20220417042018/https://www.joyent.com/node-js/production/design/errors)
 
 #### `MemoryStorage`
@@ -203,7 +203,7 @@ Xotirada saqlash paytida, fayl ma'lumotlari `buffer` deb nomlanadigan maydonni o
 
 ### `limits`
 
-Quyidagi xususiyatlar o'lchov(limit)larni aniqlaydigan obyekt. Multer ushbu obyektni to'g'ridan-to'g'ri busboy ga o'tkazadi va xususiyatlar tafsilotlari [busboy sahifasida](https://github.com/mscdex/busboy#busboy-methods)dan topishingiz mumkin.
+Quyidagi xususiyatlar o'lchov(limit)larni aniqlaydigan object. Multer ushbu obyektni to'g'ridan-to'g'ri busboy ga o'tkazadi va xususiyatlar tafsilotlari [busboy sahifasida](https://github.com/mscdex/busboy#busboy-methods)dan topishingiz mumkin.
 
 Quyidagi butun qiymatlar mavjud:
 
@@ -243,7 +243,7 @@ function fileFilter (req, file, cb) {
 
 ## Xatolar bilan ishlash
 
-Xatoga duch kelganda, Multer xatoni Expressga yuboradi. [standart express usuli](http://expressjs.com/guide/error-handling.html)dan foydalanib xatoni tartibliroq chiqarishingiz mumkin.
+Xatoga duch kelganda, Multer xatoni Expressga yuboradi. [standard express usuli](http://expressjs.com/guide/error-handling.html)dan foydalanib xatoni tartibliroq chiqarishingiz mumkin.
 
 Agar siz Multerdan chiqqan xatolarni aniqlamoqchi bo'lsangiz o'zingiz `middleware` funksiya yozishingiz mumkin. Shuningdek, agar siz faqat [Multer xatolarini](https://github.com/expressjs/multer/blob/main/lib/multer-error.js) ushlamoqchi bo'lsangiz, siz `multer` ob'ektiga yozilgan `MulterError` class ni ishlatishingiz mumkin (masalan, `err instanceof multer.MulterError`).
 
