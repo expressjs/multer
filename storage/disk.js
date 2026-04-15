@@ -15,6 +15,14 @@ function getDestination (req, file, cb) {
 
 function DiskStorage (opts) {
   this.getFilename = (opts.filename || getFilename)
+  // When `flush` is truthy, the disk storage asks the underlying write
+  // stream to fdatasync() the uploaded file before `_handleFile` reports
+  // success, so callers that expect the data to survive a crash or power
+  // loss (see #1381) can rely on it. The option is forwarded as
+  // `fs.createWriteStream(..., { flush: true })`, which was added in
+  // Node.js 20.10 / 21.0. On older runtimes the option is ignored and
+  // behavior falls back to the previous buffered-write semantics.
+  this.flush = opts.flush === true
 
   if (typeof opts.destination === 'string') {
     fs.mkdirSync(opts.destination, { recursive: true })
@@ -34,7 +42,8 @@ DiskStorage.prototype._handleFile = function _handleFile (req, file, cb) {
       if (err) return cb(err)
 
       var finalPath = path.join(destination, filename)
-      var outStream = fs.createWriteStream(finalPath)
+      var writeStreamOptions = that.flush ? { flush: true } : undefined
+      var outStream = fs.createWriteStream(finalPath, writeStreamOptions)
 
       file.stream.pipe(outStream)
       outStream.on('error', cb)

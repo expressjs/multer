@@ -185,4 +185,59 @@ describe('Disk Storage', function () {
       done()
     })
   })
+
+  it('should support the flush option for durable uploads (#1381)', function (done) {
+    var calls = []
+    var realCreateWriteStream = fs.createWriteStream
+    fs.createWriteStream = function (filePath, options) {
+      calls.push({ filePath: filePath, options: options })
+      return realCreateWriteStream.apply(fs, arguments)
+    }
+
+    var storage = multer.diskStorage({ destination: uploadDir, flush: true })
+    var flushUpload = multer({ storage: storage })
+    var parser = flushUpload.single('small0')
+
+    var form = new FormData()
+    form.append('small0', util.file('small0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      fs.createWriteStream = realCreateWriteStream
+      assert.ifError(err)
+
+      assert.strictEqual(calls.length, 1)
+      assert.ok(calls[0].options && calls[0].options.flush === true,
+        'expected createWriteStream to be called with { flush: true }')
+
+      assert.strictEqual(req.file.fieldname, 'small0')
+      assert.strictEqual(req.file.size, 1778)
+      assert.strictEqual(util.fileSize(req.file.path), 1778)
+
+      done()
+    })
+  })
+
+  it('should default to buffered writes when flush is not set', function (done) {
+    var calls = []
+    var realCreateWriteStream = fs.createWriteStream
+    fs.createWriteStream = function (filePath, options) {
+      calls.push({ filePath: filePath, options: options })
+      return realCreateWriteStream.apply(fs, arguments)
+    }
+
+    var parser = upload.single('small0')
+    var form = new FormData()
+    form.append('small0', util.file('small0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      fs.createWriteStream = realCreateWriteStream
+      assert.ifError(err)
+
+      assert.strictEqual(calls.length, 1)
+      assert.strictEqual(calls[0].options, undefined,
+        'expected createWriteStream to be called with no options when flush is not set')
+
+      done()
+    })
+  })
 })
