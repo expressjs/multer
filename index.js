@@ -18,6 +18,9 @@ function Multer (options) {
   }
 
   this.limits = options.limits
+  if (this.limits && this.limits.fileSize != null && !Number.isInteger(this.limits.fileSize)) {
+    throw new TypeError('Expected limits.fileSize to be an integer')
+  }
   this.preservePath = options.preservePath
   this.defParamCharset = options.defParamCharset || 'latin1'
   this.fileFilter = options.fileFilter || allowAll

@@ -459,4 +459,16 @@ describe('Error Handling', function () {
       done()
     })
   })
+
+  it('should throw TypeError when fileSize limit is a float', function () {
+    assert.throws(function () {
+      multer({ limits: { fileSize: 1024.5 } })
+    }, TypeError)
+  })
+
+  it('should accept integer fileSize limit', function () {
+    assert.doesNotThrow(function () {
+      multer({ limits: { fileSize: 1024 } })
+    })
+  })
 })
