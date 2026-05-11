@@ -34,6 +34,37 @@ describe('Fields', function () {
     })
   })
 
+  it('should preserve existing body properties', function (done) {
+    var form = new FormData()
+
+    form.append('name', 'Multer')
+
+    form.getLength(function (err, length) {
+      if (err) return done(err)
+
+      var req = new stream.PassThrough()
+
+      form.pipe(req)
+      req.body = {
+        auth: true,
+        limit: 66
+      }
+      req.headers = {
+        'content-type': 'multipart/form-data; boundary=' + form.getBoundary(),
+        'content-length': length
+      }
+
+      parser(req, null, function (err) {
+        assert.ifError(err)
+        assert.strictEqual(Object.getPrototypeOf(req.body), null)
+        assert.strictEqual(req.body.auth, true)
+        assert.strictEqual(req.body.limit, 66)
+        assert.strictEqual(req.body.name, 'Multer')
+        done()
+      })
+    })
+  })
+
   it('should process empty fields', function (done) {
     var form = new FormData()
 
