@@ -2,7 +2,10 @@
 
 var assert = require('assert')
 
+var fs = require('fs')
 var os = require('os')
+var temp = require('fs-temp')
+var rimraf = require('rimraf')
 var util = require('./_util')
 var multer = require('../')
 var removeUploadedFiles = require('../lib/remove-uploaded-files')
@@ -457,6 +460,88 @@ describe('Error Handling', function () {
       assert.ifError(err)
       assert.strictEqual(errors.length, 0)
       done()
+    })
+  })
+})
+
+it('should remove uploaded files if request is aborted before completion', function (done) {
+  this.timeout(5000)
+
+  temp.mkdir(function (err, uploadDir) {
+    if (err) return done(err)
+
+    var upload = multer({ storage: multer.diskStorage({ destination: uploadDir }) }).single('file')
+    var server = http.createServer(function (req, res) {
+      upload(req, res, function (err) {
+        assert(err)
+        var files = fs.readdirSync(uploadDir)
+        assert.strictEqual(files.length, 0)
+        clearTimeout(timer)
+        server.close(function () {
+          rimraf(uploadDir, function (cleanupErr) {
+            done(cleanupErr)
+          })
+        })
+      })
+    })
+
+    var timer = setTimeout(function () {
+      server.close(function () {
+        rimraf(uploadDir, function (cleanupErr) {
+          done(cleanupErr || new Error('middleware did not complete after client abort'))
+        })
+      })
+    }, 2000)
+
+    server.listen(0, function () {
+      var port = server.address().port
+      var boundary = 'Abort' + Date.now()
+      var preamble = [
+        '--' + boundary,
+        'Content-Disposition: form-data; name="file"; filename="test.bin"',
+        'Content-Type: application/octet-stream',
+        '',
+        ''
+      ].join('\r\n')
+      var footer = '\r\n--' + boundary + '--\r\n'
+      var chunk = Buffer.alloc(32 * 1024, 97)
+      var totalChunks = 5
+      var contentLength = Buffer.byteLength(preamble) +
+          (chunk.length * totalChunks) +
+          Buffer.byteLength(footer)
+
+      var sock = new net.Socket()
+      var sentChunks = 0
+      function writeChunk () {
+        if (sentChunks >= 3) {
+          sock.destroy()
+          return
+        }
+
+        sentChunks += 1
+        var canContinue = sock.write(chunk)
+        if (canContinue) {
+          setTimeout(writeChunk, 2)
+        } else {
+          sock.once('drain', function () {
+            setTimeout(writeChunk, 2)
+          })
+        }
+      }
+
+      sock.connect(port, '127.0.0.1', function () {
+        sock.write(
+          'POST / HTTP/1.1\r\n' +
+            'Host: localhost\r\n' +
+            'Connection: close\r\n' +
+            'Content-Type: multipart/form-data; boundary=' + boundary + '\r\n' +
+            'Content-Length: ' + contentLength + '\r\n\r\n'
+        )
+        sock.write(preamble)
+        writeChunk()
+      })
+
+      sock.on('error', function () {})
     })
   })
 })
