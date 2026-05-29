@@ -68,7 +68,7 @@ const uploadMiddleware = upload.fields([
   { name: "gallery", maxCount: 8 },
 ]);
 app.post("/cool-profile", uploadMiddleware, function (req, res, next) {
-  
+
 // req.files bir nesnedir (String -> Array) ve burada fieldname (alan adı) anahtar, değer ise dosyaların bulunduğu bir dizidir.
 // Örneğin:
 // req.files['avatar'][0] -> File
@@ -313,10 +313,10 @@ function fileFilter(req, file, cb) {
 }
 ```
 
-## Hata Yönetimi 
+## Hata Yönetimi
 
 Bir hatayla karşılaşıldığında, Multer hatayı Express'e devreder.
-[Standart Express yöntemi](http://expressjs.com/guide/error-handling.html) kullanarak güzel bir hata sayfası görüntüleyebilirsiniz.
+[Standart Express yöntemi](https://expressjs.com/en/guide/error-handling) kullanarak güzel bir hata sayfası görüntüleyebilirsiniz.
 
 Özellikle Multer'dan gelen hataları yakalamak istiyorsanız,
 orta katman işlevini kendiniz çağırabilirsiniz. Ayrıca, yalnızca [Multer hatalarını](https://github.com/expressjs/multer/blob/main/lib/multer-error.js) yakalamak istiyorsanız, `multer` nesnesine eklenmiş olan `MulterError` sınıfını kullanabilirsiniz (ör. `err instanceof multer.MulterError`).

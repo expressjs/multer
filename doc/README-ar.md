@@ -278,7 +278,7 @@ function fileFilter (req, file, cb) {
 ## معالجة الأخطاء
 
 عند مواجهة خطأ ، سيقوم Multer بتفويض الخطأ إلى Express. يمكنك
-عرض صفحة خطأ لطيفة باستخدام [طريقة Express القياسية](http://expressjs.com/guide/error-handling.html).
+عرض صفحة خطأ لطيفة باستخدام [طريقة Express القياسية](https://expressjs.com/en/guide/error-handling).
 
 إذا كنت تريد إنتقاء الأخطاء والحصول على [أخطاء Multer فقط](https://github.com/expressjs/multer/blob/main/lib/multer-error.js)، فيمكنك نداء بدالة الوسيطة من قبل نفسك. أيضًا ، إذا كنت تريد التقاط أخطاء Multer فقط ، فيمكنك استخدام صنف `MulterError` المتصل بالكائن` multer` نفسه (على سبيل المثال `err instanceof multer.MulterError`).
 
