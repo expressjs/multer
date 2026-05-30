@@ -6,6 +6,11 @@ var deepEqual = require('deep-equal')
 var util = require('./_util')
 var multer = require('../')
 var FormData = require('form-data')
+var tiny0Size = util.fixtureSize('tiny0.dat')
+var small0Size = util.fixtureSize('small0.dat')
+var small1Size = util.fixtureSize('small1.dat')
+var mediumSize = util.fixtureSize('medium.dat')
+var largeSize = util.fixtureSize('large.jpg')
 
 describe('Memory Storage', function () {
   var upload
@@ -29,8 +34,8 @@ describe('Memory Storage', function () {
 
       assert.strictEqual(req.file.fieldname, 'small0')
       assert.strictEqual(req.file.originalname, 'small0.dat')
-      assert.strictEqual(req.file.size, 1778)
-      assert.strictEqual(req.file.buffer.length, 1778)
+      assert.strictEqual(req.file.size, small0Size)
+      assert.strictEqual(req.file.buffer.length, small0Size)
 
       done()
     })
@@ -104,8 +109,8 @@ describe('Memory Storage', function () {
 
       assert.strictEqual(req.files.tiny0[0].fieldname, 'tiny0')
       assert.strictEqual(req.files.tiny0[0].originalname, 'tiny0.dat')
-      assert.strictEqual(req.files.tiny0[0].size, 122)
-      assert.strictEqual(req.files.tiny0[0].buffer.length, 122)
+      assert.strictEqual(req.files.tiny0[0].size, tiny0Size)
+      assert.strictEqual(req.files.tiny0[0].buffer.length, tiny0Size)
 
       assert.strictEqual(req.files.tiny1[0].fieldname, 'tiny1')
       assert.strictEqual(req.files.tiny1[0].originalname, 'tiny1.dat')
@@ -114,23 +119,23 @@ describe('Memory Storage', function () {
 
       assert.strictEqual(req.files.small0[0].fieldname, 'small0')
       assert.strictEqual(req.files.small0[0].originalname, 'small0.dat')
-      assert.strictEqual(req.files.small0[0].size, 1778)
-      assert.strictEqual(req.files.small0[0].buffer.length, 1778)
+      assert.strictEqual(req.files.small0[0].size, small0Size)
+      assert.strictEqual(req.files.small0[0].buffer.length, small0Size)
 
       assert.strictEqual(req.files.small1[0].fieldname, 'small1')
       assert.strictEqual(req.files.small1[0].originalname, 'small1.dat')
-      assert.strictEqual(req.files.small1[0].size, 315)
-      assert.strictEqual(req.files.small1[0].buffer.length, 315)
+      assert.strictEqual(req.files.small1[0].size, small1Size)
+      assert.strictEqual(req.files.small1[0].buffer.length, small1Size)
 
       assert.strictEqual(req.files.medium[0].fieldname, 'medium')
       assert.strictEqual(req.files.medium[0].originalname, 'medium.dat')
-      assert.strictEqual(req.files.medium[0].size, 13196)
-      assert.strictEqual(req.files.medium[0].buffer.length, 13196)
+      assert.strictEqual(req.files.medium[0].size, mediumSize)
+      assert.strictEqual(req.files.medium[0].buffer.length, mediumSize)
 
       assert.strictEqual(req.files.large[0].fieldname, 'large')
       assert.strictEqual(req.files.large[0].originalname, 'large.jpg')
-      assert.strictEqual(req.files.large[0].size, 2413677)
-      assert.strictEqual(req.files.large[0].buffer.length, 2413677)
+      assert.strictEqual(req.files.large[0].size, largeSize)
+      assert.strictEqual(req.files.large[0].buffer.length, largeSize)
 
       done()
     })

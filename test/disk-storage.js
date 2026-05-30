@@ -10,6 +10,11 @@ var multer = require('../')
 var temp = require('fs-temp')
 var rimraf = require('rimraf')
 var FormData = require('form-data')
+var small0Size = util.fixtureSize('small0.dat')
+var small1Size = util.fixtureSize('small1.dat')
+var tiny0Size = util.fixtureSize('tiny0.dat')
+var mediumSize = util.fixtureSize('medium.dat')
+var largeSize = util.fixtureSize('large.jpg')
 
 describe('Disk Storage', function () {
   var uploadDir, upload
@@ -42,8 +47,8 @@ describe('Disk Storage', function () {
 
       assert.strictEqual(req.file.fieldname, 'small0')
       assert.strictEqual(req.file.originalname, 'small0.dat')
-      assert.strictEqual(req.file.size, 1778)
-      assert.strictEqual(util.fileSize(req.file.path), 1778)
+      assert.strictEqual(req.file.size, small0Size)
+      assert.strictEqual(util.fileSize(req.file.path), small0Size)
 
       done()
     })
@@ -116,8 +121,8 @@ describe('Disk Storage', function () {
 
       assert.strictEqual(req.files.tiny0[0].fieldname, 'tiny0')
       assert.strictEqual(req.files.tiny0[0].originalname, 'tiny0.dat')
-      assert.strictEqual(req.files.tiny0[0].size, 122)
-      assert.strictEqual(util.fileSize(req.files.tiny0[0].path), 122)
+      assert.strictEqual(req.files.tiny0[0].size, tiny0Size)
+      assert.strictEqual(util.fileSize(req.files.tiny0[0].path), tiny0Size)
 
       assert.strictEqual(req.files.tiny1[0].fieldname, 'tiny1')
       assert.strictEqual(req.files.tiny1[0].originalname, 'tiny1.dat')
@@ -126,23 +131,23 @@ describe('Disk Storage', function () {
 
       assert.strictEqual(req.files.small0[0].fieldname, 'small0')
       assert.strictEqual(req.files.small0[0].originalname, 'small0.dat')
-      assert.strictEqual(req.files.small0[0].size, 1778)
-      assert.strictEqual(util.fileSize(req.files.small0[0].path), 1778)
+      assert.strictEqual(req.files.small0[0].size, small0Size)
+      assert.strictEqual(util.fileSize(req.files.small0[0].path), small0Size)
 
       assert.strictEqual(req.files.small1[0].fieldname, 'small1')
       assert.strictEqual(req.files.small1[0].originalname, 'small1.dat')
-      assert.strictEqual(req.files.small1[0].size, 315)
-      assert.strictEqual(util.fileSize(req.files.small1[0].path), 315)
+      assert.strictEqual(req.files.small1[0].size, small1Size)
+      assert.strictEqual(util.fileSize(req.files.small1[0].path), small1Size)
 
       assert.strictEqual(req.files.medium[0].fieldname, 'medium')
       assert.strictEqual(req.files.medium[0].originalname, 'medium.dat')
-      assert.strictEqual(req.files.medium[0].size, 13196)
-      assert.strictEqual(util.fileSize(req.files.medium[0].path), 13196)
+      assert.strictEqual(req.files.medium[0].size, mediumSize)
+      assert.strictEqual(util.fileSize(req.files.medium[0].path), mediumSize)
 
       assert.strictEqual(req.files.large[0].fieldname, 'large')
       assert.strictEqual(req.files.large[0].originalname, 'large.jpg')
-      assert.strictEqual(req.files.large[0].size, 2413677)
-      assert.strictEqual(util.fileSize(req.files.large[0].path), 2413677)
+      assert.strictEqual(req.files.large[0].size, largeSize)
+      assert.strictEqual(util.fileSize(req.files.large[0].path), largeSize)
 
       done()
     })
