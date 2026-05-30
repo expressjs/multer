@@ -66,6 +66,18 @@ describe('Error Handling', function () {
     })
   })
 
+  it('should allow file that is exactly at file size limit', function (done) {
+    var form = new FormData()
+    var parser = multer({ storage: multer.memoryStorage(), limits: { fileSize: 1500 } }).single('small0')
+
+    form.append('small0', Buffer.alloc(1500), 'small0.txt')
+
+    util.submitForm(parser, form, function (err) {
+      assert.ifError(err)
+      done()
+    })
+  })
+
   it('should respect file count limit', function (done) {
     var form = new FormData()
     var parser = withLimits({ files: 1 }, [
