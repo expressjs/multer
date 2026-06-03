@@ -207,12 +207,17 @@ where you are handling the uploaded files.
 The disk storage engine gives you full control on storing files to disk.
 
 ```javascript
+const crypto = require('crypto')
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, '/tmp/my-uploads')
   },
   filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    // Use a cryptographically strong suffix so filenames cannot be
+    // guessed or enumerated from a weak PRNG like `Math.random()`. The
+    // built-in `DiskStorage` default uses the same approach.
+    const uniqueSuffix = crypto.randomBytes(16).toString('hex')
     cb(null, file.fieldname + '-' + uniqueSuffix)
   }
 })
