@@ -216,13 +216,17 @@ Bu işlevi yalnızca, yüklenen dosyaları işlediğiniz rotalarda kullanın.
 Disk depolama motoru, dosyaları diske kaydetme konusunda size tam kontrol sağlar.
 
 ```javascript
+const crypto = require("crypto");
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "/tmp/my-uploads");
   },
   filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, file.fieldname + "-" + uniqueSuffix);
+    crypto.randomBytes(16, function (err, raw) {
+      if (err) return cb(err);
+      cb(null, file.fieldname + "-" + raw.toString("hex"));
+    });
   },
 });
 
