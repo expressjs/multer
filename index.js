@@ -4,6 +4,24 @@ var diskStorage = require('./storage/disk')
 var memoryStorage = require('./storage/memory')
 var MulterError = require('./lib/multer-error')
 
+function checkLimitValue (limitKey, value) {
+  if (!Number.isInteger(value) || value < 0) {
+    throw new MulterError('LIMIT_OPTION_ERROR', `option "${limitKey}" value: ${value}`)
+  }
+  return value
+}
+
+function getLimits (limitObj) {
+  if (!limitObj || typeof limitObj !== 'object' || Array.isArray(limitObj)) {
+    throw new TypeError('Expected limits to be a plain object')
+  }
+  var limits = {}
+  Object.keys(limitObj).forEach(key => {
+    limits[key] = checkLimitValue(key, limitObj[key])
+  })
+  return limits
+}
+
 function allowAll (req, file, cb) {
   cb(null, true)
 }
@@ -17,7 +35,7 @@ function Multer (options) {
     this.storage = memoryStorage()
   }
 
-  this.limits = options.limits
+  this.limits = options.limits ? getLimits(options.limits) : options.limits
   this.preservePath = options.preservePath
   this.defParamCharset = options.defParamCharset || 'latin1'
   this.fileFilter = options.fileFilter || allowAll
@@ -94,7 +112,7 @@ function multer (options) {
     return new Multer({})
   }
 
-  if (typeof options === 'object' && options !== null) {
+  if (typeof options === 'object' && options !== null && !Array.isArray(options)) {
     return new Multer(options)
   }
 
