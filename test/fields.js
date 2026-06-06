@@ -34,6 +34,33 @@ describe('Fields', function () {
     })
   })
 
+  it('should process multipart boundary containing equals sign', function (done) {
+    var boundary = 'abc=def'
+    var body = Buffer.from(
+      '--' + boundary + '\r\n' +
+      'Content-Disposition: form-data; name="name"\r\n' +
+      '\r\n' +
+      'Multer\r\n' +
+      '--' + boundary + '--\r\n'
+    )
+    var req = new stream.PassThrough()
+
+    req.end(body)
+    req.method = 'POST'
+    req.headers = {
+      'content-type': 'multipart/form-data; boundary=' + boundary,
+      'content-length': body.length
+    }
+
+    parser(req, null, function (err) {
+      assert.ifError(err)
+      assert(deepEqual(req.body, {
+        name: 'Multer'
+      }))
+      done()
+    })
+  })
+
   it('should process empty fields', function (done) {
     var form = new FormData()
 
