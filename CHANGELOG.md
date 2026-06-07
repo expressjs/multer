@@ -71,7 +71,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Docs: Fix broken link in Chinese Readme (#730)
 - Docs: Fix typo in Russian README (#738)
 - Docs: Add unit for fieldSize in busboy limit params (#734)
-- Internal: Make unit tests comaptible with Node.js 13.x (#752)
+- Internal: Make unit tests compatible with Node.js 13.x (#752)
 
 ## 1.4.1 - 2018-10-11
 
