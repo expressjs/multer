@@ -16,7 +16,7 @@
 - [简体中文](https://github.com/expressjs/multer/blob/main/doc/README-zh-cn.md) (الصينية)
 - [한국어](https://github.com/expressjs/multer/blob/main/doc/README-ko.md) (الكورية)
 - [Русский язык](https://github.com/expressjs/multer/blob/main/doc/README-ru.md) (الروسية)
-- [Việt Nam](https://github.com/expressjs/multer/blob/main/doc/README-vi.md) (الفتنامية)
+- [Việt Name](https://github.com/expressjs/multer/blob/main/doc/README-vi.md) (الفتنامية)
 - [Português](https://github.com/expressjs/multer/blob/main/doc/README-pt-br.md) (البرتغالية)
 
 

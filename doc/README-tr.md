@@ -19,7 +19,7 @@ Bu README dosyası ayrıca diğer dillerde de mevcuttur:
 | [Русский язык](https://github.com/expressjs/multer/blob/main/doc/README-ru.md) | Rusça           |
 | [Español](https://github.com/expressjs/multer/blob/main/doc/README-es.md)      | İspanyolca      |
 | [O'zbek tili](https://github.com/expressjs/multer/blob/main/doc/README-uz.md)  | Özbekçe         |
-| [Việt Nam](https://github.com/expressjs/multer/blob/main/doc/README-vi.md)     | Vietnamca       |
+| [Việt Name](https://github.com/expressjs/multer/blob/main/doc/README-vi.md)     | Vietnamca       |
 | [Türkçe](https://github.com/expressjs/multer/blob/main/doc/README-tr.md)       | Türkçe          |
 
 ## Kurulum
@@ -205,7 +205,7 @@ Ağ üzerinden gelen tüm dosyaları kabul eder. Bir dizi dosya
 `req.files` içinde saklanacaktır.
 
 **UYARI:** Kullanıcıların yüklediği dosyaları her zaman kendiniz işlediğinizden emin olun.
-Kötü niyetli bir kullanıcı, sizin öngörmediğiniz bir rotaya dosya yükleyebileceğinden, multer'ı asla global bir orta katman yazılımı olarak eklemeyin.
+Kötü niyetli bir kullanıcı, sizing öngörmediğiniz bir rotaya dosya yükleyebileceğinden, multer'ı asla global bir orta katman yazılımı olarak eklemeyin.
 Bu işlevi yalnızca, yüklenen dosyaları işlediğiniz rotalarda kullanın.
 
 
@@ -238,13 +238,13 @@ saklanacağını belirlemek için kullanılır. Bu, `string` olarak da verilebil
 dizini kullanılır.
 
 **Not:** `destination` işlevini kullanarak dizin oluşturmaktan siz
-sorumlusunuz. Bir string aktardığınızda, multer dizin sizin için
+sorumlusunuz. Bir string aktardığınızda, multer dizin sizing için
 oluşturulduğundan emin olacaktır.
 
 `filename`, dosyanın klasör içinde nasıl adlandırılacağını belirlemek için kullanılır.
 `filename` belirtilmezse, her dosyaya dosya uzantısı içermeyen rastgele bir ad verilir.
 
-**Not:** Multer sizin için herhangi bir dosya uzantısı eklemez, işleviniz
+**Not:** Multer sizing için herhangi bir dosya uzantısı eklemez, işleviniz
 dosya uzantısı ile birlikte tam bir dosya adı döndürmelidir.
 
 Her fonksiyona, karar vermeyi kolaylaştırmak için hem istek (`req`) hem de dosya
@@ -253,7 +253,7 @@ hakkında bazı bilgiler (`file`) aktarılır.
 `req.body`'nin henüz tam olarak doldurulmamış olabileceğini unutmayın. Bu,
 istemcinin alanları ve dosyaları sunucuya aktarma sırasına bağlıdır.
 
-Geri aramada kullanılan çağırma kuralını anlamak için (ilk parametre olarak null geçilmesi gerekir),
+Geri aramada kullanılan çağırma kuralını anlamak için (ilk parameter olarak null geçilmesi gerekir),
 [Node.js hata işleme](https://web.archive.org/web/20220417042018/https://www.joyent.com/node-js/production/design/errors)
 
 #### `MemoryStorage`
@@ -316,7 +316,7 @@ function fileFilter(req, file, cb) {
 ## Hata Yönetimi 
 
 Bir hatayla karşılaşıldığında, Multer hatayı Express'e devreder.
-[Standart Express yöntemi](http://expressjs.com/guide/error-handling.html) kullanarak güzel bir hata sayfası görüntüleyebilirsiniz.
+[Standard Express yöntemi](http://expressjs.com/guide/error-handling.html) kullanarak güzel bir hata sayfası görüntüleyebilirsiniz.
 
 Özellikle Multer'dan gelen hataları yakalamak istiyorsanız,
 orta katman işlevini kendiniz çağırabilirsiniz. Ayrıca, yalnızca [Multer hatalarını](https://github.com/expressjs/multer/blob/main/lib/multer-error.js) yakalamak istiyorsanız, `multer` nesnesine eklenmiş olan `MulterError` sınıfını kullanabilirsiniz (ör. `err instanceof multer.MulterError`).

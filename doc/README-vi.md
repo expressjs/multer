@@ -100,7 +100,7 @@ Mỗi file sẽ chứa các thông tin sau:
 | `path`         | Đường dẫn đầy đủ tới file đã upload                             | `DiskStorage`             |
 | `buffer`       | Một `Buffer` của toàn bộ file                                   | `MemoryStorage`           |
 
-### Tham số `multer(opts)`
+### Than số `multer(opts)`
 
 Multer chấp nhận một biến options. Cơ bản là thuộc tính `dest`, là nơi sẽ lưu
 file được upload. Trong trường hợp bỏ qua options này, file sẽ được giữ trong
@@ -117,7 +117,7 @@ Dưới đây là các tùy chọn mà bạn có thể sử dụng:
 | `fileFilter`          | Hàm để xử lý chỉ những file nào mới được chấp nhận |
 | `limits`              | Giới hạn dung lượng file được upload               |
 | `preservePath`        | Giữ đầy đủ đường dẫn tới file thay vì chỉ tên file |
-| `defParamCharset`     | Bộ ký tự mặc định để sử dụng cho các giá trị tham số tiêu đề phần (ví dụ: tên tệp) không phải là tham số mở rộng (không chứa bộ ký tự rõ ràng). Mặc định: `'latin1'` |
+| `defParamCharset`     | Bộ ký tự mặc định để sử dụng cho các giá trị than số tiêu đề phần (ví dụ: tên tệp) không phải là than số mở rộng (không chứa bộ ký tự rõ ràng). Mặc định: `'latin1'` |
 
 Nói chung với web app, chỉ `dest` mới cần khai báo, như bên dưới:
 
