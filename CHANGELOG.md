@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## unreleased
 
+- Fix [CVE-2025-47935](https://www.cve.org/CVERecord?id=CVE-2025-47935) ([GHSA-44fp-w29j-9vj5](https://github.com/expressjs/multer/security/advisories/GHSA-44fp-w29j-9vj5))
+- Fix [CVE-2025-47944](https://www.cve.org/CVERecord?id=CVE-2025-47944) ([GHSA-4pg4-qvpc-4q3h](https://github.com/expressjs/multer/security/advisories/GHSA-4pg4-qvpc-4q3h))
 - Support node >=18.0.0
 
 ## 3.0.0-alpha.1 - 2025-05-23
