@@ -137,7 +137,7 @@ Clé | Description
 `fileFilter` | Fonction pour contrôler quels fichiers sont acceptés
 `limits` | Limites des données téléchargées
 `preservePath` | Conservez le chemin complet des fichiers au lieu du nom de base uniquement
-`defParamCharset` | Jeu de caractères par défaut à utiliser pour les valeurs des paramètres d'en-tête de partie (par exemple, nom de fichier) qui ne sont pas des paramètres étendus (qui contiennent un jeu de caractères explicite). Par défaut : `'latin1'`
+`defParamCharset` | Jeu de caractères par défaut à utiliser pour les valeurs des paramètres d'en-tête de partie (par exemple, nom de fichier) qui ne sont pas des paramètres étendus (qui contiennent un jeu de caractères explicite). Par défaut : `'utf8'`
 
 Dans une application Web moyenne, seul `dest` peut être requis et configuré comme indiqué dans
 l'exemple suivant.
