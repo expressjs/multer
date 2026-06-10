@@ -231,7 +231,7 @@ function fileFilter (req, file, cb) {
 
 ## 에러 핸들링
 
-에러가 발생할 때, multer는 에러를 express에 위임할 것입니다. 여러분은 [the standard express way](http://expressjs.com/guide/error-handling.html) 를 이용해서 멋진 오류 페이지를 보여줄 수 있습니다.
+에러가 발생할 때, multer는 에러를 express에 위임할 것입니다. 여러분은 [the standard express way](https://expressjs.com/ko/guide/error-handling) 를 이용해서 멋진 오류 페이지를 보여줄 수 있습니다.
 
 만일 multer 로부터 특별히 에러를 캐치하고 싶다면, 직접 미들웨어 함수를 호출하세요.
 

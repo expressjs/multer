@@ -239,7 +239,7 @@ function fileFilter (req, file, cb) {
 
 ## Обработка ошибок
 
-Когда выбрасывается исключение, Multer делегирует его обработку Express. Вы можете выводить страницу ошибки [стандартными для express способами](http://expressjs.com/guide/error-handling.html).
+Когда выбрасывается исключение, Multer делегирует его обработку Express. Вы можете выводить страницу ошибки [стандартными для express способами](https://expressjs.com/en/guide/error-handling).
 
 Если вы хотите отлавливать ошибки конкретно от Multer, вам нужно вызывать собственную middleware для их обработки. Еще, если вы хотите отлавливать [исключительно ошибки Multer](https://github.com/expressjs/multer/blob/main/lib/make-error.js#L1-L9), вы можете использовать класс `MulterError`, который привязан к объекту `multer` (например, `err instanceof multer.MulterError`)
 

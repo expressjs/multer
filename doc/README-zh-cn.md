@@ -234,7 +234,7 @@ function fileFilter (req, file, cb) {
 
 ## 错误处理机制
 
-当遇到一个错误，multer 将会把错误发送给 express。你可以使用一个比较好的错误展示页 ([express标准方式](http://expressjs.com/guide/error-handling.html))。
+当遇到一个错误，multer 将会把错误发送给 express。你可以使用一个比较好的错误展示页 ([express标准方式](https://expressjs.com/zh-cn/guide/error-handling))。
 
 如果你想捕捉 multer 发出的错误，你可以自己调用中间件程序。如果你想捕捉 [Multer 错误](https://github.com/expressjs/multer/blob/main/lib/multer-error.js)，你可以使用 `multer` 对象下的 `MulterError` 类 (即 `err instanceof multer.MulterError`)。
 

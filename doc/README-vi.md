@@ -261,7 +261,7 @@ function fileFilter(req, file, cb) {
 ## Error handling
 
 Khi một lỗi xảy ra, Multer sẽ gửi lỗi đó cho Express. Bạn có thể hiển thị
-đẹp hơn sử dụng [cách bắt lỗi chuẩn của Express](http://expressjs.com/guide/error-handling.html).
+đẹp hơn sử dụng [cách bắt lỗi chuẩn của Express](https://expressjs.com/en/guide/error-handling).
 
 Nếu bạn muốn bắt các lỗi cụ thể từ Multer, bạn có thể tự gọi hàm trung gian (middleware) này. Ngoài ra, nếu bạn chỉ muốn bắt [lỗi của Multer](https://github.com/expressjs/multer/blob/main/lib/multer-error.js), bạn có thể dùng class `MulterError` được đính kèm với chính object `multer` (vd: `err instanceof multer.MulterError`).
 
