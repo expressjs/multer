@@ -120,7 +120,7 @@ Each file contains the following information:
 Key | Description | Note
 --- | --- | ---
 `fieldname` | Field name specified in the form |
-`originalname` | Name of the file on the user's computer |
+`originalname` | Name of the file on the user's computer, or the full path when `preservePath: true` |
 `encoding` | Encoding type of the file |
 `mimetype` | Mime type of the file |
 `size` | Size of the file in bytes |
@@ -145,7 +145,7 @@ Key | Description
 `dest` or `storage` | Where to store the files
 `fileFilter` | Function to control which files are accepted
 `limits` | Limits of the uploaded data
-`preservePath` | Keep the full path of files instead of just the base name
+`preservePath` | Keep the full client-supplied path in `file.originalname` instead of just the base name
 `defParamCharset` | Default character set to use for values of part header parameters (e.g. filename) that are not extended parameters (that contain an explicit charset). Default: `'latin1'`
 
 In an average web app, only `dest` might be required, and configured as shown in
@@ -154,6 +154,13 @@ the following example.
 ```javascript
 const upload = multer({ dest: 'uploads/' })
 ```
+
+When `preservePath` is enabled, Multer passes the incoming filename through with
+any path segments provided by the client. This is exposed as `file.originalname`;
+it does not change the destination folder, create directories, or sanitize the
+path for you. Treat `file.originalname` as untrusted input if you use it in a
+custom `filename` or storage engine, and normalize or validate it before writing
+to disk.
 
 If you want more control over your uploads, you'll want to use the `storage`
 option instead of `dest`. Multer ships with storage engines `DiskStorage`
