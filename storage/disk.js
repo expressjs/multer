@@ -34,6 +34,9 @@ DiskStorage.prototype._handleFile = function _handleFile (req, file, cb) {
       if (err) return cb(err)
 
       var finalPath = path.join(destination, filename)
+      file.destination = destination
+      file.filename = filename
+      file.path = finalPath
       var outStream = fs.createWriteStream(finalPath)
 
       file.stream.pipe(outStream)

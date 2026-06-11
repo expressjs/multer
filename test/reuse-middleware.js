@@ -5,6 +5,7 @@ var assert = require('assert')
 var util = require('./_util')
 var multer = require('../')
 var FormData = require('form-data')
+var small0Size = util.fixtureSize('small0.dat')
 
 describe('Reuse Middleware', function () {
   var parser
@@ -37,8 +38,8 @@ describe('Reuse Middleware', function () {
         req.files.forEach(function (file) {
           assert.strictEqual(file.fieldname, 'them-files')
           assert.strictEqual(file.originalname, 'small0.dat')
-          assert.strictEqual(file.size, 1778)
-          assert.strictEqual(file.buffer.length, 1778)
+          assert.strictEqual(file.size, small0Size)
+          assert.strictEqual(file.buffer.length, small0Size)
         })
 
         if (--pending === 0) done()

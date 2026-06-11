@@ -1,6 +1,7 @@
 /* eslint-env mocha */
 
 var assert = require('assert')
+var path = require('path')
 
 var util = require('./_util')
 var multer = require('../')
@@ -15,6 +16,8 @@ function generateFilename (req, file, cb) {
 function startsWith (str, start) {
   return (str.substring(0, start.length) === start)
 }
+
+var small0Size = util.fixtureSize('small0.dat')
 
 describe('Functionality', function () {
   var cleanup = []
@@ -52,7 +55,7 @@ describe('Functionality', function () {
       util.submitForm(parser, env.form, function (err, req) {
         assert.ifError(err)
         assert.ok(startsWith(req.file.path, env.uploadDir))
-        assert.strictEqual(util.fileSize(req.file.path), 1778)
+        assert.strictEqual(util.fileSize(req.file.path), small0Size)
         done()
       })
     })
@@ -129,8 +132,8 @@ describe('Functionality', function () {
     util.submitForm(parser, form, function (err, req) {
       assert.ifError(err)
       assert.strictEqual(req.files.length, 2)
-      assert.ok(req.files[0].path.indexOf('/testforme-') >= 0)
-      assert.ok(req.files[1].path.indexOf('/testforme-') >= 0)
+      assert.strictEqual(path.basename(path.dirname(req.files[0].path)).startsWith('testforme-'), true)
+      assert.strictEqual(path.basename(path.dirname(req.files[1].path)).startsWith('testforme-'), true)
       done()
     })
   })
