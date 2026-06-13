@@ -62,6 +62,7 @@ describe('Error Handling', function () {
     util.submitForm(parser, form, function (err, req) {
       assert.strictEqual(err.code, 'LIMIT_FILE_SIZE')
       assert.strictEqual(err.field, 'small0')
+      assert.strictEqual(err.filename, 'small0.dat')
       done()
     })
   })
@@ -434,11 +435,6 @@ describe('Error Handling', function () {
   })
 
   it('should not overflow call stack when cleaning up many files (memory storage sync remove)', function (done) {
-    // - without setImmediate in remove-uploaded-files, synchronous _removeFile (e.g. memory storage)
-    //     causes handleFile(0) -> remove -> cb() -> handleFile(1) -> ... in one stack,
-    //     leading to "Maximum call stack size exceeded"
-    // - use enough files to exceed typical node stack depth (~10k - 30k)
-
     this.timeout(10 * 1000)
 
     var fileCount = 25000
