@@ -1,0 +1,6 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Treat test fixture files as binary (prevent CRLF conversion on Windows)
+test/files/*.dat binary
+test/files/*.jpg binary
