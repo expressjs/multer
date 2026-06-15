@@ -1,6 +1,7 @@
 /* eslint-env mocha */
 
 import assert from 'node:assert'
+import http from 'node:http'
 import { promisify } from 'node:util'
 
 import express from 'express'
@@ -104,5 +105,57 @@ describe('Express Integration', () => {
     assert.strictEqual(errorCalled, 0)
     assert.strictEqual(result.body.toString(), 'SUCCESS')
     assert.strictEqual(result.res.statusCode, 200)
+  })
+
+  // Regression for CVE-2025-47944 / CVE-2025-47935.
+  it('should not crash on malformed request that causes two errors to be emitted by busboy', function (done) {
+    this.timeout(5000)
+
+    const router = new express.Router()
+    router.post('/upload', multer().single('file'), (_, res) => res.status(500).end('Request should not be processed'))
+    router.use((err, _, res, __) => res.status(200).end(err.message))
+
+    app.use('/t3', router)
+
+    const boundary = 'AaB03x'
+    const body = [
+      '--' + boundary,
+      'Content-Disposition: form-data; name="file"; filename="test.txt"',
+      'Content-Type: text/plain',
+      '',
+      '--' + boundary + '--',
+      ''
+    ].join('\r\n')
+
+    let finished = false
+    const finish = (err) => {
+      if (finished) return
+      finished = true
+      clearTimeout(watchdog)
+      done(err)
+    }
+
+    const req = http.request({
+      hostname: 'localhost',
+      port,
+      path: '/t3/upload',
+      method: 'POST',
+      headers: {
+        'content-type': 'multipart/form-data; boundary=' + boundary,
+        'content-length': body.length
+      }
+    }, (res) => {
+      assert.strictEqual(res.statusCode, 200)
+      finish()
+    })
+
+    req.on('error', (err) => finish(err))
+    req.write(body)
+    req.end()
+
+    const watchdog = setTimeout(() => {
+      req.destroy()
+      finish(new Error('Middleware hung on malformed multipart body'))
+    }, 3000)
   })
 })
