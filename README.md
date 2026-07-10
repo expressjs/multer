@@ -72,6 +72,24 @@ app.post('/cool-profile', uploadMiddleware, function (req, res, next) {
 })
 ```
 
+The same upload middleware can be used with an `express.Router()` instance:
+
+```javascript
+const express = require('express')
+const multer  = require('multer')
+
+const router = express.Router()
+const upload = multer({ dest: 'uploads/' })
+
+router.post('/uploadFiles', upload.array('documents'), function (req, res, next) {
+  // req.files is array of `documents` files
+  // req.body will contain the text fields, if there were any
+  res.sendStatus(204)
+})
+
+module.exports = router
+```
+
 In case you need to handle a text-only multipart form, you should use the `.none()` method:
 
 ```javascript
