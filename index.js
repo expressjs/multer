@@ -28,7 +28,7 @@ class Multer {
       fieldNameSize: parseLimit(options.limits || {}, 'fieldNameSize', '100B'),
       fieldSize: parseLimit(options.limits || {}, 'fieldSize', '8KB'),
       fields: parseLimit(options.limits || {}, 'fields', 1000),
-      fieldNestingDepth: (options.limits || {}).fieldNestingDepth ?? Infinity,
+      fieldNestingDepth: parseLimit(options.limits || {}, 'fieldNestingDepth', 32),
       fileSize: parseLimit(options.limits || {}, 'fileSize', '8MB'),
       files: parseLimit(options.limits || {}, 'files', 10),
       headerPairs: parseLimit(options.limits || {}, 'headerPairs', 2000)
