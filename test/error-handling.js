@@ -5,6 +5,7 @@ var assert = require('assert')
 var os = require('os')
 var util = require('./_util')
 var multer = require('../')
+var FileAppender = require('../lib/file-appender')
 var removeUploadedFiles = require('../lib/remove-uploaded-files')
 var stream = require('stream')
 var FormData = require('form-data')
@@ -17,6 +18,50 @@ function withLimits (limits, fields) {
 }
 
 describe('Error Handling', function () {
+  it('should throw for invalid options', function () {
+    assert.throws(function () {
+      multer('invalid')
+    }, /Expected object for argument options/)
+  })
+
+  it('should throw for unknown file strategies', function () {
+    assert.throws(function () {
+      new FileAppender('UNKNOWN', {})
+    }, /Unknown file strategy/)
+  })
+
+  it('should remove placeholders from array file strategies', function () {
+    var req = {}
+    var appender = new FileAppender('ARRAY', req)
+    var placeholder = appender.insertPlaceholder({ fieldname: 'tiny0' })
+
+    appender.removePlaceholder(placeholder)
+
+    assert.deepStrictEqual(req.files, [])
+  })
+
+  it('should ignore missing placeholders when removing from array file strategies', function () {
+    var req = {}
+    var appender = new FileAppender('ARRAY', req)
+
+    appender.removePlaceholder({ fieldname: 'tiny0' })
+
+    assert.deepStrictEqual(req.files, [])
+  })
+
+  it('should skip multipart handling for non-multipart requests', function (done) {
+    var upload = multer({ storage: multer.memoryStorage() }).single('tiny0')
+    var req = {
+      headers: { 'content-type': 'text/plain' },
+      method: 'GET'
+    }
+
+    upload(req, null, function (err) {
+      assert.ifError(err)
+      done()
+    })
+  })
+
   it('should be an instance of both `Error` and `MulterError` classes in case of the Multer\'s error', function (done) {
     var form = new FormData()
     var storage = multer.diskStorage({ destination: os.tmpdir() })
@@ -191,6 +236,294 @@ describe('Error Handling', function () {
     })
   })
 
+  it('should allow small field names within the configured field size limit', function (done) {
+    var form = new FormData()
+    var upload = multer({ storage: multer.memoryStorage(), limits: { fieldNameSize: 40 } }).single('tiny0')
+
+    form.append('tiny0', 'value')
+
+    util.submitForm(upload, form, function (err, req) {
+      assert.ifError(err)
+      assert.strictEqual(req.body.tiny0, 'value')
+      done()
+    })
+  })
+
+  it('should remove busboy listeners when multipart processing completes', function (done) {
+    var makeMiddlewarePath = require.resolve('../lib/make-middleware')
+    var busboyPath = require.resolve('busboy')
+    var listenersRemoved = false
+
+    delete require.cache[makeMiddlewarePath]
+    delete require.cache[busboyPath]
+    require.cache[busboyPath] = {
+      id: busboyPath,
+      filename: busboyPath,
+      loaded: true,
+      exports: function () {
+        var busboy = new stream.PassThrough()
+
+        busboy.removeAllListeners = function () {
+          listenersRemoved = true
+          return stream.PassThrough.prototype.removeAllListeners.call(this)
+        }
+
+        setImmediate(function () {
+          busboy.emit('close')
+        })
+
+        return busboy
+      }
+    }
+
+    var makeMiddleware = require('../lib/make-middleware')
+    var req = new stream.PassThrough()
+    var upload = makeMiddleware(function () {
+      return {
+        limits: undefined,
+        preservePath: false,
+        defParamCharset: 'latin1',
+        storage: {
+          _removeFile: function (req, file, cb) { cb() },
+          _handleFile: function (req, file, cb) { cb(null, {}) }
+        },
+        fileFilter: function (req, file, cb) { cb(null, true) },
+        fileStrategy: 'NONE'
+      }
+    })
+
+    req.headers = {
+      'content-type': 'multipart/form-data',
+      'content-length': '0'
+    }
+    req.end('')
+
+    upload(req, null, function (err) {
+      assert.ifError(err)
+      setImmediate(function () {
+        assert.strictEqual(listenersRemoved, true)
+        done()
+      })
+    })
+  })
+
+  it('should destroy busboy when request fails during multipart parsing', function (done) {
+    var makeMiddlewarePath = require.resolve('../lib/make-middleware')
+    var busboyPath = require.resolve('busboy')
+    var destroyed = false
+
+    delete require.cache[makeMiddlewarePath]
+    delete require.cache[busboyPath]
+    require.cache[busboyPath] = {
+      id: busboyPath,
+      filename: busboyPath,
+      loaded: true,
+      exports: function () {
+        var busboy = new stream.PassThrough()
+
+        busboy.destroy = function (err) {
+          destroyed = true
+          return stream.PassThrough.prototype.destroy.call(this, err)
+        }
+
+        return busboy
+      }
+    }
+
+    var makeMiddleware = require('../lib/make-middleware')
+    var req = new stream.PassThrough()
+    var upload = makeMiddleware(function () {
+      return {
+        limits: undefined,
+        preservePath: false,
+        defParamCharset: 'latin1',
+        storage: {
+          _removeFile: function (req, file, cb) { cb() },
+          _handleFile: function (req, file, cb) { cb(null, {}) }
+        },
+        fileFilter: function (req, file, cb) { cb(null, true) },
+        fileStrategy: 'NONE'
+      }
+    })
+
+    req.headers = {
+      'content-type': 'multipart/form-data',
+      'content-length': '0'
+    }
+    req.end('')
+
+    upload(req, null, function (err) {
+      assert.strictEqual(err.message, 'Request error')
+      assert.strictEqual(destroyed, true)
+      done()
+    })
+
+    req.emit('error', new Error('Request error'))
+    req.emit('end')
+  })
+
+  it('should skip busboy cleanup when no busboy instance exists', function (done) {
+    var makeMiddlewarePath = require.resolve('../lib/make-middleware')
+    var busboyPath = require.resolve('busboy')
+
+    delete require.cache[makeMiddlewarePath]
+    delete require.cache[busboyPath]
+    require.cache[busboyPath] = {
+      id: busboyPath,
+      filename: busboyPath,
+      loaded: true,
+      exports: function () {
+        req.emit('error', new Error('Request error'))
+        throw new Error('busboy setup failed')
+      }
+    }
+
+    var makeMiddleware = require('../lib/make-middleware')
+    var req = new stream.PassThrough()
+    var completed = false
+    function finish (err) {
+      if (completed) return
+      completed = true
+      done(err)
+    }
+    var upload = makeMiddleware(function () {
+      return {
+        limits: undefined,
+        preservePath: false,
+        defParamCharset: 'latin1',
+        storage: {
+          _removeFile: function (req, file, cb) { cb() },
+          _handleFile: function (req, file, cb) { cb(null, {}) }
+        },
+        fileFilter: function (req, file, cb) { cb(null, true) },
+        fileStrategy: 'NONE'
+      }
+    })
+
+    req.headers = {
+      'content-type': 'multipart/form-data',
+      'content-length': '0'
+    }
+    req.end('')
+
+    upload(req, null, function (err) {
+      assert.ok(err)
+      finish()
+    })
+
+    req.emit('end')
+  })
+
+  it('should reject files with field names that exceed the configured field size limit', function (done) {
+    var makeMiddlewarePath = require.resolve('../lib/make-middleware')
+    var busboyPath = require.resolve('busboy')
+
+    delete require.cache[makeMiddlewarePath]
+    delete require.cache[busboyPath]
+    require.cache[busboyPath] = {
+      id: busboyPath,
+      filename: busboyPath,
+      loaded: true,
+      exports: function () {
+        var busboy = new stream.PassThrough()
+
+        setImmediate(function () {
+          var fileStream = new stream.PassThrough()
+          busboy.emit('file', 'very-long-field-name', fileStream, {
+            filename: 'test.txt',
+            encoding: '7bit',
+            mimeType: 'text/plain'
+          })
+          busboy.emit('close')
+        })
+
+        return busboy
+      }
+    }
+
+    var makeMiddleware = require('../lib/make-middleware')
+    var req = new stream.PassThrough()
+    var upload = makeMiddleware(function () {
+      return {
+        limits: { fieldNameSize: 4 },
+        preservePath: false,
+        defParamCharset: 'latin1',
+        storage: {
+          _removeFile: function (req, file, cb) { cb() },
+          _handleFile: function (req, file, cb) { cb(null, {}) }
+        },
+        fileFilter: function (req, file, cb) { cb(null, true) },
+        fileStrategy: 'NONE'
+      }
+    })
+
+    req.headers = {
+      'content-type': 'multipart/form-data',
+      'content-length': '0'
+    }
+    req.end('')
+
+    upload(req, null, function (err) {
+      assert.strictEqual(err.code, 'LIMIT_FIELD_KEY')
+      done()
+    })
+  })
+
+  it('should allow files with field names that fit within the configured field size limit', function (done) {
+    var makeMiddlewarePath = require.resolve('../lib/make-middleware')
+    var busboyPath = require.resolve('busboy')
+
+    delete require.cache[makeMiddlewarePath]
+    delete require.cache[busboyPath]
+    require.cache[busboyPath] = {
+      id: busboyPath,
+      filename: busboyPath,
+      loaded: true,
+      exports: function () {
+        var busboy = new stream.PassThrough()
+
+        setImmediate(function () {
+          var fileStream = new stream.PassThrough()
+          busboy.emit('file', 'tiny', fileStream, {
+            filename: 'test.txt',
+            encoding: '7bit',
+            mimeType: 'text/plain'
+          })
+          busboy.emit('close')
+        })
+
+        return busboy
+      }
+    }
+
+    var makeMiddleware = require('../lib/make-middleware')
+    var req = new stream.PassThrough()
+    var upload = makeMiddleware(function () {
+      return {
+        limits: { fieldNameSize: 4 },
+        preservePath: false,
+        defParamCharset: 'latin1',
+        storage: {
+          _removeFile: function (req, file, cb) { cb() },
+          _handleFile: function (req, file, cb) { cb(null, {}) }
+        },
+        fileFilter: function (req, file, cb) { cb(null, true) },
+        fileStrategy: 'NONE'
+      }
+    })
+
+    req.headers = {
+      'content-type': 'multipart/form-data',
+      'content-length': '0'
+    }
+    req.end('')
+
+    upload(req, null, function (err) {
+      assert.ifError(err)
+      done()
+    })
+  })
+
   it('should report errors from storage engines', function (done) {
     var storage = multer.memoryStorage()
 
@@ -218,6 +551,191 @@ describe('Error Handling', function () {
 
       done()
     })
+  })
+
+  it('should report truncated field names from busboy', function (done) {
+    var makeMiddlewarePath = require.resolve('../lib/make-middleware')
+    var busboyPath = require.resolve('busboy')
+
+    delete require.cache[makeMiddlewarePath]
+    delete require.cache[busboyPath]
+    require.cache[busboyPath] = {
+      id: busboyPath,
+      filename: busboyPath,
+      loaded: true,
+      exports: function () {
+        var busboy = new stream.PassThrough()
+
+        setImmediate(function () {
+          busboy.emit('field', 'name', 'value', { nameTruncated: true, valueTruncated: false })
+          busboy.emit('close')
+        })
+
+        return busboy
+      }
+    }
+
+    var makeMiddleware = require('../lib/make-middleware')
+    var req = new stream.PassThrough()
+    var upload = makeMiddleware(function () {
+      return {
+        limits: undefined,
+        preservePath: false,
+        defParamCharset: 'latin1',
+        storage: {
+          _removeFile: function (req, file, cb) { cb() },
+          _handleFile: function (req, file, cb) { cb(null, {}) }
+        },
+        fileFilter: function (req, file, cb) { cb(null, true) },
+        fileStrategy: 'NONE'
+      }
+    })
+
+    req.headers = {
+      'content-type': 'multipart/form-data',
+      'content-length': '0'
+    }
+    req.end('')
+
+    upload(req, null, function (err) {
+      assert.strictEqual(err.code, 'LIMIT_FIELD_KEY')
+      done()
+    })
+  })
+
+  it('should ignore repeated close events after completion', function (done) {
+    var makeMiddlewarePath = require.resolve('../lib/make-middleware')
+    var busboyPath = require.resolve('busboy')
+
+    delete require.cache[makeMiddlewarePath]
+    delete require.cache[busboyPath]
+    require.cache[busboyPath] = {
+      id: busboyPath,
+      filename: busboyPath,
+      loaded: true,
+      exports: function () {
+        var busboy = new stream.PassThrough()
+
+        setImmediate(function () {
+          busboy.emit('close')
+          busboy.emit('close')
+        })
+
+        return busboy
+      }
+    }
+
+    var makeMiddleware = require('../lib/make-middleware')
+    var req = new stream.PassThrough()
+    var upload = makeMiddleware(function () {
+      return {
+        limits: undefined,
+        preservePath: false,
+        defParamCharset: 'latin1',
+        storage: {
+          _removeFile: function (req, file, cb) { cb() },
+          _handleFile: function (req, file, cb) { cb(null, {}) }
+        },
+        fileFilter: function (req, file, cb) { cb(null, true) },
+        fileStrategy: 'NONE'
+      }
+    })
+
+    req.headers = {
+      'content-type': 'multipart/form-data',
+      'content-length': '0'
+    }
+    req.end('')
+
+    upload(req, null, function (err) {
+      assert.ifError(err)
+      done()
+    })
+  })
+
+  it('should propagate cleanup errors from removeUploadedFiles', function (done) {
+    var makeMiddlewarePath = require.resolve('../lib/make-middleware')
+    var busboyPath = require.resolve('busboy')
+    var removeUploadedFilesPath = require.resolve('../lib/remove-uploaded-files')
+
+    delete require.cache[makeMiddlewarePath]
+    delete require.cache[busboyPath]
+    delete require.cache[removeUploadedFilesPath]
+    require.cache[busboyPath] = {
+      id: busboyPath,
+      filename: busboyPath,
+      loaded: true,
+      exports: function () {
+        return new stream.PassThrough()
+      }
+    }
+    require.cache[removeUploadedFilesPath] = {
+      id: removeUploadedFilesPath,
+      filename: removeUploadedFilesPath,
+      loaded: true,
+      exports: function (uploadedFiles, remove, cb) {
+        cb(new Error('cleanup error'))
+      }
+    }
+
+    var makeMiddleware = require('../lib/make-middleware')
+    var req = new stream.PassThrough()
+    var upload = makeMiddleware(function () {
+      return {
+        limits: undefined,
+        preservePath: false,
+        defParamCharset: 'latin1',
+        storage: {
+          _removeFile: function (req, file, cb) { cb() },
+          _handleFile: function (req, file, cb) { cb(null, {}) }
+        },
+        fileFilter: function (req, file, cb) { cb(null, true) },
+        fileStrategy: 'NONE'
+      }
+    })
+
+    req.headers = {
+      'content-type': 'multipart/form-data',
+      'content-length': '0'
+    }
+    req.end('')
+
+    upload(req, null, function (err) {
+      assert.strictEqual(err.message, 'cleanup error')
+      done()
+    })
+
+    setImmediate(function () {
+      req.emit('error', new Error('Request error'))
+      req.emit('error', new Error('Request error'))
+    })
+  })
+
+  it('should use a fallback error when request emits an error without payload', function (done) {
+    var req = new stream.PassThrough()
+    var upload = multer({ storage: multer.memoryStorage() }).single('tiny0')
+    var boundary = 'AaB03x'
+    var body = [
+      '--' + boundary,
+      'Content-Disposition: form-data; name="tiny0"',
+      '',
+      'value',
+      '--' + boundary + '--',
+      ''
+    ].join('\r\n')
+
+    req.headers = {
+      'content-type': 'multipart/form-data; boundary=' + boundary,
+      'content-length': body.length
+    }
+
+    upload(req, null, function (err) {
+      assert.strictEqual(err.message, 'Request error')
+      done()
+    })
+
+    req.emit('error')
+    req.end(body)
   })
 
   it('should report errors from busboy constructor', function (done) {

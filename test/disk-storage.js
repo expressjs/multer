@@ -3,7 +3,9 @@
 var assert = require('assert')
 var deepEqual = require('deep-equal')
 
+var crypto = require('crypto')
 var fs = require('fs')
+var os = require('os')
 var path = require('path')
 var util = require('./_util')
 var multer = require('../')
@@ -164,6 +166,122 @@ describe('Disk Storage', function () {
       assert(deepEqual(files, []))
 
       done()
+    })
+  })
+
+  it('should use a string destination when provided', function (done) {
+    var storage = multer.diskStorage({
+      destination: uploadDir,
+      filename: function (req, file, cb) {
+        cb(null, 'custom-name.txt')
+      }
+    })
+    var upload = multer({ storage: storage })
+    var parser = upload.single('tiny0')
+    var form = new FormData()
+
+    form.append('tiny0', util.file('tiny0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.ifError(err)
+      assert.strictEqual(req.file.destination, uploadDir)
+      assert.strictEqual(req.file.filename, 'custom-name.txt')
+      assert.strictEqual(path.dirname(req.file.path), uploadDir)
+
+      done()
+    })
+  })
+
+  it('should use the default temporary directory when no destination is provided', function (done) {
+    var storage = multer.diskStorage({
+      filename: function (req, file, cb) {
+        cb(null, 'default-destination.txt')
+      }
+    })
+    var upload = multer({ storage: storage })
+    var parser = upload.single('tiny0')
+    var form = new FormData()
+
+    form.append('tiny0', util.file('tiny0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.ifError(err)
+      assert.strictEqual(req.file.destination, os.tmpdir())
+      assert.strictEqual(req.file.filename, 'default-destination.txt')
+      assert.strictEqual(path.dirname(req.file.path), os.tmpdir())
+
+      fs.unlinkSync(req.file.path)
+      done()
+    })
+  })
+
+  it('should pass through destination errors', function (done) {
+    var storage = multer.diskStorage({})
+    storage.getDestination = function ($0, $1, cb) {
+      cb(new Error('destination error'))
+    }
+
+    storage._handleFile({}, { stream: { destroyed: false } }, function (err) {
+      assert.strictEqual(err.message, 'destination error')
+      done()
+    })
+  })
+
+  it('should pass through filename errors', function (done) {
+    var storage = multer.diskStorage({})
+    storage.getDestination = function ($0, $1, cb) {
+      cb(null, uploadDir)
+    }
+    storage.getFilename = function ($0, $1, cb) {
+      cb(new Error('filename error'))
+    }
+
+    storage._handleFile({}, { stream: { destroyed: false } }, function (err) {
+      assert.strictEqual(err.message, 'filename error')
+      done()
+    })
+  })
+
+  it('should pass through filename generation errors', function (done) {
+    var randomBytes = crypto.randomBytes
+    crypto.randomBytes = function (size, cb) {
+      if (typeof cb === 'function') {
+        cb(new Error('random bytes error'))
+      } else {
+        throw new Error('random bytes error')
+      }
+    }
+
+    var storage = multer.diskStorage({})
+    storage._handleFile({}, { stream: { destroyed: false } }, function (err) {
+      assert.strictEqual(err.message, 'random bytes error')
+      crypto.randomBytes = randomBytes
+      done()
+    })
+  })
+
+  it('should skip writing when the stream is already destroyed', function (done) {
+    var storage = multer.diskStorage({})
+    storage.getDestination = function ($0, $1, cb) {
+      cb(null, uploadDir)
+    }
+    storage.getFilename = function ($0, $1, cb) {
+      cb(null, 'destroyed.txt')
+    }
+
+    var completed = false
+    function finish (err) {
+      if (completed) return
+      completed = true
+      done(err)
+    }
+
+    storage._handleFile({}, { stream: { destroyed: true } }, function () {
+      finish(new Error('expected no callback'))
+    })
+
+    setImmediate(function () {
+      finish()
     })
   })
 
