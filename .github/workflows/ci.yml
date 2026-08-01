@@ -146,7 +146,7 @@ jobs:
         fi
 
     - name: Collect code coverage
-      uses: coverallsapp/github-action@648a8eb78e6d50909eff900e4ec85cab4524a45b # master
+      uses: coverallsapp/github-action@8d6379e14d29928660c4ba802d8e85393440b329 # master
       if: steps.list_env.outputs.nyc != ''
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -160,7 +160,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Upload code coverage
-      uses: coverallsapp/github-action@648a8eb78e6d50909eff900e4ec85cab4524a45b # master
+      uses: coverallsapp/github-action@8d6379e14d29928660c4ba802d8e85393440b329 # master
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         parallel-finished: true
