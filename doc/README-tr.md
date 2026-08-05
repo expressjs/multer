@@ -316,7 +316,7 @@ function fileFilter(req, file, cb) {
 ## Hata Yönetimi
 
 Bir hatayla karşılaşıldığında, Multer hatayı Express'e devreder.
-[Standart Express yöntemi](https://expressjs.com/en/guide/error-handling) kullanarak güzel bir hata sayfası görüntüleyebilirsiniz.
+[Standart Express yöntemi](https://expressjs.com/en/guide/error-handling/) kullanarak güzel bir hata sayfası görüntüleyebilirsiniz.
 
 Özellikle Multer'dan gelen hataları yakalamak istiyorsanız,
 orta katman işlevini kendiniz çağırabilirsiniz. Ayrıca, yalnızca [Multer hatalarını](https://github.com/expressjs/multer/blob/main/lib/multer-error.js) yakalamak istiyorsanız, `multer` nesnesine eklenmiş olan `MulterError` sınıfını kullanabilirsiniz (ör. `err instanceof multer.MulterError`).
