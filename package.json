@@ -5,7 +5,7 @@
   "contributors": [
     "Hage Yaapa <captain@hacksparrow.com> (http://www.hacksparrow.com)",
     "Jaret Pfluger <https://github.com/jpfluger>",
-    "Linus Unnebäck <linus@folkdatorn.se>"
+    "Linus Unneb\u00e4ck <linus@folkdatorn.se>"
   ],
   "license": "MIT",
   "repository": "expressjs/multer",
@@ -54,5 +54,9 @@
     "test": "mocha --reporter spec --exit --check-leaks test/",
     "test-ci": "nyc --reporter=lcov --reporter=text npm test",
     "test-cov": "nyc --reporter=html --reporter=text npm test"
+  },
+  "homepage": "https://github.com/expressjs/multer",
+  "bugs": {
+    "url": "https://github.com/expressjs/multer/issues"
   }
 }
