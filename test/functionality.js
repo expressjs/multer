@@ -2,6 +2,8 @@
 
 var assert = require('assert')
 
+var path = require('path')
+
 var util = require('./_util')
 var multer = require('../')
 var temp = require('fs-temp')
@@ -129,8 +131,8 @@ describe('Functionality', function () {
     util.submitForm(parser, form, function (err, req) {
       assert.ifError(err)
       assert.strictEqual(req.files.length, 2)
-      assert.ok(req.files[0].path.indexOf('/testforme-') >= 0)
-      assert.ok(req.files[1].path.indexOf('/testforme-') >= 0)
+      assert.ok(req.files[0].path.indexOf(path.sep + 'testforme-') >= 0)
+      assert.ok(req.files[1].path.indexOf(path.sep + 'testforme-') >= 0)
       done()
     })
   })
