@@ -76,4 +76,33 @@ describe('File Filter', function () {
       done()
     })
   })
+
+  it('should keep an accepted file when a sibling triggers a duplicate reject', function (done) {
+    var calls = 0
+    function acceptFirstDoubleRejectSecond (req, file, cb) {
+      calls++
+      if (calls === 1) return cb(null, true)
+      setImmediate(function () {
+        cb(null, false)
+        cb(null, false)
+      })
+    }
+
+    var form = new FormData()
+    var upload = withFilter(acceptFirstDoubleRejectSecond)
+    var parser = upload.fields([
+      { name: 'docs', maxCount: 2 }
+    ])
+
+    form.append('docs', util.file('tiny0.dat'))
+    form.append('docs', util.file('tiny1.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.ifError(err)
+      assert.ok(req.files.docs, 'the accepted file must not be dropped')
+      assert.strictEqual(req.files.docs.length, 1)
+      assert.strictEqual(req.files.docs[0].originalname, 'tiny0.dat')
+      done()
+    })
+  })
 })
