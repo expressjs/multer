@@ -11,19 +11,16 @@ var FormData = require('form-data')
 var http = require('http')
 var net = require('net')
 
-function withLimits(limits, fields) {
+function withLimits (limits, fields) {
   var storage = multer.memoryStorage()
   return multer({ storage: storage, limits: limits }).fields(fields)
 }
 
 describe('Error Handling', function () {
-
-
   it('should use a fallback message when the code is not mapped', function () {
     var err = new MulterError('SOME_NEW_CODE')
     assert.strictEqual(err.message, 'Unknown error: SOME_NEW_CODE')
   })
-
 
   it('should be an instance of both `Error` and `MulterError` classes in case of the Multer\'s error', function (done) {
     var form = new FormData()
@@ -202,7 +199,7 @@ describe('Error Handling', function () {
   it('should report errors from storage engines', function (done) {
     var storage = multer.memoryStorage()
 
-    storage._removeFile = function _removeFile(req, file, cb) {
+    storage._removeFile = function _removeFile (req, file, cb) {
       var err = new Error('Test error')
       err.code = 'TEST'
       cb(err)
@@ -332,7 +329,7 @@ describe('Error Handling', function () {
         })
       }, 8000)
 
-      function finish(err) {
+      function finish (err) {
         if (finished) return
         finished = true
         clearTimeout(timeout)
@@ -341,7 +338,7 @@ describe('Error Handling', function () {
         })
       }
 
-      function writeChunk() {
+      function writeChunk () {
         if (sentChunks >= totalChunks) {
           sock.write(footer)
           return
@@ -456,7 +453,7 @@ describe('Error Handling', function () {
       uploadedFiles.push({ fieldname: 'file', originalname: 'f.dat', buffer: Buffer.alloc(0) })
     }
 
-    function syncRemove(file, cb) {
+    function syncRemove (file, cb) {
       delete file.buffer
       cb(null)
     }
