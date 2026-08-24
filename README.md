@@ -295,6 +295,10 @@ Key | Description | Default
 `headerPairs` | For multipart forms, the max number of header key=>value pairs to parse | 2000
 `fieldNestingDepth` | Max number of nesting levels for field names (e.g. `a[b][c]` has 2 levels) | Infinity
 
+The `parts` limit is triggered when busboy reaches the configured number of
+parts, not only after that number is exceeded. If you want to allow an exact
+number of fields and files, set `parts` to at least one more than that total.
+
 Specifying the limits can help protect your site against denial of service (DoS) attacks.
 
 ### `fileFilter`
