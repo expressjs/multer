@@ -274,7 +274,7 @@ The following integer values are available:
 
 Key | Description | Default
 --- | --- | ---
-`fieldNameSize` | Max field name size | 100 bytes
+`fieldNameSize` | Max field name size | Infinity
 `fieldSize` | Max field value size (in bytes) | 1MB
 `fields` | Max number of non-file fields | Infinity
 `fileSize` | For multipart forms, the max file size (in bytes) | Infinity
