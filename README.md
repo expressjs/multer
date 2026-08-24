@@ -158,9 +158,10 @@ const upload = multer({ dest: 'uploads/' })
 When `preservePath` is enabled, Multer passes the incoming filename through with
 any path segments provided by the client. This is exposed as `file.originalname`;
 it does not change the destination folder, create directories, or sanitize the
-path for you. Treat `file.originalname` as untrusted input if you use it in a
-custom `filename` or storage engine, and normalize or validate it before writing
-to disk.
+path for you. `file.originalname` is always client-supplied and should be treated
+as untrusted; with `preservePath` it additionally contains the path segments the
+client sent. Normalize or validate it before using it in a custom `filename` or
+storage engine.
 
 If you want more control over your uploads, you'll want to use the `storage`
 option instead of `dest`. Multer ships with storage engines `DiskStorage`
