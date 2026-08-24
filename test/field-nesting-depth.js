@@ -37,8 +37,17 @@ describe('Field name nesting depth', () => {
     assert.strictEqual(req.body.a[0][1][2], 'value')
   })
 
-  it('should allow unlimited nesting by default', async () => {
+  it('should reject field names exceeding the default fieldNestingDepth', async () => {
     const parser = multer({ limits: { fieldNameSize: '10KB' } }).none()
+    const form = new FormData()
+
+    form.append('a' + '[0]'.repeat(33), 'value')
+
+    await assert.rejects(util.submitForm(parser, form), (err) => err.code === 'LIMIT_FIELD_NESTING')
+  })
+
+  it('should allow deep nesting when opted in to a higher limit', async () => {
+    const parser = multer({ limits: { fieldNameSize: '10KB', fieldNestingDepth: 1000 } }).none()
     const form = new FormData()
 
     form.append('a' + '[0]'.repeat(100), 'value')
