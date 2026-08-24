@@ -1,7 +1,7 @@
 /* eslint-env mocha */
 
 var assert = require('assert')
-
+var MulterError = require('../lib/multer-error')
 var os = require('os')
 var util = require('./_util')
 var multer = require('../')
@@ -17,6 +17,11 @@ function withLimits (limits, fields) {
 }
 
 describe('Error Handling', function () {
+  it('should use a fallback message when the code is not mapped', function () {
+    var err = new MulterError('SOME_NEW_CODE')
+    assert.strictEqual(err.message, 'Unknown error: SOME_NEW_CODE')
+  })
+
   it('should be an instance of both `Error` and `MulterError` classes in case of the Multer\'s error', function (done) {
     var form = new FormData()
     var storage = multer.diskStorage({ destination: os.tmpdir() })
@@ -429,7 +434,7 @@ describe('Error Handling', function () {
         }, 50)
       })
 
-      sock.on('error', function () {})
+      sock.on('error', function () { })
     })
   })
 
@@ -457,6 +462,22 @@ describe('Error Handling', function () {
       assert.ifError(err)
       assert.strictEqual(errors.length, 0)
       done()
+    })
+  })
+
+  it('should throw TypeError if options is not an object', function () {
+    assert.throws(() => {
+      multer(null)
+    }, {
+      name: 'TypeError',
+      message: 'Expected object for argument options'
+    })
+
+    assert.throws(() => {
+      multer('invalid')
+    }, {
+      name: 'TypeError',
+      message: 'Expected object for argument options'
     })
   })
 })
