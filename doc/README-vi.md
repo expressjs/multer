@@ -117,7 +117,7 @@ Dưới đây là các tùy chọn mà bạn có thể sử dụng:
 | `fileFilter`          | Hàm để xử lý chỉ những file nào mới được chấp nhận |
 | `limits`              | Giới hạn dung lượng file được upload               |
 | `preservePath`        | Giữ đầy đủ đường dẫn tới file thay vì chỉ tên file |
-| `defParamCharset`     | Bộ ký tự mặc định để sử dụng cho các giá trị tham số tiêu đề phần (ví dụ: tên tệp) không phải là tham số mở rộng (không chứa bộ ký tự rõ ràng). Mặc định: `'latin1'` |
+| `defParamCharset`     | Bộ ký tự mặc định để sử dụng cho các giá trị tham số tiêu đề phần (ví dụ: tên tệp) không phải là tham số mở rộng (không chứa bộ ký tự rõ ràng). Mặc định: `'utf8'` |
 
 Nói chung với web app, chỉ `dest` mới cần khai báo, như bên dưới:
 

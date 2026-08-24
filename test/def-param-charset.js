@@ -31,12 +31,12 @@ describe('defParamCharset', function () {
     rimraf(uploadDir, done)
   })
 
-  it('should use latin1 as default charset for non-extended parameters', function (done) {
+  it('should use utf-8 as default charset for non-extended parameters', function (done) {
     var req = new stream.PassThrough()
     var boundary = 'AaB03x'
 
-    // Create a filename with latin1 characters (e.g., café encoded as latin1)
-    // In latin1: é = 0xE9
+    // Create a filename with utf-8 characters (e.g., café encoded as utf-8)
+    // In utf-8: é = 0xC3 0xA9
     var bodyParts = [
       '--' + boundary,
       'Content-Disposition: form-data; name="testfile"; filename="caf',
@@ -47,63 +47,7 @@ describe('defParamCharset', function () {
       '--' + boundary + '--'
     ]
 
-    // Create buffer with proper latin1 encoding
-    var bodyBuffer = Buffer.concat([
-      Buffer.from(bodyParts[0] + '\r\n', 'ascii'),
-      Buffer.from(bodyParts[1], 'ascii'),
-      Buffer.from([0xE9]), // é in latin1
-      Buffer.from(bodyParts[2] + '\r\n', 'ascii'),
-      Buffer.from(bodyParts[3] + '\r\n', 'ascii'),
-      Buffer.from(bodyParts[4] + '\r\n', 'ascii'),
-      Buffer.from(bodyParts[5] + '\r\n', 'ascii'),
-      Buffer.from(bodyParts[6], 'ascii')
-    ])
-
-    req.headers = {
-      'content-type': 'multipart/form-data; boundary=' + boundary,
-      'content-length': bodyBuffer.length
-    }
-
-    req.end(bodyBuffer)
-
-    upload.single('testfile')(req, null, function (err) {
-      assert.ifError(err)
-
-      // With latin1 (default), the filename should be interpreted as latin1
-      assert.strictEqual(req.file.originalname, 'café.txt')
-      assert.strictEqual(req.file.fieldname, 'testfile')
-
-      done()
-    })
-  })
-
-  it('should use custom charset when defParamCharset is specified', function (done) {
-    var customUpload = multer({
-      storage: multer.diskStorage({
-        destination: uploadDir,
-        filename: function (req, file, cb) {
-          cb(null, file.originalname)
-        }
-      }),
-      defParamCharset: 'utf8'
-    })
-
-    var req = new stream.PassThrough()
-    var boundary = 'AaB03x'
-
-    // Create a filename with UTF-8 characters (e.g., café encoded as UTF-8)
-    // In UTF-8: é = 0xC3 0xA9
-    var bodyParts = [
-      '--' + boundary,
-      'Content-Disposition: form-data; name="testfile"; filename="caf',
-      '.txt"',
-      'Content-Type: text/plain',
-      '',
-      'test file content',
-      '--' + boundary + '--'
-    ]
-
-    // Create buffer with proper UTF-8 encoding
+    // Create buffer with proper utf-8 encoding
     var bodyBuffer = Buffer.concat([
       Buffer.from(bodyParts[0] + '\r\n', 'ascii'),
       Buffer.from(bodyParts[1], 'ascii'),
@@ -122,10 +66,66 @@ describe('defParamCharset', function () {
 
     req.end(bodyBuffer)
 
+    upload.single('testfile')(req, null, function (err) {
+      assert.ifError(err)
+
+      // With utf-8 (default), the filename should be interpreted as utf-8
+      assert.strictEqual(req.file.originalname, 'café.txt')
+      assert.strictEqual(req.file.fieldname, 'testfile')
+
+      done()
+    })
+  })
+
+  it('should use custom charset when defParamCharset is specified', function (done) {
+    var customUpload = multer({
+      storage: multer.diskStorage({
+        destination: uploadDir,
+        filename: function (req, file, cb) {
+          cb(null, file.originalname)
+        }
+      }),
+      defParamCharset: 'latin1' // ISO-8859-1, where é is 0xE9
+    })
+
+    var req = new stream.PassThrough()
+    var boundary = 'AaB03x'
+
+    // Create a filename with Latin1 characters (e.g., café encoded as Latin1)
+    // In Latin1: é = 0xE9
+    var bodyParts = [
+      '--' + boundary,
+      'Content-Disposition: form-data; name="testfile"; filename="caf',
+      '.txt"',
+      'Content-Type: text/plain',
+      '',
+      'test file content',
+      '--' + boundary + '--'
+    ]
+
+    // Create buffer with proper Latin1 encoding
+    var bodyBuffer = Buffer.concat([
+      Buffer.from(bodyParts[0] + '\r\n', 'ascii'),
+      Buffer.from(bodyParts[1], 'ascii'),
+      Buffer.from([0xE9]), // é in Latin1
+      Buffer.from(bodyParts[2] + '\r\n', 'ascii'),
+      Buffer.from(bodyParts[3] + '\r\n', 'ascii'),
+      Buffer.from(bodyParts[4] + '\r\n', 'ascii'),
+      Buffer.from(bodyParts[5] + '\r\n', 'ascii'),
+      Buffer.from(bodyParts[6], 'ascii')
+    ])
+
+    req.headers = {
+      'content-type': 'multipart/form-data; boundary=' + boundary,
+      'content-length': bodyBuffer.length
+    }
+
+    req.end(bodyBuffer)
+
     customUpload.single('testfile')(req, null, function (err) {
       assert.ifError(err)
 
-      // With utf8, the filename should be interpreted as utf8
+      // With latin1, the filename should be interpreted as latin1
       assert.strictEqual(req.file.originalname, 'café.txt')
       assert.strictEqual(req.file.fieldname, 'testfile')
 
