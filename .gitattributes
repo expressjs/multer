@@ -1,0 +1,5 @@
+# The upload fixtures are opaque payloads whose exact byte size the tests assert
+# on. Treating them as binary keeps Git's end-of-line conversion from rewriting
+# LF to CRLF when they are checked out on Windows, which would inflate the size
+# of every text-like fixture and fail the tests that hardcode those sizes.
+test/files/** binary
