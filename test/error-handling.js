@@ -66,6 +66,21 @@ describe('Error Handling', function () {
     })
   })
 
+  it('should accept a file whose size equals the file size limit', function (done) {
+    var form = new FormData()
+    var parser = withLimits({ fileSize: 122 }, [
+      { name: 'tiny0', maxCount: 1 }
+    ])
+
+    form.append('tiny0', util.file('tiny0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.ifError(err)
+      assert.strictEqual(req.files.tiny0[0].size, 122)
+      done()
+    })
+  })
+
   it('should respect file count limit', function (done) {
     var form = new FormData()
     var parser = withLimits({ files: 1 }, [
