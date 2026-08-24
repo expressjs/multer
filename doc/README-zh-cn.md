@@ -104,6 +104,7 @@ Key | Description
 `fileFilter` | 文件过滤器，控制哪些文件可以被接受
 `limits` | 限制上传的数据
 `preservePath` | 保存包含文件名的完整文件路径
+`defParamCharset` | 用于部分标头参数值（例如文件名）的默认字符集，这些参数不是扩展参数（不包含显式字符集）。默认值：`'latin1'`
 
 通常，一般的网页应用，只需要设置 `dest` 属性，像这样：
 
@@ -233,7 +234,7 @@ function fileFilter (req, file, cb) {
 
 ## 错误处理机制
 
-当遇到一个错误，multer 将会把错误发送给 express。你可以使用一个比较好的错误展示页 ([express标准方式](http://expressjs.com/guide/error-handling.html))。
+当遇到一个错误，multer 将会把错误发送给 express。你可以使用一个比较好的错误展示页 ([express标准方式](https://expressjs.com/zh-cn/guide/error-handling/))。
 
 如果你想捕捉 multer 发出的错误，你可以自己调用中间件程序。如果你想捕捉 [Multer 错误](https://github.com/expressjs/multer/blob/main/lib/multer-error.js)，你可以使用 `multer` 对象下的 `MulterError` 类 (即 `err instanceof multer.MulterError`)。
 

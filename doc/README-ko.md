@@ -102,6 +102,7 @@ Key | Description
 `fileFilter` | 어떤 파일을 허용할지 제어하는 함수
 `limits` | 업로드 된 데이터의 한도
 `preservePath` | 파일의 base name 대신 보존할 파일의 전체 경로
+`defParamCharset` | 확장 매개변수가 아닌 부분 헤더 매개변수 값(예: 파일명)에 사용할 기본 문자 집합(명시적 문자 집합을 포함하지 않음). 기본값: `'latin1'`
 
 보통의 웹 앱에서는 `dest` 옵션 정도만 필요할지도 모릅니다. 설정 방법은 아래의 예제에 나와있습니다.
 
@@ -230,7 +231,7 @@ function fileFilter (req, file, cb) {
 
 ## 에러 핸들링
 
-에러가 발생할 때, multer는 에러를 express에 위임할 것입니다. 여러분은 [the standard express way](http://expressjs.com/guide/error-handling.html) 를 이용해서 멋진 오류 페이지를 보여줄 수 있습니다.
+에러가 발생할 때, multer는 에러를 express에 위임할 것입니다. 여러분은 [the standard express way](https://expressjs.com/ko/guide/error-handling/) 를 이용해서 멋진 오류 페이지를 보여줄 수 있습니다.
 
 만일 multer 로부터 특별히 에러를 캐치하고 싶다면, 직접 미들웨어 함수를 호출하세요.
 
