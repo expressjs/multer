@@ -137,6 +137,7 @@ Key | Descrição
 `fileFilter` | Função para controlar quais arquivos são aceitos
 `limits` | Limites dos dados enviados
 `preservePath` | Mantenha o caminho completo dos arquivos em vez de apenas o nome base
+`defParamCharset` | Conjunto de caracteres padrão para usar em valores de parâmetros de cabeçalho de parte (por exemplo, nome do arquivo) que não são parâmetros estendidos (que contêm um conjunto de caracteres explícito). Padrão: `'latin1'`
 
 Em um web app básico, somente o `dest` pode ser necessário, e configurado como mostrado no exemplo a seguir:
 
@@ -152,7 +153,7 @@ Aceite um único arquivo com o nome `fieldname`. O arquivo único será armazena
 
 #### `.array(fieldname[, maxCount])`
 
-Aceite múltiplos arquivos, todos com o nome `fieldname`. Opcional, gera um errose forem enviados mais de `maxCount`. O array de arquivos serão armazenados em
+Aceite múltiplos arquivos, todos com o nome `fieldname`. Opcional, gera um erro se forem enviados mais de `maxCount`. O array de arquivos serão armazenados em
 `req.files`.
 
 #### `.fields(fields)`
@@ -275,7 +276,7 @@ function fileFilter (req, file, cb) {
 
 ## Error handling
 
-Quando encontrar um erro, Multer delegará o erro para Express. Você pode exibir uma boa página de erro usando [the standard express way](http://expressjs.com/guide/error-handling.html).
+Quando encontrar um erro, Multer delegará o erro para Express. Você pode exibir uma boa página de erro usando [the standard express way](https://expressjs.com/pt-br/guide/error-handling/).
 
 Se você quer pegar erros especificamente do Multer, você pode enviar para o função de middleware. Além disso, se você quiser pegar apenas [os erros do Multer](https://github.com/expressjs/multer/blob/main/lib/multer-error.js), você pode usar a classe `MulterError` que está ligado ao objeto `multer` (e.g. `err instanceof multer.MulterError`).
 

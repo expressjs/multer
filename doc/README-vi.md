@@ -103,7 +103,7 @@ Mỗi file sẽ chứa các thông tin sau:
 ### Tham số `multer(opts)`
 
 Multer chấp nhận một biến options. Cơ bản là thuộc tính `dest`, là nơi sẽ lưu
-file được uplaod. Trong trường hợp bỏ qua options này, file sẽ được giữ trong
+file được upload. Trong trường hợp bỏ qua options này, file sẽ được giữ trong
 RAM và không được lưu trên ổ cứng.
 
 Mặc định, Multer sẽ đổi tên các file, vì vậy để tránh bị trùng lặp, bạn có thể
@@ -117,6 +117,7 @@ Dưới đây là các tùy chọn mà bạn có thể sử dụng:
 | `fileFilter`          | Hàm để xử lý chỉ những file nào mới được chấp nhận |
 | `limits`              | Giới hạn dung lượng file được upload               |
 | `preservePath`        | Giữ đầy đủ đường dẫn tới file thay vì chỉ tên file |
+| `defParamCharset`     | Bộ ký tự mặc định để sử dụng cho các giá trị tham số tiêu đề phần (ví dụ: tên tệp) không phải là tham số mở rộng (không chứa bộ ký tự rõ ràng). Mặc định: `'latin1'` |
 
 Nói chung với web app, chỉ `dest` mới cần khai báo, như bên dưới:
 
@@ -260,7 +261,7 @@ function fileFilter(req, file, cb) {
 ## Error handling
 
 Khi một lỗi xảy ra, Multer sẽ gửi lỗi đó cho Express. Bạn có thể hiển thị
-đẹp hơn sử dụng [cách bắt lỗi chuẩn của Express](http://expressjs.com/guide/error-handling.html).
+đẹp hơn sử dụng [cách bắt lỗi chuẩn của Express](https://expressjs.com/en/guide/error-handling/).
 
 Nếu bạn muốn bắt các lỗi cụ thể từ Multer, bạn có thể tự gọi hàm trung gian (middleware) này. Ngoài ra, nếu bạn chỉ muốn bắt [lỗi của Multer](https://github.com/expressjs/multer/blob/main/lib/multer-error.js), bạn có thể dùng class `MulterError` được đính kèm với chính object `multer` (vd: `err instanceof multer.MulterError`).
 

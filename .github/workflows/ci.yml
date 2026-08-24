@@ -32,6 +32,8 @@ jobs:
         - Node.js 22.x
         - Node.js 23.x
         - Node.js 24.x
+        - Node.js 25.x
+        - Node.js 26.x
 
         include:
         - name: Node.js 10.x
@@ -85,8 +87,14 @@ jobs:
         - name: Node.js 24.x
           node-version: "24"
 
+        - name: Node.js 25.x
+          node-version: "25"
+
+        - name: Node.js 26.x
+          node-version: "26"
+
     steps:
-    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
     - name: Install Node.js ${{ matrix.node-version }}
       shell: bash -eo pipefail -l {0}
@@ -138,7 +146,7 @@ jobs:
         fi
 
     - name: Collect code coverage
-      uses: coverallsapp/github-action@09b709cf6a16e30b0808ba050c7a6e8a5ef13f8d # master
+      uses: coverallsapp/github-action@8d6379e14d29928660c4ba802d8e85393440b329 # v2.3.8
       if: steps.list_env.outputs.nyc != ''
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -152,7 +160,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Upload code coverage
-      uses: coverallsapp/github-action@09b709cf6a16e30b0808ba050c7a6e8a5ef13f8d # master
+      uses: coverallsapp/github-action@8d6379e14d29928660c4ba802d8e85393440b329 # v2.3.8
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         parallel-finished: true

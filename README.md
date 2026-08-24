@@ -12,7 +12,7 @@ This README is also available in other languages:
 |                                                                                |                 |
 | ------------------------------------------------------------------------------ | --------------- |
 | [العربية](https://github.com/expressjs/multer/blob/main/doc/README-ar.md)      | Arabic          |
-| [简体中文](https://github.com/expressjs/multer/blob/main/doc/README-zh-cn.md)  | Chinese         |
+| [简体中文](https://github.com/expressjs/multer/blob/main/doc/README-zh-cn.md)  | Chinese (Simplified)         |
 | [Français](https://github.com/expressjs/multer/blob/main/doc/README-fr.md)     | French          |
 | [한국어](https://github.com/expressjs/multer/blob/main/doc/README-ko.md)       | Korean          |
 | [Português](https://github.com/expressjs/multer/blob/main/doc/README-pt-br.md) | Portuguese (BR) |
@@ -20,6 +20,8 @@ This README is also available in other languages:
 | [Español](https://github.com/expressjs/multer/blob/main/doc/README-es.md)      | Spanish         |
 | [O'zbek tili](https://github.com/expressjs/multer/blob/main/doc/README-uz.md)  | Uzbek           |
 | [Việt Nam](https://github.com/expressjs/multer/blob/main/doc/README-vi.md)     | Vietnamese      |
+| [Türkçe](https://github.com/expressjs/multer/blob/main/doc/README-tr.md)       | Turkish         |
+
 
 ## Installation
 
@@ -118,7 +120,7 @@ Each file contains the following information:
 Key | Description | Note
 --- | --- | ---
 `fieldname` | Field name specified in the form |
-`originalname` | Name of the file on the user's computer |
+`originalname` | Name of the file on the user's computer, or the full path when `preservePath: true` |
 `encoding` | Encoding type of the file |
 `mimetype` | Mime type of the file |
 `size` | Size of the file in bytes |
@@ -143,7 +145,8 @@ Key | Description
 `dest` or `storage` | Where to store the files
 `fileFilter` | Function to control which files are accepted
 `limits` | Limits of the uploaded data
-`preservePath` | Keep the full path of files instead of just the base name
+`preservePath` | Keep the full client-supplied path in `file.originalname` instead of just the base name
+`defParamCharset` | Default character set to use for values of part header parameters (e.g. filename) that are not extended parameters (that contain an explicit charset). Default: `'latin1'`
 
 In an average web app, only `dest` might be required, and configured as shown in
 the following example.
@@ -151,6 +154,14 @@ the following example.
 ```javascript
 const upload = multer({ dest: 'uploads/' })
 ```
+
+When `preservePath` is enabled, Multer passes the incoming filename through with
+any path segments provided by the client. This is exposed as `file.originalname`;
+it does not change the destination folder, create directories, or sanitize the
+path for you. `file.originalname` is always client-supplied and should be treated
+as untrusted; with `preservePath` it additionally contains the path segments the
+client sent. Normalize or validate it before using it in a custom `filename` or
+storage engine.
 
 If you want more control over your uploads, you'll want to use the `storage`
 option instead of `dest`. Multer ships with storage engines `DiskStorage`
@@ -204,13 +215,17 @@ where you are handling the uploaded files.
 The disk storage engine gives you full control on storing files to disk.
 
 ```javascript
+const crypto = require('crypto')
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, '/tmp/my-uploads')
   },
   filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-    cb(null, file.fieldname + '-' + uniqueSuffix)
+    crypto.randomBytes(16, function (err, raw) {
+      if (err) return cb(err)
+      cb(null, file.fieldname + '-' + raw.toString('hex'))
+    })
   }
 })
 
@@ -265,19 +280,24 @@ memory storage is used.
 
 ### `limits`
 
-An object specifying the size limits of the following optional properties. Multer passes this object into busboy directly, and the details of the properties can be found on [busboy's page](https://github.com/mscdex/busboy#busboy-methods).
+An object specifying the size limits of the following optional properties. Multer passes this object into busboy directly, and the details of the properties can be found on [busboy's page](https://github.com/mscdex/busboy#exports).
 
 The following integer values are available:
 
 Key | Description | Default
 --- | --- | ---
-`fieldNameSize` | Max field name size | 100 bytes
+`fieldNameSize` | Max field name size | Infinity
 `fieldSize` | Max field value size (in bytes) | 1MB
 `fields` | Max number of non-file fields | Infinity
 `fileSize` | For multipart forms, the max file size (in bytes) | Infinity
 `files` | For multipart forms, the max number of file fields | Infinity
 `parts` | For multipart forms, the max number of parts (fields + files) | Infinity
 `headerPairs` | For multipart forms, the max number of header key=>value pairs to parse | 2000
+`fieldNestingDepth` | Max number of nesting levels for field names (e.g. `a[b][c]` has 2 levels) | Infinity
+
+The `parts` limit is triggered when busboy reaches the configured number of
+parts, not only after that number is exceeded. If you want to allow an exact
+number of fields and files, set `parts` to at least one more than that total.
 
 Specifying the limits can help protect your site against denial of service (DoS) attacks.
 
@@ -304,10 +324,19 @@ function fileFilter (req, file, cb) {
 }
 ```
 
+## Security
+
+Specifying the [limits](#limits) can help protect your site against denial of service (DoS) attacks. The following limits are recommended for most applications:
+
+- `fileSize` -- set to the maximum expected file size for your use case
+- `files` -- set to the maximum number of files per request
+- `fields` -- set to the maximum number of text fields per request
+- `fieldNestingDepth` -- set to the minimum depth your field names require (e.g. `3` for `a[b][c]`)
+
 ## Error handling
 
 When encountering an error, Multer will delegate the error to Express. You can
-display a nice error page using [the standard express way](http://expressjs.com/guide/error-handling.html).
+display a nice error page using [the standard express way](https://expressjs.com/en/guide/error-handling/).
 
 If you want to catch errors specifically from Multer, you can call the
 middleware function by yourself. Also, if you want to catch only [the Multer errors](https://github.com/expressjs/multer/blob/main/lib/multer-error.js), you can use the `MulterError` class that is attached to the `multer` object itself (e.g. `err instanceof multer.MulterError`).

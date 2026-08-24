@@ -126,6 +126,7 @@ app.post('/profile', upload.none(), function (req, res, next) {
 `fileFilter` | دالة للسيطرة على الملفات التي يتم قبولها
 `limits` | حدود البيانات التي تم تحميلها
 `preservePath` | الاحتفظ بالمسار الكامل للملفات بدلاً من الاسم الأساسي
+`defParamCharset` | مجموعة الأحرف الافتراضية لاستخدامها لقيم معاملات رأس الجزء (مثل اسم الملف) التي ليست معاملات موسعة (لا تحتوي على مجموعة أحرف صريحة). الافتراضي: `'latin1'`
 
 في تطبيق ويب متوسط  ​​، قد تكون هناك حاجة  فقط إلى `dest`، وتكوينها كما هو موضح في
 المثال التالي :
@@ -277,7 +278,7 @@ function fileFilter (req, file, cb) {
 ## معالجة الأخطاء
 
 عند مواجهة خطأ ، سيقوم Multer بتفويض الخطأ إلى Express. يمكنك
-عرض صفحة خطأ لطيفة باستخدام [طريقة Express القياسية](http://expressjs.com/guide/error-handling.html).
+عرض صفحة خطأ لطيفة باستخدام [طريقة Express القياسية](https://expressjs.com/en/guide/error-handling/).
 
 إذا كنت تريد إنتقاء الأخطاء والحصول على [أخطاء Multer فقط](https://github.com/expressjs/multer/blob/main/lib/multer-error.js)، فيمكنك نداء بدالة الوسيطة من قبل نفسك. أيضًا ، إذا كنت تريد التقاط أخطاء Multer فقط ، فيمكنك استخدام صنف `MulterError` المتصل بالكائن` multer` نفسه (على سبيل المثال `err instanceof multer.MulterError`).
 
