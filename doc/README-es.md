@@ -8,11 +8,11 @@ Multer es un "*middleware*" de node.js para el manejo de `multipart/form-data`, 
 
 Éste archivo README también está disponible en otros lenguajes:
 
-- [English](https://github.com/expressjs/multer/blob/master/README.md) (Inglés)
-- [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (Chino)
-- [한국어](https://github.com/expressjs/multer/blob/master/doc/README-ko.md) (Coreano)
-- [Русский язык](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (Ruso)
-- [Português](https://github.com/expressjs/multer/blob/master/doc/README-pt-br.md) (Portugués Brasileño)
+- [English](https://github.com/expressjs/multer/blob/main/README.md) (Inglés)
+- [简体中文](https://github.com/expressjs/multer/blob/main/doc/README-zh-cn.md) (Chino)
+- [한국어](https://github.com/expressjs/multer/blob/main/doc/README-ko.md) (Coreano)
+- [Русский язык](https://github.com/expressjs/multer/blob/main/doc/README-ru.md) (Ruso)
+- [Português](https://github.com/expressjs/multer/blob/main/doc/README-pt-br.md) (Portugués Brasileño)
 
 ## Instalación
 
@@ -135,6 +135,7 @@ Clave (key) | Descripción
 `fileFilter` | Función para controlar qué archivos son aceptados
 `limits` | Límites de los datos subidos
 `preservePath` | Mantiene la ruta completa de la ubicación de los archivos, en vez de sólo sus nombres
+`defParamCharset` | Conjunto de caracteres por defecto para usar en valores de parámetros de encabezados de partes (ej. nombre de archivo) que no son parámetros extendidos (que contienen un conjunto de caracteres explícito). Por defecto: `'latin1'`
 
 En la aplicación web promedio es probable que sólo se requiera `dest`, siendo configurado como en el siguiente ejemplo:
 
@@ -268,9 +269,9 @@ function fileFilter (req, file, cb) {
 
 ## Manejo de errores
 
-Al encontrarse con un error, Multer delegará ese error a Express. Puedes mostrar una linda página de error usando [la manera standard de Express](http://expressjs.com/guide/error-handling.html).
+Al encontrarse con un error, Multer delegará ese error a Express. Puedes mostrar una linda página de error usando [la manera standard de Express](https://expressjs.com/es/guide/error-handling/).
 
-Si quieres capturar los errores específicamente desde Multer, puedes llamar la función middleware tú mismo. También, si quieres capturar sólo [los errores de Multer](https://github.com/expressjs/multer/blob/master/lib/multer-error.js), puedes usar la clase `MulterError` que está adherida al mismo objeto `multer` (por ejemplo: `err instanceof multer.MulterError`).
+Si quieres capturar los errores específicamente desde Multer, puedes llamar la función middleware tú mismo. También, si quieres capturar sólo [los errores de Multer](https://github.com/expressjs/multer/blob/main/lib/multer-error.js), puedes usar la clase `MulterError` que está adherida al mismo objeto `multer` (por ejemplo: `err instanceof multer.MulterError`).
 
 ```javascript
 const multer = require('multer')
@@ -291,8 +292,18 @@ app.post('/profile', function (req, res) {
 
 ## Mecanismos de almacenamiento personalizados
 
-Para más información acerca de cómo construir tu propio mecanismo de almacenamiento, recomendamos leer [Multer Storage Engine](https://github.com/expressjs/multer/blob/master/StorageEngine.md).
+Para más información acerca de cómo construir tu propio mecanismo de almacenamiento, recomendamos leer [Multer Storage Engine](https://github.com/expressjs/multer/blob/main/StorageEngine.md).
 
 ## Licencia
 
 [MIT](LICENSE)
+
+[ci-image]: https://github.com/expressjs/multer/actions/workflows/ci.yml/badge.svg
+[ci-url]: https://github.com/expressjs/multer/actions/workflows/ci.yml
+[test-url]: https://coveralls.io/r/expressjs/multer?branch=main
+[test-image]: https://badgen.net/coveralls/c/github/expressjs/multer/main
+[npm-downloads-image]: https://badgen.net/npm/dm/multer
+[npm-url]: https://npmjs.org/package/multer
+[npm-version-image]: https://badgen.net/npm/v/multer
+[ossf-scorecard-badge]: https://api.scorecard.dev/projects/github.com/expressjs/multer/badge
+[ossf-scorecard-visualizer]: https://ossf.github.io/scorecard-visualizer/#/projects/github.com/expressjs/multer

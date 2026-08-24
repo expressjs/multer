@@ -8,16 +8,16 @@ Multer é um middleware node.js para manipulação `multipart/form-data`, que é
 
 Este README também está disponível em outros idiomas:
 
-- [English](https://github.com/expressjs/multer/blob/master/README.md) (Inglês)
-- [العربية](https://github.com/expressjs/multer/blob/master/doc/README-ar.md) (Árabe)
-- [Español](https://github.com/expressjs/multer/blob/master/doc/README-es.md) (Espanhol)
-- [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (Chinês)
-- [한국어](https://github.com/expressjs/multer/blob/master/doc/README-ko.md) (Coreano)
-- [Русский язык](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (Russo)
-- [Việt Nam](https://github.com/expressjs/multer/blob/master/doc/README-vi.md) (Vietnã)
-- [Português](https://github.com/expressjs/multer/blob/master/doc/README-pt-br.md) (Português Brasil)
-- [Français](https://github.com/expressjs/multer/blob/master/doc/README-fr.md) (Francês)
-- [O'zbek tili](https://github.com/expressjs/multer/blob/master/doc/README-uz.md) (Uzbequistão)
+- [English](https://github.com/expressjs/multer/blob/main/README.md) (Inglês)
+- [العربية](https://github.com/expressjs/multer/blob/main/doc/README-ar.md) (Árabe)
+- [Español](https://github.com/expressjs/multer/blob/main/doc/README-es.md) (Espanhol)
+- [简体中文](https://github.com/expressjs/multer/blob/main/doc/README-zh-cn.md) (Chinês)
+- [한국어](https://github.com/expressjs/multer/blob/main/doc/README-ko.md) (Coreano)
+- [Русский язык](https://github.com/expressjs/multer/blob/main/doc/README-ru.md) (Russo)
+- [Việt Nam](https://github.com/expressjs/multer/blob/main/doc/README-vi.md) (Vietnã)
+- [Português](https://github.com/expressjs/multer/blob/main/doc/README-pt-br.md) (Português Brasil)
+- [Français](https://github.com/expressjs/multer/blob/main/doc/README-fr.md) (Francês)
+- [O'zbek tili](https://github.com/expressjs/multer/blob/main/doc/README-uz.md) (Uzbequistão)
 
 ## Instalação
 
@@ -137,6 +137,7 @@ Key | Descrição
 `fileFilter` | Função para controlar quais arquivos são aceitos
 `limits` | Limites dos dados enviados
 `preservePath` | Mantenha o caminho completo dos arquivos em vez de apenas o nome base
+`defParamCharset` | Conjunto de caracteres padrão para usar em valores de parâmetros de cabeçalho de parte (por exemplo, nome do arquivo) que não são parâmetros estendidos (que contêm um conjunto de caracteres explícito). Padrão: `'latin1'`
 
 Em um web app básico, somente o `dest` pode ser necessário, e configurado como mostrado no exemplo a seguir:
 
@@ -152,7 +153,7 @@ Aceite um único arquivo com o nome `fieldname`. O arquivo único será armazena
 
 #### `.array(fieldname[, maxCount])`
 
-Aceite múltiplos arquivos, todos com o nome `fieldname`. Opcional, gera um errose forem enviados mais de `maxCount`. O array de arquivos serão armazenados em
+Aceite múltiplos arquivos, todos com o nome `fieldname`. Opcional, gera um erro se forem enviados mais de `maxCount`. O array de arquivos serão armazenados em
 `req.files`.
 
 #### `.fields(fields)`
@@ -275,9 +276,9 @@ function fileFilter (req, file, cb) {
 
 ## Error handling
 
-Quando encontrar um erro, Multer delegará o erro para Express. Você pode exibir uma boa página de erro usando [the standard express way](http://expressjs.com/guide/error-handling.html).
+Quando encontrar um erro, Multer delegará o erro para Express. Você pode exibir uma boa página de erro usando [the standard express way](https://expressjs.com/pt-br/guide/error-handling/).
 
-Se você quer pegar erros especificamente do Multer, você pode enviar para o função de middleware. Além disso, se você quiser pegar apenas [os erros do Multer](https://github.com/expressjs/multer/blob/master/lib/multer-error.js), você pode usar a classe `MulterError` que está ligado ao objeto `multer` (e.g. `err instanceof multer.MulterError`).
+Se você quer pegar erros especificamente do Multer, você pode enviar para o função de middleware. Além disso, se você quiser pegar apenas [os erros do Multer](https://github.com/expressjs/multer/blob/main/lib/multer-error.js), você pode usar a classe `MulterError` que está ligado ao objeto `multer` (e.g. `err instanceof multer.MulterError`).
 
 ```javascript
 const multer = require('multer')
@@ -298,8 +299,18 @@ app.post('/profile', function (req, res) {
 
 ## Mecanismo de armazenamento personalizado
 
-Para obter informações sobre como criar seu próprio mecanismo de armazenamento, veja [Multer Storage Engine](https://github.com/expressjs/multer/blob/master/StorageEngine.md).
+Para obter informações sobre como criar seu próprio mecanismo de armazenamento, veja [Multer Storage Engine](https://github.com/expressjs/multer/blob/main/StorageEngine.md).
 
 ## Licença
 
 [MIT](LICENSE)
+
+[ci-image]: https://github.com/expressjs/multer/actions/workflows/ci.yml/badge.svg
+[ci-url]: https://github.com/expressjs/multer/actions/workflows/ci.yml
+[test-url]: https://coveralls.io/r/expressjs/multer?branch=main
+[test-image]: https://badgen.net/coveralls/c/github/expressjs/multer/main
+[npm-downloads-image]: https://badgen.net/npm/dm/multer
+[npm-url]: https://npmjs.org/package/multer
+[npm-version-image]: https://badgen.net/npm/v/multer
+[ossf-scorecard-badge]: https://api.scorecard.dev/projects/github.com/expressjs/multer/badge
+[ossf-scorecard-visualizer]: https://ossf.github.io/scorecard-visualizer/#/projects/github.com/expressjs/multer

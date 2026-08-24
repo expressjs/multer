@@ -16,7 +16,7 @@ on:
     branches: ["main", "v2"]
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: ["main", "v2]
+    branches: ["main", "v2"]
   schedule:
     - cron: "0 0 * * 1"
 
@@ -34,11 +34,11 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       # Initializes the CodeQL tools for scanning.
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@3ab4101902695724f9365a384f86c1074d94e18c # v3.24.7
+        uses: github/codeql-action/init@f205ea1c3313d32999d8d6a48b4f6530d4437b38 # v4.37.4
         with:
           languages: javascript
           # If you wish to specify custom queries, you can do so here or in a config file.
@@ -61,6 +61,6 @@ jobs:
       #   ./location_of_script_within_repo/buildscript.sh
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@3ab4101902695724f9365a384f86c1074d94e18c # v3.24.7
+        uses: github/codeql-action/analyze@f205ea1c3313d32999d8d6a48b4f6530d4437b38 # v4.37.4
         with:
           category: "/language:javascript"
