@@ -8,7 +8,10 @@
     "Linus Unnebäck <linus@folkdatorn.se>"
   ],
   "license": "MIT",
-  "repository": "expressjs/multer",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/expressjs/multer.git"
+  },
   "funding": {
     "type": "opencollective",
     "url": "https://opencollective.com/express"
