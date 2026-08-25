@@ -1,6 +1,7 @@
 /* eslint-env mocha */
 
 var assert = require('assert')
+var asyncHooks = require('async_hooks')
 
 var path = require('path')
 
@@ -135,6 +136,25 @@ describe('Functionality', function () {
       assert.ok(req.files[0].path.indexOf(path.sep + 'testforme-') >= 0)
       assert.ok(req.files[1].path.indexOf(path.sep + 'testforme-') >= 0)
       done()
+    })
+  })
+
+  var itWithAsyncLocalStorage = asyncHooks.AsyncLocalStorage ? it : it.skip
+  itWithAsyncLocalStorage('should preserve async_hooks context', function (done) {
+    makeStandardEnv(function (err, env) {
+      if (err) return done(err)
+
+      var parser = env.upload.single('small0')
+      env.form.append('small0', util.file('small0.dat'))
+
+      var asyncLocalStorage = new asyncHooks.AsyncLocalStorage()
+      asyncLocalStorage.run('foo', function () {
+        util.submitForm(parser, env.form, function (err, req) {
+          assert.ifError(err)
+          assert.strictEqual(asyncLocalStorage.getStore(), 'foo')
+          done()
+        })
+      })
     })
   })
 })
