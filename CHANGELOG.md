@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.3.0
+
+- Fix [CVE-2026-77078](https://www.cve.org/CVERecord?id=CVE-2026-77078) ([GHSA-wc9g-mqfw-jrwm](https://github.com/expressjs/multer/security/advisories/GHSA-wc9g-mqfw-jrwm))
+- Fix [CVE-2026-77037](https://www.cve.org/CVERecord?id=CVE-2026-77037) ([GHSA-qfvm-cv95-jqjf](https://github.com/expressjs/multer/security/advisories/GHSA-qfvm-cv95-jqjf))
+- Fix [CVE-2026-77063](https://www.cve.org/CVERecord?id=CVE-2026-77063) ([GHSA-qvfw-j98x-7q72](https://github.com/expressjs/multer/security/advisories/GHSA-qvfw-j98x-7q72))
+- Fix [CVE-2026-82333](https://www.cve.org/CVERecord?id=CVE-2026-82333) ([GHSA-535w-7cp7-47q4](https://github.com/expressjs/multer/security/advisories/GHSA-535w-7cp7-47q4))
+- Add `MulterError` codes `INVALID_FIELD_NAME` and `STREAM_DESTROYED`
+- Add opt-in `limits.fieldArrayIndexLimit` to bound numeric array indexes in field names ([#1438](https://github.com/expressjs/multer/pull/1438))
+- Accept files whose size is exactly `limits.fileSize` ([#1407](https://github.com/expressjs/multer/pull/1407))
+- Preserve the caller's async context (`AsyncLocalStorage`) when calling `next()` ([#1124](https://github.com/expressjs/multer/pull/1124))
+- Decode WHATWG-escaped characters (`%0A`, `%0D`, `%22`) in `file.originalname` ([#1421](https://github.com/expressjs/multer/pull/1421))
+- Do not crash when `fileFilter` invokes its callback more than once ([#1427](https://github.com/expressjs/multer/pull/1427))
+- Use a fallback message for `MulterError` codes without a mapping ([#1448](https://github.com/expressjs/multer/pull/1448))
+- Docs: clarify `preservePath` and `parts`, use `crypto.randomBytes` in the `DiskStorage` example ([#1414](https://github.com/expressjs/multer/pull/1414), [#1430](https://github.com/expressjs/multer/pull/1430), [#1436](https://github.com/expressjs/multer/pull/1436))
+- Docs: add Indonesian, Japanese and Tamil translations and refresh all translations from the current README ([#1431](https://github.com/expressjs/multer/pull/1431), [#1354](https://github.com/expressjs/multer/pull/1354), [#1462](https://github.com/expressjs/multer/pull/1462))
+- Internal: run the test suite on Windows ([#1334](https://github.com/expressjs/multer/pull/1334))
+
 ## 2.2.0
 
 - Fix [CVE-2026-5038](https://www.cve.org/CVERecord?id=CVE-2026-5038) ([GHSA-3p4h-7m6x-2hcm](https://github.com/expressjs/multer/security/advisories/GHSA-3p4h-7m6x-2hcm))
