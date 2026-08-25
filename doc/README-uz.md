@@ -113,6 +113,7 @@ Kalit(key) | Ta'rif
 `fileFilter` | Qaysi fayllar qabul qilinishini boshqarish funksiyasi
 `limits` | Yuklash chegarasi
 `preservePath` | Asosiy nom o'rniga fayllarning to'liq yo'lini saqlash
+`defParamCharset` | Kengaytirilgan parametrlar bo'lmagan qism sarlavha parametrlari qiymatlari (masalan, fayl nomi) uchun ishlatish uchun standart belgilar to'plami (aniq belgilar to'plamini o'z ichiga olmaydi). Standart: `'latin1'`
 
 O'rtacha veb-ilovada faqat `dest` kerak bo'lishi mumkin va quyidagicha sozlanishi mumkin
 
@@ -242,7 +243,7 @@ function fileFilter (req, file, cb) {
 
 ## Xatolar bilan ishlash
 
-Xatoga duch kelganda, Multer xatoni Expressga yuboradi. [standart express usuli](http://expressjs.com/guide/error-handling.html)dan foydalanib xatoni tartibliroq chiqarishingiz mumkin.
+Xatoga duch kelganda, Multer xatoni Expressga yuboradi. [standart express usuli](https://expressjs.com/en/guide/error-handling/)dan foydalanib xatoni tartibliroq chiqarishingiz mumkin.
 
 Agar siz Multerdan chiqqan xatolarni aniqlamoqchi bo'lsangiz o'zingiz `middleware` funksiya yozishingiz mumkin. Shuningdek, agar siz faqat [Multer xatolarini](https://github.com/expressjs/multer/blob/main/lib/multer-error.js) ushlamoqchi bo'lsangiz, siz `multer` ob'ektiga yozilgan `MulterError` class ni ishlatishingiz mumkin (masalan, `err instanceof multer.MulterError`).
 

@@ -1,15 +1,22 @@
 /* eslint-env mocha */
 
 var assert = require('assert')
-var deepEqual = require('deep-equal')
 
-var fs = require('fs')
 var path = require('path')
+var os = require('os')
 var util = require('./_util')
 var multer = require('../')
 var temp = require('fs-temp')
 var rimraf = require('rimraf')
 var FormData = require('form-data')
+
+function assertFileProperties (file, expectedFieldname, expectedOriginalname) {
+  const expectedSize = util.fileSizeByName(expectedOriginalname)
+  assert.strictEqual(file.fieldname, expectedFieldname)
+  assert.strictEqual(file.originalname, expectedOriginalname)
+  assert.strictEqual(file.size, expectedSize)
+  assert.strictEqual(util.fileSize(file.path), expectedSize)
+}
 
 describe('Disk Storage', function () {
   var uploadDir, upload
@@ -40,10 +47,7 @@ describe('Disk Storage', function () {
 
       assert.strictEqual(req.body.name, 'Multer')
 
-      assert.strictEqual(req.file.fieldname, 'small0')
-      assert.strictEqual(req.file.originalname, 'small0.dat')
-      assert.strictEqual(req.file.size, 1778)
-      assert.strictEqual(util.fileSize(req.file.path), 1778)
+      assertFileProperties(req.file, 'small0', 'small0.dat')
 
       done()
     })
@@ -71,14 +75,11 @@ describe('Disk Storage', function () {
       assert.strictEqual(req.body.version, '')
       assert.strictEqual(req.body.year, '')
 
-      assert(deepEqual(req.body.checkboxfull, ['cb1', 'cb2']))
-      assert(deepEqual(req.body.checkboxhalfempty, ['cb1', '']))
-      assert(deepEqual(req.body.checkboxempty, ['', '']))
+      assert.deepStrictEqual(req.body.checkboxfull, ['cb1', 'cb2'])
+      assert.deepStrictEqual(req.body.checkboxhalfempty, ['cb1', ''])
+      assert.deepStrictEqual(req.body.checkboxempty, ['', ''])
 
-      assert.strictEqual(req.file.fieldname, 'empty')
-      assert.strictEqual(req.file.originalname, 'empty.dat')
-      assert.strictEqual(req.file.size, 0)
-      assert.strictEqual(util.fileSize(req.file.path), 0)
+      assertFileProperties(req.file, 'empty', 'empty.dat')
 
       done()
     })
@@ -107,42 +108,15 @@ describe('Disk Storage', function () {
     util.submitForm(parser, form, function (err, req) {
       assert.ifError(err)
 
-      assert(deepEqual(req.body, {}))
+      assert.deepStrictEqual(req.body, util.toNullProtoDeep({}))
 
-      assert.strictEqual(req.files.empty[0].fieldname, 'empty')
-      assert.strictEqual(req.files.empty[0].originalname, 'empty.dat')
-      assert.strictEqual(req.files.empty[0].size, 0)
-      assert.strictEqual(util.fileSize(req.files.empty[0].path), 0)
-
-      assert.strictEqual(req.files.tiny0[0].fieldname, 'tiny0')
-      assert.strictEqual(req.files.tiny0[0].originalname, 'tiny0.dat')
-      assert.strictEqual(req.files.tiny0[0].size, 122)
-      assert.strictEqual(util.fileSize(req.files.tiny0[0].path), 122)
-
-      assert.strictEqual(req.files.tiny1[0].fieldname, 'tiny1')
-      assert.strictEqual(req.files.tiny1[0].originalname, 'tiny1.dat')
-      assert.strictEqual(req.files.tiny1[0].size, 7)
-      assert.strictEqual(util.fileSize(req.files.tiny1[0].path), 7)
-
-      assert.strictEqual(req.files.small0[0].fieldname, 'small0')
-      assert.strictEqual(req.files.small0[0].originalname, 'small0.dat')
-      assert.strictEqual(req.files.small0[0].size, 1778)
-      assert.strictEqual(util.fileSize(req.files.small0[0].path), 1778)
-
-      assert.strictEqual(req.files.small1[0].fieldname, 'small1')
-      assert.strictEqual(req.files.small1[0].originalname, 'small1.dat')
-      assert.strictEqual(req.files.small1[0].size, 315)
-      assert.strictEqual(util.fileSize(req.files.small1[0].path), 315)
-
-      assert.strictEqual(req.files.medium[0].fieldname, 'medium')
-      assert.strictEqual(req.files.medium[0].originalname, 'medium.dat')
-      assert.strictEqual(req.files.medium[0].size, 13196)
-      assert.strictEqual(util.fileSize(req.files.medium[0].path), 13196)
-
-      assert.strictEqual(req.files.large[0].fieldname, 'large')
-      assert.strictEqual(req.files.large[0].originalname, 'large.jpg')
-      assert.strictEqual(req.files.large[0].size, 2413677)
-      assert.strictEqual(util.fileSize(req.files.large[0].path), 2413677)
+      assertFileProperties(req.files.empty[0], 'empty', 'empty.dat')
+      assertFileProperties(req.files.tiny0[0], 'tiny0', 'tiny0.dat')
+      assertFileProperties(req.files.tiny1[0], 'tiny1', 'tiny1.dat')
+      assertFileProperties(req.files.small0[0], 'small0', 'small0.dat')
+      assertFileProperties(req.files.small1[0], 'small1', 'small1.dat')
+      assertFileProperties(req.files.medium[0], 'medium', 'medium.dat')
+      assertFileProperties(req.files.large[0], 'large', 'large.jpg')
 
       done()
     })
@@ -158,10 +132,9 @@ describe('Disk Storage', function () {
     util.submitForm(parser, form, function (err, req) {
       assert.strictEqual(err.code, 'LIMIT_UNEXPECTED_FILE')
       assert.strictEqual(err.field, 'small0')
-      assert(deepEqual(err.storageErrors, []))
+      assert.deepStrictEqual(err.storageErrors, [])
 
-      var files = fs.readdirSync(uploadDir)
-      assert(deepEqual(files, []))
+      assert.deepStrictEqual(util.readDir(uploadDir), [])
 
       done()
     })
@@ -181,6 +154,77 @@ describe('Disk Storage', function () {
     util.submitForm(parser, form, function (err, req) {
       assert.strictEqual(err.code, 'ENOENT')
       assert.strictEqual(path.dirname(err.path), directory)
+
+      done()
+    })
+  })
+
+  it('should use default destination when none is provided', function (done) {
+    var storage = multer.diskStorage({})
+    var upload = multer({ storage: storage })
+    var parser = upload.single('file')
+    var form = new FormData()
+
+    form.append('file', util.file('small0.dat'))
+
+    util.submitForm(parser, form, (err, req) => {
+      assert.ifError(err)
+
+      // Verify that the file was stored in the system's temporary directory
+      assert.strictEqual(path.dirname(req.file.path), os.tmpdir())
+
+      done()
+    })
+  })
+
+  it('should handle error in getDestination', function (done) {
+    var storage = multer.diskStorage({
+      destination: function (req, file, cb) {
+        cb(new Error('Test getDestination error'))
+      }
+    })
+    var upload = multer({ storage: storage })
+    var parser = upload.single('file')
+    var form = new FormData()
+
+    form.append('file', util.file('small0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert(err)
+      assert.strictEqual(err.message, 'Test getDestination error')
+      done()
+    })
+  })
+
+  it('should handle error in getFilename', function (done) {
+    var storage = multer.diskStorage({
+      filename: function (req, file, cb) {
+        cb(new Error('Test getFilename error'))
+      }
+    })
+    var upload = multer({ storage: storage })
+    var parser = upload.single('file')
+    var form = new FormData()
+
+    form.append('file', util.file('small0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert(err)
+      assert.strictEqual(err.message, 'Test getFilename error')
+      done()
+    })
+  })
+
+  it('should handle case where fieldname and originalname did not match', function (done) {
+    var form = new FormData()
+    var parser = upload.single('profilePic')
+
+    form.append('profilePic', util.file('large.jpg'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.ifError(err)
+
+      assertFileProperties(req.file, 'profilePic', 'large.jpg')
 
       done()
     })

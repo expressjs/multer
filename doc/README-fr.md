@@ -137,6 +137,7 @@ Clé | Description
 `fileFilter` | Fonction pour contrôler quels fichiers sont acceptés
 `limits` | Limites des données téléchargées
 `preservePath` | Conservez le chemin complet des fichiers au lieu du nom de base uniquement
+`defParamCharset` | Jeu de caractères par défaut à utiliser pour les valeurs des paramètres d'en-tête de partie (par exemple, nom de fichier) qui ne sont pas des paramètres étendus (qui contiennent un jeu de caractères explicite). Par défaut : `'latin1'`
 
 Dans une application Web moyenne, seul `dest` peut être requis et configuré comme indiqué dans
 l'exemple suivant.
@@ -300,7 +301,7 @@ function fileFilter (req, file, cb) {
 ## Gestion des Erreurs
 
 En cas d'erreur, Multer déléguera l'erreur à Express. Vous pouvez
-afficher une belle page d'erreur en utilisant [la voie express standard](http://expressjs.com/guide/error-handling.html).
+afficher une belle page d'erreur en utilisant [la voie express standard](https://expressjs.com/fr/guide/error-handling/).
 
 Si vous souhaitez détecter les erreurs spécifiquement de Multer, vous pouvez appeler la
 fonction middleware par vous-même. Aussi, si vous voulez attraper seulement [les erreurs Multer](https://github.com/expressjs/multer/blob/main/lib/multer-error.js), vous pouvez utiliser la classe `MulterError` qui est jointe à l'objet `multer` lui-même (par exemple `err instanceof multer.MulterError`).

@@ -104,6 +104,7 @@ Key | Description
 `fileFilter` | 文件过滤器，控制哪些文件可以被接受
 `limits` | 限制上传的数据
 `preservePath` | 保存包含文件名的完整文件路径
+`defParamCharset` | 用于部分标头参数值（例如文件名）的默认字符集，这些参数不是扩展参数（不包含显式字符集）。默认值：`'latin1'`
 
 通常，一般的网页应用，只需要设置 `dest` 属性，像这样：
 
@@ -170,13 +171,13 @@ const upload = multer({ storage: storage })
 
 `destination` 是用来确定上传的文件应该存储在哪个文件夹中。也可以提供一个 `string` (例如 `'/tmp/uploads'`)。如果没有设置 `destination`，则使用操作系统默认的临时文件夹。
 
-**注意:** 如果你提供的 `destination` 是一个函数，你需要负责创建文件夹。当提供一个字符串，multer 将确保这个文件夹是你创建的。
+**注意:** 当 `destination` 声明为一个函数时，你需要自己创建文件夹。当 `destination` 是一个字符串时，multer 会为你创建相应的文件夹。
 
 `filename` 用于确定文件夹中的文件名的确定。 如果没有设置 `filename`，每个文件将设置为一个随机文件名，并且是没有扩展名的。
 
 **注意:** Multer 不会为你添加任何扩展名，你的程序应该返回一个完整的文件名。
 
-每个函数都传递了请求对象 (`req`) 和一些关于这个文件的信息 (`file`)，有助于你的决定。
+每个函数都会传入请求对象 (`req`) 和一些关于文件的信息 (`file`)，这两个参数有助于你做出决定。
 
 注意 `req.body` 可能还没有完全填充，这取决于向客户端发送字段和文件到服务器的顺序。
 
@@ -233,7 +234,7 @@ function fileFilter (req, file, cb) {
 
 ## 错误处理机制
 
-当遇到一个错误，multer 将会把错误发送给 express。你可以使用一个比较好的错误展示页 ([express标准方式](http://expressjs.com/guide/error-handling.html))。
+当遇到一个错误，multer 将会把错误发送给 express。你可以使用一个比较好的错误展示页 ([express标准方式](https://expressjs.com/zh-cn/guide/error-handling/))。
 
 如果你想捕捉 multer 发出的错误，你可以自己调用中间件程序。如果你想捕捉 [Multer 错误](https://github.com/expressjs/multer/blob/main/lib/multer-error.js)，你可以使用 `multer` 对象下的 `MulterError` 类 (即 `err instanceof multer.MulterError`)。
 

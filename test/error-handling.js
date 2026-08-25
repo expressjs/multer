@@ -1,12 +1,15 @@
 /* eslint-env mocha */
 
 var assert = require('assert')
-
+var MulterError = require('../lib/multer-error')
 var os = require('os')
 var util = require('./_util')
 var multer = require('../')
+var removeUploadedFiles = require('../lib/remove-uploaded-files')
 var stream = require('stream')
 var FormData = require('form-data')
+var http = require('http')
+var net = require('net')
 
 function withLimits (limits, fields) {
   var storage = multer.memoryStorage()
@@ -14,6 +17,11 @@ function withLimits (limits, fields) {
 }
 
 describe('Error Handling', function () {
+  it('should use a fallback message when the code is not mapped', function () {
+    var err = new MulterError('SOME_NEW_CODE')
+    assert.strictEqual(err.message, 'Unknown error: SOME_NEW_CODE')
+  })
+
   it('should be an instance of both `Error` and `MulterError` classes in case of the Multer\'s error', function (done) {
     var form = new FormData()
     var storage = multer.diskStorage({ destination: os.tmpdir() })
@@ -59,6 +67,66 @@ describe('Error Handling', function () {
     util.submitForm(parser, form, function (err, req) {
       assert.strictEqual(err.code, 'LIMIT_FILE_SIZE')
       assert.strictEqual(err.field, 'small0')
+      done()
+    })
+  })
+
+  it('should allow file that is exactly at file size limit', function (done) {
+    var form = new FormData()
+    var parser = multer({ storage: multer.memoryStorage(), limits: { fileSize: 1500 } }).single('small0')
+
+    form.append('small0', Buffer.alloc(1500), 'small0.txt')
+
+    util.submitForm(parser, form, function (err) {
+      assert.ifError(err)
+      done()
+    })
+  })
+
+  it('should reject file 1 byte over fileSize limit', function (done) {
+    // tiny0.dat is 122 bytes - set limit to 121 (1 byte less)
+    var form = new FormData()
+    var parser = withLimits({ fileSize: 121 }, [
+      { name: 'tiny0', maxCount: 1 }
+    ])
+
+    form.append('tiny0', util.file('tiny0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.strictEqual(err.code, 'LIMIT_FILE_SIZE')
+      assert.strictEqual(err.field, 'tiny0')
+      done()
+    })
+  })
+
+  it('should accept empty file when fileSize limit is 0', function (done) {
+    // empty.dat is 0 bytes
+    var form = new FormData()
+    var parser = withLimits({ fileSize: 0 }, [
+      { name: 'empty', maxCount: 1 }
+    ])
+
+    form.append('empty', util.file('empty.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.ifError(err)
+      assert.strictEqual(req.files.empty[0].size, 0)
+      done()
+    })
+  })
+
+  it('should reject non-empty file when fileSize limit is 0', function (done) {
+    // tiny1.dat is 7 bytes
+    var form = new FormData()
+    var parser = withLimits({ fileSize: 0 }, [
+      { name: 'tiny1', maxCount: 1 }
+    ])
+
+    form.append('tiny1', util.file('tiny1.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.strictEqual(err.code, 'LIMIT_FILE_SIZE')
+      assert.strictEqual(err.field, 'tiny1')
       done()
     })
   })
@@ -275,6 +343,201 @@ describe('Error Handling', function () {
     util.submitForm(upload, form, function (err, req) {
       assert.strictEqual(err.code, 'LIMIT_FILE_SIZE')
       done()
+    })
+  })
+
+  it('should allow client to finish sending body before error response', function (done) {
+    this.timeout(10000)
+
+    var upload = multer({ storage: multer.memoryStorage() }).single('expected')
+
+    var server = http.createServer(function (req, res) {
+      upload(req, res, function (err) {
+        res.statusCode = err ? 500 : 200
+        res.end(err ? err.code : 'OK')
+      })
+    })
+
+    server.listen(0, function () {
+      var port = server.address().port
+      var boundary = 'Drain' + Date.now()
+      var preamble = [
+        '--' + boundary,
+        'Content-Disposition: form-data; name="unexpected"; filename="test.bin"',
+        'Content-Type: application/octet-stream',
+        '',
+        ''
+      ].join('\r\n')
+      var footer = '\r\n--' + boundary + '--\r\n'
+      var chunk = Buffer.alloc(32 * 1024, 97)
+      var totalChunks = 24
+      var contentLength = Buffer.byteLength(preamble) +
+        (chunk.length * totalChunks) +
+        Buffer.byteLength(footer)
+
+      var sock = new net.Socket()
+      var socketError = null
+      var response = ''
+      var sentChunks = 0
+      var finished = false
+      var timeout = setTimeout(function () {
+        if (finished) return
+        finished = true
+        sock.destroy()
+        server.close(function () {
+          done(new Error('timed out while uploading request body'))
+        })
+      }, 8000)
+
+      function finish (err) {
+        if (finished) return
+        finished = true
+        clearTimeout(timeout)
+        server.close(function () {
+          done(err)
+        })
+      }
+
+      function writeChunk () {
+        if (sentChunks >= totalChunks) {
+          sock.write(footer)
+          return
+        }
+
+        sentChunks += 1
+        var canContinue = sock.write(chunk)
+
+        if (canContinue) {
+          setTimeout(writeChunk, 2)
+        } else {
+          sock.once('drain', function () {
+            setTimeout(writeChunk, 2)
+          })
+        }
+      }
+
+      sock.connect(port, '127.0.0.1', function () {
+        sock.write(
+          'POST / HTTP/1.1\r\n' +
+          'Host: localhost\r\n' +
+          'Connection: close\r\n' +
+          'Content-Type: multipart/form-data; boundary=' + boundary + '\r\n' +
+          'Content-Length: ' + contentLength + '\r\n\r\n'
+        )
+        sock.write(preamble)
+        writeChunk()
+      })
+
+      sock.on('data', function (buf) {
+        response += buf.toString('utf8')
+      })
+
+      sock.on('error', function (err) {
+        socketError = err
+      })
+
+      sock.on('close', function () {
+        if (socketError) return finish(socketError)
+
+        try {
+          assert.strictEqual(sentChunks, totalChunks)
+          assert.ok(/HTTP\/1\.1 500/.test(response))
+          finish()
+        } catch (err) {
+          finish(err)
+        }
+      })
+    })
+  })
+
+  it('should not hang when client aborts multipart upload', function (done) {
+    this.timeout(5000)
+
+    var upload = multer({ storage: multer.memoryStorage() }).any()
+
+    var server = http.createServer(function (req, res) {
+      var hung = false
+
+      var timer = setTimeout(function () {
+        hung = true
+        server.close()
+        done(new Error('Middleware hung when client aborted request'))
+      }, 1000)
+
+      upload(req, res, function (/* err */) {
+        if (hung) return
+        clearTimeout(timer)
+        server.close()
+        done()
+      })
+    })
+
+    server.listen(0, function () {
+      var port = server.address().port
+      var boundary = 'PoC' + Date.now()
+      var sock = new net.Socket()
+
+      sock.connect(port, '127.0.0.1', function () {
+        sock.write(
+          'POST / HTTP/1.1\r\n' +
+          'Host: localhost\r\n' +
+          'Content-Type: multipart/form-data; boundary=' + boundary + '\r\n' +
+          'Content-Length: 999999\r\n\r\n' +
+          '--' + boundary + '\r\n' +
+          'Content-Disposition: form-data; name="file"; filename="test.bin"\r\n' +
+          'Content-Type: application/octet-stream\r\n\r\n' +
+          'AAAAAAAAAAAAAAAA'
+        )
+
+        setTimeout(function () {
+          sock.destroy()
+        }, 50)
+      })
+
+      sock.on('error', function () { })
+    })
+  })
+
+  it('should not overflow call stack when cleaning up many files (memory storage sync remove)', function (done) {
+    // - without setImmediate in remove-uploaded-files, synchronous _removeFile (e.g. memory storage)
+    //     causes handleFile(0) -> remove -> cb() -> handleFile(1) -> ... in one stack,
+    //     leading to "Maximum call stack size exceeded"
+    // - use enough files to exceed typical node stack depth (~10k - 30k)
+
+    this.timeout(10 * 1000)
+
+    var fileCount = 25000
+    var uploadedFiles = []
+
+    for (var i = 0; i < fileCount; i++) {
+      uploadedFiles.push({ fieldname: 'file', originalname: 'f.dat', buffer: Buffer.alloc(0) })
+    }
+
+    function syncRemove (file, cb) {
+      delete file.buffer
+      cb(null)
+    }
+
+    removeUploadedFiles(uploadedFiles, syncRemove, function (err, errors) {
+      assert.ifError(err)
+      assert.strictEqual(errors.length, 0)
+      done()
+    })
+  })
+
+  it('should throw TypeError if options is not an object', function () {
+    assert.throws(() => {
+      multer(null)
+    }, {
+      name: 'TypeError',
+      message: 'Expected object for argument options'
+    })
+
+    assert.throws(() => {
+      multer('invalid')
+    }, {
+      name: 'TypeError',
+      message: 'Expected object for argument options'
     })
   })
 })
