@@ -2,7 +2,6 @@ var fs = require('fs')
 var os = require('os')
 var path = require('path')
 var crypto = require('crypto')
-var mkdirp = require('mkdirp')
 
 function getFilename (req, file, cb) {
   crypto.randomBytes(16, function (err, raw) {
@@ -18,7 +17,7 @@ function DiskStorage (opts) {
   this.getFilename = (opts.filename || getFilename)
 
   if (typeof opts.destination === 'string') {
-    mkdirp.sync(opts.destination)
+    fs.mkdirSync(opts.destination, { recursive: true })
     this.getDestination = function ($0, $1, cb) { cb(null, opts.destination) }
   } else {
     this.getDestination = (opts.destination || getDestination)
@@ -35,7 +34,12 @@ DiskStorage.prototype._handleFile = function _handleFile (req, file, cb) {
       if (err) return cb(err)
 
       var finalPath = path.join(destination, filename)
+
+      if (file.stream.destroyed) return
+
       var outStream = fs.createWriteStream(finalPath)
+
+      file.path = finalPath
 
       file.stream.pipe(outStream)
       outStream.on('error', cb)

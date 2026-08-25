@@ -2,7 +2,7 @@
 **甚至可能存在翻译错误！你可能需要阅读原版英语[README](../README.md)**
 **此文档仅供参考！**
 
-# Multer [![Build Status](https://travis-ci.org/expressjs/multer.svg?branch=master)](https://travis-ci.org/expressjs/multer) [![NPM version](https://badge.fury.io/js/multer.svg)](https://badge.fury.io/js/multer) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
+# Multer [![NPM Version][npm-version-image]][npm-url] [![NPM Downloads][npm-downloads-image]][npm-url] [![Build Status][ci-image]][ci-url] [![Test Coverage][test-image]][test-url] [![OpenSSF Scorecard Badge][ossf-scorecard-badge]][ossf-scorecard-visualizer]
 
 Multer 是一个 node.js 中间件，用于处理 `multipart/form-data` 类型的表单数据，它主要用于上传文件。它是写在 [busboy](https://github.com/mscdex/busboy) 之上非常高效。
 
@@ -10,11 +10,12 @@ Multer 是一个 node.js 中间件，用于处理 `multipart/form-data` 类型�
 
 ## 其它语言
 
-- [English](https://github.com/expressjs/multer/blob/master/README.md) (英语)
-- [Español](https://github.com/expressjs/multer/blob/master/doc/README-es.md) (西班牙文)
-- [한국어](https://github.com/expressjs/multer/blob/master/doc/README-ko.md) (朝鲜语)
-- [Русский язык](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (俄語)
-- [Português](https://github.com/expressjs/multer/blob/master/doc/README-pt-br.md) (巴西葡萄牙语)
+- [العربية](https://github.com/expressjs/multer/blob/main/doc/README-ar.md) (阿拉伯语)
+- [English](https://github.com/expressjs/multer/blob/main/README.md) (英语)
+- [Español](https://github.com/expressjs/multer/blob/main/doc/README-es.md) (西班牙文)
+- [한국어](https://github.com/expressjs/multer/blob/main/doc/README-ko.md) (朝鲜语)
+- [Русский язык](https://github.com/expressjs/multer/blob/main/doc/README-ru.md) (俄語)
+- [Português](https://github.com/expressjs/multer/blob/main/doc/README-pt-br.md) (巴西葡萄牙语)
 
 ## 安装
 
@@ -46,8 +47,8 @@ app.post('/photos/upload', upload.array('photos', 12), function (req, res, next)
   // req.body 将具有文本域数据，如果存在的话
 })
 
-const cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
-app.post('/cool-profile', cpUpload, function (req, res, next) {
+const uploadMiddleware = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
+app.post('/cool-profile', uploadMiddleware, function (req, res, next) {
   // req.files 是一个对象 (String -> Array) 键是文件名，值是文件数组
   //
   // 例如：
@@ -103,6 +104,7 @@ Key | Description
 `fileFilter` | 文件过滤器，控制哪些文件可以被接受
 `limits` | 限制上传的数据
 `preservePath` | 保存包含文件名的完整文件路径
+`defParamCharset` | 用于部分标头参数值（例如文件名）的默认字符集，这些参数不是扩展参数（不包含显式字符集）。默认值：`'latin1'`
 
 通常，一般的网页应用，只需要设置 `dest` 属性，像这样：
 
@@ -169,13 +171,13 @@ const upload = multer({ storage: storage })
 
 `destination` 是用来确定上传的文件应该存储在哪个文件夹中。也可以提供一个 `string` (例如 `'/tmp/uploads'`)。如果没有设置 `destination`，则使用操作系统默认的临时文件夹。
 
-**注意:** 如果你提供的 `destination` 是一个函数，你需要负责创建文件夹。当提供一个字符串，multer 将确保这个文件夹是你创建的。
+**注意:** 当 `destination` 声明为一个函数时，你需要自己创建文件夹。当 `destination` 是一个字符串时，multer 会为你创建相应的文件夹。
 
 `filename` 用于确定文件夹中的文件名的确定。 如果没有设置 `filename`，每个文件将设置为一个随机文件名，并且是没有扩展名的。
 
 **注意:** Multer 不会为你添加任何扩展名，你的程序应该返回一个完整的文件名。
 
-每个函数都传递了请求对象 (`req`) 和一些关于这个文件的信息 (`file`)，有助于你的决定。
+每个函数都会传入请求对象 (`req`) 和一些关于文件的信息 (`file`)，这两个参数有助于你做出决定。
 
 注意 `req.body` 可能还没有完全填充，这取决于向客户端发送字段和文件到服务器的顺序。
 
@@ -232,9 +234,9 @@ function fileFilter (req, file, cb) {
 
 ## 错误处理机制
 
-当遇到一个错误，multer 将会把错误发送给 express。你可以使用一个比较好的错误展示页 ([express标准方式](http://expressjs.com/guide/error-handling.html))。
+当遇到一个错误，multer 将会把错误发送给 express。你可以使用一个比较好的错误展示页 ([express标准方式](https://expressjs.com/zh-cn/guide/error-handling/))。
 
-如果你想捕捉 multer 发出的错误，你可以自己调用中间件程序。如果你想捕捉 [Multer 错误](https://github.com/expressjs/multer/blob/master/lib/multer-error.js)，你可以使用 `multer` 对象下的 `MulterError` 类 (即 `err instanceof multer.MulterError`)。
+如果你想捕捉 multer 发出的错误，你可以自己调用中间件程序。如果你想捕捉 [Multer 错误](https://github.com/expressjs/multer/blob/main/lib/multer-error.js)，你可以使用 `multer` 对象下的 `MulterError` 类 (即 `err instanceof multer.MulterError`)。
 
 ```javascript
 const multer = require('multer')
@@ -260,3 +262,13 @@ app.post('/profile', function (req, res) {
 ## License
 
 [MIT](LICENSE)
+
+[ci-image]: https://github.com/expressjs/multer/actions/workflows/ci.yml/badge.svg
+[ci-url]: https://github.com/expressjs/multer/actions/workflows/ci.yml
+[test-url]: https://coveralls.io/r/expressjs/multer?branch=main
+[test-image]: https://badgen.net/coveralls/c/github/expressjs/multer/main
+[npm-downloads-image]: https://badgen.net/npm/dm/multer
+[npm-url]: https://npmjs.org/package/multer
+[npm-version-image]: https://badgen.net/npm/v/multer
+[ossf-scorecard-badge]: https://api.scorecard.dev/projects/github.com/expressjs/multer/badge
+[ossf-scorecard-visualizer]: https://ossf.github.io/scorecard-visualizer/#/projects/github.com/expressjs/multer

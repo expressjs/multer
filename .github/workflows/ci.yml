@@ -1,0 +1,220 @@
+name: ci
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
+
+    - name: Install Node.js
+      uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      with:
+        node-version: lts/*
+
+    - name: Install Node.js dependencies
+      run: npm install
+
+    - name: Lint code
+      run: npm run lint
+
+  test:
+    permissions:
+      checks: write  # for coverallsapp/github-action to create new checks
+      contents: read  # for actions/checkout to fetch code
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+        - ubuntu-latest
+        - windows-latest
+        name:
+        - Node.js 10.x
+        - Node.js 11.x
+        - Node.js 12.x
+        - Node.js 13.x
+        - Node.js 14.x
+        - Node.js 15.x
+        - Node.js 16.x
+        - Node.js 17.x
+        - Node.js 18.x
+        - Node.js 19.x
+        - Node.js 20.x
+        - Node.js 21.x
+        - Node.js 22.x
+        - Node.js 23.x
+        - Node.js 24.x
+        - Node.js 25.x
+        - Node.js 26.x
+
+        include:
+        - name: Node.js 10.x
+          node-version: "10.16.0"
+          npm-i: mocha@8.4.0
+
+        - name: Node.js 11.x
+          node-version: "11.15"
+          npm-i: mocha@8.4.0
+
+        - name: Node.js 12.x
+          node-version: "12.0.0"
+          npm-i: mocha@9.2.2
+
+        - name: Node.js 13.x
+          node-version: "13.14"
+          npm-i: mocha@9.2.2
+
+        - name: Node.js 14.x
+          node-version: "14.0.0"
+          npm-i: mocha@9.2.2
+
+        - name: Node.js 15.x
+          node-version: "15.0.0"
+          npm-i: mocha@9.2.2
+
+        - name: Node.js 16.x
+          node-version: "16.0.0"
+
+        - name: Node.js 17.x
+          node-version: "17.0.0"
+
+        - name: Node.js 18.x
+          node-version: "18.0.0"
+
+        - name: Node.js 19.x
+          node-version: "19.0.0"
+
+        - name: Node.js 20.x
+          node-version: "20.0.0"
+
+        - name: Node.js 21.x
+          node-version: "21"
+
+        - name: Node.js 22.x
+          node-version: "22"
+
+        - name: Node.js 23.x
+          node-version: "23"
+
+        - name: Node.js 24.x
+          node-version: "24"
+
+        - name: Node.js 25.x
+          node-version: "25"
+
+        - name: Node.js 26.x
+          node-version: "26"
+
+        # Windows on Node.js < 22 is not yet stable in the test suite;
+        # keep those legs informational until it is.
+        - name: Node.js 10.x
+          os: windows-latest
+          experimental: true
+
+        - name: Node.js 11.x
+          os: windows-latest
+          experimental: true
+
+        - name: Node.js 12.x
+          os: windows-latest
+          experimental: true
+
+        - name: Node.js 13.x
+          os: windows-latest
+          experimental: true
+
+        - name: Node.js 14.x
+          os: windows-latest
+          experimental: true
+
+        - name: Node.js 15.x
+          os: windows-latest
+          experimental: true
+
+        - name: Node.js 16.x
+          os: windows-latest
+          experimental: true
+
+        - name: Node.js 17.x
+          os: windows-latest
+          experimental: true
+
+        - name: Node.js 18.x
+          os: windows-latest
+          experimental: true
+
+        - name: Node.js 19.x
+          os: windows-latest
+          experimental: true
+
+        - name: Node.js 20.x
+          os: windows-latest
+          experimental: true
+
+        - name: Node.js 21.x
+          os: windows-latest
+          experimental: true
+
+    continue-on-error: ${{ matrix.experimental == true }}
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
+
+    - name: Install Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Remove npm module(s) ${{ matrix.npm-rm }}
+      run: npm rm --silent --save-dev ${{ matrix.npm-rm }}
+      if: matrix.npm-rm != ''
+
+    - name: Install npm module(s) ${{ matrix.npm-i }}
+      run: npm install --save-dev ${{ matrix.npm-i }}
+      if: matrix.npm-i != ''
+
+    - name: Install Node.js dependencies
+      run: npm install
+
+    - name: List environment
+      shell: bash
+      run: |
+        echo "node@$(node -v)"
+        echo "npm@$(npm -v)"
+        npm -s ls ||:
+
+    - name: Run tests
+      shell: bash
+      run: npm run test-ci
+
+    - name: Collect code coverage
+      uses: coverallsapp/github-action@8d6379e14d29928660c4ba802d8e85393440b329 # v2.3.8
+      if: matrix.os == 'ubuntu-latest'
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        flag-name: run-${{ matrix.name }}
+        parallel: true
+
+  coverage:
+    permissions:
+      checks: write  # for coverallsapp/github-action to create new checks
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Upload code coverage
+      uses: coverallsapp/github-action@8d6379e14d29928660c4ba802d8e85393440b329 # v2.3.8
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        parallel-finished: true

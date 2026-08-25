@@ -2,12 +2,10 @@
 
 var assert = require('assert')
 
-var path = require('path')
-var util = require('./_util')
 var multer = require('../')
 var temp = require('fs-temp')
 var rimraf = require('rimraf')
-var FormData = require('form-data')
+var stream = require('stream')
 
 describe('Unicode', function () {
   var uploadDir, upload
@@ -34,21 +32,29 @@ describe('Unicode', function () {
   })
 
   it('should handle unicode filenames', function (done) {
-    var form = new FormData()
-    var parser = upload.single('small0')
-    var filename = '\ud83d\udca9.dat'
+    var req = new stream.PassThrough()
+    var boundary = 'AaB03x'
+    var body = [
+      '--' + boundary,
+      'Content-Disposition: form-data; name="small0"; filename="poo.dat"; filename*=utf-8\'\'%F0%9F%92%A9.dat',
+      'Content-Type: text/plain',
+      '',
+      'test with unicode filename',
+      '--' + boundary + '--'
+    ].join('\r\n')
 
-    form.append('small0', util.file('small0.dat'), { filename: filename })
+    req.headers = {
+      'content-type': 'multipart/form-data; boundary=' + boundary,
+      'content-length': body.length
+    }
 
-    util.submitForm(parser, form, function (err, req) {
+    req.end(body)
+
+    upload.single('small0')(req, null, function (err) {
       assert.ifError(err)
 
-      assert.strictEqual(path.basename(req.file.path), filename)
-      assert.strictEqual(req.file.originalname, filename)
-
+      assert.strictEqual(req.file.originalname, '\ud83d\udca9.dat')
       assert.strictEqual(req.file.fieldname, 'small0')
-      assert.strictEqual(req.file.size, 1778)
-      assert.strictEqual(util.fileSize(req.file.path), 1778)
 
       done()
     })

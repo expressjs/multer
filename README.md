@@ -1,25 +1,32 @@
-# Multer [![Build Status](https://travis-ci.org/expressjs/multer.svg?branch=master)](https://travis-ci.org/expressjs/multer) [![NPM version](https://badge.fury.io/js/multer.svg)](https://badge.fury.io/js/multer) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
+# Multer [![NPM Version][npm-version-image]][npm-url] [![NPM Downloads][npm-downloads-image]][npm-url] [![Build Status][ci-image]][ci-url] [![Test Coverage][test-image]][test-url] [![OpenSSF Scorecard Badge][ossf-scorecard-badge]][ossf-scorecard-visualizer]
 
 Multer is a node.js middleware for handling `multipart/form-data`, which is primarily used for uploading files. It is written
 on top of [busboy](https://github.com/mscdex/busboy) for maximum efficiency.
 
 **NOTE**: Multer will not process any form which is not multipart (`multipart/form-data`).
 
-## Translations 
+## Translations
 
 This README is also available in other languages:
 
-- [Español](https://github.com/expressjs/multer/blob/master/doc/README-es.md) (Spanish)
-- [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (Chinese)
-- [한국어](https://github.com/expressjs/multer/blob/master/doc/README-ko.md) (Korean)
-- [Русский язык](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (Russian)
-- [Việt Nam](https://github.com/expressjs/multer/blob/master/doc/README-vi.md) (Vietnam)
-- [Português](https://github.com/expressjs/multer/blob/master/doc/README-pt-br.md) (Portuguese Brazil)
+|                                                                                |                 |
+| ------------------------------------------------------------------------------ | --------------- |
+| [العربية](https://github.com/expressjs/multer/blob/main/doc/README-ar.md)      | Arabic          |
+| [简体中文](https://github.com/expressjs/multer/blob/main/doc/README-zh-cn.md)  | Chinese (Simplified)         |
+| [Français](https://github.com/expressjs/multer/blob/main/doc/README-fr.md)     | French          |
+| [한국어](https://github.com/expressjs/multer/blob/main/doc/README-ko.md)       | Korean          |
+| [Português](https://github.com/expressjs/multer/blob/main/doc/README-pt-br.md) | Portuguese (BR) |
+| [Русский язык](https://github.com/expressjs/multer/blob/main/doc/README-ru.md) | Russian         |
+| [Español](https://github.com/expressjs/multer/blob/main/doc/README-es.md)      | Spanish         |
+| [O'zbek tili](https://github.com/expressjs/multer/blob/main/doc/README-uz.md)  | Uzbek           |
+| [Việt Nam](https://github.com/expressjs/multer/blob/main/doc/README-vi.md)     | Vietnamese      |
+| [Türkçe](https://github.com/expressjs/multer/blob/main/doc/README-tr.md)       | Turkish         |
+
 
 ## Installation
 
 ```sh
-$ npm install --save multer
+$ npm install multer
 ```
 
 ## Usage
@@ -53,8 +60,8 @@ app.post('/photos/upload', upload.array('photos', 12), function (req, res, next)
   // req.body will contain the text fields, if there were any
 })
 
-const cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
-app.post('/cool-profile', cpUpload, function (req, res, next) {
+const uploadMiddleware = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
+app.post('/cool-profile', uploadMiddleware, function (req, res, next) {
   // req.files is an object (String -> Array) where fieldname is the key, and the value is array of files
   //
   // e.g.
@@ -78,14 +85,14 @@ app.post('/profile', upload.none(), function (req, res, next) {
 })
 ```
 
-Here's an example on how multer is used an HTML form. Take special note of the `enctype="multipart/form-data"` and `name="uploaded_file"` fields:
+Here's an example on how multer is used in a HTML form. Take special note of the `enctype="multipart/form-data"` and `name="uploaded_file"` fields:
 
 ```html
 <form action="/stats" enctype="multipart/form-data" method="post">
   <div class="form-group">
     <input type="file" class="form-control-file" name="uploaded_file">
     <input type="text" class="form-control" placeholder="Number of speakers" name="nspeakers">
-    <input type="submit" value="Get me the stats!" class="btn btn-default">            
+    <input type="submit" value="Get me the stats!" class="btn btn-default">
   </div>
 </form>
 ```
@@ -96,9 +103,9 @@ Then in your javascript file you would add these lines to access both the file a
 const multer  = require('multer')
 const upload = multer({ dest: './public/data/uploads/' })
 app.post('/stats', upload.single('uploaded_file'), function (req, res) {
-   // req.file is the name of your file in the form above, here 'uploaded_file'
-   // req.body will hold the text fields, if there were any 
-   console.log(req.file, req.body)
+  // req.file is the name of your file in the form above, here 'uploaded_file'
+  // req.body will hold the text fields, if there were any
+  console.log(req.file, req.body)
 });
 ```
 
@@ -113,7 +120,7 @@ Each file contains the following information:
 Key | Description | Note
 --- | --- | ---
 `fieldname` | Field name specified in the form |
-`originalname` | Name of the file on the user's computer |
+`originalname` | Name of the file on the user's computer, or the full path when `preservePath: true` |
 `encoding` | Encoding type of the file |
 `mimetype` | Mime type of the file |
 `size` | Size of the file in bytes |
@@ -138,7 +145,8 @@ Key | Description
 `dest` or `storage` | Where to store the files
 `fileFilter` | Function to control which files are accepted
 `limits` | Limits of the uploaded data
-`preservePath` | Keep the full path of files instead of just the base name
+`preservePath` | Keep the full client-supplied path in `file.originalname` instead of just the base name
+`defParamCharset` | Default character set to use for values of part header parameters (e.g. filename) that are not extended parameters (that contain an explicit charset). Default: `'latin1'`
 
 In an average web app, only `dest` might be required, and configured as shown in
 the following example.
@@ -146,6 +154,14 @@ the following example.
 ```javascript
 const upload = multer({ dest: 'uploads/' })
 ```
+
+When `preservePath` is enabled, Multer passes the incoming filename through with
+any path segments provided by the client. This is exposed as `file.originalname`;
+it does not change the destination folder, create directories, or sanitize the
+path for you. `file.originalname` is always client-supplied and should be treated
+as untrusted; with `preservePath` it additionally contains the path segments the
+client sent. Normalize or validate it before using it in a custom `filename` or
+storage engine.
 
 If you want more control over your uploads, you'll want to use the `storage`
 option instead of `dest`. Multer ships with storage engines `DiskStorage`
@@ -199,13 +215,17 @@ where you are handling the uploaded files.
 The disk storage engine gives you full control on storing files to disk.
 
 ```javascript
+const crypto = require('crypto')
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, '/tmp/my-uploads')
   },
   filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-    cb(null, file.fieldname + '-' + uniqueSuffix)
+    crypto.randomBytes(16, function (err, raw) {
+      if (err) return cb(err)
+      cb(null, file.fieldname + '-' + raw.toString('hex'))
+    })
   }
 })
 
@@ -229,7 +249,7 @@ If no `filename` is given, each file will be given a random name that doesn't
 include any file extension.
 
 **Note:** Multer will not append any file extension for you, your function
-should return a filename complete with an file extension.
+should return a filename complete with a file extension.
 
 Each function gets passed both the request (`req`) and some information about
 the file (`file`) to aid with the decision.
@@ -239,7 +259,7 @@ order that the client transmits fields and files to the server.
 
 For understanding the calling convention used in the callback (needing to pass
 null as the first param), refer to
-[Node.js error handling](https://www.joyent.com/node-js/production/design/errors)
+[Node.js error handling](https://web.archive.org/web/20220417042018/https://www.joyent.com/node-js/production/design/errors)
 
 #### `MemoryStorage`
 
@@ -260,19 +280,24 @@ memory storage is used.
 
 ### `limits`
 
-An object specifying the size limits of the following optional properties. Multer passes this object into busboy directly, and the details of the properties can be found on [busboy's page](https://github.com/mscdex/busboy#busboy-methods).
+An object specifying the size limits of the following optional properties. Multer passes this object into busboy directly, and the details of the properties can be found on [busboy's page](https://github.com/mscdex/busboy#exports).
 
 The following integer values are available:
 
 Key | Description | Default
 --- | --- | ---
-`fieldNameSize` | Max field name size | 100 bytes
+`fieldNameSize` | Max field name size | Infinity
 `fieldSize` | Max field value size (in bytes) | 1MB
 `fields` | Max number of non-file fields | Infinity
 `fileSize` | For multipart forms, the max file size (in bytes) | Infinity
 `files` | For multipart forms, the max number of file fields | Infinity
 `parts` | For multipart forms, the max number of parts (fields + files) | Infinity
 `headerPairs` | For multipart forms, the max number of header key=>value pairs to parse | 2000
+`fieldNestingDepth` | Max number of nesting levels for field names (e.g. `a[b][c]` has 2 levels) | Infinity
+
+The `parts` limit is triggered when busboy reaches the configured number of
+parts, not only after that number is exceeded. If you want to allow an exact
+number of fields and files, set `parts` to at least one more than that total.
 
 Specifying the limits can help protect your site against denial of service (DoS) attacks.
 
@@ -299,13 +324,22 @@ function fileFilter (req, file, cb) {
 }
 ```
 
+## Security
+
+Specifying the [limits](#limits) can help protect your site against denial of service (DoS) attacks. The following limits are recommended for most applications:
+
+- `fileSize` -- set to the maximum expected file size for your use case
+- `files` -- set to the maximum number of files per request
+- `fields` -- set to the maximum number of text fields per request
+- `fieldNestingDepth` -- set to the minimum depth your field names require (e.g. `3` for `a[b][c]`)
+
 ## Error handling
 
 When encountering an error, Multer will delegate the error to Express. You can
-display a nice error page using [the standard express way](http://expressjs.com/guide/error-handling.html).
+display a nice error page using [the standard express way](https://expressjs.com/en/guide/error-handling/).
 
 If you want to catch errors specifically from Multer, you can call the
-middleware function by yourself. Also, if you want to catch only [the Multer errors](https://github.com/expressjs/multer/blob/master/lib/multer-error.js), you can use the `MulterError` class that is attached to the `multer` object itself (e.g. `err instanceof multer.MulterError`).
+middleware function by yourself. Also, if you want to catch only [the Multer errors](https://github.com/expressjs/multer/blob/main/lib/multer-error.js), you can use the `MulterError` class that is attached to the `multer` object itself (e.g. `err instanceof multer.MulterError`).
 
 ```javascript
 const multer = require('multer')
@@ -326,8 +360,18 @@ app.post('/profile', function (req, res) {
 
 ## Custom storage engine
 
-For information on how to build your own storage engine, see [Multer Storage Engine](https://github.com/expressjs/multer/blob/master/StorageEngine.md).
+For information on how to build your own storage engine, see [Multer Storage Engine](https://github.com/expressjs/multer/blob/main/StorageEngine.md).
 
 ## License
 
 [MIT](LICENSE)
+
+[ci-image]: https://github.com/expressjs/multer/actions/workflows/ci.yml/badge.svg
+[ci-url]: https://github.com/expressjs/multer/actions/workflows/ci.yml
+[test-url]: https://coveralls.io/r/expressjs/multer?branch=main
+[test-image]: https://badgen.net/coveralls/c/github/expressjs/multer/main
+[npm-downloads-image]: https://badgen.net/npm/dm/multer
+[npm-url]: https://npmjs.org/package/multer
+[npm-version-image]: https://badgen.net/npm/v/multer
+[ossf-scorecard-badge]: https://api.scorecard.dev/projects/github.com/expressjs/multer/badge
+[ossf-scorecard-visualizer]: https://ossf.github.io/scorecard-visualizer/#/projects/github.com/expressjs/multer

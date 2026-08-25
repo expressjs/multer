@@ -1,6 +1,7 @@
 /* eslint-env mocha */
 
 var assert = require('assert')
+var http = require('http')
 
 var multer = require('../')
 var util = require('./_util')
@@ -8,7 +9,6 @@ var util = require('./_util')
 var express = require('express')
 var FormData = require('form-data')
 var concat = require('concat-stream')
-var onFinished = require('on-finished')
 
 var port = 34279
 
@@ -27,7 +27,7 @@ describe('Express Integration', function () {
     req.on('response', function (res) {
       res.on('error', cb)
       res.pipe(concat({ encoding: 'buffer' }, function (body) {
-        onFinished(req, function () { cb(null, res, body) })
+        cb(null, res, body)
       }))
     })
   }
@@ -70,7 +70,9 @@ describe('Express Integration', function () {
 
   it('should work when receiving error from fileFilter', function (done) {
     function fileFilter (req, file, cb) {
-      cb(new Error('TEST'))
+      if (file.mimetype !== 'image/png') {
+        return cb(new Error('Only PNG files are allowed'))
+      }
     }
 
     var upload = multer({ fileFilter: fileFilter })
@@ -80,7 +82,7 @@ describe('Express Integration', function () {
     var routeCalled = 0
     var errorCalled = 0
 
-    form.append('avatar', util.file('large.jpg'))
+    form.append('avatar', util.file('small0.dat'))
 
     router.post('/profile', upload.single('avatar'), function (req, res, next) {
       routeCalled++
@@ -88,7 +90,7 @@ describe('Express Integration', function () {
     })
 
     router.use(function (err, req, res, next) {
-      assert.strictEqual(err.message, 'TEST')
+      assert.strictEqual(err.message, 'Only PNG files are allowed')
 
       errorCalled++
       res.status(500).end('ERROR')
@@ -105,5 +107,137 @@ describe('Express Integration', function () {
 
       done()
     })
+  })
+
+  it('should not crash on malformed request', function (done) {
+    var upload = multer()
+
+    app.post('/upload', upload.single('file'), function (req, res) {
+      res.status(500).end('Request should not be processed')
+    })
+
+    app.use(function (err, req, res, next) {
+      assert.strictEqual(err.message, 'Unexpected end of form')
+      res.status(200).end('Correct error')
+    })
+
+    var boundary = 'AaB03x'
+    var body = [
+      '--' + boundary,
+      'Content-Disposition: form-data; name="file"; filename="test.txt"',
+      'Content-Type: text/plain',
+      '',
+      'test without end boundary'
+    ].join('\r\n')
+    var options = {
+      hostname: 'localhost',
+      port,
+      path: '/upload',
+      method: 'POST',
+      headers: {
+        'content-type': 'multipart/form-data; boundary=' + boundary,
+        'content-length': body.length
+      }
+    }
+
+    var req = http.request(options, (res) => {
+      assert.strictEqual(res.statusCode, 200)
+      done()
+    })
+
+    req.on('error', (err) => {
+      done(err)
+    })
+
+    req.write(body)
+    req.end()
+  })
+
+  it('should not crash on malformed request that causes two errors to be emitted by busboy', function (done) {
+    var upload = multer()
+
+    app.post('/upload2', upload.single('file'), function (req, res) {
+      res.status(500).end('Request should not be processed')
+    })
+
+    app.use(function (err, req, res, next) {
+      assert.strictEqual(err.message, 'Malformed part header')
+      res.status(200).end('Correct error')
+    })
+
+    var boundary = 'AaB03x'
+    // this payload causes two errors to be emitted by busboy: `Malformed part header` and `Unexpected end of form`
+    var body = [
+      '--' + boundary,
+      'Content-Disposition: form-data; name="file"; filename="test.txt"',
+      'Content-Type: text/plain',
+      '',
+      '--' + boundary + '--',
+      ''
+    ].join('\r\n')
+    var options = {
+      hostname: 'localhost',
+      port,
+      path: '/upload2',
+      method: 'POST',
+      headers: {
+        'content-type': 'multipart/form-data; boundary=' + boundary,
+        'content-length': body.length
+      }
+    }
+
+    var req = http.request(options, (res) => {
+      assert.strictEqual(res.statusCode, 200)
+      done()
+    })
+
+    req.on('error', (err) => {
+      done(err)
+    })
+
+    req.write(body)
+    req.end()
+  })
+
+  it('should not crash on malformed multipart body with bad boundary', function (done) {
+    var upload = multer()
+
+    app.post('/upload3', upload.single('image'), function (req, res) {
+      res.status(500).end('Request should not be processed')
+    })
+
+    app.use(function (err, req, res, next) {
+      assert.strictEqual(err.message, 'Unexpected end of form')
+      res.status(200).end('Correct error')
+    })
+
+    var boundary = '----FormBoundary'
+    var body = [
+      '------FormBoundary',
+      'Content-Disposition: form-data; name="image"; filename=""',
+      'Content-Type: application/octet-stream',
+      '',
+      '', // empty content
+      '------FormBoundar' // intentionally malformed final boundary (missing 'y')
+    ].join('\r\n')
+
+    var options = {
+      hostname: 'localhost',
+      port,
+      path: '/upload3',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'multipart/form-data; boundary=' + boundary,
+        'Content-Length': Buffer.byteLength(body)
+      }
+    }
+
+    var req = http.request(options, (res) => {
+      assert.strictEqual(res.statusCode, 200)
+      done()
+    })
+
+    req.write(body)
+    req.end()
   })
 })

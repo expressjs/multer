@@ -1,18 +1,23 @@
-# Multer [![Build Status](https://travis-ci.org/expressjs/multer.svg?branch=master)](https://travis-ci.org/expressjs/multer) [![NPM version](https://badge.fury.io/js/multer.svg)](https://badge.fury.io/js/multer) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
+# Multer [![NPM Version][npm-version-image]][npm-url] [![NPM Downloads][npm-downloads-image]][npm-url] [![Build Status][ci-image]][ci-url] [![Test Coverage][test-image]][test-url] [![OpenSSF Scorecard Badge][ossf-scorecard-badge]][ossf-scorecard-visualizer]
 
-Multer é um middleware node.js para manipulação `multipart/form-data`, que é usado principalmente para fazer upload de arquivos. Está escrito em cima do [busboy](https://github.com/mscdex/busboy) para máxima eficiência.
+Multer é um middleware node.js para manipulação `multipart/form-data`, que é usado principalmente para fazer upload de arquivos. Foi escrito em cima do [busboy](https://github.com/mscdex/busboy) para máxima eficiência.
 
 **NOTA**: Multer não processará nenhum formulário que não seja multipart (`multipart/form-data`).
 
-## Traduções 
+## Traduções
 
 Este README também está disponível em outros idiomas:
 
-- [English](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (Inglês)
-- [Español](https://github.com/expressjs/multer/blob/master/doc/README-es.md) (Espanhol)
-- [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (Chinês)
-- [한국어](https://github.com/expressjs/multer/blob/master/doc/README-ko.md) (Coreano)
-- [Русский язык](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (Russo)
+- [English](https://github.com/expressjs/multer/blob/main/README.md) (Inglês)
+- [العربية](https://github.com/expressjs/multer/blob/main/doc/README-ar.md) (Árabe)
+- [Español](https://github.com/expressjs/multer/blob/main/doc/README-es.md) (Espanhol)
+- [简体中文](https://github.com/expressjs/multer/blob/main/doc/README-zh-cn.md) (Chinês)
+- [한국어](https://github.com/expressjs/multer/blob/main/doc/README-ko.md) (Coreano)
+- [Русский язык](https://github.com/expressjs/multer/blob/main/doc/README-ru.md) (Russo)
+- [Việt Nam](https://github.com/expressjs/multer/blob/main/doc/README-vi.md) (Vietnã)
+- [Português](https://github.com/expressjs/multer/blob/main/doc/README-pt-br.md) (Português Brasil)
+- [Français](https://github.com/expressjs/multer/blob/main/doc/README-fr.md) (Francês)
+- [O'zbek tili](https://github.com/expressjs/multer/blob/main/doc/README-uz.md) (Uzbequistão)
 
 ## Instalação
 
@@ -36,30 +41,30 @@ Não esqueça o `enctype="multipart/form-data"` em seu formulário.
 
 ```javascript
 const express = require('express')
-const multer  = require('multer')
+const multer = require('multer')
 const upload = multer({ dest: 'uploads/' })
 
 const app = express()
 
 app.post('/profile', upload.single('avatar'), function (req, res, next) {
-  // req.file is the `avatar` file
-  // req.body will hold the text fields, if there were any
+  // req.file é um arquivo `avatar`
+  // req.body conterá os campos de texto, se houver
 })
 
 app.post('/photos/upload', upload.array('photos', 12), function (req, res, next) {
-  // req.files is array of `photos` files
-  // req.body will contain the text fields, if there were any
+  // req.files é um array de arquivos `photos`
+  // req.body conterá os campos de texto, se houver
 })
 
-const cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
-app.post('/cool-profile', cpUpload, function (req, res, next) {
-  // req.files is an object (String -> Array) where fieldname is the key, and the value is array of files
+const uploadMiddleware = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
+app.post('/cool-profile', uploadMiddleware, function (req, res, next) {
+  // req.files é um objeto (String -> Array) onde fieldname é a chave e o valor é array de arquivos
   //
   // e.g.
   //  req.files['avatar'][0] -> File
   //  req.files['gallery'] -> Array
   //
-  // req.body will contain the text fields, if there were any
+  // req.body conterá os campos de texto, se houver
 })
 ```
 
@@ -72,8 +77,32 @@ const multer  = require('multer')
 const upload = multer()
 
 app.post('/profile', upload.none(), function (req, res, next) {
-  // req.body contains the text fields
+  // req.body contém os campos de texto
 })
+```
+
+Aqui está um exemplo de como o multer é usado em um formulário HTML. Onde adicionamos `enctype="multipart/form-data"` no form e no input `name="uploaded_file"`:
+
+```html
+<form action="/stats" enctype="multipart/form-data" method="post">
+  <div class="form-group">
+    <input type="file" class="form-control-file" name="uploaded_file">
+    <input type="text" class="form-control" placeholder="Número de palestrantes" name="nspeakers">
+    <input type="submit" value="Obter as estatísticas!" class="btn btn-default">
+  </div>
+</form>
+```
+
+Então, em seu arquivo javascript, você adicionaria essas linhas para acessar o arquivo e o corpo. É importante que você use o valor do campo `name` do formulário em sua função de upload. Isso informa ao multer em qual campo da solicitação ele deve procurar os arquivos. Se esses campos não forem iguais no formulário HTML e no seu servidor, seu upload falhará:
+
+```javascript
+const multer  = require('multer')
+const upload = multer({ dest: './public/data/uploads/' })
+app.post('/stats', upload.single('uploaded_file'), function (req, res) {
+  // req.fileé o nome do seu arquivo no formato acima, aqui 'uploaded_file'
+  // req.body irá conter os campos de texto, se houver algum
+  console.log(req.file, req.body)
+});
 ```
 
 ## API
@@ -100,7 +129,7 @@ Multer aceita um objeto de opções, a propriedade mais básica é o `dest`, que
 
 Por padrão, Multer irá renomear os arquivos para evitar conflitos de nomes. A função de renomeação pode ser personalizada de acordo com suas necessidades.
 
-A seguir estão as opções que podem ser passadas para Multer.
+A seguir estão as opções que podem ser passadas para o Multer.
 
 Key | Descrição
 --- | ---
@@ -108,6 +137,7 @@ Key | Descrição
 `fileFilter` | Função para controlar quais arquivos são aceitos
 `limits` | Limites dos dados enviados
 `preservePath` | Mantenha o caminho completo dos arquivos em vez de apenas o nome base
+`defParamCharset` | Conjunto de caracteres padrão para usar em valores de parâmetros de cabeçalho de parte (por exemplo, nome do arquivo) que não são parâmetros estendidos (que contêm um conjunto de caracteres explícito). Padrão: `'latin1'`
 
 Em um web app básico, somente o `dest` pode ser necessário, e configurado como mostrado no exemplo a seguir:
 
@@ -123,7 +153,7 @@ Aceite um único arquivo com o nome `fieldname`. O arquivo único será armazena
 
 #### `.array(fieldname[, maxCount])`
 
-Aceite múltiplos arquivos, todos com o nome `fieldname`. Opcional, gera um erro se mais de `maxCount` forem enviados. O array de arquivos serão armazenados em
+Aceite múltiplos arquivos, todos com o nome `fieldname`. Opcional, gera um erro se forem enviados mais de `maxCount`. O array de arquivos serão armazenados em
 `req.files`.
 
 #### `.fields(fields)`
@@ -147,7 +177,7 @@ Aceite apenas campo de texto. Se algum upload de arquivo for feito, um erro com 
 
 #### `.any()`
 
-Aceita todos os arquivos que são enviaos. Uma matriz de arquivos será armazenada em
+Aceita todos os arquivos que são enviados. Uma matriz de arquivos será armazenada em
 `req.files`.
 
 **AVISO:** Certifique-se de sempre manipular os arquivos que um usuário envia.
@@ -187,6 +217,10 @@ Cada função é passada pelo request (`req`) e algumas informações sobre o ar
 
 Observe que `req.body` pode não ter sido totalmente preenchido ainda. Isso depende da ordem na qual o cliente transmite campos e arquivos para o servidor.
 
+Para entender a convenção de chamada usada no callback (precisando passar
+null como o primeiro parâmetro), consulte em
+[Manipulação de erros no Node.js](https://web.archive.org/web/20220417042018/https://www.joyent.com/node-js/production/design/errors)
+
 #### `MemoryStorage`
 
 O mecanismo de armazenamento na memória, armazena os arquivos na memória como um objeto `Buffer`. Não tendo opções.
@@ -218,7 +252,7 @@ A especificação dos limites pode ajudar a proteger seu site contra ataques de 
 
 ### `fileFilter`
 
-Defina isso para uma função para controlar quais arquivos devem ser enviados e quais devem ser ignorados. 
+Defina isso para uma função para controlar quais arquivos devem ser enviados e quais devem ser ignorados.
 
 A função deve ficar assim:
 
@@ -226,7 +260,7 @@ A função deve ficar assim:
 function fileFilter (req, file, cb) {
 
   // A função deve chamar `cb` com um booleano
-  // to indicate if the file should be accepted
+  // para indicar se o arquivo deve ser aceito
 
   // Para rejeitar este arquivo passe `false`, assim:
   cb(null, false)
@@ -242,9 +276,9 @@ function fileFilter (req, file, cb) {
 
 ## Error handling
 
-Quando encontrar um erro, Multer delegará o erro para Express. Você pode exibir uma boa página de erro usando [the standard express way](http://expressjs.com/guide/error-handling.html).
+Quando encontrar um erro, Multer delegará o erro para Express. Você pode exibir uma boa página de erro usando [the standard express way](https://expressjs.com/pt-br/guide/error-handling/).
 
-Se você quer pegar erros especificamente do Multer, você pode enviar para o função de middleware. Além disso, se você quiser pegar apenas [os erros do Multer](https://github.com/expressjs/multer/blob/master/lib/multer-error.js), você pode usar a classe `MulterError` que está ligado ao objeto `multer` (e.g. `err instanceof multer.MulterError`).
+Se você quer pegar erros especificamente do Multer, você pode enviar para o função de middleware. Além disso, se você quiser pegar apenas [os erros do Multer](https://github.com/expressjs/multer/blob/main/lib/multer-error.js), você pode usar a classe `MulterError` que está ligado ao objeto `multer` (e.g. `err instanceof multer.MulterError`).
 
 ```javascript
 const multer = require('multer')
@@ -253,20 +287,30 @@ const upload = multer().single('avatar')
 app.post('/profile', function (req, res) {
   upload(req, res, function (err) {
     if (err instanceof multer.MulterError) {
-      // A Multer error occurred when uploading.
+      // Ocorreu um erro durante o upload.
     } else if (err) {
-      // An unknown error occurred when uploading.
+      // Ocorreu um erro durante o upload.
     }
 
-    // Everything went fine.
+    // Tudo correu bem.
   })
 })
 ```
 
 ## Mecanismo de armazenamento personalizado
 
-Para obter informações sobre como criar seu próprio mecanismo de armazenamento, veja [Multer Storage Engine](https://github.com/expressjs/multer/blob/master/StorageEngine.md).
+Para obter informações sobre como criar seu próprio mecanismo de armazenamento, veja [Multer Storage Engine](https://github.com/expressjs/multer/blob/main/StorageEngine.md).
 
 ## Licença
 
 [MIT](LICENSE)
+
+[ci-image]: https://github.com/expressjs/multer/actions/workflows/ci.yml/badge.svg
+[ci-url]: https://github.com/expressjs/multer/actions/workflows/ci.yml
+[test-url]: https://coveralls.io/r/expressjs/multer?branch=main
+[test-image]: https://badgen.net/coveralls/c/github/expressjs/multer/main
+[npm-downloads-image]: https://badgen.net/npm/dm/multer
+[npm-url]: https://npmjs.org/package/multer
+[npm-version-image]: https://badgen.net/npm/v/multer
+[ossf-scorecard-badge]: https://api.scorecard.dev/projects/github.com/expressjs/multer/badge
+[ossf-scorecard-visualizer]: https://ossf.github.io/scorecard-visualizer/#/projects/github.com/expressjs/multer

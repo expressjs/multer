@@ -3,6 +3,51 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.2.0
+
+- Fix [CVE-2026-5038](https://www.cve.org/CVERecord?id=CVE-2026-5038) ([GHSA-3p4h-7m6x-2hcm](https://github.com/expressjs/multer/security/advisories/GHSA-3p4h-7m6x-2hcm))
+- Fix [CVE-2026-5079](https://www.cve.org/CVERecord?id=CVE-2026-5079) ([GHSA-72gw-mp4g-v24j](https://github.com/expressjs/multer/security/advisories/GHSA-72gw-mp4g-v24j))
+
+## 2.1.1
+
+- Fix [CVE-2026-3520](https://www.cve.org/CVERecord?id=CVE-2026-3520) ([GHSA-5528-5vmv-3xc2](https://github.com/expressjs/multer/security/advisories/GHSA-5528-5vmv-3xc2))
+- fix error/abort handling
+
+## 2.1.0
+
+- Add `defParamCharset` option for UTF-8 filename support ([#1210](https://github.com/expressjs/multer/pull/1210))
+- Fix [CVE-2026-2359](https://www.cve.org/CVERecord?id=CVE-2026-2359) ([GHSA-v52c-386h-88mc](https://github.com/expressjs/multer/security/advisories/GHSA-v52c-386h-88mc))
+- Fix [CVE-2026-3304](https://www.cve.org/CVERecord?id=CVE-2026-3304) ([GHSA-xf7r-hgr6-v32p](https://github.com/expressjs/multer/security/advisories/GHSA-xf7r-hgr6-v32p))
+
+
+## 2.0.2
+
+- Fix [CVE-2025-7338](https://www.cve.org/CVERecord?id=CVE-2025-7338) ([GHSA-fjgf-rc76-4x9p](https://github.com/expressjs/multer/security/advisories/GHSA-fjgf-rc76-4x9p))
+
+
+## 2.0.1
+
+- Fix [CVE-2025-48997](https://www.cve.org/CVERecord?id=CVE-2025-48997) ([GHSA-g5hg-p3ph-g8qg](https://github.com/expressjs/multer/security/advisories/GHSA-g5hg-p3ph-g8qg))
+
+## 2.0.0
+
+- **Breaking change: The minimum supported Node version is now 10.16.0**
+- Fix [CVE-2025-47935](https://www.cve.org/CVERecord?id=CVE-2025-47935) ([GHSA-44fp-w29j-9vj5](https://github.com/expressjs/multer/security/advisories/GHSA-44fp-w29j-9vj5))
+- Fix [CVE-2025-47944](https://www.cve.org/CVERecord?id=CVE-2025-47944) ([GHSA-4pg4-qvpc-4q3h](https://github.com/expressjs/multer/security/advisories/GHSA-4pg4-qvpc-4q3h))
+
+## 1.4.5-lts.2
+
+- Fix out-of-band error event from busboy (#1177)
+
+## 1.4.5-lts.1
+
+- No changes
+
+## 1.4.4-lts.1
+
+- Bugfix: Bump busboy to fix CVE-2022-24434 (#1097)
+- Breaking: Require Node.js 10.16.0 or later (#1097)
+
 ## 1.4.4 - 2021-12-07
 
 - Bugfix: Handle missing field names (#913)
@@ -31,7 +76,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Docs: Fix broken link in Chinese Readme (#730)
 - Docs: Fix typo in Russian README (#738)
 - Docs: Add unit for fieldSize in busboy limit params (#734)
-- Internal: Make unit tests comaptible with Node.js 13.x (#752)
+- Internal: Make unit tests compatible with Node.js 13.x (#752)
 
 ## 1.4.1 - 2018-10-11
 

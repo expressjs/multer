@@ -1,14 +1,21 @@
 {
   "name": "multer",
   "description": "Middleware for handling `multipart/form-data`.",
-  "version": "1.4.4",
+  "version": "2.2.0",
   "contributors": [
     "Hage Yaapa <captain@hacksparrow.com> (http://www.hacksparrow.com)",
     "Jaret Pfluger <https://github.com/jpfluger>",
     "Linus Unnebäck <linus@folkdatorn.se>"
   ],
   "license": "MIT",
-  "repository": "expressjs/multer",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/expressjs/multer.git"
+  },
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/express"
+  },
   "keywords": [
     "form",
     "post",
@@ -20,26 +27,22 @@
   ],
   "dependencies": {
     "append-field": "^1.0.0",
-    "busboy": "^0.2.11",
-    "concat-stream": "^1.5.2",
-    "mkdirp": "^0.5.4",
-    "object-assign": "^4.1.1",
-    "on-finished": "^2.3.0",
-    "type-is": "^1.6.4",
-    "xtend": "^4.0.0"
+    "busboy": "^1.6.0",
+    "concat-stream": "^2.0.0",
+    "type-is": "^1.6.18"
   },
   "devDependencies": {
-    "deep-equal": "^2.0.3",
-    "express": "^4.13.1",
-    "form-data": "^1.0.0-rc1",
-    "fs-temp": "^1.1.2",
-    "mocha": "^3.5.3",
-    "rimraf": "^2.4.1",
-    "standard": "^14.3.3",
+    "express": "^4.22.2",
+    "form-data": "^4.0.6",
+    "fs-temp": "^1.2.1",
+    "mocha": "^11.7.6",
+    "nyc": "^15.1.0",
+    "rimraf": "^2.7.1",
+    "standard": "^14.3.4",
     "testdata-w3c-json-form": "^1.0.0"
   },
   "engines": {
-    "node": ">= 0.10.0"
+    "node": ">= 10.16.0"
   },
   "files": [
     "LICENSE",
@@ -48,6 +51,10 @@
     "lib/"
   ],
   "scripts": {
-    "test": "standard && mocha"
+    "lint": "standard",
+    "lint:fix": "standard --fix",
+    "test": "mocha --reporter spec --exit --check-leaks test/",
+    "test-ci": "nyc --reporter=lcov --reporter=text npm test",
+    "test-cov": "nyc --reporter=html --reporter=text npm test"
   }
 }
