@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.2.0
+
+- Fix [CVE-2026-5038](https://www.cve.org/CVERecord?id=CVE-2026-5038) ([GHSA-3p4h-7m6x-2hcm](https://github.com/expressjs/multer/security/advisories/GHSA-3p4h-7m6x-2hcm))
+- Fix [CVE-2026-5079](https://www.cve.org/CVERecord?id=CVE-2026-5079) ([GHSA-72gw-mp4g-v24j](https://github.com/expressjs/multer/security/advisories/GHSA-72gw-mp4g-v24j))
+
 ## 2.1.1
 
 - Fix [CVE-2026-3520](https://www.cve.org/CVERecord?id=CVE-2026-3520) ([GHSA-5528-5vmv-3xc2](https://github.com/expressjs/multer/security/advisories/GHSA-5528-5vmv-3xc2))
@@ -71,7 +76,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Docs: Fix broken link in Chinese Readme (#730)
 - Docs: Fix typo in Russian README (#738)
 - Docs: Add unit for fieldSize in busboy limit params (#734)
-- Internal: Make unit tests comaptible with Node.js 13.x (#752)
+- Internal: Make unit tests compatible with Node.js 13.x (#752)
 
 ## 1.4.1 - 2018-10-11
 
