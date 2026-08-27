@@ -10,6 +10,32 @@ var rimraf = require('rimraf')
 var temp = require('fs-temp')
 
 // @see https://github.com/expressjs/multer/security/advisories/GHSA-3p4h-7m6x-2hcm
+
+// File cleanup after an abort is inherently asynchronous and its timing varies
+// per platform: on Windows with older Node.js versions the cleanup can take
+// longer than a fixed delay, which made this suite flaky (GHSA-3p4h-7m6x-2hcm
+// regression test). Poll until the directory is empty instead of assuming the
+// cleanup finished within a hard-coded number of milliseconds.
+function waitForEmptyDir (dir, message, done) {
+  var deadline = Date.now() + 4000
+
+  function poll () {
+    var files = fs.readdirSync(dir)
+
+    if (files.length === 0) {
+      return done()
+    }
+
+    if (Date.now() >= deadline) {
+      return assert.strictEqual(files.length, 0, message + ': ' + files.join(', '))
+    }
+
+    setTimeout(poll, 50)
+  }
+
+  poll()
+}
+
 describe('orphan file cleanup on abort/malformed requests', function () {
   var uploadDir, server, port
 
@@ -47,7 +73,7 @@ describe('orphan file cleanup on abort/malformed requests', function () {
   })
 
   it('should not leave orphan files when client aborts mid-upload', function (done) {
-    this.timeout(5000)
+    this.timeout(10000)
 
     var boundary = 'AbortBound' + Date.now()
     var preamble =
@@ -74,16 +100,12 @@ describe('orphan file cleanup on abort/malformed requests', function () {
     setTimeout(function () {
       req.destroy()
 
-      setTimeout(function () {
-        var files = fs.readdirSync(uploadDir)
-        assert.strictEqual(files.length, 0, 'orphan files after client abort: ' + files.join(', '))
-        done()
-      }, 500)
+      waitForEmptyDir(uploadDir, 'orphan files after client abort', done)
     }, 50)
   })
 
   it('should not leave orphan files on truncated multipart', function (done) {
-    this.timeout(5000)
+    this.timeout(10000)
 
     var boundary = 'TruncBound' + Date.now()
     var body =
@@ -104,11 +126,7 @@ describe('orphan file cleanup on abort/malformed requests', function () {
     }, function (res) {
       res.resume()
       res.on('end', function () {
-        setTimeout(function () {
-          var files = fs.readdirSync(uploadDir)
-          assert.strictEqual(files.length, 0, 'orphan files after truncated multipart: ' + files.join(', '))
-          done()
-        }, 500)
+        waitForEmptyDir(uploadDir, 'orphan files after truncated multipart', done)
       })
     })
 
@@ -118,7 +136,7 @@ describe('orphan file cleanup on abort/malformed requests', function () {
   })
 
   it('should not leave orphan files when a later file aborts after an earlier one completed', function (done) {
-    this.timeout(5000)
+    this.timeout(10000)
 
     var boundary = 'CompletedBound' + Date.now()
 
@@ -155,11 +173,7 @@ describe('orphan file cleanup on abort/malformed requests', function () {
     setTimeout(function () {
       req.destroy()
 
-      setTimeout(function () {
-        var files = fs.readdirSync(uploadDir)
-        assert.strictEqual(files.length, 0, 'orphan files after late abort: ' + files.join(', '))
-        done()
-      }, 500)
+      waitForEmptyDir(uploadDir, 'orphan files after late abort', done)
     }, 200)
   })
 })

@@ -51,6 +51,23 @@ DiskStorage.prototype._handleFile = function _handleFile (req, file, cb) {
           size: outStream.bytesWritten
         })
       })
+
+      // If the request is aborted (or the incoming stream otherwise ends
+      // prematurely), `pipe()` does not close the destination stream. The
+      // write stream would then hold the file handle open forever, which
+      // on Windows makes it impossible to unlink the orphaned partial file
+      // (EPERM). Explicitly destroy the write stream in that case so the
+      // abort cleanup path can remove the file. The stream fires 'close'
+      // after a normal 'end' too, so only destroy when 'end' never ran.
+      var inputEnded = false
+      file.stream.on('end', function () {
+        inputEnded = true
+      })
+      file.stream.on('close', function () {
+        if (!inputEnded && !outStream.destroyed && !outStream.writableFinished) {
+          outStream.destroy()
+        }
+      })
     })
   })
 }
