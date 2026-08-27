@@ -21,6 +21,7 @@ function getDestination (req, file, cb) {
 
 function DiskStorage (opts) {
   this.getFilename = (opts.filename || getFilename)
+  this.flush = opts.flush
 
   if (typeof opts.destination === 'string') {
     fs.mkdirSync(opts.destination, { recursive: true })
@@ -52,12 +53,22 @@ DiskStorage.prototype._handleFile = function _handleFile (req, file, cb) {
       pipeline(file.stream, outStream, function (err) {
         if (err) return cb(err)
 
-        cb(null, {
-          destination: destination,
-          filename: filename,
-          path: finalPath,
-          size: outStream.bytesWritten
-        })
+        var done = function (err) {
+          if (err) return cb(err)
+
+          cb(null, {
+            destination: destination,
+            filename: filename,
+            path: finalPath,
+            size: outStream.bytesWritten
+          })
+        }
+
+        if (that.flush && outStream.fd) {
+          fs.fsync(outStream.fd, done)
+        } else {
+          done()
+        }
       })
     })
   })
