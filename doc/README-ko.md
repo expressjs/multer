@@ -79,7 +79,7 @@ app.post('/profile', upload.array(), function (req, res, next) {
 Key | Description | Note
 --- | --- | ---
 `fieldname` | 폼에 정의된 필드 명 |
-`originalname` | 사용자가 업로드한 파일 명 |
+`originalname` | 사용자가 업로드한 파일 명, 또는 `preservePath: true`일 때의 전체 경로 |
 `encoding` | 파일의 엔코딩 타입 |
 `mimetype` | 파일의 Mime 타입 |
 `size` | 파일의 바이트(byte) 사이즈 |
@@ -109,6 +109,8 @@ Key | Description
 ```javascript
 const upload = multer({ dest: 'uploads/' })
 ```
+
+`preservePath`가 활성화되면 Multer는 클라이언트가 제공한 경로 세그먼트와 함께 수신되는 파일 이름을 그대로 전달합니다. 이 값은 `file.originalname`으로 노출되며, 대상 폴더를 변경하거나 디렉터리를 만들거나 경로를 정리(sanitize)하지 않습니다. `file.originalname`은 항상 클라이언트가 제공한 값이므로 신뢰할 수 없는 것으로 취급해야 합니다. `preservePath`를 활성화하면 클라이언트가 보낸 경로 세그먼트가 추가로 포함됩니다. 커스텀 `filename` 또는 스토리지 엔진에서 사용하기 전에 정규화하거나 검증하세요.
 
 만일 업로드를 더 제어하고 싶다면, `dest` 옵션 대신 `storage` 옵션을 사용할 수 있습니다. Multer는 스토리지 엔진인 `DiskStorage` 와 `MemoryStorage` 를 탑재하고 있습니다. 써드파티로부터 더 많은 엔진들을 사용할 수 있습니다.
 

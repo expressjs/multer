@@ -115,7 +115,7 @@ Setiap objek file berisi informasi berikut:
 Key | Deskripsi | Catatan
 --- | --- | ---
 `fieldname` | Nama kolom yang ditentukan pada form |
-`originalname` | Nama file di komputer pengguna |
+`originalname` | Nama file di komputer pengguna, atau path lengkap saat `preservePath: true` |
 `encoding` | Tipe encoding file |
 `mimetype` | Mime type file |
 `size` | Ukuran file dalam satuan byte |
@@ -145,6 +145,8 @@ Pada aplikasi web standar, umumnya hanya opsi `dest` yang diperlukan, seperti ya
 ```javascript
 const upload = multer({ dest: 'uploads/' })
 ```
+
+Ketika `preservePath` diaktifkan, Multer meneruskan nama file yang masuk beserta segmen path yang diberikan oleh klien. Ini diekspos sebagai `file.originalname`; ini tidak mengubah folder tujuan, tidak membuat direktori, atau membersihkan path untuk Anda. `file.originalname` selalu berasal dari klien dan harus diperlakukan sebagai tidak tepercaya; dengan `preservePath`, ini juga berisi segmen path yang dikirim klien. Normalisasi atau validasi sebelum menggunakannya dalam `filename` khusus atau mesin penyimpanan.
 
 Jika Anda menginginkan kontrol lebih besar pada proses unggah, gunakan opsi `storage` alih-alih `dest`. Multer dilengkapi dengan mesin penyimpanan bawaan `DiskStorage` dan `MemoryStorage`; mesin penyimpanan lainnya juga tersedia dari pihak ketiga.
 

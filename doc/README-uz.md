@@ -89,7 +89,7 @@ Har bir fayl quyidagi ma'lumotlarni o'zida saqlaydi:
 Kalit(key) | Ta'rif                                 | Eslatma
 --- |----------------------------------------| ---
 `fieldname` | Formada berilgan maxsus nom            |
-`originalname` | Foydalanuvchi kompyuteridagi fayl nomi |
+`originalname` | Foydalanuvchi kompyuteridagi fayl nomi yoki `preservePath: true` bo'lganda to'liq yo'l |
 `encoding` | Faylning kodlash turi                  |
 `mimetype` | Faylning `mime` turi                   |
 `size` | Fayl hajmi - baytda                    |
@@ -120,6 +120,9 @@ O'rtacha veb-ilovada faqat `dest` kerak bo'lishi mumkin va quyidagicha sozlanish
 ```javascript
 const upload = multer({ dest: 'uploads/' })
 ```
+
+`preservePath` yoqilgan bo'lsa, Multer mijoz taqdim etgan yo'l segmentlari bilan birga kiruvchi fayl nomini o'zgartirmasdan uzatadi. Bu `file.originalname` sifatida ko'rsatiladi; u maqsadli papkani o'zgartirmaydi, kataloglar yaratmaydi yoki yo'lni siz uchun tozalamaydi. `file.originalname` har doim mijoz tomonidan taqdim etiladi va ishonchsiz deb hisoblanishi kerak; `preservePath` bilan u mijoz yuborgan yo'l segmentlarini ham o'z ichiga oladi. Uni maxsus `filename` yoki saqlash mexanizmi (storage engine)da ishlatishdan oldin normallashtiring yoki tekshiring.
+
 Yuklamalaringizni boshqarishda ko'proq nazoratni xohlasangiz, `dest` o'rniga `storage` tanlovini ishlatishingiz kerak. Multer `DiskStorage` va `MemoryStorage` saqlash motorlari(engines) bilan keladi. Boshqa motorlar(engines) uchun uchinchi tomondan(third parties) ko'proq tanlovlar keladi.
 
 #### `.single(fieldname)`

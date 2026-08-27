@@ -112,7 +112,7 @@ app.post('/stats', upload.single('uploaded_file'), function (req, res) {
 Key | Description | Note
 --- | --- | ---
 `fieldname` | Field name 由表单指定 |
-`originalname` | 用户计算机上的文件的名称 |
+`originalname` | 用户计算机上的文件的名称，或 `preservePath: true` 时的完整路径 |
 `encoding` | 文件编码 |
 `mimetype` | 文件的 MIME 类型 |
 `size` | 文件大小（字节单位） |
@@ -142,6 +142,8 @@ Key | Description
 ```javascript
 const upload = multer({ dest: 'uploads/' })
 ```
+
+启用 `preservePath` 时，Multer 会原样传递客户端提供的文件名及其路径段。该值作为 `file.originalname` 暴露；它不会更改目标文件夹、不会创建目录，也不会替你清理路径。`file.originalname` 始终由客户端提供，应视为不可信数据；启用 `preservePath` 时，它还会包含客户端发送的路径段。在将其用于自定义 `filename` 或存储引擎之前，请先进行规范化或校验。
 
 如果你想在上传时进行更多的控制，你可以使用 `storage` 选项替代 `dest`。Multer 具有 `DiskStorage` 和 `MemoryStorage` 两个存储引擎；另外还可以从第三方获得更多可用的引擎。
 

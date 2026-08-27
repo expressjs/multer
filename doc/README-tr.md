@@ -138,7 +138,7 @@ Her dosya aşağıdaki bilgileri içerir:
 | Anahtar        | Açıklama                                | Not             |
 | -------------- | -------------------------------------- | --------------- |
 | `fieldname`    | Formdaki alan adı                        |                 |
-| `originalname` | Kullanıcının bilgisayarındaki dosya adı  |                 |
+| `originalname` | Kullanıcının bilgisayarındaki dosya adı, veya `preservePath: true` olduğunda tam yol  |                 |
 | `encoding`     | Dosyanın kodlama tipi                    |                 |
 | `mimetype`     | Dosyanın MIME tipi                        |                 |
 | `size`         | Dosyanın boyutu (byte)                   |                 |
@@ -169,6 +169,8 @@ Ortalama bir web uygulamasında genellikle sadece `dest` gerekir:
 ```javascript
 const upload = multer({ dest: "uploads/" });
 ```
+
+`preservePath` etkinleştirildiğinde, Multer istemcinin sağladığı yol bölümleriyle birlikte gelen dosya adını olduğu gibi iletir. Bu değer `file.originalname` olarak sunulur; hedef klasörü değiştirmez, dizin oluşturmaz veya yolu sizin için temizlemez. `file.originalname` her zaman istemci tarafından sağlanır ve güvenilmez olarak ele alınmalıdır; `preservePath` ile istemcinin gönderdiği yol bölümleri de ek olarak içerilir. Özel bir `filename` veya depolama motorunda kullanmadan önce normalleştirin veya doğrulayın.
 
 Daha fazla kontrol için `storage` seçeneğini kullanabilirsiniz. `Multer`, `DiskStorage` ve `MemoryStorage` depolama motorları ile gelir; üçüncü taraf motorlar da mevcuttur.
 

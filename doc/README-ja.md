@@ -115,7 +115,7 @@ app.post('/stats', upload.single('uploaded_file'), function (req, res) {
 キー | 説明 | 備考
 --- | --- | ---
 `fieldname` | フォームで指定されたフィールド名 |
-`originalname` | ユーザーのコンピュータ上のファイル名 |
+`originalname` | ユーザーのコンピュータ上のファイル名、または `preservePath: true` の場合はフルパス |
 `encoding` | ファイルのエンコーディングタイプ |
 `mimetype` | ファイルのMIMEタイプ |
 `size` | ファイルサイズ（バイト） |
@@ -144,6 +144,8 @@ Multerはオプションオブジェクトを受け取ります。最も基本�
 ```javascript
 const upload = multer({ dest: 'uploads/' })
 ```
+
+`preservePath` が有効な場合、Multer はクライアントが指定したパスのセグメントを含む受信ファイル名をそのまま渡します。これは `file.originalname` として公開されますが、宛先フォルダを変更したり、ディレクトリを作成したり、パスをサニタイズしたりはしません。`file.originalname` は常にクライアントが指定したものであり、信頼できないものとして扱う必要があります。`preservePath` を有効にすると、クライアントが送信したパスのセグメントも追加で含まれます。カスタムの `filename` またはストレージエンジンで使用する前に、正規化または検証してください。
 
 アップロードをより詳細に制御したい場合は、`dest`の代わりに`storage`オプションを使用します。Multerには`DiskStorage`と`MemoryStorage`のストレージエンジンが付属しています。サードパーティからより多くのエンジンが利用できます。
 

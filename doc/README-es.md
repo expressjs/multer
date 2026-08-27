@@ -112,7 +112,7 @@ Cada archivo contiene la siguiente información:
 Clave (Key) | Descripción | Nota
 --- | --- | ---
 `fieldname` | Nombre del campo especificado en el formulario |
-`originalname` | Nombre del archivo en la computadora del usuario |
+`originalname` | Nombre del archivo en la computadora del usuario, o la ruta completa cuando `preservePath: true` está habilitado |
 `encoding` | Tipo de codificación del archivo |
 `mimetype` | Mime type del archivo |
 `size` | Tamaño del archivo en Bytes |
@@ -142,6 +142,8 @@ En la aplicación web promedio es probable que sólo se requiera `dest`, siendo 
 ```javascript
 const upload = multer({ dest: 'uploads/' })
 ```
+
+Cuando `preservePath` está habilitado, Multer pasa el nombre de archivo entrante junto con los segmentos de ruta proporcionados por el cliente. Esto se expone como `file.originalname`; no cambia la carpeta de destino, no crea directorios ni limpia la ruta por usted. `file.originalname` siempre es proporcionado por el cliente y debe tratarse como no confiable; con `preservePath` además contiene los segmentos de ruta que el cliente envió. Normalícelo o valídelo antes de usarlo en un `filename` personalizado o en un motor de almacenamiento.
 
 Si quieres más control sobre tus subidas, tendrás que usar la opción `storage` en vez de `dest`. Multer incorpora los mecanismos de almacenamiento `DiskStorage` y `MemoryStorage`; existen otros medios provistos por terceros.
 

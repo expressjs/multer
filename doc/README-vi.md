@@ -91,7 +91,7 @@ Mỗi file sẽ chứa các thông tin sau:
 | Thuộc tính     | Mô tả                                                           | Ghi chú                   |
 | -------------- | --------------------------------------------------------------- | ------------------------- |
 | `fieldname`    | tên mỗi thuộc tính ở trong form                                 |
-| `originalname` | Tên của file nằm trên máy của người dùng, trước khi được upload |
+| `originalname` | Tên của file nằm trên máy của người dùng, trước khi được upload, hoặc đường dẫn đầy đủ khi `preservePath: true` |
 | `encoding`     | Kiểu Encoding của file                                          |
 | `mimetype`     | Mime type của file                                              | `image/jpeg`, `image/png` |
 | `size`         | Kích thước của file (theo bytes)                                |
@@ -124,6 +124,8 @@ Nói chung với web app, chỉ `dest` mới cần khai báo, như bên dưới:
 ```javascript
 var upload = multer({ dest: 'uploads/' });
 ```
+
+Khi bật `preservePath`, Multer chuyển tiếp tên file nhận được cùng với các phân đoạn đường dẫn do máy khách cung cấp. Giá trị này được hiển thị qua `file.originalname`; nó không thay đổi thư mục đích, không tạo thư mục hay làm sạch đường dẫn cho bạn. `file.originalname` luôn do máy khách cung cấp và nên được coi là không đáng tin cậy; với `preservePath`, nó còn chứa các phân đoạn đường dẫn mà máy khách gửi. Hãy chuẩn hóa hoặc xác thực nó trước khi dùng trong `filename` tùy chỉnh hoặc cơ chế lưu trữ.
 
 Nếu bạn muốn tùy biến việc upload, bạn sẽ muốn dùng tùy chọn `storage` thay vì `dest`.
 Multer sẽ sử dụng 1 trong 2 cách `DiskStorage` và `MemoryStorage`; Hoặc các cách khác (với các thư viện ngoài).
