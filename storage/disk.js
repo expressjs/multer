@@ -2,6 +2,12 @@ var fs = require('fs')
 var os = require('os')
 var path = require('path')
 var crypto = require('crypto')
+var pipeline = require('stream').pipeline
+var MulterError = require('../lib/multer-error')
+
+// Write streams still open for a file, so _removeFile can wait for the
+// descriptor to be closed before unlinking (Windows refuses to unlink open files).
+var openStreams = new WeakMap()
 
 function getFilename (req, file, cb) {
   crypto.randomBytes(16, function (err, raw) {
@@ -35,15 +41,17 @@ DiskStorage.prototype._handleFile = function _handleFile (req, file, cb) {
 
       var finalPath = path.join(destination, filename)
 
-      if (file.stream.destroyed) return
+      if (file.stream.destroyed) return cb(new MulterError('STREAM_DESTROYED'))
 
       var outStream = fs.createWriteStream(finalPath)
 
       file.path = finalPath
+      openStreams.set(file, outStream)
+      outStream.once('close', function () { openStreams.delete(file) })
 
-      file.stream.pipe(outStream)
-      outStream.on('error', cb)
-      outStream.on('finish', function () {
+      pipeline(file.stream, outStream, function (err) {
+        if (err) return cb(err)
+
         cb(null, {
           destination: destination,
           filename: filename,
@@ -62,7 +70,26 @@ DiskStorage.prototype._removeFile = function _removeFile (req, file, cb) {
   delete file.filename
   delete file.path
 
-  fs.unlink(path, cb)
+  var outStream = openStreams.get(file)
+  if (!outStream) return fs.unlink(path, cb)
+
+  // Unlink only once the descriptor has been released. `closed` is set when
+  // the descriptor is closed on every supported Node.js version, whereas
+  // 'close' is not emitted after a write stream is destroyed with an error on
+  // Node.js < 14 (emitClose defaults to false there), so wait for 'close' or
+  // 'error', whichever comes first. destroy() is a no-op if the stream is
+  // already being torn down.
+  if (outStream.closed) return fs.unlink(path, cb)
+
+  function onReleased () {
+    outStream.removeListener('close', onReleased)
+    outStream.removeListener('error', onReleased)
+    fs.unlink(path, cb)
+  }
+
+  outStream.once('close', onReleased)
+  outStream.once('error', onReleased)
+  outStream.destroy()
 }
 
 module.exports = function (opts) {
