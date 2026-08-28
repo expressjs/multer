@@ -64,11 +64,21 @@ DiskStorage.prototype._handleFile = function _handleFile (req, file, cb) {
           })
         }
 
-        if (that.flush && outStream.fd) {
-          fs.fsync(outStream.fd, done)
-        } else {
-          done()
-        }
+        if (!that.flush) return done()
+
+        // The write stream's descriptor is already closed by the time
+        // 'finish' fires on some Node.js versions, so open the file again
+        // to flush it. fsync applies to the file, not to a specific
+        // descriptor, so this is equivalent and works everywhere.
+        fs.open(finalPath, 'r+', function (err, fd) {
+          if (err) return done(err)
+
+          fs.fsync(fd, function (syncErr) {
+            fs.close(fd, function (closeErr) {
+              done(syncErr || closeErr)
+            })
+          })
+        })
       })
     })
   })
