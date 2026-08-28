@@ -5,27 +5,6 @@ on top of [busboy](https://github.com/mscdex/busboy) for maximum efficiency.
 
 **NOTE**: Multer will not process any form which is not multipart (`multipart/form-data`).
 
-## Translations
-
-This README is also available in other languages:
-
-|                                                                                |                 |
-| ------------------------------------------------------------------------------ | --------------- |
-| [العربية](https://github.com/expressjs/multer/blob/main/doc/README-ar.md)      | Arabic          |
-| [简体中文](https://github.com/expressjs/multer/blob/main/doc/README-zh-cn.md)  | Chinese (Simplified)         |
-| [Français](https://github.com/expressjs/multer/blob/main/doc/README-fr.md)     | French          |
-| [日本語](https://github.com/expressjs/multer/blob/main/doc/README-ja.md)       | Japanese        |
-| [Bahasa Indonesia](https://github.com/expressjs/multer/blob/main/doc/README-id.md) | Indonesian    |
-| [한국어](https://github.com/expressjs/multer/blob/main/doc/README-ko.md)       | Korean          |
-| [Português](https://github.com/expressjs/multer/blob/main/doc/README-pt-br.md) | Portuguese (BR) |
-| [Русский язык](https://github.com/expressjs/multer/blob/main/doc/README-ru.md) | Russian         |
-| [Español](https://github.com/expressjs/multer/blob/main/doc/README-es.md)      | Spanish         |
-| [தமிழ்](https://github.com/expressjs/multer/blob/main/doc/README-ta.md)         | Tamil           |
-| [O'zbek tili](https://github.com/expressjs/multer/blob/main/doc/README-uz.md)  | Uzbek           |
-| [Việt Nam](https://github.com/expressjs/multer/blob/main/doc/README-vi.md)     | Vietnamese      |
-| [Türkçe](https://github.com/expressjs/multer/blob/main/doc/README-tr.md)       | Turkish         |
-
-
 ## Installation
 
 ```sh
