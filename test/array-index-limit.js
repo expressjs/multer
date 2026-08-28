@@ -7,8 +7,6 @@ var multer = require('../')
 var FormData = require('form-data')
 
 describe('Field name array index limit', function () {
-  // @see https://github.com/expressjs/multer/security/advisories/GHSA-cf2x-4m44-rv66
-
   it('should reject an array index above fieldArrayIndexLimit', function (done) {
     var parser = multer({ limits: { fieldArrayIndexLimit: 1000 } }).none()
     var form = new FormData()
@@ -49,6 +47,19 @@ describe('Field name array index limit', function () {
     })
   })
 
+  it('should reject an array index one above the limit', function (done) {
+    var parser = multer({ limits: { fieldArrayIndexLimit: 5 } }).none()
+    var form = new FormData()
+
+    form.append('a[6]', 'value')
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.ok(err, 'should have returned an error')
+      assert.strictEqual(err.code, 'LIMIT_FIELD_ARRAY_INDEX')
+      done()
+    })
+  })
+
   it('should bound a numeric key even when the limit is zero', function (done) {
     var parser = multer({ limits: { fieldArrayIndexLimit: 0 } }).none()
     var form = new FormData()
@@ -71,6 +82,34 @@ describe('Field name array index limit', function () {
     util.submitForm(parser, form, function (err, req) {
       assert.ifError(err)
       assert.strictEqual(req.body.a['99999999x'], 'value')
+      done()
+    })
+  })
+
+  it('should allow bracketed digits in a name stored as a literal key', function (done) {
+    var parser = multer({ limits: { fieldArrayIndexLimit: 5 } }).none()
+    var form = new FormData()
+
+    // Trailing text makes append-field store the whole name as a literal key
+    // rather than an array path, so no array is built and the limit must not fire.
+    form.append('a[6]suffix', 'value')
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.ifError(err)
+      assert.strictEqual(req.body['a[6]suffix'], 'value')
+      done()
+    })
+  })
+
+  it('should allow a nested array index within the limit', function (done) {
+    var parser = multer({ limits: { fieldArrayIndexLimit: 100 } }).none()
+    var form = new FormData()
+
+    form.append('a[b][3]', 'value')
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.ifError(err)
+      assert.strictEqual(req.body.a.b[3], 'value')
       done()
     })
   })
