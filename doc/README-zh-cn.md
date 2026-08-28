@@ -1,4 +1,4 @@
-**此文档于2016年10月3日翻译时multer的版本是1.2.0，它可能不是最新的！**
+**此文档于2024年7月27日更新翻译时multer的版本是1.4.5-lts.1，它可能不是最新的！**
 **甚至可能存在翻译错误！你可能需要阅读原版英语[README](../README.md)**
 **此文档仅供参考！**
 
@@ -29,6 +29,14 @@ Multer 会添加一个 `body` 对象 以及 `file` 或 `files` 对象 到 expres
 `body` 对象包含表单的文本域信息，`file` 或 `files` 对象包含对象表单上传的文件信息。
 
 基本使用方法:
+
+别忘了在你的表单中添加 enctype="multipart/form-data"。
+
+```html
+<form action="/profile" method="post" enctype="multipart/form-data">
+  <input type="file" name="avatar" />
+</form>
+```
 
 ```javascript
 const express = require('express')
@@ -72,6 +80,29 @@ app.post('/profile', upload.none(), function (req, res, next) {
 })
 ```
 
+以下是一个使用multer和HTML表单的示例。特别注意`enctype="multipart/form-data"`和`name="uploaded_file"`字段：
+
+```html
+<form action="/stats" enctype="multipart/form-data" method="post">
+  <div class="form-group">
+    <input type="file" class="form-control-file" name="uploaded_file">
+    <input type="text" class="form-control" placeholder="Number of speakers" name="nspeakers">
+    <input type="submit" value="Get me the stats!" class="btn btn-default">
+  </div>
+</form>
+```
+
+然后在你的JavaScript文件中，添加这些行来访问文件和正文。重要的是，你需要在上传函数中使用表单中的`name`字段值。这告诉multer应该在请求中查找文件的哪个字段。如果这些字段在HTML表单和服务器上不相同，你的上传将会失败：
+
+```javascript
+const multer  = require('multer')
+const upload = multer({ dest: './public/data/uploads/' })
+app.post('/stats', upload.single('uploaded_file'), function (req, res) {
+  // req.file 是你在上面的表单中的文件名，这里为 'uploaded_file'
+  // req.body 将包含文本字段，如果有的话
+  console.log(req.file, req.body)
+});
+```
 ## API
 
 ### 文件信息
@@ -160,7 +191,8 @@ const storage = multer.diskStorage({
     cb(null, '/tmp/my-uploads')
   },
   filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now())
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, file.fieldname + '-' + uniqueSuffix)
   }
 })
 
@@ -171,15 +203,19 @@ const upload = multer({ storage: storage })
 
 `destination` 是用来确定上传的文件应该存储在哪个文件夹中。也可以提供一个 `string` (例如 `'/tmp/uploads'`)。如果没有设置 `destination`，则使用操作系统默认的临时文件夹。
 
-**注意:** 如果你提供的 `destination` 是一个函数，你需要负责创建文件夹。当提供一个字符串，multer 将确保这个文件夹是你创建的。
+**注意:** 当 `destination` 声明为一个函数时，你需要自己创建文件夹。当 `destination` 是一个字符串时，multer 会为你创建相应的文件夹。
 
 `filename` 用于确定文件夹中的文件名的确定。 如果没有设置 `filename`，每个文件将设置为一个随机文件名，并且是没有扩展名的。
 
 **注意:** Multer 不会为你添加任何扩展名，你的程序应该返回一个完整的文件名。
 
-每个函数都传递了请求对象 (`req`) 和一些关于这个文件的信息 (`file`)，有助于你的决定。
+每个函数都会传入请求对象 (`req`) 和一些关于文件的信息 (`file`)，这两个参数有助于你做出决定。
 
 注意 `req.body` 可能还没有完全填充，这取决于向客户端发送字段和文件到服务器的顺序。
+
+要理解回调中使用的调用约定（需要传递null作为第一个参数），请参考
+[Node.js 错误处理](https://web.archive.org/web/20220417042018/https://www.joyent.com/node-js/production/design/errors)
+
 
 #### 内存存储引擎 (`MemoryStorage`)
 
@@ -234,7 +270,7 @@ function fileFilter (req, file, cb) {
 
 ## 错误处理机制
 
-当遇到一个错误，multer 将会把错误发送给 express。你可以使用一个比较好的错误展示页 ([express标准方式](http://expressjs.com/guide/error-handling.html))。
+当遇到一个错误，multer 将会把错误发送给 express。你可以使用一个比较好的错误展示页 ([express标准方式](https://expressjs.com/zh-cn/guide/error-handling/))。
 
 如果你想捕捉 multer 发出的错误，你可以自己调用中间件程序。如果你想捕捉 [Multer 错误](https://github.com/expressjs/multer/blob/main/lib/multer-error.js)，你可以使用 `multer` 对象下的 `MulterError` 类 (即 `err instanceof multer.MulterError`)。
 

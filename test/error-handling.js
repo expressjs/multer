@@ -1,7 +1,7 @@
 /* eslint-env mocha */
 
 var assert = require('assert')
-
+var MulterError = require('../lib/multer-error')
 var os = require('os')
 var util = require('./_util')
 var multer = require('../')
@@ -17,6 +17,11 @@ function withLimits (limits, fields) {
 }
 
 describe('Error Handling', function () {
+  it('should use a fallback message when the code is not mapped', function () {
+    var err = new MulterError('SOME_NEW_CODE')
+    assert.strictEqual(err.message, 'Unknown error: SOME_NEW_CODE')
+  })
+
   it('should be an instance of both `Error` and `MulterError` classes in case of the Multer\'s error', function (done) {
     var form = new FormData()
     var storage = multer.diskStorage({ destination: os.tmpdir() })
@@ -62,6 +67,66 @@ describe('Error Handling', function () {
     util.submitForm(parser, form, function (err, req) {
       assert.strictEqual(err.code, 'LIMIT_FILE_SIZE')
       assert.strictEqual(err.field, 'small0')
+      done()
+    })
+  })
+
+  it('should allow file that is exactly at file size limit', function (done) {
+    var form = new FormData()
+    var parser = multer({ storage: multer.memoryStorage(), limits: { fileSize: 1500 } }).single('small0')
+
+    form.append('small0', Buffer.alloc(1500), 'small0.txt')
+
+    util.submitForm(parser, form, function (err) {
+      assert.ifError(err)
+      done()
+    })
+  })
+
+  it('should reject file 1 byte over fileSize limit', function (done) {
+    // tiny0.dat is 122 bytes - set limit to 121 (1 byte less)
+    var form = new FormData()
+    var parser = withLimits({ fileSize: 121 }, [
+      { name: 'tiny0', maxCount: 1 }
+    ])
+
+    form.append('tiny0', util.file('tiny0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.strictEqual(err.code, 'LIMIT_FILE_SIZE')
+      assert.strictEqual(err.field, 'tiny0')
+      done()
+    })
+  })
+
+  it('should accept empty file when fileSize limit is 0', function (done) {
+    // empty.dat is 0 bytes
+    var form = new FormData()
+    var parser = withLimits({ fileSize: 0 }, [
+      { name: 'empty', maxCount: 1 }
+    ])
+
+    form.append('empty', util.file('empty.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.ifError(err)
+      assert.strictEqual(req.files.empty[0].size, 0)
+      done()
+    })
+  })
+
+  it('should reject non-empty file when fileSize limit is 0', function (done) {
+    // tiny1.dat is 7 bytes
+    var form = new FormData()
+    var parser = withLimits({ fileSize: 0 }, [
+      { name: 'tiny1', maxCount: 1 }
+    ])
+
+    form.append('tiny1', util.file('tiny1.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.strictEqual(err.code, 'LIMIT_FILE_SIZE')
+      assert.strictEqual(err.field, 'tiny1')
       done()
     })
   })
@@ -429,7 +494,7 @@ describe('Error Handling', function () {
         }, 50)
       })
 
-      sock.on('error', function () {})
+      sock.on('error', function () { })
     })
   })
 
@@ -457,6 +522,22 @@ describe('Error Handling', function () {
       assert.ifError(err)
       assert.strictEqual(errors.length, 0)
       done()
+    })
+  })
+
+  it('should throw TypeError if options is not an object', function () {
+    assert.throws(() => {
+      multer(null)
+    }, {
+      name: 'TypeError',
+      message: 'Expected object for argument options'
+    })
+
+    assert.throws(() => {
+      multer('invalid')
+    }, {
+      name: 'TypeError',
+      message: 'Expected object for argument options'
     })
   })
 })
