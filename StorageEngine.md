@@ -26,6 +26,13 @@ The file data will be given to you as a stream (`file.stream`). You should pipe
 this data somewhere, and when you are done, call `cb` with some information on the
 file.
 
+If your engine writes the file data to a stream (for example an
+`fs.createWriteStream`), you can expose that stream as `file.outStream`. When
+the request is aborted or fails mid-upload, multer will call `.destroy()` on it,
+releasing the underlying handle (such as an open file descriptor) without you
+having to listen for `req.on('aborted')` yourself. This is optional — multer
+only touches `file.outStream` when your engine sets it.
+
 The information you provide in the callback will be merged with multer's file object,
 and then presented to the user via `req.files`.
 
