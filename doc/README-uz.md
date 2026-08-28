@@ -1,36 +1,44 @@
 # Multer [![NPM Version][npm-version-image]][npm-url] [![NPM Downloads][npm-downloads-image]][npm-url] [![Build Status][ci-image]][ci-url] [![Test Coverage][test-image]][test-url] [![OpenSSF Scorecard Badge][ossf-scorecard-badge]][ossf-scorecard-visualizer]
 
-Multer - bu nodejs middleware bo'lib, asosan `multipart/form-data` shaklda yuborilgan fayllarni yuklashda ishlatiladi. Yuqori samaradorlikka erishish uchun [busboy](https://github.com/mscdex/busboy)ning ustiga yozilgan.
+Multer — bu `multipart/form-data` bilan ishlash uchun mo'ljallangan node.js middleware bo'lib, asosan fayllarni yuklash uchun ishlatiladi. Maksimal samaradorlikka erishish uchun u
+[busboy](https://github.com/mscdex/busboy) ustiga qurilgan.
 
-**Muhim**: Multer `multipart` bo'lmagan har qanday formani qayta ishlamaydi.
+**ESLATMA**: Multer multipart bo'lmagan (`multipart/form-data`) har qanday formani qayta ishlamaydi.
 
 ## Tarjimalar
 
-Bu README boshqa tillarda ham mavjud:
+Ushbu README boshqa tillarda ham mavjud:
 
-- [العربية](https://github.com/expressjs/multer/blob/main/doc/README-ar.md) (arabcha)
-- [English](https://github.com/expressjs/multer/blob/main/README.md) (inglizcha)
-- [Español](https://github.com/expressjs/multer/blob/main/doc/README-es.md) (ispancha)
-- [简体中文](https://github.com/expressjs/multer/blob/main/doc/README-zh-cn.md) (xitoycha)
-- [한국어](https://github.com/expressjs/multer/blob/main/doc/README-ko.md) (korescha)
-- [Português](https://github.com/expressjs/multer/blob/main/doc/README-pt-br.md) (portugalcha)
--  [Русский язык](https://github.com/expressjs/multer/blob/main/doc/README-ru.md) (ruscha)
-- [Français](https://github.com/expressjs/multer/blob/main/doc/README-fr.md) (fransuzcha)
+|                                                                                |                 |
+| ------------------------------------------------------------------------------ | --------------- |
+| [English](https://github.com/expressjs/multer/blob/main/README.md)             | Inglizcha       |
+| [العربية](https://github.com/expressjs/multer/blob/main/doc/README-ar.md)      | Arabcha         |
+| [简体中文](https://github.com/expressjs/multer/blob/main/doc/README-zh-cn.md)  | Xitoycha (soddalashtirilgan) |
+| [Français](https://github.com/expressjs/multer/blob/main/doc/README-fr.md)     | Fransuzcha      |
+| [日本語](https://github.com/expressjs/multer/blob/main/doc/README-ja.md)       | Yaponcha        |
+| [Bahasa Indonesia](https://github.com/expressjs/multer/blob/main/doc/README-id.md) | Indonezcha    |
+| [한국어](https://github.com/expressjs/multer/blob/main/doc/README-ko.md)       | Koreyscha       |
+| [Português](https://github.com/expressjs/multer/blob/main/doc/README-pt-br.md) | Portugalcha (Braziliya) |
+| [Русский язык](https://github.com/expressjs/multer/blob/main/doc/README-ru.md) | Ruscha          |
+| [Español](https://github.com/expressjs/multer/blob/main/doc/README-es.md)      | Ispancha        |
+| [தமிழ்](https://github.com/expressjs/multer/blob/main/doc/README-ta.md)         | Tamilcha        |
+| [Việt Nam](https://github.com/expressjs/multer/blob/main/doc/README-vi.md)     | Vyetnamcha      |
+| [Türkçe](https://github.com/expressjs/multer/blob/main/doc/README-tr.md)       | Turkcha         |
 
 
 ## O'rnatish
 
 ```sh
-$ npm install --save multer
+$ npm install multer
 ```
 
 ## Foydalanish
 
-Multer - `request` ob'ektiga `body` va `file` yoki `files` ob'ektini qo'shadi. `body` ob'ekti formaning matn maydonlarining (fields) qiymatlarini o'z ichiga oladi, `file` yoki `files` ob'ekti forma orqali yuklangan fayllarni o'z ichiga oladi.
+Multer `request` ob'ektiga `body` ob'ektini hamda `file` yoki `files` ob'ektini qo'shadi. `body` ob'ekti formaning matnli maydonlari qiymatlarini, `file` yoki `files` ob'ekti esa forma orqali yuklangan fayllarni o'z ichiga oladi.
 
-Sodda ishlatish uchun namuna:
+Oddiy foydalanish namunasi:
 
-Formada `enctype="multipart/form-data"` qo'shish esdan chiqmasin
+Formangizda `enctype="multipart/form-data"` ko'rsatishni unutmang.
 
 ```html
 <form action="/profile" method="post" enctype="multipart/form-data">
@@ -46,28 +54,28 @@ const upload = multer({ dest: 'uploads/' })
 const app = express()
 
 app.post('/profile', upload.single('avatar'), function (req, res, next) {
-  // req.file - fayl `avatar`
-  // req.body agar matnli maydonlar (fields) bo'lsa, ularni saqlanadi
+  // req.file — bu `avatar` fayli
+  // req.body matnli maydonlarni saqlaydi, agar ular bo'lsa
 })
 
 app.post('/photos/upload', upload.array('photos', 12), function (req, res, next) {
-  // req.files - fayllar massivi `photos`
-  // req.body agar matnli maydonlar (fields) bo'lsa, ularni saqlanadi
+  // req.files — bu `photos` fayllari massivi
+  // req.body matnli maydonlarni o'z ichiga oladi, agar ular bo'lsa
 })
 
 const uploadMiddleware = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
 app.post('/cool-profile', uploadMiddleware, function (req, res, next) {
-  // req.files - bu ob'ekt (String -> Array), matn maydoni(fieldname) - bu key, va qiymat - fayllar massivi
+  // req.files — bu ob'ekt (String -> Array), bunda fieldname kalit, qiymat esa fayllar massivi
   //
-  // misol:
+  // masalan:
   //  req.files['avatar'][0] -> File
   //  req.files['gallery'] -> Array
   //
-  // req.body agar matnli maydonlar (fields) bo'lsa, ularni saqlanadi
+  // req.body matnli maydonlarni o'z ichiga oladi, agar ular bo'lsa
 })
 ```
 
-Agarda siz faqat matndan iborat multipart form bilan ishlashingiz kerak bo'lsa,  `.none()` ishlating:
+Agar sizga faqat matndan iborat multipart formani qayta ishlash kerak bo'lsa, `.none()` metodidan foydalaning:
 
 ```javascript
 const express = require('express')
@@ -76,65 +84,110 @@ const multer  = require('multer')
 const upload = multer()
 
 app.post('/profile', upload.none(), function (req, res, next) {
-  // req.body matnli maydonlar (fields)ni o'zida saqlaydi
+  // req.body matnli maydonlarni o'z ichiga oladi
 })
 ```
+
+Quyida multer HTML formada qanday ishlatilishiga misol keltirilgan. `enctype="multipart/form-data"` va `name="uploaded_file"` maydonlariga alohida e'tibor bering:
+
+```html
+<form action="/stats" enctype="multipart/form-data" method="post">
+  <div class="form-group">
+    <input type="file" class="form-control-file" name="uploaded_file">
+    <input type="text" class="form-control" placeholder="Number of speakers" name="nspeakers">
+    <input type="submit" value="Get me the stats!" class="btn btn-default">
+  </div>
+</form>
+```
+
+So'ngra javascript faylingizga faylga ham, body'ga ham murojaat qilish uchun quyidagi qatorlarni qo'shasiz. Yuklash funksiyangizda formadagi `name` maydonining qiymatini ishlatishingiz muhim. Bu multerga so'rovning qaysi maydonidan fayllarni izlash kerakligini bildiradi. Agar bu maydonlar HTML formada va serveringizda bir xil bo'lmasa, yuklash muvaffaqiyatsiz tugaydi:
+
+```javascript
+const multer  = require('multer')
+const upload = multer({ dest: './public/data/uploads/' })
+app.post('/stats', upload.single('uploaded_file'), function (req, res) {
+  // req.file — yuqoridagi formadagi faylingizning nomi, bu yerda 'uploaded_file'
+  // req.body matnli maydonlarni saqlaydi, agar ular bo'lsa
+  console.log(req.file, req.body)
+});
+```
+
+
 
 ## API
 
 ### Fayl haqida ma'lumot
 
-Har bir fayl quyidagi ma'lumotlarni o'zida saqlaydi:
+Har bir fayl quyidagi ma'lumotlarni o'z ichiga oladi:
 
-Kalit(key) | Ta'rif                                 | Eslatma
---- |----------------------------------------| ---
-`fieldname` | Formada berilgan maxsus nom            |
-`originalname` | Foydalanuvchi kompyuteridagi fayl nomi |
-`encoding` | Faylning kodlash turi                  |
-`mimetype` | Faylning `mime` turi                   |
-`size` | Fayl hajmi - baytda                    |
-`destination` | Fayl saqlangan papka                   | `DiskStorage`
-`filename` | `destination`ni ichidagi fayl nomi     | `DiskStorage`
-`path` | Yuklangan faylning to'liq yo'li        | `DiskStorage`
-`buffer` | Butun boshli fayl `Buffer` tipda       | `MemoryStorage`
+Kalit | Ta'rif | Eslatma
+--- | --- | ---
+`fieldname` | Formada ko'rsatilgan maydon nomi |
+`originalname` | Foydalanuvchi kompyuteridagi fayl nomi yoki `preservePath: true` bo'lganda to'liq yo'l |
+`encoding` | Faylning kodlash turi |
+`mimetype` | Faylning mime turi |
+`size` | Fayl hajmi (baytlarda) |
+`destination` | Fayl saqlangan papka | `DiskStorage`
+`filename` | `destination` ichidagi fayl nomi | `DiskStorage`
+`path` | Yuklangan faylning to'liq yo'li | `DiskStorage`
+`buffer` | Butun faylning `Buffer`i | `MemoryStorage`
 
 ### `multer(opts)`
 
-Multer qo'shimcha ob'ekt qabul qiladi, ulardan eng asosiysi - `dest`,
-Multerga fayllarni qayerga yuklash kerakligini aytadigan xususiyat. Agarda siz qo'shimcha(`options`) ob'ektni tashlab ketsangiz, fayllar xotirada saqlanadi va hech qachon diskka yozilmaydi.
+Multer parametrlar ob'ektini qabul qiladi, ulardan eng asosiysi `dest`
+xususiyati bo'lib, u Multerga fayllarni qayerga yuklash kerakligini bildiradi. Agar parametrlar
+ob'ektini bermasangiz, fayllar xotirada saqlanadi va hech qachon diskka yozilmaydi.
 
-Standart holatda - Multer nomlashda kelib chiqishi mumkin bo'lgan muammolarni oldini olish uchun fayllar nomini o'zgartiradi. O'z talablaringizga mos ravishda nomlash funksiyasini sozlay olashingiz mumkin.
+Standart holatda Multer nomlar to'qnashuvining oldini olish uchun fayllarni qayta nomlaydi. Qayta
+nomlash funksiyasini o'z ehtiyojlaringizga mos ravishda sozlashingiz mumkin.
 
-Quyidagilar Multerga qo'shimcha qiymat sifati berilishi mumkin:
+Quyida Multerga berilishi mumkin bo'lgan parametrlar keltirilgan.
 
-Kalit(key) | Ta'rif
+Kalit | Ta'rif
 --- | ---
-`dest` yoki `storage` | Faylni qayerda saqlash
-`fileFilter` | Qaysi fayllar qabul qilinishini boshqarish funksiyasi
-`limits` | Yuklash chegarasi
-`preservePath` | Asosiy nom o'rniga fayllarning to'liq yo'lini saqlash
-`defParamCharset` | Kengaytirilgan parametrlar bo'lmagan qism sarlavha parametrlari qiymatlari (masalan, fayl nomi) uchun ishlatish uchun standart belgilar to'plami (aniq belgilar to'plamini o'z ichiga olmaydi). Standart: `'latin1'`
+`dest` yoki `storage` | Fayllarni qayerda saqlash
+`fileFilter` | Qaysi fayllar qabul qilinishini boshqaruvchi funksiya
+`limits` | Yuklanadigan ma'lumotlar chegaralari
+`preservePath` | `file.originalname` ichida faqat asosiy nom o'rniga mijoz yuborgan to'liq yo'lni saqlash
+`defParamCharset` | Kengaytirilgan parametr bo'lmagan (ya'ni aniq charset ko'rsatilmagan) qism sarlavhasi parametrlari qiymatlari (masalan, fayl nomi) uchun ishlatiladigan standart belgilar to'plami. Standart qiymat: `'latin1'`
 
-O'rtacha veb-ilovada faqat `dest` kerak bo'lishi mumkin va quyidagicha sozlanishi mumkin
+Oddiy veb-ilovada faqat `dest` kerak bo'lishi mumkin va u quyidagi
+misolda ko'rsatilganidek sozlanadi.
 
 ```javascript
 const upload = multer({ dest: 'uploads/' })
 ```
-Yuklamalaringizni boshqarishda ko'proq nazoratni xohlasangiz, `dest` o'rniga `storage` tanlovini ishlatishingiz kerak. Multer `DiskStorage` va `MemoryStorage` saqlash motorlari(engines) bilan keladi. Boshqa motorlar(engines) uchun uchinchi tomondan(third parties) ko'proq tanlovlar keladi.
+
+`preservePath` yoqilganda Multer kelayotgan fayl nomini mijoz yuborgan barcha
+yo'l segmentlari bilan birga o'tkazadi. Bu `file.originalname` sifatida taqdim etiladi;
+u saqlash papkasini o'zgartirmaydi, papkalar yaratmaydi va yo'lni siz uchun
+tozalamaydi. `file.originalname` har doim mijoz tomonidan yuboriladi va ishonchsiz
+deb qaralishi kerak; `preservePath` bilan u qo'shimcha ravishda mijoz yuborgan yo'l
+segmentlarini ham o'z ichiga oladi. Uni maxsus `filename` funksiyasida yoki saqlash
+mexanizmida ishlatishdan oldin normallashtiring yoki tekshiring.
+
+Yuklashlaringiz ustidan ko'proq nazoratga ega bo'lishni istasangiz, `dest` o'rniga
+`storage` parametridan foydalanishingiz kerak. Multer `DiskStorage` va `MemoryStorage`
+saqlash mexanizmlari bilan birga keladi; boshqa mexanizmlar uchinchi tomonlardan mavjud.
 
 #### `.single(fieldname)`
 
-`fieldname` nomi bilan yagona faylni qabul qiladi. Yagona fayl `req.file` da saqlanadi.
+`fieldname` nomli bitta faylni qabul qiladi. Bu bitta fayl
+`req.file` da saqlanadi.
 
 #### `.array(fieldname[, maxCount])`
 
-`fieldname` nomi bilan fayllar massivini qabul qiladi. Agar `maxCount` dan ko'p fayl yuklash urinishi bo'lsa, hatolikni aniqlash imkoniyatini berish mumkin. Fayllar massivi `req.files` da saqlanadi.
+Barchasi `fieldname` nomiga ega bo'lgan fayllar massivini qabul qiladi. Ixtiyoriy ravishda
+`maxCount` dan ko'p fayl yuklansa, xatolik qaytaradi. Fayllar massivi
+`req.files` da saqlanadi.
 
 #### `.fields(fields)`
 
-`fields`da aniqlangan fayllarni qabul qiladi. Fayllar massivini saqlash uchun `req.files` ichidagi massivda saqlanadi.
+`fields` orqali ko'rsatilgan fayllar aralashmasini qabul qiladi. Fayllar massivlaridan iborat ob'ekt
+`req.files` da saqlanadi.
 
-`fields` ob'ektida `name` va `maxCount` kalitlar(keys)ni o'z ichiga olishi kerak. Misol:
+`fields` — `name` va ixtiyoriy `maxCount` ga ega ob'ektlar massivi bo'lishi kerak.
+Misol:
 
 ```javascript
 [
@@ -145,108 +198,153 @@ Yuklamalaringizni boshqarishda ko'proq nazoratni xohlasangiz, `dest` o'rniga `st
 
 #### `.none()`
 
-Faqatgina matnli maydonlar(fields)ni oladi. Agarda biror fayl yuklansa, "LIMIT\_UNEXPECTED\_FILE" xatoligi yuboriladi.
+Faqat matnli maydonlarni qabul qiladi. Agar biror fayl yuklansa,
+"LIMIT\_UNEXPECTED\_FILE" kodli xatolik chiqariladi.
 
 #### `.any()`
 
-Ushbu so'rov barcha fayllarni qabul qiladi, fayllar `req.files` ichida saqlanadi.
+Tarmoq orqali kelgan barcha fayllarni qabul qiladi. Fayllar massivi
+`req.files` da saqlanadi.
 
-**OGOHLANTIRISH:** Foydalanuvchi yuklagan fayllarni doimo boshqarib turishni unutmang. Ularni boshqa yo'l(route)ni kutmagan holda fayllarini yuklash imkonini beradigan global middleware sifatida multerni sozlamang. Faqatgina yuklangan fayllarni boshqarish kerak bo'lgan yo'l(route)larda ushbu funksiyani ishlating.
+**OGOHLANTIRISH:** Foydalanuvchi yuklagan fayllarni har doim qayta ishlashingizga ishonch hosil qiling.
+Multerni hech qachon global middleware sifatida qo'shmang, chunki yovuz niyatli foydalanuvchi
+siz kutmagan yo'nalishga (route) fayllar yuklashi mumkin. Bu funksiyani faqat yuklangan
+fayllarni qayta ishlaydigan yo'nalishlarda ishlating.
 
 ### `storage`
 
 #### `DiskStorage`
 
-Diskka saqlash motori(engine) sizga fayllarni saqlashda to'liq nazorat qilish imkonini beradi.
+Diskka saqlash mexanizmi sizga fayllarni diskka saqlash ustidan to'liq nazorat beradi.
 
 ```javascript
+const crypto = require('crypto')
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, '/tmp/my-uploads')
   },
   filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now())
+    crypto.randomBytes(16, function (err, raw) {
+      if (err) return cb(err)
+      cb(null, file.fieldname + '-' + raw.toString('hex'))
+    })
   }
 })
 
 const upload = multer({ storage: storage })
 ```
 
-`destination` va `filename` qo'shimcha tanlovlari mavjud, ular ikkala ham qaysi papkada faylni saqlash kerakligini aniqlab turadigan funksiyalardir.
+Ikkita parametr mavjud: `destination` va `filename`. Ularning ikkalasi ham
+faylni qayerda saqlash kerakligini aniqlaydigan funksiyalardir.
 
-`destination` yuklangan fayllarni qaysi papkada saqlash kerakligini aniqlab turadi. Bu, `string` sifatida berilishi mumkin (masalan, `'/tmp/uploads'`). Agar `destination` berilmagan bo'lsa, operatsion tizimning vaqtinchalik fayllar uchun ishlatiladigan papkasini ishlatadi.
+`destination` yuklangan fayllar qaysi papkada saqlanishini aniqlash uchun
+ishlatiladi. Uni `string` sifatida ham berish mumkin (masalan, `'/tmp/uploads'`). Agar
+`destination` berilmasa, operatsion tizimning vaqtinchalik fayllar uchun standart
+papkasi ishlatiladi.
 
-**Diqqat:** `destination` ni funksiya sifatida berib bo'lganda papka ochilganligiga o'zingiz javobgar bo'lasiz. Agar `string` sifatida bersangiz, multer papkani o'zi uchun yaratishni ta'minlaydi.
+**Eslatma:** `destination` ni funksiya sifatida berganingizda papkani yaratish
+uchun o'zingiz javobgarsiz. Satr (string) berilganda esa multer papka siz uchun
+yaratilishini ta'minlaydi.
 
-`filename` faylni papka ichida qanday nomlanganligini aniqlaydi. Agar `filename` berilmagan bo'lsa, har bir faylga fayl kengaytmasini o'z ichiga olmagan tasodifiy nom beriladi.
+`filename` papka ichida fayl qanday nomlanishini aniqlash uchun ishlatiladi.
+Agar `filename` berilmasa, har bir faylga fayl kengaytmasisiz
+tasodifiy nom beriladi.
 
-**Diqqat:** Multer siz uchun fayl kengaytmasini qo'shmaydi, sizning funksiyangiz kengaytma bilan to'liq nomni qaytarishi kerak.
+**Eslatma:** Multer siz uchun hech qanday fayl kengaytmasini qo'shmaydi, funksiyangiz
+fayl kengaytmasi bilan to'liq fayl nomini qaytarishi kerak.
 
-Har bir funksiya `req` so'rovini va fayl haqida ma'lumotlarni (`file`) olish uchun o'tkaziladi.
+Qaror qabul qilishga yordam berish uchun har bir funksiyaga so'rov (`req`) hamda fayl haqidagi
+ba'zi ma'lumotlar (`file`) uzatiladi.
 
-Diqqat qiling, `req.body` hali to'liq to'ldirilmagan bo'lishi mumkin. Bu mijozning maydon(field)larni va fayllarni serverga qanday yuborishiga bog'liq bo'ladi.
+E'tibor bering, `req.body` hali to'liq to'ldirilmagan bo'lishi mumkin. Bu mijozning
+maydonlar va fayllarni serverga qaysi tartibda yuborishiga bog'liq.
 
-Callback funktsiyasida ishlatiladigan chaqirish tartibini tushunish uchun (birinchi parametr sifatida null o‘tkazish talab etilishi) ko‘rish uchun quyidagi manzilga murojaat qiling:
-[Node.js da xatoliklarni ushlash](https://web.archive.org/web/20220417042018/https://www.joyent.com/node-js/production/design/errors)
+Callback'da ishlatiladigan chaqirish qoidasini (birinchi parametr sifatida
+null uzatish zarurligini) tushunish uchun
+[Node.js xatolarni qayta ishlash](https://web.archive.org/web/20220417042018/https://www.joyent.com/node-js/production/design/errors) sahifasiga qarang
 
 #### `MemoryStorage`
 
-Xotira saqlash motori fayllarni xotirada `Buffer` ob'ektlar sifatida saqlaydi. Uning qo'shimcha qiymatlari yo‘q.
+Xotirada saqlash mexanizmi fayllarni xotirada `Buffer` ob'ektlari sifatida saqlaydi. Uning
+hech qanday parametrlari yo'q.
 
 ```javascript
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage })
 ```
-Xotirada saqlash paytida, fayl ma'lumotlari `buffer` deb nomlanadigan maydonni o‘z ichiga oladi.
 
-**DIQQAT:** Juda katta fayllarni yuklash, yoki kichik fayllarni tez-tez yuklash, xotirada saqlash ishlatilganda, sizning ilovangizning xotirasini to'ldirib qo'yishi mumkin.
+Xotirada saqlash ishlatilganda fayl ma'lumotlari butun faylni o'z ichiga olgan
+`buffer` nomli maydonni o'z ichiga oladi.
+
+**OGOHLANTIRISH**: Xotirada saqlash ishlatilganda juda katta fayllarni yoki nisbatan kichik
+fayllarni ko'p miqdorda juda tez yuklash ilovangizning xotirasi
+tugab qolishiga olib kelishi mumkin.
 
 ### `limits`
 
-Quyidagi xususiyatlar o'lchov(limit)larni aniqlaydigan obyekt. Multer ushbu obyektni to'g'ridan-to'g'ri busboy ga o'tkazadi va xususiyatlar tafsilotlari [busboy sahifasida](https://github.com/mscdex/busboy#busboy-methods)dan topishingiz mumkin.
+Quyidagi ixtiyoriy xususiyatlarning hajm chegaralarini belgilaydigan ob'ekt. Multer bu ob'ektni to'g'ridan-to'g'ri busboy'ga uzatadi va xususiyatlar tafsilotlarini [busboy sahifasida](https://github.com/mscdex/busboy#exports) topishingiz mumkin.
 
-Quyidagi butun qiymatlar mavjud:
+Quyidagi butun son qiymatlar mavjud:
 
-Kalit(key) | Ta'rif                                                                                      | Odatiy qiymat
---- |---------------------------------------------------------------------------------------------| ---
-`fieldNameSize` | Maksimal maydon nomi o'lchami                                                               | 100 bayt
-`fieldSize` | Maksimal maydon qiymati o'lchami (baytlarda)                                                | 1MB
-`fields` | Fayl bo'lmagan  maydonlarning maksimal soni                                                 | Cheklanmagan
-`fileSize` | Multipart form uchun faylning maksimal o'lchami (baytda)                        | Cheklanmagan
-`files` | Multipart form uchun fayllar sonining maksimal chegarasi                        | Cheklanmagan
-`parts` | Multipart form uchun fayllar sonining maksimal chegarasi (fieldlar va fayllar)  | Cheklanmagan
-`headerPairs` | Multipart form uchun ma'lumotlar (kalit va qiymat juftliklari) sonining maksimal chegarasi | 2000
+Kalit | Ta'rif | Standart qiymat
+--- | --- | ---
+`fieldNameSize` | Maydon nomining maksimal hajmi | Infinity
+`fieldSize` | Maydon qiymatining maksimal hajmi (baytlarda) | 1MB
+`fields` | Fayl bo'lmagan maydonlarning maksimal soni | Infinity
+`fileSize` | Multipart formalar uchun faylning maksimal hajmi (baytlarda) | Infinity
+`files` | Multipart formalar uchun fayl maydonlarining maksimal soni | Infinity
+`parts` | Multipart formalar uchun qismlarning maksimal soni (maydonlar + fayllar) | Infinity
+`headerPairs` | Multipart formalar uchun tahlil qilinadigan sarlavha key=>value juftliklarining maksimal soni | 2000
+`fieldNestingDepth` | Maydon nomlari uchun ichma-ichlik darajalarining maksimal soni (masalan, `a[b][c]` 2 darajaga ega) | Infinity
+`fieldArrayIndexLimit` | Maydon nomi ichida qabul qilinadigan maksimal raqamli massiv indeksi (masalan, `a[3]` 3-indeksni ishlatadi) | Infinity
 
-Chegaralarni sozlash, DoS-hujumlariga qarshi saytingizni himoya qilishga yordam bera olishi mumkin
+`parts` chegarasi busboy belgilangan qismlar soniga yetganda ishga tushadi,
+faqat bu son oshib ketgandan keyin emas. Agar aniq miqdordagi maydonlar va fayllarga
+ruxsat bermoqchi bo'lsangiz, `parts` ni shu umumiy sondan kamida bittaga ko'proq qilib belgilang.
+
+Chegaralarni belgilash saytingizni xizmat ko'rsatishni rad etish (DoS) hujumlaridan himoya qilishga yordam beradi.
 
 ### `fileFilter`
 
-Bu, qaysi fayllarni yuklashi, qaysilarini o'tkazib yuborish kerakligini boshqarish uchun funksiya sifatida sozlasa bo'ladi. Funksiya quyidagi ko'rinishda bo'lishi kerak:"
+Qaysi fayllar yuklanishi va qaysilari o'tkazib yuborilishi kerakligini boshqarish uchun
+buni funksiya sifatida belgilang. Funksiya quyidagi ko'rinishda bo'lishi kerak:
 
 ```javascript
 function fileFilter (req, file, cb) {
 
-  // Bu funksiya, faylni qabul qilish kerakligini anglatish uchun `cb` ni
-  // boolean qiymat bilan chaqirish kerak.
+  // Funksiya faylni qabul qilish kerakligini bildirish uchun
+  // `cb` ni boolean qiymat bilan chaqirishi kerak
 
-  // Faylni qabul qilishni rad etish uchun false quyudagicha berilishi kerak:
+  // Bu faylni rad etish uchun `false` uzating, quyidagicha:
   cb(null, false)
 
-  // Faylni qabul qiilishni tasdiqlash uchun true quyudagicha berilishi kerak:
+  // Faylni qabul qilish uchun `true` uzating, quyidagicha:
   cb(null, true)
 
-  // Nimadir xato ketsa, siz har doim  Error berishingiz mumkin:
+  // Biror narsa noto'g'ri ketsa, har doim xatolik uzatishingiz mumkin:
   cb(new Error('I don\'t have a clue!'))
 
 }
 ```
 
-## Xatolar bilan ishlash
+## Xavfsizlik
 
-Xatoga duch kelganda, Multer xatoni Expressga yuboradi. [standart express usuli](https://expressjs.com/en/guide/error-handling/)dan foydalanib xatoni tartibliroq chiqarishingiz mumkin.
+[Chegaralarni](#limits) belgilash saytingizni xizmat ko'rsatishni rad etish (DoS) hujumlaridan himoya qilishga yordam beradi. Ko'pchilik ilovalar uchun quyidagi chegaralar tavsiya etiladi:
 
-Agar siz Multerdan chiqqan xatolarni aniqlamoqchi bo'lsangiz o'zingiz `middleware` funksiya yozishingiz mumkin. Shuningdek, agar siz faqat [Multer xatolarini](https://github.com/expressjs/multer/blob/main/lib/multer-error.js) ushlamoqchi bo'lsangiz, siz `multer` ob'ektiga yozilgan `MulterError` class ni ishlatishingiz mumkin (masalan, `err instanceof multer.MulterError`).
+- `fileSize` -- o'z holatingiz uchun kutilayotgan maksimal fayl hajmiga o'rnating
+- `files` -- bitta so'rovdagi fayllarning maksimal soniga o'rnating
+- `fields` -- bitta so'rovdagi matnli maydonlarning maksimal soniga o'rnating
+- `fieldNestingDepth` -- maydon nomlaringiz talab qiladigan minimal chuqurlikka o'rnating (masalan, `a[b][c]` uchun `3`)
+- `fieldArrayIndexLimit` -- maydon nomlaringiz talab qiladigan eng katta massiv indeksiga o'rnating (masalan, `a[99]` uchun `100`)
 
+## Xatolarni qayta ishlash
+
+Xatoga duch kelganda Multer xatoni Express'ga topshiradi. [Standart express usuli](https://expressjs.com/en/guide/error-handling/)dan
+foydalanib chiroyli xato sahifasini ko'rsatishingiz mumkin.
+
+Agar aynan Multer xatolarini ushlamoqchi bo'lsangiz, middleware funksiyasini
+o'zingiz chaqirishingiz mumkin. Shuningdek, faqat [Multer xatolarini](https://github.com/expressjs/multer/blob/main/lib/multer-error.js) ushlamoqchi bo'lsangiz, `multer` ob'ektining o'ziga biriktirilgan `MulterError` klassidan foydalanishingiz mumkin (masalan, `err instanceof multer.MulterError`).
 
 ```javascript
 const multer = require('multer')
@@ -255,19 +353,19 @@ const upload = multer().single('avatar')
 app.post('/profile', function (req, res) {
   upload(req, res, function (err) {
     if (err instanceof multer.MulterError) {
-      // Yuklanishda Multerdan xatolik yuz berganda.
-    } else {
-      // Yuklanishda noma'lum xatolik yuz berganda.
+      // Yuklash vaqtida Multer xatoligi yuz berdi.
+    } else if (err) {
+      // Yuklash vaqtida noma'lum xatolik yuz berdi.
     }
 
-    // Hammasi muvaffaqqiyatli bo'lganda.
+    // Hammasi yaxshi o'tdi.
   })
 })
 ```
 
 ## Maxsus saqlash mexanizmi
 
-O'zingizning saqlash dvigatelingizni qanday yaratish haqida ma'lumot olish: [Maxsus saqlash mexanizmi](https://github.com/expressjs/multer/blob/main/StorageEngine.md).
+O'zingizning saqlash mexanizmingizni qanday yaratish haqida ma'lumot olish uchun [Multer Storage Engine](https://github.com/expressjs/multer/blob/main/StorageEngine.md) sahifasiga qarang.
 
 ## Litsenziya
 
