@@ -2,41 +2,48 @@
 
 <div dir="rtl">
 
-تعتبر Multer وسيط node.js لمعالجة `multipart/form-data`, والتي تُستخدم أساسًا لتحميل الملفات. تم بناء هذا الوسيط بالإعتماد على [busboy](https://github.com/mscdex/busboy) لأجل الحصول على أقصى قدر من الكفاءة.
+Multer هو وسيط (middleware) لـ node.js لمعالجة `multipart/form-data`، والتي تُستخدم في المقام الأول لرفع الملفات. وهو مبني فوق [busboy](https://github.com/mscdex/busboy) لتحقيق أقصى قدر من الكفاءة.
 
-**ملاحظة**: لن يقوم Multer بمعالجة أي شكل غير متعدد الأجزاء (`multipart/form-data`).
-
+**ملاحظة**: لن يعالج Multer أي نموذج ليس متعدد الأجزاء (`multipart/form-data`).
 
 ## الترجمات
 
-هذا الملف متاح أيضًا بلغات أخرى:
+هذا الملف التعريفي متاح أيضًا بلغات أخرى:
 
-- [English](https://github.com/expressjs/multer/blob/main/README.md) (الإنجليزية)
-- [Español](https://github.com/expressjs/multer/blob/main/doc/README-es.md) (الإسبانية)
-- [简体中文](https://github.com/expressjs/multer/blob/main/doc/README-zh-cn.md) (الصينية)
-- [한국어](https://github.com/expressjs/multer/blob/main/doc/README-ko.md) (الكورية)
-- [Русский язык](https://github.com/expressjs/multer/blob/main/doc/README-ru.md) (الروسية)
-- [Việt Nam](https://github.com/expressjs/multer/blob/main/doc/README-vi.md) (الفتنامية)
-- [Português](https://github.com/expressjs/multer/blob/main/doc/README-pt-br.md) (البرتغالية)
+|                                                                                |                 |
+| ------------------------------------------------------------------------------ | --------------- |
+| [English](https://github.com/expressjs/multer/blob/main/README.md)             | الإنجليزية      |
+| [简体中文](https://github.com/expressjs/multer/blob/main/doc/README-zh-cn.md)  | الصينية (المبسطة) |
+| [Français](https://github.com/expressjs/multer/blob/main/doc/README-fr.md)     | الفرنسية        |
+| [日本語](https://github.com/expressjs/multer/blob/main/doc/README-ja.md)       | اليابانية       |
+| [Bahasa Indonesia](https://github.com/expressjs/multer/blob/main/doc/README-id.md) | الإندونيسية |
+| [한국어](https://github.com/expressjs/multer/blob/main/doc/README-ko.md)       | الكورية         |
+| [Português](https://github.com/expressjs/multer/blob/main/doc/README-pt-br.md) | البرتغالية (البرازيل) |
+| [Русский язык](https://github.com/expressjs/multer/blob/main/doc/README-ru.md) | الروسية         |
+| [Español](https://github.com/expressjs/multer/blob/main/doc/README-es.md)      | الإسبانية       |
+| [தமிழ்](https://github.com/expressjs/multer/blob/main/doc/README-ta.md)         | التاميلية       |
+| [O'zbek tili](https://github.com/expressjs/multer/blob/main/doc/README-uz.md)  | الأوزبكية       |
+| [Việt Nam](https://github.com/expressjs/multer/blob/main/doc/README-vi.md)     | الفيتنامية      |
+| [Türkçe](https://github.com/expressjs/multer/blob/main/doc/README-tr.md)       | التركية         |
 
 
-## التنصيب
+## التثبيت
+
+<div dir="ltr">
+
+```sh
+$ npm install multer
+```
 
 </div>
 
-```sh
-$ npm install --save multer
-```
+## الاستخدام
 
-<div dir="rtl">
-
-## الاستعمال
-
-يضيف Multer كائن `body` وكائن `file` أو `files` إلى كائن `request`. يحتوي الكائن `body` على قيم مدخلات النص في الإستمارة ، بينما يحتوي الكائن `file` أو `files` على الملفات التي تم تحميلها عبر الإستمارة.
+يضيف Multer كائن `body` وكائن `file` أو `files` إلى كائن `request`. يحتوي الكائن `body` على قيم الحقول النصية في النموذج، بينما يحتوي الكائن `file` أو `files` على الملفات المرفوعة عبر النموذج.
 
 مثال على الاستخدام الأساسي:
 
-لا تنسَ <span dir="ltr"> `enctype="multipart/form-data"` </span> في الإستمارة الخاص بك.
+لا تنسَ إضافة `enctype="multipart/form-data"` في النموذج الخاص بك.
 
 <div dir="ltr">
 
@@ -47,116 +54,151 @@ $ npm install --save multer
 ```
 
 ```javascript
-var express = require('express')
-var multer  = require('multer')
-var upload = multer({ dest: 'uploads/' })
+const express = require('express')
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
 
-var app = express()
+const app = express()
 
 app.post('/profile', upload.single('avatar'), function (req, res, next) {
-  // req.file is the `avatar` file
-  // req.body will hold the text fields, if there were any
+  // req.file هو ملف `avatar`
+  // req.body سيحتوي على الحقول النصية، إن وُجدت
 })
 
 app.post('/photos/upload', upload.array('photos', 12), function (req, res, next) {
-  // req.files is array of `photos` files
-  // req.body will contain the text fields, if there were any
+  // req.files هو مصفوفة من ملفات `photos`
+  // req.body سيحتوي على الحقول النصية، إن وُجدت
 })
 
-var uploadMiddleware = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
+const uploadMiddleware = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
 app.post('/cool-profile', uploadMiddleware, function (req, res, next) {
-  // req.files is an object (String -> Array) where fieldname is the key, and the value is array of files
+  // req.files هو كائن (String -> Array) حيث fieldname هو المفتاح، والقيمة هي مصفوفة من الملفات
   //
-  // e.g.
+  // مثلاً
   //  req.files['avatar'][0] -> File
   //  req.files['gallery'] -> Array
   //
-  // req.body will contain the text fields, if there were any
+  // req.body سيحتوي على الحقول النصية، إن وُجدت
 })
 ```
 
 </div>
 
-إذا احتجت لمعالجة إستمارة متعددة الأجزاء للنص فقط ، فيجب عليك استخدام الدالة `.none ()`:
+إذا احتجت إلى معالجة نموذج متعدد الأجزاء يحتوي على نصوص فقط، فعليك استخدام الدالة `.none()`:
 
 <div dir="ltr">
 
 ```javascript
-var express = require('express')
-var app = express()
-var multer  = require('multer')
-var upload = multer()
+const express = require('express')
+const app = express()
+const multer  = require('multer')
+const upload = multer()
 
 app.post('/profile', upload.none(), function (req, res, next) {
-  // req.body contains the text fields
+  // req.body يحتوي على الحقول النصية
 })
 ```
+
 </div>
+
+فيما يلي مثال على كيفية استخدام multer في نموذج HTML. انتبه جيدًا إلى الحقلين `enctype="multipart/form-data"` و `name="uploaded_file"`:
+
+<div dir="ltr">
+
+```html
+<form action="/stats" enctype="multipart/form-data" method="post">
+  <div class="form-group">
+    <input type="file" class="form-control-file" name="uploaded_file">
+    <input type="text" class="form-control" placeholder="Number of speakers" name="nspeakers">
+    <input type="submit" value="Get me the stats!" class="btn btn-default">
+  </div>
+</form>
+```
+
+</div>
+
+بعد ذلك، في ملف javascript الخاص بك ستضيف هذه الأسطر للوصول إلى الملف والجسم (body) معًا. من المهم أن تستخدم قيمة الحقل `name` من النموذج في دالة الرفع الخاصة بك. فهذا ما يخبر multer في أي حقل من الطلب ينبغي أن يبحث عن الملفات. إذا لم تكن هذه الحقول متطابقة في نموذج HTML وعلى الخادم، فستفشل عملية الرفع:
+
+<div dir="ltr">
+
+```javascript
+const multer  = require('multer')
+const upload = multer({ dest: './public/data/uploads/' })
+app.post('/stats', upload.single('uploaded_file'), function (req, res) {
+  // req.file هو اسم ملفك في النموذج أعلاه، وهو هنا 'uploaded_file'
+  // req.body سيحتوي على الحقول النصية، إن وُجدت
+  console.log(req.file, req.body)
+});
+```
+
+</div>
+
+
 
 ## واجهة برمجة التطبيقات (API)
 
 ### معلومات الملف
 
-كل ملف يحتوي على المعلومات التالية:
+يحتوي كل ملف على المعلومات التالية:
 
-مفتاح | وصف | ملاحظة
+المفتاح | الوصف | ملاحظة
 --- | --- | ---
-`fieldname` | اسم المُدخَل المحدد في الإستمارة |
-`originalname` | اسم الملف على كمبيوتر المستخدم |
-`encoding` | نوع تشفير الملف |
-`mimetype` | نوع  ملف ملحقات بريد إنترنت متعددة الأغراض ( MIME ) |
+`fieldname` | اسم الحقل المحدد في النموذج |
+`originalname` | اسم الملف على جهاز المستخدم، أو المسار الكامل عند تفعيل `preservePath: true` |
+`encoding` | نوع ترميز الملف |
+`mimetype` | نوع MIME للملف |
 `size` | حجم الملف بالبايت |
-`destination` | المجلد الذي تم حفظ الملف إليه | `تخزين على الاسطوانة` (`DiskStorage`)
-`filename` | اسم الملف داخل "الوجهة" ( `destination` ) | `تخزين على الاسطوانة` (`DiskStorage`)
-`path` | المسار الكامل للملف الذي تم تحميله | `تخزين على الاسطوانة` (`DiskStorage`)
-`buffer` | "ذاكرة" (`Buffer`) للملف بأكمله | `تخزين على الذاكرة ` (`MemoryStorage`)
-
+`destination` | المجلد الذي حُفظ فيه الملف | `DiskStorage`
+`filename` | اسم الملف داخل `destination` | `DiskStorage`
+`path` | المسار الكامل للملف المرفوع | `DiskStorage`
+`buffer` | كائن `Buffer` يحتوي على الملف بأكمله | `MemoryStorage`
 
 ### `multer(opts)`
 
-يقبل Multer كائن الخيارات ، وأهمها خاصية `dest`، والتي تحدد مكان تحميل الملفات. في حال حذفت كائن الخيارات ، سيتم الاحتفاظ بالملفات في الذاكرة ولن تتم كتابتها مطلقًا على القرص.
+يقبل Multer كائن خيارات، وأبسط هذه الخيارات هي الخاصية `dest` التي تخبر Multer بمكان رفع الملفات. في حال حذفت كائن الخيارات، ستُحفظ الملفات في الذاكرة ولن تُكتب على القرص أبدًا.
 
-بشكل افتراضي ، سيقوم Multer بإعادة تسمية الملفات لتجنب تعارض الأسماء. يمكن تخصيص وظيفة إعادة التسمية وفقا لاحتياجاتك.
+بشكل افتراضي، سيعيد Multer تسمية الملفات لتجنب تعارض الأسماء. ويمكن تخصيص دالة إعادة التسمية وفقًا لاحتياجاتك.
 
-فيما يلي الخيارات التي يمكن تمريرها إلى Multer:
+فيما يلي الخيارات التي يمكن تمريرها إلى Multer.
 
-مفتاح | وصف
+المفتاح | الوصف
 --- | ---
-`dest` أو `storage` | مكان لتخزين الملفات
-`fileFilter` | دالة للسيطرة على الملفات التي يتم قبولها
-`limits` | حدود البيانات التي تم تحميلها
-`preservePath` | الاحتفظ بالمسار الكامل للملفات بدلاً من الاسم الأساسي
-`defParamCharset` | مجموعة الأحرف الافتراضية لاستخدامها لقيم معاملات رأس الجزء (مثل اسم الملف) التي ليست معاملات موسعة (لا تحتوي على مجموعة أحرف صريحة). الافتراضي: `'latin1'`
+`dest` أو `storage` | مكان تخزين الملفات
+`fileFilter` | دالة للتحكم في الملفات التي يتم قبولها
+`limits` | حدود البيانات المرفوعة
+`preservePath` | الاحتفاظ بالمسار الكامل الذي يرسله العميل في `file.originalname` بدلاً من الاسم الأساسي فقط
+`defParamCharset` | مجموعة الأحرف الافتراضية المستخدمة لقيم معاملات ترويسة الجزء (مثل اسم الملف) التي ليست معاملات موسّعة (أي التي لا تحتوي على مجموعة أحرف صريحة). الافتراضي: `'latin1'`
 
-في تطبيق ويب متوسط  ​​، قد تكون هناك حاجة  فقط إلى `dest`، وتكوينها كما هو موضح في
-المثال التالي :
+في تطبيق ويب عادي، قد لا تحتاج سوى إلى `dest`، مضبوطًا كما هو موضح في المثال التالي.
 
-<div dir='ltr'>
+<div dir="ltr">
 
 ```javascript
-var upload = multer({ dest: 'uploads/' })
+const upload = multer({ dest: 'uploads/' })
 ```
 
 </div>
 
-إذا كنت تريد مزيدًا من التحكم في عمليات التحميل ، فستحتاج إلى استخدام خيار `storage` بدلاً من `dest`. يأتي Multer مع محركات التخزين `DiskStorage` و` MemoryStorage` ؛ كما تتوفر المزيد من المحركات من أطراف ثالثة.
+عند تفعيل `preservePath`، يمرر Multer اسم الملف الوارد كما هو مع أي مقاطع مسار يقدمها العميل. ويُعرض ذلك في `file.originalname`؛ وهو لا يغير مجلد الوجهة، ولا ينشئ مجلدات، ولا ينقّي المسار نيابةً عنك. إن `file.originalname` يأتي دائمًا من العميل ويجب التعامل معه على أنه غير موثوق؛ ومع `preservePath` يحتوي إضافةً إلى ذلك على مقاطع المسار التي أرسلها العميل. قم بتطبيعه أو التحقق منه قبل استخدامه في دالة `filename` مخصصة أو في محرك تخزين.
+
+إذا أردت مزيدًا من التحكم في عمليات الرفع، فستحتاج إلى استخدام الخيار `storage` بدلاً من `dest`. يأتي Multer مزودًا بمحركي التخزين `DiskStorage` و `MemoryStorage`؛ وتتوفر محركات أخرى من أطراف ثالثة.
 
 #### `.single(fieldname)`
 
-قبول ملف واحد باسم `اسم-المُدخَل`. سيتم تخزين الملف في `req.file`.
+يقبل ملفًا واحدًا بالاسم `fieldname`. سيُخزَّن هذا الملف في `req.file`.
 
 #### `.array(fieldname[, maxCount])`
 
-قبول مصفوفة من الملفات ، وكلها تحمل اسم `اسم-المُدخَل`. يظهر خطأ اختياريً إذا تم تحميل ملفات أكثر من `maxCount`. سيتم تخزين مصفوفة الملفات في `req.files`.
+يقبل مصفوفة من الملفات، جميعها بالاسم `fieldname`. ويمكنه اختياريًا إصدار خطأ إذا رُفع عدد من الملفات يزيد عن `maxCount`. ستُخزَّن مصفوفة الملفات في `req.files`.
 
 #### `.fields(fields)`
 
-قبول مزيج من الملفات ، المحدد بواسطة `المدخلات`. سيتم تخزين كائن مع مصفوفات من الملفات في `req.files`.
+يقبل مزيجًا من الملفات المحددة بواسطة `fields`. سيُخزَّن كائن يحتوي على مصفوفات من الملفات في `req.files`.
 
-يجب أن تكون `المدخلات` عبارة عن مصفوفة من الكائنات التي توفر بشكل اساسي `name` واختيارياً `maxCount`.
+يجب أن يكون `fields` مصفوفة من الكائنات التي تحتوي على `name` واختياريًا `maxCount`.
 مثال:
 
-<div dir='ltr'>
+<div dir="ltr">
 
 ```javascript
 [
@@ -169,105 +211,116 @@ var upload = multer({ dest: 'uploads/' })
 
 #### `.none()`
 
-قبول المدخلات النصية فقط. في حالة رفع أي ملف ، سيتم إصدار خطأ بشيفرة "LIMIT \_UNEXPECTED \_FILE".
+يقبل الحقول النصية فقط. إذا تم رفع أي ملف، فسيُصدر خطأ بالرمز "LIMIT\_UNEXPECTED\_FILE".
 
 #### `.any()`
 
-قبول جميع الملفات التي تأتي عبر السلك. سيتم تخزين مصفوفة من الملفات في `req.files`.
+يقبل جميع الملفات الواردة عبر الشبكة. ستُخزَّن مصفوفة من الملفات في `req.files`.
 
-**تحذير:** تأكد من أنك تعالج دائمًا الملفات التي يقوم المستخدم بتحميلها. لا تقم أبداً بإضافة multer باعتبارها أداة وسيطة عامة ، حيث يمكن للمستخدم الضار تحميل الملفات إلى مسار غير متتوقع. استخدم هذه الدالة فقط على المسارات التي تتعامل فيها مع الملفات التي تم تحميلها.
+**تحذير:** تأكد من أنك تعالج دائمًا الملفات التي يرفعها المستخدم. لا تضف multer أبدًا كوسيط عام، إذ يمكن لمستخدم خبيث رفع ملفات إلى مسار لم تتوقعه. استخدم هذه الدالة فقط في المسارات التي تعالج فيها الملفات المرفوعة.
 
 ### `storage`
 
 #### `DiskStorage`
 
-يمنحك محرك تخزين القرص التحكم الكامل في تخزين الملفات على القرص.
+يمنحك محرك التخزين على القرص تحكمًا كاملاً في تخزين الملفات على القرص.
 
-<div dir='ltr'>
+<div dir="ltr">
 
 ```javascript
-var storage = multer.diskStorage({
+const crypto = require('crypto')
+
+const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, '/tmp/my-uploads')
   },
   filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now())
+    crypto.randomBytes(16, function (err, raw) {
+      if (err) return cb(err)
+      cb(null, file.fieldname + '-' + raw.toString('hex'))
+    })
   }
 })
 
-var upload = multer({ storage: storage })
+const upload = multer({ storage: storage })
 ```
 
 </div>
 
-هناك خياران متاحان ، `destination` و `filename`. كلاهما يعملان على تحديد مكان تخزين الملف.
+هناك خياران متاحان، `destination` و `filename`. وكلاهما دالتان تحددان مكان تخزين الملف.
 
-يتم استخدام `destination` لتحديد أي مجلد يجب تخزين الملفات المحملة. يمكن أيضًا إعطاء هذا كـ`سلسلة` (مثل `'/tmp/uploads'`). إذا لم يتم إعطاء `destination` ، فسيتم استخدام الدليل الافتراضي لنظام التشغيل للملفات المؤقتة.
+يُستخدم `destination` لتحديد المجلد الذي ينبغي تخزين الملفات المرفوعة فيه. ويمكن أيضًا تمريره كـ `string` (مثل `'/tmp/uploads'`). إذا لم يُحدَّد `destination`، فسيُستخدم المجلد الافتراضي لنظام التشغيل الخاص بالملفات المؤقتة.
 
-**ملاحظة:** أنت مسؤول عن إنشاء الدليل عند توفر `destination` كدالة. عند المرور بسلسلة ، سوف يتأكد multer من إنشاء الدليل من أجلك.
+**ملاحظة:** أنت مسؤول عن إنشاء المجلد عند تمرير `destination` كدالة. أما عند تمرير سلسلة نصية، فسيتأكد multer من إنشاء المجلد نيابةً عنك.
 
-يتم استخدام `اسم الملف` لتحديد ما يجب تسمية الملف داخل المجلد. إذا لم يتم تقديم `اسم الملف`، فسيتم إعطاء كل ملف اسمًا عشوائيًا لا يتضمن أي امتداد للملف.
+يُستخدم `filename` لتحديد الاسم الذي سيحمله الملف داخل المجلد. إذا لم يُحدَّد `filename`، فسيُعطى كل ملف اسمًا عشوائيًا لا يتضمن أي امتداد.
 
-**ملاحظة:** لن يقوم multer بإلحاق اي ملحق ملف لك، الدالة الخاص بك يجب أن تقوم بإرجاع اسم ملف كامل بملحق الملف.
+**ملاحظة:** لن يضيف Multer أي امتداد للملف نيابةً عنك، بل يجب أن تُرجع دالتك اسم ملف كاملاً مع امتداده.
 
-يتم تمرير كل دالة من خلال الطلب (req`) وبعض المعلومات حول الملف (`file`) للمساعدة في اتخاذ القرار.
+تُمرَّر إلى كل دالة كلٌّ من الطلب (`req`) وبعض المعلومات عن الملف (`file`) للمساعدة في اتخاذ القرار.
 
-لاحظ أن `req.body` ربما لم يتم ملؤها بالكامل بعد. يعتمد ذلك على الترتيب الذي يقوم به العميل من خلال نقل المدخلات والملفات إلى الخادم.
+لاحظ أن `req.body` قد لا يكون قد اكتمل ملؤه بعد. فهذا يعتمد على الترتيب الذي يرسل به العميل الحقول والملفات إلى الخادم.
+
+لفهم اصطلاح الاستدعاء المستخدم في دالة رد النداء (ضرورة تمرير null كمعامل أول)، راجع [معالجة الأخطاء في Node.js](https://web.archive.org/web/20220417042018/https://www.joyent.com/node-js/production/design/errors)
 
 #### `MemoryStorage`
 
-يخزن محرك تخزين الذاكرة الملفات الموجودة في الذاكرة ككائنات `ذاكرة` (`Buffer`). ليس لديها أي خيارات.
+يخزن محرك التخزين في الذاكرة الملفات في الذاكرة ككائنات `Buffer`. وليس له أي خيارات.
 
-<div dir='ltr'>
+<div dir="ltr">
 
 ```javascript
-var storage = multer.memoryStorage()
-var upload = multer({ storage: storage })
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage })
 ```
 
 </div>
 
-عند استخدام ذاكرة التخزين ، ستحتوي معلومات الملف على مُدخَل يسمى `buffer` الذي يحتوي على الملف بأكمله.
+عند استخدام التخزين في الذاكرة، ستحتوي معلومات الملف على حقل يسمى `buffer` يحتوي على الملف بأكمله.
 
-**تحذير**: يمكن أن يؤدي تحميل ملفات كبيرة جدًا أو ملفات صغيرة نسبيًا بأعداد كبيرة و بسرعة كبيرة إلى نفاد ذاكرة التطبيق عند استخدام ذاكرة التخزين.
+**تحذير**: قد يؤدي رفع ملفات كبيرة جدًا، أو ملفات صغيرة نسبيًا بأعداد كبيرة وبسرعة عالية، إلى نفاد ذاكرة تطبيقك عند استخدام التخزين في الذاكرة.
 
 ### `limits`
 
-كائن يحدد حدود حجم الخصائص الاختيارية التالية. يقوم Multer بتمرير هذا الكائن إلى busboy مباشرة ، ويمكن العثور على تفاصيل الخصائص من خلال [صفحة busboy's](https://github.com/mscdex/busboy#busboy-methods).
+كائن يحدد حدود الحجم للخصائص الاختيارية التالية. يمرر Multer هذا الكائن إلى busboy مباشرةً، ويمكن العثور على تفاصيل الخصائص في [صفحة busboy](https://github.com/mscdex/busboy#exports).
 
 تتوفر القيم الصحيحة التالية:
 
-مفتاح | وصف | افتراضي
+المفتاح | الوصف | الافتراضي
 --- | --- | ---
-`fieldNameSize` | الحد الأقصى لحجم اسم المُدخَل | 100 بايت
-`fieldSize` | الحد الأقصى لحجم قيمة المُدخَل (بالبايت) | 1 ميغابايت
-`fields` | الحد الأقصى لعدد المدخلات التى لا تعتبر من الملفات | ما لا نهاية
-`fileSize` | حجم الملف الأقصى بالنسبة لإستمارة متعددة الأجزاء (بالبايت) | ما لا نهاية
-`files` | الحد الأقصى لعدد المدخلات من نوع الملفات بالنسبة لإستمارة متعددة الأجزاء | ما لا نهاية
-`parts` | الحد الأقصى لعدد الأجزاء (مدخلات + ملفات) بالنسبة لإستمارة متعددة الأجزاء | ما لا نهاية
-`headerPairs` | الحد الأقصى لعدد أزواج الرأس (المفتاح => القيمة) المطلوب تحليلها بالنسبة لإستمارة متعددة الأجزاء | 2000
+`fieldNameSize` | الحد الأقصى لحجم اسم الحقل | Infinity
+`fieldSize` | الحد الأقصى لحجم قيمة الحقل (بالبايت) | 1MB
+`fields` | الحد الأقصى لعدد الحقول غير الملفية | Infinity
+`fileSize` | للنماذج متعددة الأجزاء، الحد الأقصى لحجم الملف (بالبايت) | Infinity
+`files` | للنماذج متعددة الأجزاء، الحد الأقصى لعدد حقول الملفات | Infinity
+`parts` | للنماذج متعددة الأجزاء، الحد الأقصى لعدد الأجزاء (الحقول + الملفات) | Infinity
+`headerPairs` | للنماذج متعددة الأجزاء، الحد الأقصى لعدد أزواج الترويسة (مفتاح=>قيمة) المطلوب تحليلها | 2000
+`fieldNestingDepth` | الحد الأقصى لعدد مستويات التداخل في أسماء الحقول (مثلاً `a[b][c]` يحتوي على مستويين) | Infinity
+`fieldArrayIndexLimit` | الحد الأقصى لفهرس المصفوفة الرقمي المقبول داخل اسم الحقل (مثلاً `a[3]` يستخدم الفهرس 3) | Infinity
+
+يُفعَّل حد `parts` عندما يصل busboy إلى العدد المضبوط من الأجزاء، وليس فقط بعد تجاوز هذا العدد. إذا أردت السماح بعدد محدد بالضبط من الحقول والملفات، فاضبط `parts` على قيمة تزيد بواحد على الأقل عن ذلك المجموع.
 
 يمكن أن يساعد تحديد الحدود في حماية موقعك من هجمات حجب الخدمة (DoS).
 
 ### `fileFilter`
 
-اضبط هذا على دالة للتحكم في الملفات التي ينبغي تحميلها وأي الملفات يجب تخطيها. يجب أن تبدو دالة كما يلي:
+اضبط هذا الخيار على دالة للتحكم في الملفات التي ينبغي رفعها وتلك التي ينبغي تخطيها. يجب أن تبدو الدالة كما يلي:
 
-<div dir='ltr'>
+<div dir="ltr">
 
 ```javascript
 function fileFilter (req, file, cb) {
 
-  // The function should call `cb` with a boolean
-  // to indicate if the file should be accepted
+  // يجب أن تستدعي الدالة `cb` بقيمة منطقية
+  // للإشارة إلى ما إذا كان ينبغي قبول الملف
 
-  // To reject this file pass `false`, like so:
+  // لرفض هذا الملف مرّر `false`، هكذا:
   cb(null, false)
 
-  // To accept the file pass `true`, like so:
+  // لقبول الملف مرّر `true`، هكذا:
   cb(null, true)
 
-  // You can always pass an error if something goes wrong:
+  // يمكنك دائمًا تمرير خطأ إذا حدث شيء ما:
   cb(new Error('I don\'t have a clue!'))
 
 }
@@ -275,41 +328,52 @@ function fileFilter (req, file, cb) {
 
 </div>
 
+## الأمان
+
+يمكن أن يساعد تحديد [الحدود](#limits) في حماية موقعك من هجمات حجب الخدمة (DoS). يُوصى بالحدود التالية لمعظم التطبيقات:
+
+- `fileSize` -- اضبطه على الحد الأقصى المتوقع لحجم الملف في حالة استخدامك
+- `files` -- اضبطه على الحد الأقصى لعدد الملفات في كل طلب
+- `fields` -- اضبطه على الحد الأقصى لعدد الحقول النصية في كل طلب
+- `fieldNestingDepth` -- اضبطه على أدنى عمق تتطلبه أسماء حقولك (مثلاً `3` لـ `a[b][c]`)
+- `fieldArrayIndexLimit` -- اضبطه على أكبر فهرس مصفوفة تتطلبه أسماء حقولك (مثلاً `100` لـ `a[99]`)
+
 ## معالجة الأخطاء
 
-عند مواجهة خطأ ، سيقوم Multer بتفويض الخطأ إلى Express. يمكنك
-عرض صفحة خطأ لطيفة باستخدام [طريقة Express القياسية](https://expressjs.com/en/guide/error-handling/).
+عند مواجهة خطأ، سيفوّض Multer الخطأ إلى Express. يمكنك عرض صفحة خطأ أنيقة باستخدام [الطريقة القياسية في Express](https://expressjs.com/en/guide/error-handling/).
 
-إذا كنت تريد إنتقاء الأخطاء والحصول على [أخطاء Multer فقط](https://github.com/expressjs/multer/blob/main/lib/multer-error.js)، فيمكنك نداء بدالة الوسيطة من قبل نفسك. أيضًا ، إذا كنت تريد التقاط أخطاء Multer فقط ، فيمكنك استخدام صنف `MulterError` المتصل بالكائن` multer` نفسه (على سبيل المثال `err instanceof multer.MulterError`).
+إذا أردت التقاط الأخطاء الصادرة عن Multer تحديدًا، فيمكنك استدعاء دالة الوسيط بنفسك. كذلك، إذا أردت التقاط [أخطاء Multer](https://github.com/expressjs/multer/blob/main/lib/multer-error.js) فقط، فيمكنك استخدام الصنف `MulterError` المرفق بكائن `multer` نفسه (مثلاً `err instanceof multer.MulterError`).
 
-<div dir='ltr'>
+<div dir="ltr">
 
 ```javascript
-var multer = require('multer')
-var upload = multer().single('avatar')
+const multer = require('multer')
+const upload = multer().single('avatar')
 
 app.post('/profile', function (req, res) {
   upload(req, res, function (err) {
     if (err instanceof multer.MulterError) {
-      // A Multer error occurred when uploading.
+      // حدث خطأ من Multer أثناء الرفع.
     } else if (err) {
-      // An unknown error occurred when uploading.
+      // حدث خطأ غير معروف أثناء الرفع.
     }
 
-    // Everything went fine.
+    // سار كل شيء على ما يرام.
   })
 })
 ```
 
 </div>
 
-## محرك التخزين الخاص بك
+## محرك تخزين مخصص
 
-للحصول على معلومات حول كيفية إنشاء محرك التخزين الخاص بك ، راجع [محرك تخزين Multer](https://github.com/expressjs/multer/blob/main/StorageEngine.md).
+للحصول على معلومات حول كيفية بناء محرك التخزين الخاص بك، راجع [محرك تخزين Multer](https://github.com/expressjs/multer/blob/main/StorageEngine.md).
 
 ## الترخيص
 
 [MIT](LICENSE)
+
+</div>
 
 [ci-image]: https://github.com/expressjs/multer/actions/workflows/ci.yml/badge.svg
 [ci-url]: https://github.com/expressjs/multer/actions/workflows/ci.yml

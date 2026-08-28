@@ -20,6 +20,7 @@ This README is also available in other languages:
 | [Português](https://github.com/expressjs/multer/blob/main/doc/README-pt-br.md) | Portuguese (BR) |
 | [Русский язык](https://github.com/expressjs/multer/blob/main/doc/README-ru.md) | Russian         |
 | [Español](https://github.com/expressjs/multer/blob/main/doc/README-es.md)      | Spanish         |
+| [தமிழ்](https://github.com/expressjs/multer/blob/main/doc/README-ta.md)         | Tamil           |
 | [O'zbek tili](https://github.com/expressjs/multer/blob/main/doc/README-uz.md)  | Uzbek           |
 | [Việt Nam](https://github.com/expressjs/multer/blob/main/doc/README-vi.md)     | Vietnamese      |
 | [Türkçe](https://github.com/expressjs/multer/blob/main/doc/README-tr.md)       | Turkish         |
