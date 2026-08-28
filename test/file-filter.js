@@ -105,4 +105,39 @@ describe('File Filter', function () {
       done()
     })
   })
+
+  it('should enforce fileSize limit with an async fileFilter (GHSA-qvfw-j98x-7q72)', function (done) {
+    var form = new FormData()
+    var upload = multer({
+      fileFilter: function (req, file, cb) { setImmediate(function () { cb(null, true) }) },
+      limits: { fileSize: 1024 }
+    })
+    var parser = upload.single('small0')
+
+    // small0.dat is 1778 bytes, over the 1024 byte limit
+    form.append('small0', util.file('small0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.strictEqual(err.code, 'LIMIT_FILE_SIZE')
+      assert.strictEqual(err.field, 'small0')
+      done()
+    })
+  })
+
+  it('should still skip oversized files rejected by an async fileFilter', function (done) {
+    var form = new FormData()
+    var upload = multer({
+      fileFilter: function (req, file, cb) { setImmediate(function () { cb(null, false) }) },
+      limits: { fileSize: 1024 }
+    })
+    var parser = upload.single('small0')
+
+    form.append('small0', util.file('small0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.ifError(err)
+      assert.strictEqual(req.file, undefined)
+      done()
+    })
+  })
 })
