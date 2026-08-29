@@ -1,3 +1,9 @@
+/**
+ * Storage engine that keeps files in memory.
+ *
+ * @constructor
+ * @private
+ */
 function MemoryStorage (opts) {}
 
 MemoryStorage.prototype._handleFile = function _handleFile (req, file, cb) {
@@ -22,6 +28,12 @@ MemoryStorage.prototype._removeFile = function _removeFile (req, file, cb) {
   cb(null)
 }
 
+/**
+ * Create a memory storage engine. Sets `buffer` on the file object with the
+ * whole file contents; set `limits.fileSize` to bound memory use.
+ *
+ * @returns {MemoryStorage}
+ */
 module.exports = function (opts) {
   return new MemoryStorage(opts)
 }
