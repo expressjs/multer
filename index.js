@@ -17,6 +17,11 @@ function Multer (options) {
     this.storage = memoryStorage()
   }
 
+  if (options.limits && options.limits.fileSize != null &&
+    !Number.isInteger(options.limits.fileSize) && options.limits.fileSize !== Infinity) {
+    throw new TypeError('Expected limits.fileSize to be an integer or Infinity')
+  }
+
   this.limits = options.limits
   this.preservePath = options.preservePath
   this.defParamCharset = options.defParamCharset || 'latin1'

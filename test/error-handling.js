@@ -528,6 +528,29 @@ describe('Error Handling', function () {
     })
   })
 
+  it('should throw TypeError when fileSize limit is not an integer', function () {
+    // busboy only emits 'limit' when the byte count equals the limit exactly,
+    // so a float limit silently truncates the file instead of rejecting it
+    assert.throws(function () {
+      multer({ limits: { fileSize: 1024.5 } })
+    }, {
+      name: 'TypeError',
+      message: 'Expected limits.fileSize to be an integer or Infinity'
+    })
+
+    assert.throws(function () {
+      multer({ limits: { fileSize: '1024' } })
+    }, TypeError)
+  })
+
+  it('should accept an integer or Infinity fileSize limit', function () {
+    assert.doesNotThrow(function () {
+      multer({ limits: { fileSize: 1024 } })
+      multer({ limits: { fileSize: Infinity } })
+      multer({ limits: {} })
+    })
+  })
+
   it('should throw TypeError if options is not an object', function () {
     assert.throws(() => {
       multer(null)
