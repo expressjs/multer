@@ -21,6 +21,7 @@ function getDestination (req, file, cb) {
 
 function DiskStorage (opts) {
   this.getFilename = (opts.filename || getFilename)
+  this.flush = opts.flush
 
   if (typeof opts.destination === 'string') {
     fs.mkdirSync(opts.destination, { recursive: true })
@@ -52,11 +53,31 @@ DiskStorage.prototype._handleFile = function _handleFile (req, file, cb) {
       pipeline(file.stream, outStream, function (err) {
         if (err) return cb(err)
 
-        cb(null, {
-          destination: destination,
-          filename: filename,
-          path: finalPath,
-          size: outStream.bytesWritten
+        var done = function (err) {
+          if (err) return cb(err)
+
+          cb(null, {
+            destination: destination,
+            filename: filename,
+            path: finalPath,
+            size: outStream.bytesWritten
+          })
+        }
+
+        if (!that.flush) return done()
+
+        // The write stream's descriptor is already closed by the time
+        // 'finish' fires on some Node.js versions, so open the file again
+        // to flush it. fsync applies to the file, not to a specific
+        // descriptor, so this is equivalent and works everywhere.
+        fs.open(finalPath, 'r+', function (err, fd) {
+          if (err) return done(err)
+
+          fs.fsync(fd, function (syncErr) {
+            fs.close(fd, function (closeErr) {
+              done(syncErr || closeErr)
+            })
+          })
         })
       })
     })
