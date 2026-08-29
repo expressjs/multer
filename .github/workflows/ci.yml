@@ -166,6 +166,50 @@ jobs:
           os: windows-latest
           experimental: true
 
+        # macOS legs come from `include`, scoped to versions that can run on
+        # the macOS runners: Node.js < 16 has no darwin-arm64 builds (setup-node
+        # cannot install them natively and those legs would be permanently
+        # red), so they are skipped. 16.x-21.x run as x64 under Rosetta;
+        # informational until measured, mirroring the Windows < 22 treatment.
+        - name: Node.js 16.x
+          os: macos-latest
+          experimental: true
+
+        - name: Node.js 17.x
+          os: macos-latest
+          experimental: true
+
+        - name: Node.js 18.x
+          os: macos-latest
+          experimental: true
+
+        - name: Node.js 19.x
+          os: macos-latest
+          experimental: true
+
+        - name: Node.js 20.x
+          os: macos-latest
+          experimental: true
+
+        - name: Node.js 21.x
+          os: macos-latest
+          experimental: true
+
+        - name: Node.js 22.x
+          os: macos-latest
+
+        - name: Node.js 23.x
+          os: macos-latest
+
+        - name: Node.js 24.x
+          os: macos-latest
+
+        - name: Node.js 25.x
+          os: macos-latest
+
+        - name: Node.js 26.x
+          os: macos-latest
+
     continue-on-error: ${{ matrix.experimental == true }}
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
