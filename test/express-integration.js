@@ -8,7 +8,6 @@ var util = require('./_util')
 
 var express = require('express')
 var FormData = require('form-data')
-var concat = require('concat-stream')
 
 var port = 34279
 
@@ -25,10 +24,11 @@ describe('Express Integration', function () {
 
     req.on('error', cb)
     req.on('response', function (res) {
+      var chunks = []
+
       res.on('error', cb)
-      res.pipe(concat({ encoding: 'buffer' }, function (body) {
-        cb(null, res, body)
-      }))
+      res.on('data', function (chunk) { chunks.push(chunk) })
+      res.on('end', function () { cb(null, res, Buffer.concat(chunks)) })
     })
   }
 
