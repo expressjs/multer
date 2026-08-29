@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+- Files skipped by `fileFilter` no longer count towards `maxCount` ([#1426](https://github.com/expressjs/multer/pull/1426))
 - Accept requests with exactly `limits.parts` parts; `LIMIT_PART_COUNT` now fires only when the limit is exceeded. If you set `parts` one higher to work around this, you can drop the extra one ([#1446](https://github.com/expressjs/multer/pull/1446))
 
 ## 2.3.0
