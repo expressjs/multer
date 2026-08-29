@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+- Accept requests with exactly `limits.parts` parts; `LIMIT_PART_COUNT` now fires only when the limit is exceeded. If you set `parts` one higher to work around this, you can drop the extra one ([#1446](https://github.com/expressjs/multer/pull/1446))
+
 ## 2.3.0
 
 - Fix [CVE-2026-77078](https://www.cve.org/CVERecord?id=CVE-2026-77078) ([GHSA-wc9g-mqfw-jrwm](https://github.com/expressjs/multer/security/advisories/GHSA-wc9g-mqfw-jrwm))

@@ -278,10 +278,6 @@ Key | Description | Default
 `fieldNestingDepth` | Max number of nesting levels for field names (e.g. `a[b][c]` has 2 levels) | Infinity
 `fieldArrayIndexLimit` | Max numeric array index accepted inside a field name (e.g. `a[3]` uses index 3) | Infinity
 
-The `parts` limit is triggered when busboy reaches the configured number of
-parts, not only after that number is exceeded. If you want to allow an exact
-number of fields and files, set `parts` to at least one more than that total.
-
 Specifying the limits can help protect your site against denial of service (DoS) attacks.
 
 ### `fileFilter`
