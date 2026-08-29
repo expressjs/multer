@@ -7,11 +7,12 @@ var multer = require('../')
 var util = require('./_util')
 
 /**
- * 构建一个自定义 storage engine，捕获 _handleFile 与 _removeFile 的调用。
+ * Builds a custom storage engine that records the _handleFile and _removeFile calls.
  *
- * 对应 issue #1293 的疑问：_handleFile 的 cb(null, info) 会被合并到
- * 同一个 file 对象（见 lib/make-middleware.js 中 fileInfo = { ...file, ...info }），
- * _removeFile 应该能拿到这些字段；本组测试对此做断言。
+ * Answers the question in issue #1293: the info passed to _handleFile's
+ * cb(null, info) is merged into the same file object (see fileInfo in
+ * lib/make-middleware.js), so _removeFile receives those fields too.
+ * These tests assert exactly that.
  */
 function makeStorage () {
   var captured = {
@@ -22,10 +23,11 @@ function makeStorage () {
   var storage = {
     _handleFile: function (req, file, cb) {
       captured.handleCalls.push(file.originalname)
-      // 消费来源流，模拟真实引擎：流读取完成后才回调（超限截断的流不会触发 end）
+      // Consume the source stream like a real engine and only call back once it
+      // has ended (a stream truncated by the size limit never emits 'end')
       file.stream.on('data', function () {})
       file.stream.on('end', function () {
-        // 在 info 中返回自定义的 path
+        // Return a custom path in the info object
         cb(null, { path: 'custom-' + file.originalname })
       })
     },
@@ -63,20 +65,22 @@ describe('_removeFile', function () {
     })
     var form = new FormData()
 
-    // tiny1.dat 为 7 字节，先被正常保存
+    // tiny1.dat is 7 bytes and is stored normally first
     form.append('files', util.file('tiny1.dat'))
-    // tiny0.dat 为 128 字节，超限触发清理
+    // tiny0.dat is 128 bytes, exceeds the limit and triggers the cleanup
     form.append('files', util.file('tiny0.dat'))
 
     util.submitForm(upload.array('files', 2), form, function (err) {
       assert.strictEqual(err.code, 'LIMIT_FILE_SIZE')
 
-      // 两个文件都进入了 uploadedFiles：tiny1.dat 正常保存，tiny0.dat 超限
-      // 但其 _handleFile 已完成（aborting 分支仍将其计入），因此都会被清理
+      // Both files reached uploadedFiles: tiny1.dat was stored normally and
+      // tiny0.dat exceeded the limit but its _handleFile had already completed
+      // (the aborting branch still counts it), so both are cleaned up
       assert.strictEqual(engine.captured.handleCalls.length, 2)
       assert.strictEqual(engine.captured.removeCalls.length, 2)
 
-      // _handleFile 返回的 info 应已合并到传给 _removeFile 的 file 对象上
+      // The info returned by _handleFile must be merged into the file object
+      // passed to _removeFile
       var removedPaths = engine.captured.removeCalls.map(function (f) {
         return f.path
       })
@@ -112,7 +116,8 @@ describe('_removeFile', function () {
     util.submitForm(upload.array('files', 2), form, function (err) {
       assert.strictEqual(err.message, 'rejected')
 
-      // small0.dat 已保存，应被清理；tiny1.dat 在 fileFilter 阶段被拒，未保存
+      // small0.dat was stored and must be cleaned up; tiny1.dat was rejected by
+      // fileFilter and never stored
       assert.strictEqual(engine.captured.handleCalls.length, 1)
       assert.strictEqual(engine.captured.removeCalls.length, 1)
       assert.strictEqual(engine.captured.removeCalls[0].originalname, 'small0.dat')
@@ -142,8 +147,8 @@ describe('_removeFile', function () {
     util.submitForm(upload.array('files', 2), form, function (err) {
       assert.strictEqual(err.code, 'LIMIT_FILE_SIZE')
 
-      // 与自定义 storage 一致：已进入 uploadedFiles 的两个文件都会被清理，
-      // memory storage 的 _removeFile 删除各自 file.buffer
+      // Same as with the custom storage: both files in uploadedFiles are cleaned
+      // up, and memory storage's _removeFile deletes each file.buffer
       assert.strictEqual(removeCalls, 2)
       done()
     })
