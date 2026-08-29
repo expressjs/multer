@@ -39,6 +39,39 @@ describe('Error Handling', function () {
     })
   })
 
+  it('should allow exactly the configured number of parts', function (done) {
+    var form = new FormData()
+    var parser = withLimits({ parts: 2 }, [
+      { name: 'small0', maxCount: 1 }
+    ])
+
+    form.append('field0', 'value')
+    form.append('small0', util.file('small0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.ifError(err)
+      assert.strictEqual(req.body.field0, 'value')
+      assert.strictEqual(req.files.small0[0].originalname, 'small0.dat')
+      done()
+    })
+  })
+
+  it('should reject one part over the parts limit', function (done) {
+    var form = new FormData()
+    var parser = withLimits({ parts: 2 }, [
+      { name: 'small0', maxCount: 1 }
+    ])
+
+    form.append('field0', 'value')
+    form.append('field1', 'value')
+    form.append('small0', util.file('small0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.strictEqual(err.code, 'LIMIT_PART_COUNT')
+      done()
+    })
+  })
+
   it('should respect parts limit', function (done) {
     var form = new FormData()
     var parser = withLimits({ parts: 1 }, [
