@@ -3,12 +3,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## 2.4.0
 
-- Add opt-in `flush` option to `DiskStorage` to fsync files before the callback runs ([#1458](https://github.com/expressjs/multer/pull/1458))
+- Add `filename` to `LIMIT_FILE_SIZE` and `LIMIT_UNEXPECTED_FILE` errors ([#1416](https://github.com/expressjs/multer/pull/1416))
 - Accept a function for `limits`, called with the request, to set limits per request ([#1133](https://github.com/expressjs/multer/pull/1133))
-- Files skipped by `fileFilter` no longer count towards `maxCount` ([#1426](https://github.com/expressjs/multer/pull/1426))
+- Add opt-in `flush` option to `DiskStorage` to fsync files before the callback runs ([#1458](https://github.com/expressjs/multer/pull/1458))
+- Reject non-integer or negative `limits` values at construction time; a float limit silently disabled the check ([#1395](https://github.com/expressjs/multer/pull/1395), [#1335](https://github.com/expressjs/multer/pull/1335))
 - Accept requests with exactly `limits.parts` parts; `LIMIT_PART_COUNT` now fires only when the limit is exceeded. If you set `parts` one higher to work around this, you can drop the extra one ([#1446](https://github.com/expressjs/multer/pull/1446))
+- Files skipped by `fileFilter` no longer count towards `maxCount` ([#1426](https://github.com/expressjs/multer/pull/1426))
+- Change the `LIMIT_UNEXPECTED_FILE` message to "Unexpected file field" ([#426](https://github.com/expressjs/multer/pull/426))
+- Remove the `concat-stream` dependency ([#1356](https://github.com/expressjs/multer/pull/1356))
+- Docs: remove the translated READMEs ([#1463](https://github.com/expressjs/multer/pull/1463))
+- Internal: run the test suite on macOS ([#1464](https://github.com/expressjs/multer/pull/1464))
 
 ## 2.3.0
 
