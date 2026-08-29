@@ -3,22 +3,10 @@ var makeMiddleware = require('./lib/make-middleware')
 var diskStorage = require('./storage/disk')
 var memoryStorage = require('./storage/memory')
 var MulterError = require('./lib/multer-error')
+var validateLimits = require('./lib/validate-limits')
 
 function allowAll (req, file, cb) {
   cb(null, true)
-}
-
-// busboy compares most limits with strict equality, so a non-integer value
-// never matches and silently disables the limit. Reject such values up front.
-function validateLimits (limits) {
-  Object.keys(limits).forEach(function (key) {
-    var value = limits[key]
-
-    if (value == null) return
-    if ((Number.isInteger(value) && value >= 0) || value === Infinity) return
-
-    throw new TypeError('Expected limits.' + key + ' to be a non-negative integer or Infinity')
-  })
 }
 
 function Multer (options) {
@@ -30,7 +18,7 @@ function Multer (options) {
     this.storage = memoryStorage()
   }
 
-  if (options.limits) validateLimits(options.limits)
+  if (options.limits && typeof options.limits !== 'function') validateLimits(options.limits)
 
   this.limits = options.limits
   this.preservePath = options.preservePath

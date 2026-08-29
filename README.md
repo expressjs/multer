@@ -267,6 +267,21 @@ memory storage is used.
 
 An object specifying the size limits of the following optional properties. Multer passes this object into busboy directly, and the details of the properties can be found on [busboy's page](https://github.com/mscdex/busboy#exports).
 
+`limits` can also be a function that receives the request and returns such an
+object. It is called once per request, before parsing starts, so limits can
+depend on e.g. the authenticated user:
+
+```javascript
+const upload = multer({
+  limits: function (req) {
+    return { fileSize: req.user.maxUploadSize }
+  }
+})
+```
+
+Limits apply to the whole request; there is no per-file limit. To restrict
+individual files by type or name, use `fileFilter` or a custom storage engine.
+
 The following integer values are available:
 
 Key | Description | Default
