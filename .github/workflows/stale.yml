@@ -23,5 +23,5 @@ jobs:
           stale-pr-label: stale
           stale-issue-message: 'This issue has been inactive for 30 days. It will be closed in 30 days unless there is further activity or the stale label is removed.'
           stale-pr-message: 'This pull request has been inactive for 30 days. It will be closed in 30 days unless there is further activity or the stale label is removed.'
-          exempt-issue-labels: 'security-release,help wanted,good first issue,release'
-          exempt-pr-labels: 'security-release,release'
+          exempt-issue-labels: 'never-stale,security-release,help wanted,good first issue,release'
+          exempt-pr-labels: 'never-stale,security-release,release'
