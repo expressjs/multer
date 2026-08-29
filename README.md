@@ -93,6 +93,9 @@ app.post('/stats', upload.single('uploaded_file'), function (req, res) {
 
 
 
+Complete client-side and server-side examples (browser `FormData` uploads of a
+blob and of an image) are in the [`examples/`](examples/) folder.
+
 ## API
 
 ### File information
