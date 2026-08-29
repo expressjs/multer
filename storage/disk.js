@@ -20,6 +20,8 @@ function getDestination (req, file, cb) {
 }
 
 function DiskStorage (opts) {
+  opts = opts || {}
+
   this.getFilename = (opts.filename || getFilename)
   this.flush = opts.flush
 
