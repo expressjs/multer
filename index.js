@@ -8,6 +8,19 @@ function allowAll (req, file, cb) {
   cb(null, true)
 }
 
+// busboy compares most limits with strict equality, so a non-integer value
+// never matches and silently disables the limit. Reject such values up front.
+function validateLimits (limits) {
+  Object.keys(limits).forEach(function (key) {
+    var value = limits[key]
+
+    if (value == null) return
+    if ((Number.isInteger(value) && value >= 0) || value === Infinity) return
+
+    throw new TypeError('Expected limits.' + key + ' to be a non-negative integer or Infinity')
+  })
+}
+
 function Multer (options) {
   if (options.storage) {
     this.storage = options.storage
@@ -17,10 +30,7 @@ function Multer (options) {
     this.storage = memoryStorage()
   }
 
-  if (options.limits && options.limits.fileSize != null &&
-    !Number.isInteger(options.limits.fileSize) && options.limits.fileSize !== Infinity) {
-    throw new TypeError('Expected limits.fileSize to be an integer or Infinity')
-  }
+  if (options.limits) validateLimits(options.limits)
 
   this.limits = options.limits
   this.preservePath = options.preservePath
