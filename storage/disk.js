@@ -19,6 +19,17 @@ function getDestination (req, file, cb) {
   cb(null, os.tmpdir())
 }
 
+/**
+ * Storage engine that writes files to disk.
+ *
+ * @constructor
+ * @private
+ * @param {Object} opts
+ * @param {string|function(Object, File, function(?Error, string=): void): void} [opts.destination]
+ *   Folder to store files in, or a function that calls back with one. Defaults to `os.tmpdir()`
+ * @param {function(Object, File, function(?Error, string=): void): void} [opts.filename]
+ *   Calls back with the file name to use. Defaults to a random hex name without extension
+ */
 function DiskStorage (opts) {
   this.getFilename = (opts.filename || getFilename)
 
@@ -92,6 +103,13 @@ DiskStorage.prototype._removeFile = function _removeFile (req, file, cb) {
   outStream.destroy()
 }
 
+/**
+ * Create a disk storage engine. Sets `destination`, `filename` and `path` on
+ * the file object.
+ *
+ * @param {Object} opts See {@link DiskStorage}
+ * @returns {DiskStorage}
+ */
 module.exports = function (opts) {
   return new DiskStorage(opts)
 }
