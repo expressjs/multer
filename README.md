@@ -251,7 +251,9 @@ null as the first param), refer to
 disk with an `fsync` call before the upload handler runs, which prevents data
 loss if the process or the system crashes while the data is still sitting in
 the operating system's page cache. It is disabled by default because forcing a
-disk flush on every upload has a performance cost.
+disk flush on every upload has a performance cost. Note that this syncs the
+file contents only; if the new directory entry must survive a crash as well,
+fsync the destination directory yourself.
 
 #### `MemoryStorage`
 
