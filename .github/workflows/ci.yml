@@ -39,7 +39,6 @@ jobs:
         os:
         - ubuntu-latest
         - windows-latest
-        - macos-latest
         name:
         - Node.js 10.x
         - Node.js 11.x
@@ -167,34 +166,11 @@ jobs:
           os: windows-latest
           experimental: true
 
-        # macOS on Node.js < 22 is unproven in CI (no native darwin-arm64
-        # builds below Node 16, so setup-node runs them as x64 under
-        # Rosetta); mirror the Windows treatment and keep those legs
-        # informational until measured.
-        - name: Node.js 10.x
-          os: macos-latest
-          experimental: true
-
-        - name: Node.js 11.x
-          os: macos-latest
-          experimental: true
-
-        - name: Node.js 12.x
-          os: macos-latest
-          experimental: true
-
-        - name: Node.js 13.x
-          os: macos-latest
-          experimental: true
-
-        - name: Node.js 14.x
-          os: macos-latest
-          experimental: true
-
-        - name: Node.js 15.x
-          os: macos-latest
-          experimental: true
-
+        # macOS legs come from `include`, scoped to versions that can run on
+        # the macOS runners: Node.js < 16 has no darwin-arm64 builds (setup-node
+        # cannot install them natively and those legs would be permanently
+        # red), so they are skipped. 16.x-21.x run as x64 under Rosetta;
+        # informational until measured, mirroring the Windows < 22 treatment.
         - name: Node.js 16.x
           os: macos-latest
           experimental: true
@@ -218,6 +194,21 @@ jobs:
         - name: Node.js 21.x
           os: macos-latest
           experimental: true
+
+        - name: Node.js 22.x
+          os: macos-latest
+
+        - name: Node.js 23.x
+          os: macos-latest
+
+        - name: Node.js 24.x
+          os: macos-latest
+
+        - name: Node.js 25.x
+          os: macos-latest
+
+        - name: Node.js 26.x
+          os: macos-latest
 
     continue-on-error: ${{ matrix.experimental == true }}
     steps:
