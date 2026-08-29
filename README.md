@@ -325,6 +325,11 @@ display a nice error page using [the standard express way](https://expressjs.com
 If you want to catch errors specifically from Multer, you can call the
 middleware function by yourself. Also, if you want to catch only [the Multer errors](https://github.com/expressjs/multer/blob/main/lib/multer-error.js), you can use the `MulterError` class that is attached to the `multer` object itself (e.g. `err instanceof multer.MulterError`).
 
+Multer errors carry a `code` (e.g. `LIMIT_FILE_SIZE`) and, when the error concerns
+a specific field, its name in `field`. Errors about a specific file
+(`LIMIT_FILE_SIZE`, `LIMIT_UNEXPECTED_FILE`) also expose the client-supplied file
+name in `filename`; treat it as untrusted input, like `file.originalname`.
+
 ```javascript
 const multer = require('multer')
 const upload = multer().single('avatar')

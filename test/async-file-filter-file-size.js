@@ -56,7 +56,7 @@ describe('async fileFilter fileSize limit (disk storage)', function () {
       })
 
       app.use(function (err, req, res, next) {
-        res.status(400).json({ code: err.code, field: err.field })
+        res.status(400).json({ code: err.code, field: err.field, filename: err.filename })
       })
 
       server = app.listen(0, function () {
@@ -103,6 +103,7 @@ describe('async fileFilter fileSize limit (disk storage)', function () {
         assert.strictEqual(status, 400)
         assert.strictEqual(body.code, 'LIMIT_FILE_SIZE')
         assert.strictEqual(body.field, 'file')
+        assert.strictEqual(body.filename, 'big.bin')
 
         setTimeout(function () {
           var files = fs.readdirSync(uploadDir)

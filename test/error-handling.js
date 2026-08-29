@@ -67,6 +67,7 @@ describe('Error Handling', function () {
     util.submitForm(parser, form, function (err, req) {
       assert.strictEqual(err.code, 'LIMIT_FILE_SIZE')
       assert.strictEqual(err.field, 'small0')
+      assert.strictEqual(err.filename, 'small0.dat')
       done()
     })
   })
@@ -197,6 +198,7 @@ describe('Error Handling', function () {
 
     util.submitForm(parser, form, function (err, req) {
       assert.strictEqual(err.code, 'LIMIT_FIELD_COUNT')
+      assert.strictEqual(err.filename, undefined)
       done()
     })
   })
@@ -212,6 +214,7 @@ describe('Error Handling', function () {
     util.submitForm(parser, form, function (err, req) {
       assert.strictEqual(err.code, 'LIMIT_UNEXPECTED_FILE')
       assert.strictEqual(err.field, 'small0')
+      assert.strictEqual(err.filename, 'small0.dat')
       done()
     })
   })

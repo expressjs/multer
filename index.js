@@ -38,7 +38,7 @@ Multer.prototype._makeMiddleware = function (fields, fileStrategy) {
 
     function wrappedFileFilter (req, file, cb) {
       if ((filesLeft[file.fieldname] || 0) <= 0) {
-        return cb(new MulterError('LIMIT_UNEXPECTED_FILE', file.fieldname))
+        return cb(new MulterError('LIMIT_UNEXPECTED_FILE', file.fieldname, file.originalname))
       }
 
       filesLeft[file.fieldname] -= 1
