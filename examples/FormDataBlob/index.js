@@ -12,6 +12,4 @@ app.post('/upload', upload.single('uploaded_file'), (req, res) => {
   res.sendStatus(200)
 })
 
-app.get('/bruh', (req, res) => res.json({ message: 'bruh' }))
-
 app.listen(PORT, () => console.log(`multer example listening on ${PORT}!`))
