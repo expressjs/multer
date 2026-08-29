@@ -21,6 +21,12 @@ function Multer (options) {
   this.preservePath = options.preservePath
   this.defParamCharset = options.defParamCharset || 'latin1'
   this.fileFilter = options.fileFilter || allowAll
+
+  if (options.streamHandler !== undefined && typeof options.streamHandler !== 'function') {
+    throw new TypeError('Expected streamHandler to be a function')
+  }
+
+  this.streamHandler = options.streamHandler
 }
 
 Multer.prototype._makeMiddleware = function (fields, fileStrategy) {
@@ -49,6 +55,7 @@ Multer.prototype._makeMiddleware = function (fields, fileStrategy) {
       limits: this.limits,
       preservePath: this.preservePath,
       defParamCharset: this.defParamCharset,
+      streamHandler: this.streamHandler,
       storage: this.storage,
       fileFilter: wrappedFileFilter,
       fileStrategy: fileStrategy
@@ -80,6 +87,7 @@ Multer.prototype.any = function () {
       limits: this.limits,
       preservePath: this.preservePath,
       defParamCharset: this.defParamCharset,
+      streamHandler: this.streamHandler,
       storage: this.storage,
       fileFilter: this.fileFilter,
       fileStrategy: 'ARRAY'
