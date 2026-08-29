@@ -160,6 +160,9 @@ Accept an array of files, all with the name `fieldname`. Optionally error out if
 more than `maxCount` files are uploaded. The array of files will be stored in
 `req.files`.
 
+Files skipped by `fileFilter` do not count towards `maxCount`. Use
+`limits.files` to bound how many files are read from a request.
+
 #### `.fields(fields)`
 
 Accept a mix of files, specified by `fields`. An object with arrays of files

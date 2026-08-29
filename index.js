@@ -46,8 +46,13 @@ Multer.prototype._makeMiddleware = function (fields, fileStrategy) {
         return cb(new MulterError('LIMIT_UNEXPECTED_FILE', file.fieldname, file.originalname))
       }
 
-      filesLeft[file.fieldname] -= 1
-      fileFilter(req, file, cb)
+      // Only count the file against the field's maxCount once the user's
+      // fileFilter has accepted it. A file skipped via cb(null, false) is
+      // never stored, so it must not consume a slot (see #1419).
+      fileFilter(req, file, function (err, includeFile) {
+        if (!err && includeFile) filesLeft[file.fieldname] -= 1
+        cb(err, includeFile)
+      })
     }
 
     return {
