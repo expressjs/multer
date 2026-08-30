@@ -226,7 +226,7 @@ describe('Disk Storage', function () {
       // Verify that the file was stored in the system's temporary directory
       assert.strictEqual(path.dirname(req.file.path), os.tmpdir())
 
-      done()
+      fs.unlink(req.file.path, done)
     })
   })
 
@@ -245,7 +245,7 @@ describe('Disk Storage', function () {
       assert.strictEqual(path.dirname(req.file.path), os.tmpdir())
       assert.strictEqual(req.file.size, util.fileSizeByName('small0.dat'))
 
-      done()
+      fs.unlink(req.file.path, done)
     })
   })
 
