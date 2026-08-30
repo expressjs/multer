@@ -44,7 +44,13 @@ function getDestination (req, file, cb) {
 }
 
 function MyCustomStorage (opts) {
-  this.getDestination = (opts.destination || getDestination)
+  opts = opts || {}
+
+  if (typeof opts.destination === 'string') {
+    this.getDestination = function ($0, $1, cb) { cb(null, opts.destination) }
+  } else {
+    this.getDestination = (opts.destination || getDestination)
+  }
 }
 
 MyCustomStorage.prototype._handleFile = function _handleFile (req, file, cb) {

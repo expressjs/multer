@@ -226,7 +226,26 @@ describe('Disk Storage', function () {
       // Verify that the file was stored in the system's temporary directory
       assert.strictEqual(path.dirname(req.file.path), os.tmpdir())
 
-      done()
+      fs.unlink(req.file.path, done)
+    })
+  })
+
+  it('should use default destination and filename when options are omitted', function (done) {
+    var storage = multer.diskStorage()
+    var upload = multer({ storage: storage })
+    var parser = upload.single('file')
+    var form = new FormData()
+
+    form.append('file', util.file('small0.dat'))
+
+    util.submitForm(parser, form, (err, req) => {
+      assert.ifError(err)
+
+      // Verify that the file was stored in the system's temporary directory
+      assert.strictEqual(path.dirname(req.file.path), os.tmpdir())
+      assert.strictEqual(req.file.size, util.fileSizeByName('small0.dat'))
+
+      fs.unlink(req.file.path, done)
     })
   })
 
