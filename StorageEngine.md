@@ -34,6 +34,10 @@ later on. Multer will decide which files to delete and when. Your storage class 
 implement the `_removeFile` function. It will receive the same arguments as
 `_handleFile`. Invoke the callback once the file has been removed.
 
+The `destination` option may be given either as a string directory path or as a
+`function (req, file, cb)`, mirroring the option accepted by
+`multer.diskStorage()`. The template below accepts both forms.
+
 ## Template
 
 ```javascript
@@ -44,7 +48,16 @@ function getDestination (req, file, cb) {
 }
 
 function MyCustomStorage (opts) {
-  this.getDestination = (opts.destination || getDestination)
+  var destination = (opts.destination || getDestination)
+
+  // Accept a string directory path as well as a function,
+  // the same way multer's own DiskStorage does.
+  if (typeof destination === 'string') {
+    var dir = destination
+    destination = function (req, file, cb) { cb(null, dir) }
+  }
+
+  this.getDestination = destination
 }
 
 MyCustomStorage.prototype._handleFile = function _handleFile (req, file, cb) {
