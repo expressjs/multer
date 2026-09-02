@@ -141,6 +141,7 @@ Key | Description | Default
 `fieldSize` | Max number of bytes per field value | `'8KB'`
 `fields` | Max number of fields per request | `1000`
 `fieldNestingDepth` | Max number of nesting levels for field names (e.g. `a[b][c]` has 2 levels) | Infinity
+`fieldArrayIndexLimit` | Max numeric array index accepted inside a field name (e.g. `a[3]` uses index 3) | `1000`
 `fileSize` | Max number of bytes per file | `'8MB'`
 `files` | Max number of files per request | `10`
 `headerPairs` | Max number of header key-value pairs | `2000` (same as Node's http)
