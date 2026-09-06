@@ -65,3 +65,50 @@ describe('Filename decoding', function () {
     })
   })
 })
+
+function submitOversized (filename, fileFilter, cb) {
+  var req = new stream.PassThrough()
+  var boundary = 'AaB03x'
+  var body = [
+    '--' + boundary,
+    'Content-Disposition: form-data; name="file"; filename="' + filename + '"',
+    'Content-Type: text/plain',
+    '',
+    'a file body that is longer than the size limit',
+    '--' + boundary + '--'
+  ].join('\r\n')
+
+  req.headers = {
+    'content-type': 'multipart/form-data; boundary=' + boundary,
+    'content-length': body.length
+  }
+
+  req.end(body)
+
+  multer({ limits: { fileSize: 8 }, fileFilter: fileFilter })
+    .single('file')(req, null, cb)
+}
+
+describe('Filename decoding on errors', function () {
+  it('should report the decoded name on LIMIT_FILE_SIZE', function (done) {
+    submitOversized('file%22.ext', null, function (err) {
+      assert.strictEqual(err.code, 'LIMIT_FILE_SIZE')
+      assert.strictEqual(err.field, 'file')
+      assert.strictEqual(err.filename, 'file".ext')
+      done()
+    })
+  })
+
+  it('should report the decoded name on LIMIT_FILE_SIZE with an async fileFilter', function (done) {
+    function fileFilter (req, file, cb) {
+      setImmediate(function () { cb(null, true) })
+    }
+
+    submitOversized('a%0D%0Ab.ext', fileFilter, function (err) {
+      assert.strictEqual(err.code, 'LIMIT_FILE_SIZE')
+      assert.strictEqual(err.field, 'file')
+      assert.strictEqual(err.filename, 'a\r\nb.ext')
+      done()
+    })
+  })
+})
