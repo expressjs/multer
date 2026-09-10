@@ -9,6 +9,18 @@ var MulterError = require('../lib/multer-error')
 // descriptor to be closed before unlinking (Windows refuses to unlink open files).
 var openStreams = new WeakMap()
 
+// Files being flushed with a second descriptor opened after the write stream
+// closed, so _removeFile can wait for it too before unlinking (see openStreams).
+var flushingFiles = new WeakMap()
+
+function endFlush (file) {
+  var flush = flushingFiles.get(file)
+  if (!flush) return
+
+  flushingFiles.delete(file)
+  if (flush.onClosed) flush.onClosed()
+}
+
 function getFilename (req, file, cb) {
   crypto.randomBytes(16, function (err, raw) {
     cb(err, err ? undefined : raw.toString('hex'))
@@ -50,8 +62,16 @@ DiskStorage.prototype._handleFile = function _handleFile (req, file, cb) {
       openStreams.set(file, outStream)
       outStream.once('close', function () { openStreams.delete(file) })
 
+      // Register the file as flushing before the write stream can close, so an
+      // abort landing while the stream is finishing still waits for the upcoming
+      // flush descriptor. endFlush runs on every pipeline outcome to release it.
+      if (that.flush) flushingFiles.set(file, {})
+
       pipeline(file.stream, outStream, function (err) {
-        if (err) return cb(err)
+        if (err) {
+          endFlush(file)
+          return cb(err)
+        }
 
         var done = function (err) {
           if (err) return cb(err)
@@ -71,10 +91,14 @@ DiskStorage.prototype._handleFile = function _handleFile (req, file, cb) {
         // to flush it. fsync applies to the file, not to a specific
         // descriptor, so this is equivalent and works everywhere.
         fs.open(finalPath, 'r+', function (err, fd) {
-          if (err) return done(err)
+          if (err) {
+            endFlush(file)
+            return done(err)
+          }
 
           fs.fsync(fd, function (syncErr) {
             fs.close(fd, function (closeErr) {
+              endFlush(file)
               done(syncErr || closeErr)
             })
           })
@@ -91,21 +115,30 @@ DiskStorage.prototype._removeFile = function _removeFile (req, file, cb) {
   delete file.filename
   delete file.path
 
-  var outStream = openStreams.get(file)
-  if (!outStream) return fs.unlink(path, cb)
+  // The flush reopen (see _handleFile) opens a descriptor after the write stream
+  // closed, so openStreams no longer tracks the file though one may still be open.
+  // Defer the unlink until any in-progress flush has finished.
+  function unlink () {
+    var flush = flushingFiles.get(file)
+    if (!flush) return fs.unlink(path, cb)
 
-  // Unlink only once the descriptor has been released. `closed` is set when
-  // the descriptor is closed on every supported Node.js version, whereas
-  // 'close' is not emitted after a write stream is destroyed with an error on
-  // Node.js < 14 (emitClose defaults to false there), so wait for 'close' or
-  // 'error', whichever comes first. destroy() is a no-op if the stream is
-  // already being torn down.
-  if (outStream.closed) return fs.unlink(path, cb)
+    flush.onClosed = function () { fs.unlink(path, cb) }
+  }
+
+  var outStream = openStreams.get(file)
+  if (!outStream) return unlink()
+
+  // `closed` is set when the descriptor is closed on every supported Node.js
+  // version, whereas 'close' is not emitted after a write stream is destroyed
+  // with an error on Node.js < 14 (emitClose defaults to false there), so wait
+  // for 'close' or 'error', whichever comes first. destroy() is a no-op if the
+  // stream is already being torn down.
+  if (outStream.closed) return unlink()
 
   function onReleased () {
     outStream.removeListener('close', onReleased)
     outStream.removeListener('error', onReleased)
-    fs.unlink(path, cb)
+    unlink()
   }
 
   outStream.once('close', onReleased)
