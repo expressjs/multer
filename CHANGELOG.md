@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+- Add opt-in `flush` option to `DiskStorage` to fsync files before the callback runs ([#1458](https://github.com/expressjs/multer/pull/1458))
+- Accept a function for `limits`, called with the request, to set limits per request ([#1133](https://github.com/expressjs/multer/pull/1133))
+- Files skipped by `fileFilter` no longer count towards `maxCount` ([#1426](https://github.com/expressjs/multer/pull/1426))
+- Accept requests with exactly `limits.parts` parts; `LIMIT_PART_COUNT` now fires only when the limit is exceeded. If you set `parts` one higher to work around this, you can drop the extra one ([#1446](https://github.com/expressjs/multer/pull/1446))
+
 ## 2.3.0
 
 - Fix [CVE-2026-77078](https://www.cve.org/CVERecord?id=CVE-2026-77078) ([GHSA-wc9g-mqfw-jrwm](https://github.com/expressjs/multer/security/advisories/GHSA-wc9g-mqfw-jrwm))

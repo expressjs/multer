@@ -1,14 +1,20 @@
-var concat = require('concat-stream')
-
 function MemoryStorage (opts) {}
 
 MemoryStorage.prototype._handleFile = function _handleFile (req, file, cb) {
-  file.stream.pipe(concat({ encoding: 'buffer' }, function (data) {
+  var chunks = []
+
+  file.stream.on('data', function (chunk) {
+    chunks.push(chunk)
+  })
+
+  file.stream.on('end', function () {
+    var buffer = Buffer.concat(chunks)
+
     cb(null, {
-      buffer: data,
-      size: data.length
+      buffer: buffer,
+      size: buffer.length
     })
-  }))
+  })
 }
 
 MemoryStorage.prototype._removeFile = function _removeFile (req, file, cb) {

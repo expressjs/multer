@@ -2,6 +2,7 @@
 
 var assert = require('assert')
 
+var fs = require('fs')
 var path = require('path')
 var os = require('os')
 var util = require('./_util')
@@ -33,6 +34,58 @@ describe('Disk Storage', function () {
 
   afterEach(function (done) {
     rimraf(uploadDir, done)
+  })
+
+  describe('flush option', function () {
+    var fsyncCalls
+    var originalFsync
+
+    beforeEach(function () {
+      fsyncCalls = 0
+      originalFsync = fs.fsync
+      fs.fsync = function (fd, cb) {
+        fsyncCalls++
+
+        originalFsync(fd, cb)
+      }
+    })
+
+    afterEach(function () {
+      fs.fsync = originalFsync
+    })
+
+    it('should not call fsync unless flush is enabled', function (done) {
+      var form = new FormData()
+      var parser = multer({ dest: uploadDir }).single('small0')
+
+      form.append('small0', util.file('small0.dat'))
+
+      util.submitForm(parser, form, function (err, req) {
+        assert.ifError(err)
+
+        assert.strictEqual(fsyncCalls, 0)
+        assertFileProperties(req.file, 'small0', 'small0.dat')
+
+        done()
+      })
+    })
+
+    it('should call fsync once when flush is enabled', function (done) {
+      var form = new FormData()
+      var storage = multer.diskStorage({ destination: uploadDir, flush: true })
+      var parser = multer({ storage: storage }).single('small0')
+
+      form.append('small0', util.file('small0.dat'))
+
+      util.submitForm(parser, form, function (err, req) {
+        assert.ifError(err)
+
+        assert.strictEqual(fsyncCalls, 1)
+        assertFileProperties(req.file, 'small0', 'small0.dat')
+
+        done()
+      })
+    })
   })
 
   it('should process parser/form-data POST request', function (done) {

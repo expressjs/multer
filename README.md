@@ -124,12 +124,16 @@ The following are the options that can be passed to Multer.
 
 Key | Description
 --- | ---
+`defCharset` | Default character set to use for text field values that do not declare one. Default: `'utf8'`
+`defParamCharset` | Default character set to use for values of part header parameters (e.g. filename) that are not extended parameters (that contain an explicit charset). Default: `'latin1'`
 `dest` or `storage` | Where to store the files
 `fileFilter` | Function to control which files are accepted
+`fileHwm` | `highWaterMark` of each file stream (`file.stream`). Default: busboy's default
+`highWaterMark` | `highWaterMark` of the multipart parser stream. Default: busboy's default
 `limits` | Limits of the uploaded data
 `preservePath` | Keep the full client-supplied path in `file.originalname` instead of just the base name
-`defParamCharset` | Default character set to use for values of part header parameters (e.g. filename) that are not extended parameters (that contain an explicit charset). Default: `'latin1'`
 `streamHandler` | Function that feeds the request body to busboy; defaults to `req.pipe(busboy)`
+
 
 In an average web app, only `dest` might be required, and configured as shown in
 the following example.
@@ -160,6 +164,9 @@ in `req.file`.
 Accept an array of files, all with the name `fieldname`. Optionally error out if
 more than `maxCount` files are uploaded. The array of files will be stored in
 `req.files`.
+
+Files skipped by `fileFilter` do not count towards `maxCount`. Use
+`limits.files` to bound how many files are read from a request.
 
 #### `.fields(fields)`
 
@@ -215,8 +222,9 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage })
 ```
 
-There are two options available, `destination` and `filename`. They are both
-functions that determine where the file should be stored.
+There are three options available: `destination`, `filename` and `flush`. All of
+them except `flush` are functions that determine where the file should be
+stored.
 
 `destination` is used to determine within which folder the uploaded files should
 be stored. This can also be given as a `string` (e.g. `'/tmp/uploads'`). If no
@@ -244,6 +252,14 @@ For understanding the calling convention used in the callback (needing to pass
 null as the first param), refer to
 [Node.js error handling](https://web.archive.org/web/20220417042018/https://www.joyent.com/node-js/production/design/errors)
 
+`flush` is an optional boolean. When set to `true`, the file data is flushed to
+disk with an `fsync` call before the upload handler runs, which prevents data
+loss if the process or the system crashes while the data is still sitting in
+the operating system's page cache. It is disabled by default because forcing a
+disk flush on every upload has a performance cost. Note that this syncs the
+file contents only; if the new directory entry must survive a crash as well,
+fsync the destination directory yourself.
+
 #### `MemoryStorage`
 
 The memory storage engine stores the files in memory as `Buffer` objects. It
@@ -265,6 +281,21 @@ memory storage is used.
 
 An object specifying the size limits of the following optional properties. Multer passes this object into busboy directly, and the details of the properties can be found on [busboy's page](https://github.com/mscdex/busboy#exports).
 
+`limits` can also be a function that receives the request and returns such an
+object. It is called once per request, before parsing starts, so limits can
+depend on e.g. the authenticated user:
+
+```javascript
+const upload = multer({
+  limits: function (req) {
+    return { fileSize: req.user.maxUploadSize }
+  }
+})
+```
+
+Limits apply to the whole request; there is no per-file limit. To restrict
+individual files by type or name, use `fileFilter` or a custom storage engine.
+
 The following integer values are available:
 
 Key | Description | Default
@@ -278,10 +309,6 @@ Key | Description | Default
 `headerPairs` | For multipart forms, the max number of header key=>value pairs to parse | 2000
 `fieldNestingDepth` | Max number of nesting levels for field names (e.g. `a[b][c]` has 2 levels) | Infinity
 `fieldArrayIndexLimit` | Max numeric array index accepted inside a field name (e.g. `a[3]` uses index 3) | Infinity
-
-The `parts` limit is triggered when busboy reaches the configured number of
-parts, not only after that number is exceeded. If you want to allow an exact
-number of fields and files, set `parts` to at least one more than that total.
 
 Specifying the limits can help protect your site against denial of service (DoS) attacks.
 
@@ -349,6 +376,11 @@ display a nice error page using [the standard express way](https://expressjs.com
 
 If you want to catch errors specifically from Multer, you can call the
 middleware function by yourself. Also, if you want to catch only [the Multer errors](https://github.com/expressjs/multer/blob/main/lib/multer-error.js), you can use the `MulterError` class that is attached to the `multer` object itself (e.g. `err instanceof multer.MulterError`).
+
+Multer errors carry a `code` (e.g. `LIMIT_FILE_SIZE`) and, when the error concerns
+a specific field, its name in `field`. Errors about a specific file
+(`LIMIT_FILE_SIZE`, `LIMIT_UNEXPECTED_FILE`) also expose the client-supplied file
+name in `filename`; treat it as untrusted input, like `file.originalname`.
 
 ```javascript
 const multer = require('multer')

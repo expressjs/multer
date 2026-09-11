@@ -3,6 +3,7 @@ var makeMiddleware = require('./lib/make-middleware')
 var diskStorage = require('./storage/disk')
 var memoryStorage = require('./storage/memory')
 var MulterError = require('./lib/multer-error')
+var validateLimits = require('./lib/validate-limits')
 
 function allowAll (req, file, cb) {
   cb(null, true)
@@ -17,9 +18,14 @@ function Multer (options) {
     this.storage = memoryStorage()
   }
 
+  if (options.limits && typeof options.limits !== 'function') validateLimits(options.limits)
+
   this.limits = options.limits
   this.preservePath = options.preservePath
   this.defParamCharset = options.defParamCharset || 'latin1'
+  this.defCharset = options.defCharset
+  this.highWaterMark = options.highWaterMark
+  this.fileHwm = options.fileHwm
   this.fileFilter = options.fileFilter || allowAll
 
   if (options.streamHandler !== undefined && typeof options.streamHandler !== 'function') {
@@ -44,17 +50,25 @@ Multer.prototype._makeMiddleware = function (fields, fileStrategy) {
 
     function wrappedFileFilter (req, file, cb) {
       if ((filesLeft[file.fieldname] || 0) <= 0) {
-        return cb(new MulterError('LIMIT_UNEXPECTED_FILE', file.fieldname))
+        return cb(new MulterError('LIMIT_UNEXPECTED_FILE', file.fieldname, file.originalname))
       }
 
-      filesLeft[file.fieldname] -= 1
-      fileFilter(req, file, cb)
+      // Only count the file against the field's maxCount once the user's
+      // fileFilter has accepted it. A file skipped via cb(null, false) is
+      // never stored, so it must not consume a slot (see #1419).
+      fileFilter(req, file, function (err, includeFile) {
+        if (!err && includeFile) filesLeft[file.fieldname] -= 1
+        cb(err, includeFile)
+      })
     }
 
     return {
       limits: this.limits,
       preservePath: this.preservePath,
       defParamCharset: this.defParamCharset,
+      defCharset: this.defCharset,
+      highWaterMark: this.highWaterMark,
+      fileHwm: this.fileHwm,
       streamHandler: this.streamHandler,
       storage: this.storage,
       fileFilter: wrappedFileFilter,
@@ -87,6 +101,9 @@ Multer.prototype.any = function () {
       limits: this.limits,
       preservePath: this.preservePath,
       defParamCharset: this.defParamCharset,
+      defCharset: this.defCharset,
+      highWaterMark: this.highWaterMark,
+      fileHwm: this.fileHwm,
       streamHandler: this.streamHandler,
       storage: this.storage,
       fileFilter: this.fileFilter,

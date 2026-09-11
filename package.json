@@ -28,7 +28,6 @@
   "dependencies": {
     "append-field": "^1.0.0",
     "busboy": "^1.6.0",
-    "concat-stream": "^2.0.0",
     "type-is": "^1.6.18"
   },
   "devDependencies": {

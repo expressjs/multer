@@ -39,6 +39,39 @@ describe('Error Handling', function () {
     })
   })
 
+  it('should allow exactly the configured number of parts', function (done) {
+    var form = new FormData()
+    var parser = withLimits({ parts: 2 }, [
+      { name: 'small0', maxCount: 1 }
+    ])
+
+    form.append('field0', 'value')
+    form.append('small0', util.file('small0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.ifError(err)
+      assert.strictEqual(req.body.field0, 'value')
+      assert.strictEqual(req.files.small0[0].originalname, 'small0.dat')
+      done()
+    })
+  })
+
+  it('should reject one part over the parts limit', function (done) {
+    var form = new FormData()
+    var parser = withLimits({ parts: 2 }, [
+      { name: 'small0', maxCount: 1 }
+    ])
+
+    form.append('field0', 'value')
+    form.append('field1', 'value')
+    form.append('small0', util.file('small0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.strictEqual(err.code, 'LIMIT_PART_COUNT')
+      done()
+    })
+  })
+
   it('should respect parts limit', function (done) {
     var form = new FormData()
     var parser = withLimits({ parts: 1 }, [
@@ -67,6 +100,7 @@ describe('Error Handling', function () {
     util.submitForm(parser, form, function (err, req) {
       assert.strictEqual(err.code, 'LIMIT_FILE_SIZE')
       assert.strictEqual(err.field, 'small0')
+      assert.strictEqual(err.filename, 'small0.dat')
       done()
     })
   })
@@ -197,6 +231,7 @@ describe('Error Handling', function () {
 
     util.submitForm(parser, form, function (err, req) {
       assert.strictEqual(err.code, 'LIMIT_FIELD_COUNT')
+      assert.strictEqual(err.filename, undefined)
       done()
     })
   })
@@ -212,6 +247,7 @@ describe('Error Handling', function () {
     util.submitForm(parser, form, function (err, req) {
       assert.strictEqual(err.code, 'LIMIT_UNEXPECTED_FILE')
       assert.strictEqual(err.field, 'small0')
+      assert.strictEqual(err.filename, 'small0.dat')
       done()
     })
   })
@@ -522,6 +558,38 @@ describe('Error Handling', function () {
       assert.ifError(err)
       assert.strictEqual(errors.length, 0)
       done()
+    })
+  })
+
+  it('should throw TypeError when a limit is not a non-negative integer', function () {
+    // busboy compares limits with strict equality, so a float limit would
+    // never trigger and silently disable the check
+    assert.throws(function () {
+      multer({ limits: { fileSize: 1024.5 } })
+    }, {
+      name: 'TypeError',
+      message: 'Expected limits.fileSize to be a non-negative integer or Infinity'
+    })
+
+    assert.throws(function () {
+      multer({ limits: { parts: 2.5 } })
+    }, /Expected limits\.parts/)
+
+    assert.throws(function () {
+      multer({ limits: { files: -1 } })
+    }, /Expected limits\.files/)
+
+    assert.throws(function () {
+      multer({ limits: { fields: '3' } })
+    }, /Expected limits\.fields/)
+  })
+
+  it('should accept integer, Infinity and unset limits', function () {
+    assert.doesNotThrow(function () {
+      multer({ limits: { fileSize: 1024, files: 2, fields: 0, parts: Infinity, fileSize2: null } })
+      multer({ limits: { fileSize: Infinity } })
+      multer({ limits: {} })
+      multer({})
     })
   })
 

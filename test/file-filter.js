@@ -18,6 +18,10 @@ function reportFakeError (req, file, cb) {
   cb(new Error('Fake error'))
 }
 
+function skipByOriginalName (req, file, cb) {
+  cb(null, file.originalname !== 'tiny0.dat')
+}
+
 describe('File Filter', function () {
   it('should skip some files', function (done) {
     var form = new FormData()
@@ -37,6 +41,24 @@ describe('File Filter', function () {
       assert.strictEqual(req.files.butme[0].originalname, 'tiny1.dat')
       assert.strictEqual(req.files.butme[0].size, 7)
       assert.strictEqual(req.files.butme[0].buffer.length, 7)
+      done()
+    })
+  })
+
+  it('should not consume maxCount for files skipped by fileFilter (#1419)', function (done) {
+    var form = new FormData()
+    var upload = withFilter(skipByOriginalName)
+    var parser = upload.array('docs', 1)
+
+    // Two files on the same field: the first is skipped by the filter, the
+    // second accepted. The skipped file must not consume the single slot.
+    form.append('docs', util.file('tiny0.dat'))
+    form.append('docs', util.file('tiny1.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.ifError(err)
+      assert.strictEqual(req.files.length, 1)
+      assert.strictEqual(req.files[0].originalname, 'tiny1.dat')
       done()
     })
   })
