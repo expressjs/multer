@@ -127,14 +127,16 @@ The following are the options that can be passed to Multer.
 
 Key | Description
 --- | ---
+`defCharset` | Default character set to use for text field values that do not declare one. Default: `'utf8'`
+`defParamCharset` | Default character set to use for values of part header parameters (e.g. filename) that are not extended parameters (that contain an explicit charset). Default: `'latin1'`
 `dest` or `storage` | Where to store the files
 `fileFilter` | Function to control which files are accepted
+`fileHwm` | `highWaterMark` of each file stream (`file.stream`). Default: busboy's default
+`highWaterMark` | `highWaterMark` of the multipart parser stream. Default: busboy's default
 `limits` | Limits of the uploaded data
 `preservePath` | Keep the full client-supplied path in `file.originalname` instead of just the base name
-`defParamCharset` | Default character set to use for values of part header parameters (e.g. filename) that are not extended parameters (that contain an explicit charset). Default: `'latin1'`
-`defCharset` | Default character set to use for text field values that do not declare one. Default: `'utf8'`
-`highWaterMark` | `highWaterMark` of the multipart parser stream. Default: busboy's default
-`fileHwm` | `highWaterMark` of each file stream (`file.stream`). Default: busboy's default
+`streamHandler` | Function that feeds the request body to busboy; defaults to `req.pipe(busboy)`
+
 
 In an average web app, only `dest` might be required, and configured as shown in
 the following example.
@@ -335,6 +337,30 @@ function fileFilter (req, file, cb) {
 
 }
 ```
+
+### `streamHandler`
+
+By default Multer reads the request with `req.pipe(busboy)`. Some platforms
+consume the request body before your handlers run, so there is nothing left to
+pipe. Google Cloud Functions and Firebase Functions, for example, expose the
+already-read body as `req.rawBody`. Provide a `streamHandler` to feed busboy
+yourself in that case:
+
+```javascript
+const upload = multer({
+  storage: multer.memoryStorage(),
+  streamHandler: function (req, busboy) {
+    if (req.rawBody) {
+      busboy.end(req.rawBody)
+    } else {
+      req.pipe(busboy)
+    }
+  }
+})
+```
+
+The function receives the request and the busboy instance and must write the
+whole multipart body to busboy and end it.
 
 ## Security
 

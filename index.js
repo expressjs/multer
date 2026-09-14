@@ -27,6 +27,12 @@ function Multer (options) {
   this.highWaterMark = options.highWaterMark
   this.fileHwm = options.fileHwm
   this.fileFilter = options.fileFilter || allowAll
+
+  if (options.streamHandler !== undefined && typeof options.streamHandler !== 'function') {
+    throw new TypeError('Expected streamHandler to be a function')
+  }
+
+  this.streamHandler = options.streamHandler
 }
 
 Multer.prototype._makeMiddleware = function (fields, fileStrategy) {
@@ -72,6 +78,7 @@ Multer.prototype._makeMiddleware = function (fields, fileStrategy) {
       defCharset: this.defCharset,
       highWaterMark: this.highWaterMark,
       fileHwm: this.fileHwm,
+      streamHandler: this.streamHandler,
       storage: this.storage,
       fileFilter: wrappedFileFilter,
       fileStrategy: fileStrategy
@@ -106,6 +113,7 @@ Multer.prototype.any = function () {
       defCharset: this.defCharset,
       highWaterMark: this.highWaterMark,
       fileHwm: this.fileHwm,
+      streamHandler: this.streamHandler,
       storage: this.storage,
       fileFilter: this.fileFilter,
       fileStrategy: 'ARRAY'
