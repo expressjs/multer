@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Unreleased
 
 - Decode WHATWG-escaped characters (`%0A`, `%0D`, `%22`) in field names, matching `file.originalname` since 2.3.0: `req.body` keys, `file.fieldname` and `err.field` now carry the real name. If you matched the escaped spelling as a workaround, use the real name now ([#1473](https://github.com/expressjs/multer/pull/1473))
+- Report the decoded filename in `err.filename` on `LIMIT_FILE_SIZE` errors, matching `file.originalname` ([#1478](https://github.com/expressjs/multer/pull/1478))
 - Add opt-in `flush` option to `DiskStorage` to fsync files before the callback runs ([#1458](https://github.com/expressjs/multer/pull/1458))
 - Accept a function for `limits`, called with the request, to set limits per request ([#1133](https://github.com/expressjs/multer/pull/1133))
 - Files skipped by `fileFilter` no longer count towards `maxCount` ([#1426](https://github.com/expressjs/multer/pull/1426))
