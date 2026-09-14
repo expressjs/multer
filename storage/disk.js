@@ -41,6 +41,7 @@ function getDestination (req, file, cb) {
  *   Folder to store files in, or a function that calls back with one. Defaults to `os.tmpdir()`
  * @param {function(Object, File, function(?Error, string=): void): void} [opts.filename]
  *   Calls back with the file name to use. Defaults to a random hex name without extension
+ * @param {boolean} [opts.flush=false] fsync the file before calling back
  */
 function DiskStorage (opts) {
   this.getFilename = (opts.filename || getFilename)

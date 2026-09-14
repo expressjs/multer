@@ -13,7 +13,8 @@ var validateLimits = require('./lib/validate-limits')
  * @property {string} originalname Name of the file on the client (client-supplied, treat as untrusted)
  * @property {string} encoding Transfer encoding of the file
  * @property {string} mimetype MIME type of the file
- * @property {number} size Size of the file in bytes
+ * @property {number} [size] Size of the file in bytes; set once the file has been stored
+ * @property {ReadableStream} [stream] The file data; only present while a storage engine's `_handleFile` runs
  * @property {string} [destination] Folder the file was saved to (`DiskStorage`)
  * @property {string} [filename] Name of the file within `destination` (`DiskStorage`)
  * @property {string} [path] Full path of the saved file (`DiskStorage`)
@@ -41,7 +42,7 @@ var validateLimits = require('./lib/validate-limits')
  *
  * @callback FileFilter
  * @param {Object} req The request
- * @param {File} file The file being uploaded (without `size`, `path` or `buffer`)
+ * @param {File} file The file being uploaded; `size`, `stream`, `path` and `buffer` are not set yet
  * @param {function(?Error, boolean=): void} cb
  */
 
@@ -60,9 +61,13 @@ var validateLimits = require('./lib/validate-limits')
  * @property {string} [dest] Folder to store files in (uses `DiskStorage`)
  * @property {StorageEngine} [storage] Storage engine; defaults to `MemoryStorage` when neither `dest` nor `storage` is set
  * @property {FileFilter} [fileFilter] Controls which files are accepted
- * @property {Limits} [limits] Size limits
+ * @property {Limits|function(Object): Limits} [limits] Size limits, or a function of the request returning them
  * @property {boolean} [preservePath=false] Keep the full client-supplied path in `file.originalname`
  * @property {string} [defParamCharset='latin1'] Charset for part header parameters (e.g. filename) without an explicit one
+ * @property {string} [defCharset='utf8'] Charset for text field values that do not declare one
+ * @property {number} [highWaterMark] `highWaterMark` of the multipart parser stream; busboy's default
+ * @property {number} [fileHwm] `highWaterMark` of each file stream (`file.stream`); busboy's default
+ * @property {function(Object, Object): void} [streamHandler] Feeds the request body to busboy; defaults to `req.pipe(busboy)`
  */
 
 function allowAll (req, file, cb) {
