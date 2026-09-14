@@ -47,11 +47,20 @@ Multer.prototype._makeMiddleware = function (fields, fileStrategy) {
         return cb(new MulterError('LIMIT_UNEXPECTED_FILE', file.fieldname, file.originalname))
       }
 
-      // Only count the file against the field's maxCount once the user's
-      // fileFilter has accepted it. A file skipped via cb(null, false) is
-      // never stored, so it must not consume a slot (see #1419).
+      // Reserve the slot synchronously before yielding to the async fileFilter,
+      // so files emitted together in one busboy write cannot all read the
+      // pre-decrement count and slip past maxCount. Release it on reject/error
+      // (a skipped file must not consume a slot, #1419), and only once so a
+      // filter that calls back repeatedly cannot leak slots.
+      filesLeft[file.fieldname] -= 1
+
+      var settled = false
       fileFilter(req, file, function (err, includeFile) {
-        if (!err && includeFile) filesLeft[file.fieldname] -= 1
+        if (!settled) {
+          settled = true
+          if (err || !includeFile) filesLeft[file.fieldname] += 1
+        }
+
         cb(err, includeFile)
       })
     }
