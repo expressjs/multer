@@ -44,6 +44,8 @@ function getDestination (req, file, cb) {
  * @param {boolean} [opts.flush=false] fsync the file before calling back
  */
 function DiskStorage (opts) {
+  opts = opts || {}
+
   this.getFilename = (opts.filename || getFilename)
   this.flush = opts.flush
 

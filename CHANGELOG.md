@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+- Allow `multer.diskStorage()` to be called without options ([#1471](https://github.com/expressjs/multer/pull/1471))
 - Decode WHATWG-escaped characters (`%0A`, `%0D`, `%22`) in field names, matching `file.originalname` since 2.3.0: `req.body` keys, `file.fieldname` and `err.field` now carry the real name. If you matched the escaped spelling as a workaround, use the real name now ([#1473](https://github.com/expressjs/multer/pull/1473))
 - Report the decoded filename in `err.filename` on `LIMIT_FILE_SIZE` errors, matching `file.originalname` ([#1478](https://github.com/expressjs/multer/pull/1478))
 - Add opt-in `flush` option to `DiskStorage` to fsync files before the callback runs ([#1458](https://github.com/expressjs/multer/pull/1458))
