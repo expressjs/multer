@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+- Accept a field value of exactly `limits.fieldSize` bytes, so `LIMIT_FIELD_VALUE` fires only when the limit is exceeded. This also covers the default `fieldSize` of 1MB, so a 1048576 byte value is no longer rejected when you set no limits
+
 ## 2.4.0
 
 - Fix [CVE-2026-88932](https://www.cve.org/CVERecord?id=CVE-2026-88932) ([GHSA-3pph-fpjx-jg34](https://github.com/expressjs/multer/security/advisories/GHSA-3pph-fpjx-jg34))

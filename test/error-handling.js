@@ -222,6 +222,60 @@ describe('Error Handling', function () {
     })
   })
 
+  it('should allow a field value that is exactly at the fieldSize limit', function (done) {
+    var form = new FormData()
+    var parser = withLimits({ fieldSize: 5 }, [])
+
+    form.append('field0', 'hello')
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.ifError(err)
+      assert.strictEqual(req.body.field0, 'hello')
+      done()
+    })
+  })
+
+  it('should reject a field value 1 byte over the fieldSize limit', function (done) {
+    var form = new FormData()
+    var parser = withLimits({ fieldSize: 5 }, [])
+
+    form.append('field0', 'hello!')
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.strictEqual(err.code, 'LIMIT_FIELD_VALUE')
+      assert.strictEqual(err.field, 'field0')
+      done()
+    })
+  })
+
+  it('should allow a field value that is exactly at the default fieldSize limit', function (done) {
+    var form = new FormData()
+    var value = 'a'.repeat(1024 * 1024)
+    var parser = multer().none()
+
+    form.append('field0', value)
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.ifError(err)
+      assert.strictEqual(req.body.field0.length, 1024 * 1024)
+      done()
+    })
+  })
+
+  it('should reject a field value 1 byte over the default fieldSize limit', function (done) {
+    var form = new FormData()
+    var value = 'a'.repeat(1024 * 1024 + 1)
+    var parser = multer().none()
+
+    form.append('field0', value)
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.strictEqual(err.code, 'LIMIT_FIELD_VALUE')
+      assert.strictEqual(err.field, 'field0')
+      done()
+    })
+  })
+
   it('should respect field count limit', function (done) {
     var form = new FormData()
     var parser = withLimits({ fields: 1 }, [])
