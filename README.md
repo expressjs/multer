@@ -153,6 +153,13 @@ as untrusted; with `preservePath` it additionally contains the path segments the
 client sent. Normalize or validate it before using it in a custom `filename` or
 storage engine.
 
+The path is taken from the multipart `filename` parameter as it arrives on the
+wire. Some clients strip directories before sending. The `form-data` library and
+SuperTest's `.attach()` pass the `filename` option through `path.basename`, so
+`{ filename: '/some/path/a.txt' }` is sent as `a.txt` and `preservePath` cannot
+recover the directories. With `form-data`, pass `filepath` instead of `filename`
+to include the path segments.
+
 If you want more control over your uploads, you'll want to use the `storage`
 option instead of `dest`. Multer ships with storage engines `DiskStorage`
 and `MemoryStorage`; More engines are available from third parties.
