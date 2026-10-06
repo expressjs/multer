@@ -189,11 +189,11 @@ Example:
 #### `.none()`
 
 Accept only text fields. If any file upload is made, error with code
-"LIMIT\_UNEXPECTED\_FILE" will be issued.
+`LIMIT_UNEXPECTED_FILE` will be issued.
 
 #### `.any()`
 
-Accepts all files that comes over the wire. An array of files will be stored in
+Accepts all files that come over the wire. An array of files will be stored in
 `req.files`.
 
 **WARNING:** Make sure that you always handle the files that a user uploads.
