@@ -94,4 +94,26 @@ describe('Field name array index limit', () => {
 
     assert.strictEqual(req.body.a.b[3], 'value')
   })
+
+  it('should not treat digits inside an object-key bracket as an array index', async () => {
+    const parser = multer().none()
+    const form = new FormData()
+
+    form.append('items[[1001]', 'value')
+
+    const req = await util.submitForm(parser, form)
+
+    assert.strictEqual(req.body.items['[1001'], 'value')
+  })
+
+  it('should keep a name with an oversized index and a trailing segment as a literal key', async () => {
+    const parser = multer().none()
+    const form = new FormData()
+
+    form.append('items[1001]tail', 'value')
+
+    const req = await util.submitForm(parser, form)
+
+    assert.strictEqual(req.body['items[1001]tail'], 'value')
+  })
 })
