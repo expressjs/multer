@@ -3,9 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## 2.5.0
 
-- Accept a field value of exactly `limits.fieldSize` bytes, so `LIMIT_FIELD_VALUE` fires only when the limit is exceeded. This also covers the default `fieldSize` of 1MB, so a 1048576 byte value is no longer rejected when you set no limits ([#1481](https://github.com/expressjs/multer/pull/1481))
+- Fix [CVE-2026-113872](https://www.cve.org/CVERecord?id=CVE-2026-113872) ([GHSA-q7qp-rjg7-q26m](https://github.com/expressjs/multer/security/advisories/GHSA-q7qp-rjg7-q26m))
+- Accept a field value of exactly `limits.fieldSize` bytes, so `LIMIT_FIELD_VALUE` fires only when the limit is exceeded. This also covers the default `fieldSize` of 1MB, so a 1048576 byte value is no longer rejected when you set no limits. If you set `fieldSize` one higher to work around this, you can drop the extra one ([#1481](https://github.com/expressjs/multer/pull/1481))
+- Do not add a file to the abort cleanup list when its storage engine reports an error after a `LIMIT_FILE_SIZE` abort; `DiskStorage` no longer tries to unlink an undefined path ([#1489](https://github.com/expressjs/multer/pull/1489))
 
 ## 2.4.0
 
