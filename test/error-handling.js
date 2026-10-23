@@ -394,6 +394,32 @@ describe('Error Handling', function () {
     })
   })
 
+  it('should call next once when the request closes after a busboy constructor error', function (done) {
+    var req = new stream.PassThrough()
+    var storage = multer.memoryStorage()
+    var upload = multer({ storage: storage }).single('tiny0')
+    var errors = []
+
+    req.headers = {
+      'content-type': 'multipart/form-data',
+      'content-length': 100
+    }
+
+    req.write('test')
+
+    upload(req, null, function (err) {
+      errors.push(err.message)
+      req.destroy()
+    })
+
+    req.on('close', function () {
+      setImmediate(function () {
+        assert.deepStrictEqual(errors, ['Multipart: Boundary not found'])
+        done()
+      })
+    })
+  })
+
   it('should report errors from busboy parsing', function (done) {
     var req = new stream.PassThrough()
     var storage = multer.memoryStorage()

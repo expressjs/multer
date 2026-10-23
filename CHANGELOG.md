@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+- Call `next()` only once when the request is aborted or closed after busboy fails to start, such as a `multipart/form-data` request with no boundary ([#1493](https://github.com/expressjs/multer/pull/1493))
+
 ## 2.5.0
 
 - Fix [CVE-2026-113872](https://www.cve.org/CVERecord?id=CVE-2026-113872) ([GHSA-q7qp-rjg7-q26m](https://github.com/expressjs/multer/security/advisories/GHSA-q7qp-rjg7-q26m))
