@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+- Act only on the first accept or reject from `fileFilter`, so a filter that calls back twice (e.g. a missing `return` before `cb(null, false)`) can no longer get a rejected file stored, drop an accepted file from `req.files`, or hang the request. An error passed on a later call still aborts the request ([#1491](https://github.com/expressjs/multer/pull/1491))
+
 ## 2.5.0
 
 - Fix [CVE-2026-113872](https://www.cve.org/CVERecord?id=CVE-2026-113872) ([GHSA-q7qp-rjg7-q26m](https://github.com/expressjs/multer/security/advisories/GHSA-q7qp-rjg7-q26m))

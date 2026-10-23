@@ -128,6 +128,77 @@ describe('File Filter', function () {
     })
   })
 
+  it('should not store a file that fileFilter rejected before accepting it', function (done) {
+    // e.g. a filter missing a `return` before `cb(null, false)`
+    function rejectThenAccept (req, file, cb) {
+      cb(null, false)
+      cb(null, true)
+    }
+
+    var form = new FormData()
+    var upload = withFilter(rejectThenAccept)
+    var parser = upload.single('test')
+
+    form.append('test', util.file('tiny0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.ifError(err)
+      assert.strictEqual(req.file, undefined)
+      done()
+    })
+  })
+
+  it('should keep a file that fileFilter accepted before rejecting it', function (done) {
+    function acceptThenReject (req, file, cb) {
+      cb(null, true)
+      cb(null, false)
+    }
+
+    var form = new FormData()
+    var upload = withFilter(acceptThenReject)
+    var parser = upload.array('docs')
+
+    form.append('docs', util.file('tiny0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.ifError(err)
+      assert.strictEqual(req.files.length, 1)
+      assert.strictEqual(req.files[0].originalname, 'tiny0.dat')
+      assert.strictEqual(req.files[0].size, 122)
+      done()
+    })
+  })
+
+  it('should store a file once when fileFilter accepts it twice', function (done) {
+    var storage = multer.memoryStorage()
+    var handleFile = storage._handleFile
+    var handled = 0
+
+    storage._handleFile = function (req, file, cb) {
+      handled++
+      handleFile.call(this, req, file, cb)
+    }
+
+    function acceptTwice (req, file, cb) {
+      cb(null, true)
+      cb(null, true)
+    }
+
+    var form = new FormData()
+    var upload = multer({ storage: storage, fileFilter: acceptTwice })
+    var parser = upload.array('docs')
+
+    form.append('docs', util.file('tiny0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.ifError(err)
+      assert.strictEqual(handled, 1)
+      assert.strictEqual(req.files.length, 1)
+      assert.strictEqual(req.files[0].originalname, 'tiny0.dat')
+      done()
+    })
+  })
+
   it('should enforce fileSize limit with an async fileFilter (GHSA-qvfw-j98x-7q72)', function (done) {
     var form = new FormData()
     var upload = multer({
