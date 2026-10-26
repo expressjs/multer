@@ -25,13 +25,13 @@ var validateLimits = require('./lib/validate-limits')
  * Size limits, passed to busboy. All are optional.
  *
  * @typedef {Object} Limits
- * @property {number} [fieldNameSize=100] Max field name size in bytes
+ * @property {number} [fieldNameSize=Infinity] Max field name size in bytes
  * @property {number} [fieldSize=1048576] Max field value size in bytes
  * @property {number} [fields=Infinity] Max number of non-file fields
  * @property {number} [fileSize=Infinity] Max file size in bytes (integer or `Infinity`)
  * @property {number} [files=Infinity] Max number of file fields
  * @property {number} [parts=Infinity] Max number of parts (fields + files)
- * @property {number} [headerPairs=2000] Max number of header key/value pairs to parse
+ * @property {number} [headerPairs=2000] Max number of header key/value pairs to parse; currently ignored, busboy 1.x always uses 2000
  * @property {number} [fieldNestingDepth=Infinity] Max nesting depth of field names (`a[b][c]` has 2 levels)
  * @property {number} [fieldArrayIndexLimit=Infinity] Max numeric array index accepted in field names
  */

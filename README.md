@@ -309,7 +309,7 @@ Key | Description | Default
 `fileSize` | For multipart forms, the max file size (in bytes) | Infinity
 `files` | For multipart forms, the max number of file fields | Infinity
 `parts` | For multipart forms, the max number of parts (fields + files) | Infinity
-`headerPairs` | For multipart forms, the max number of header key=>value pairs to parse | 2000
+`headerPairs` | For multipart forms, the max number of header key=>value pairs to parse. busboy 1.x does not read this option and always uses 2000 | 2000
 `fieldNestingDepth` | Max number of nesting levels for field names (e.g. `a[b][c]` has 2 levels) | Infinity
 `fieldArrayIndexLimit` | Max numeric array index accepted inside a field name (e.g. `a[3]` uses index 3) | Infinity
 
@@ -369,8 +369,8 @@ Specifying the [limits](#limits) can help protect your site against denial of se
 - `fileSize` -- set to the maximum expected file size for your use case
 - `files` -- set to the maximum number of files per request
 - `fields` -- set to the maximum number of text fields per request
-- `fieldNestingDepth` -- set to the minimum depth your field names require (e.g. `3` for `a[b][c]`)
-- `fieldArrayIndexLimit` -- set to the largest array index your field names require (e.g. `100` for `a[99]`)
+- `fieldNestingDepth` -- set to the minimum depth your field names require (e.g. `2` for `a[b][c]`)
+- `fieldArrayIndexLimit` -- set to the largest array index your field names require (e.g. `99` for `a[99]`)
 
 ## Error handling
 
