@@ -193,6 +193,28 @@ describe('Disk Storage', function () {
     })
   })
 
+  it('should clear the path of a file removed on error from req.files', function (done) {
+    var form = new FormData()
+    var parser = upload.fields([{ name: 'tiny0', maxCount: 1 }])
+
+    form.append('tiny0', util.file('tiny0.dat'))
+    form.append('small0', util.file('small0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.strictEqual(err.code, 'LIMIT_UNEXPECTED_FILE')
+      assert.strictEqual(err.field, 'small0')
+      assert.deepStrictEqual(util.readDir(uploadDir), [])
+
+      assert.strictEqual(req.files.tiny0.length, 1)
+      assert.strictEqual(req.files.tiny0[0].originalname, 'tiny0.dat')
+      assert.strictEqual(req.files.tiny0[0].path, undefined)
+      assert.strictEqual(req.files.tiny0[0].filename, undefined)
+      assert.strictEqual(req.files.tiny0[0].destination, undefined)
+
+      done()
+    })
+  })
+
   it('should report error when directory doesn\'t exist', function (done) {
     var directory = path.join(temp.mkdirSync(), 'ghost')
     function dest ($0, $1, cb) { cb(null, directory) }

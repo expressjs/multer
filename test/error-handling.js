@@ -375,6 +375,35 @@ describe('Error Handling', function () {
     })
   })
 
+  it('should point storage errors at the file in req.files', function (done) {
+    var storage = multer.memoryStorage()
+
+    storage._removeFile = function _removeFile (req, file, cb) {
+      var err = new Error('Test error')
+      err.code = 'TEST'
+      cb(err)
+    }
+
+    var form = new FormData()
+    var parser = multer({ storage: storage }).fields([
+      { name: 'tiny0', maxCount: 1 }
+    ])
+
+    form.append('tiny0', util.file('tiny0.dat'))
+    form.append('small0', util.file('small0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.strictEqual(err.code, 'LIMIT_UNEXPECTED_FILE')
+      assert.strictEqual(err.field, 'small0')
+
+      assert.strictEqual(err.storageErrors.length, 1)
+      assert.strictEqual(err.storageErrors[0].field, 'tiny0')
+      assert.strictEqual(err.storageErrors[0].file, req.files.tiny0[0])
+
+      done()
+    })
+  })
+
   it('should report errors from busboy constructor', function (done) {
     var req = new stream.PassThrough()
     var storage = multer.memoryStorage()
