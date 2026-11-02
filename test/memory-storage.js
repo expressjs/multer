@@ -110,6 +110,25 @@ describe('Memory Storage', function () {
     })
   })
 
+  it('should drop the buffer of a file removed on error from req.files', function (done) {
+    var form = new FormData()
+    var parser = upload.array('tiny0', 1)
+
+    form.append('tiny0', util.file('tiny0.dat'))
+    form.append('tiny0', util.file('tiny1.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.strictEqual(err.code, 'LIMIT_UNEXPECTED_FILE')
+      assert.strictEqual(err.field, 'tiny0')
+
+      assert.strictEqual(req.files.length, 1)
+      assert.strictEqual(req.files[0].originalname, 'tiny0.dat')
+      assert.strictEqual(req.files[0].buffer, undefined)
+
+      done()
+    })
+  })
+
   it('should handle case where fieldname and originalname did not match', function (done) {
     var form = new FormData()
     var parser = upload.single('profilePic')
