@@ -76,6 +76,24 @@ describe('File Filter', function () {
     })
   })
 
+  it('should report errors thrown by fileFilter (#904)', function (done) {
+    function throwFakeError (req, file, cb) {
+      throw new Error('Fake thrown error')
+    }
+
+    var form = new FormData()
+    var upload = withFilter(throwFakeError)
+    var parser = upload.single('test')
+
+    form.append('test', util.file('tiny0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.strictEqual(err.message, 'Fake thrown error')
+      assert.strictEqual(req.file, undefined)
+      done()
+    })
+  })
+
   it('should not crash when fileFilter invokes the callback more than once', function (done) {
     function rejectThenError (req, file, cb) {
       setImmediate(function () {
