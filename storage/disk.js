@@ -88,7 +88,12 @@ DiskStorage.prototype._handleFile = function _handleFile (req, file, cb) {
         }
 
         var done = function (err) {
-          if (err) return cb(err)
+          if (err) {
+            // Abort cleanup may already have claimed the file.
+            if (!file.path) return cb(err)
+
+            return that._removeFile(req, file, function () { cb(err) })
+          }
 
           cb(null, {
             destination: destination,

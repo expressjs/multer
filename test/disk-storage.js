@@ -86,6 +86,134 @@ describe('Disk Storage', function () {
         done()
       })
     })
+
+    describe('flush errors', function () {
+      var storage
+      var originalOpen
+      var originalClose
+      var originalUnlink
+
+      function submitFile (cb) {
+        var form = new FormData()
+        var parser = multer({ storage: storage }).single('small0')
+
+        form.append('small0', util.file('small0.dat'))
+        util.submitForm(parser, form, cb)
+      }
+
+      function assertFlushError (err, expectedError) {
+        assert.strictEqual(err, expectedError)
+        assert.deepStrictEqual(err.storageErrors, [])
+        assert.deepStrictEqual(util.readDir(uploadDir), [])
+      }
+
+      beforeEach(function () {
+        originalOpen = fs.open
+        originalClose = fs.close
+        originalUnlink = fs.unlink
+        storage = multer.diskStorage({ destination: uploadDir, flush: true })
+      })
+
+      afterEach(function () {
+        fs.open = originalOpen
+        fs.close = originalClose
+        fs.unlink = originalUnlink
+      })
+
+      it('should remove the uploaded file when fsync fails', function (done) {
+        var syncError = new Error('EIO: simulated fsync failure')
+        var sizeAtFsync
+
+        syncError.code = 'EIO'
+        syncError.syscall = 'fsync'
+
+        fs.fsync = function (fd, cb) {
+          fsyncCalls++
+          sizeAtFsync = fs.fstatSync(fd).size
+          process.nextTick(function () { cb(syncError) })
+        }
+
+        submitFile(function (err) {
+          assert.strictEqual(fsyncCalls, 1)
+          assert.strictEqual(sizeAtFsync, util.fileSizeByName('small0.dat'))
+          assertFlushError(err, syncError)
+          done()
+        })
+      })
+
+      it('should remove the uploaded file when the flush open fails', function (done) {
+        var openError = new Error('EIO: simulated flush open failure')
+        openError.code = 'EIO'
+
+        fs.open = function (path, flags, cb) {
+          if (flags === 'r+') return process.nextTick(function () { cb(openError) })
+          return originalOpen.apply(fs, arguments)
+        }
+
+        submitFile(function (err) {
+          assertFlushError(err, openError)
+          done()
+        })
+      })
+
+      it('should remove the uploaded file when the flush close fails', function (done) {
+        var closeError = new Error('EIO: simulated flush close failure')
+        closeError.code = 'EIO'
+
+        fs.fsync = function (fd, cb) {
+          // Inject a close error only for the flush descriptor. Close the
+          // real descriptor first so the test itself cannot leak it.
+          fs.close = function (closeFd, closeCb) {
+            if (closeFd !== fd) return originalClose.apply(fs, arguments)
+            originalClose(closeFd, function (err) {
+              closeCb(err || closeError)
+            })
+          }
+          process.nextTick(cb)
+        }
+
+        submitFile(function (err) {
+          assertFlushError(err, closeError)
+          done()
+        })
+      })
+
+      it('should not unlink twice when a request aborts during a failed flush', function (done) {
+        var syncError = new Error('EIO: simulated fsync failure')
+        var request
+        var unlinkCalls = 0
+        var handleCalls = 0
+        var originalHandle = storage._handleFile
+        syncError.code = 'EIO'
+
+        // Wait for both storage and middleware to finish, without a timer.
+        storage._handleFile = function (req, file, cb) {
+          request = req
+          originalHandle.call(this, req, file, function (err, info) {
+            handleCalls++
+            assert.strictEqual(err, syncError)
+            cb(err, info)
+          })
+        }
+        fs.fsync = function (fd, cb) {
+          request.emit('aborted')
+          process.nextTick(function () { cb(syncError) })
+        }
+        fs.unlink = function (path, cb) {
+          unlinkCalls++
+          originalUnlink(path, cb)
+        }
+
+        submitFile(function (err) {
+          assert.strictEqual(err.message, 'Request aborted')
+          assert.strictEqual(handleCalls, 1)
+          assert.strictEqual(unlinkCalls, 1)
+          assert.deepStrictEqual(err.storageErrors, [])
+          assert.deepStrictEqual(util.readDir(uploadDir), [])
+          done()
+        })
+      })
+    })
   })
 
   it('should process parser/form-data POST request', function (done) {
