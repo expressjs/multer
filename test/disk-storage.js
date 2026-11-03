@@ -287,6 +287,68 @@ describe('Disk Storage', function () {
     })
   })
 
+  it('should handle an exception thrown in getDestination (#904)', function (done) {
+    var storage = multer.diskStorage({
+      destination: function (req, file, cb) {
+        throw new Error('Test getDestination exception')
+      }
+    })
+    var upload = multer({ storage: storage })
+    var parser = upload.single('file')
+    var form = new FormData()
+
+    form.append('file', util.file('small0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.strictEqual(err.message, 'Test getDestination exception')
+      assert.strictEqual(req.file, undefined)
+      done()
+    })
+  })
+
+  it('should handle an exception thrown in getFilename (#904)', function (done) {
+    var storage = multer.diskStorage({
+      destination: uploadDir,
+      filename: function (req, file, cb) {
+        // e.g. reading the extension of a file name that has none
+        cb(null, file.originalname.match(/\.(\w+)$/)[1] + '-' + Date.now())
+      }
+    })
+    var upload = multer({ storage: storage })
+    var parser = upload.single('file')
+    var form = new FormData()
+
+    form.append('file', util.file('small0.dat'), { filename: 'no-extension' })
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.ok(err instanceof TypeError)
+      assert.strictEqual(req.file, undefined)
+      assert.deepStrictEqual(util.readDir(uploadDir), [])
+      done()
+    })
+  })
+
+  it('should remove stored files when fileFilter throws on a later file (#904)', function (done) {
+    var parser = multer({
+      dest: uploadDir,
+      fileFilter: function (req, file, cb) {
+        if (file.fieldname === 'small0') throw new Error('Test fileFilter exception')
+        cb(null, true)
+      }
+    }).any()
+    var form = new FormData()
+
+    form.append('tiny0', util.file('tiny0.dat'))
+    form.append('small0', util.file('small0.dat'))
+
+    util.submitForm(parser, form, function (err, req) {
+      assert.strictEqual(err.message, 'Test fileFilter exception')
+      assert.deepStrictEqual(err.storageErrors, [])
+      assert.deepStrictEqual(util.readDir(uploadDir), [])
+      done()
+    })
+  })
+
   it('should handle case where fieldname and originalname did not match', function (done) {
     var form = new FormData()
     var parser = upload.single('profilePic')
